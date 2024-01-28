@@ -11,9 +11,7 @@ This repository contains sources for standart game  I made based on SDL2 library
 3. Also you can build project by yourself, watch point 'Instalation for own use'.
 
 ## Usage
-Your goal - to mark all mines at game field. To achieve this at all cells located different digits - numbers of mines near this cell.
-Depend on this information you can understand, where mines are located and label it using right click.
-To open cell, you can use left click.
+
 Also you can change numbers of width, height and mines count and other usefull things from "settings.ini" file.
 
 ## Instalation for own use

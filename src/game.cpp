@@ -6,18 +6,18 @@
 #include "game.hpp"
 
 
-static bool runGame;   // Flag of running internal game cycle
-static bool start;     // Flag of showing welcome screen of choosing command
+static bool runGame;     // Flag of running internal game cycle
+static bool start;       // Flag of showing welcome screen of choosing command
 static bool twoPlayers;  // Flag of mode with two players to show text of 1/2 player instead of you
-bool restart = false;  // Flag of restarting game with other parametrs
+bool restart = false;    // Flag of restarting game with other parametrs
 
-bool loosing;      // Flag of showing loosing screen
-bool winning;      // Flag of showing winning screen
-bool nobody;       // Flag of showing screen with nobody win
+bool loosing;            // Flag of showing loosing screen
+bool winning;            // Flag of showing winning screen
+bool nobody;             // Flag of showing screen with nobody win
 
-coord fieldWidth;  // Width and height of field
-Uint8 queue;       // Modifictor to change picture of current player (0 for cross, 1 for circle)
-Uint8 player;      // Number of player, which selected
+coord fieldWidth;        // Width and height of field
+Uint8 queue;             // Modifictor to change picture of current player (0 for cross, 1 for circle)
+Uint8 player;            // Number of player, which selected
 
 static Field field;  // Main game field
 
@@ -461,8 +461,10 @@ void multiMainClient(){
     // Creating socket
     TCPsocket client = NULL;
 
-    GUI::typeBox IPbox(20, 0.5, 0.25, baseIP.std::string::c_str());
-    GUI::typeBox Portbox(20, 0.5, 0.55, basePort.std::string::c_str());
+    GUI::typeBox typeBoxes[] = {
+        {20, 0.5, 0.25, baseIP.std::string::c_str()},
+        {20, 0.5, 0.55, basePort.std::string::c_str()}
+    };
 
     GUI::Button connectButton(0.5, 0.7, IMG_MENU_BUTTON, texts + TXT_CLIENT_CONNECT);
     GUI::Button menuButton(0.5, 0.9, IMG_MENU_BUTTON, texts + TXT_STOP_MENU);
@@ -486,16 +488,63 @@ void multiMainClient(){
                 waiting = false;
                 return;
 
+            case SDL_TEXTINPUT:
+                // Typing text on which object is selected
+                if(inBox){
+                    //typeBoxes[inBox - 1].enterText(event.text);
+                    typeBoxes[inBox - 1].writeString(event.text.text, 0);
+                }
+                break;
+
+            case SDL_TEXTEDITING:
+                // Editing text
+                if(inBox){
+                    typeBoxes[inBox - 1].enterAction(event.edit);
+                }
+                break;
+
             case SDL_KEYDOWN:
-                // Typing on which object is selected
-                switch (inBox)
+                switch (event.key.keysym.sym)
                 {
-                case 1:
-                    IPbox.press(event.key.keysym.sym);
+                case SDLK_ESCAPE:
+                    if(inBox){
+                        typeBoxes[inBox - 1].removeSelect();
+                    }
+                    inBox = 0;
                     break;
                 
-                case 2:
-                    Portbox.press(event.key.keysym.sym);
+                case SDLK_KP_ENTER:
+                    // Stopping entering any letters
+                    if(inBox){
+                        typeBoxes[inBox - 1].removeSelect();
+                        inBox = 0;
+                    }
+
+                    // Trying connecting at writed coordinats
+                    if(SDLNet_ResolveHost(&ip, typeBoxes[0].buffer, std::stoi(typeBoxes[1].buffer)) != -1){
+                        client = SDLNet_TCP_Open(&ip);
+                        if(client != NULL){
+                            // If connection correct - Starting
+                            waiting = false;
+                        }
+                        else{
+                            switch (language)
+                            {
+                            case LNG_ENGLISH:
+                                SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Can't connect", "Can't connect to given address", app.window);
+                                break;
+                            
+                            case LNG_RUSSIAN:
+                                SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Невозможно присоединится", "Невозможно присоединится по указанному адресу", app.window);
+                                break;
+                            }
+                        }
+                    }
+                    // 
+                    if(inBox){
+                        typeBoxes[inBox - 1].removeSelect();
+                    }
+                    inBox = 0;
                     break;
                 }
                 break;
@@ -506,14 +555,23 @@ void multiMainClient(){
                 // Checking pressing on connect button
                 if(connectButton.in(MouseX, MouseY)){
                     // Trying connecting at writed coordinats
-                    if(SDLNet_ResolveHost(&ip, IPbox.buffer, std::stoi(Portbox.buffer)) != -1){
+                    if(SDLNet_ResolveHost(&ip, typeBoxes[0].buffer, std::stoi(typeBoxes[1].buffer)) != -1){
                         client = SDLNet_TCP_Open(&ip);
                         if(client != NULL){
                             // If connection correct - Starting
                             waiting = false;
                         }
                         else{
-                            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Can't connect", "Can't connect to this addres", app.window);
+                            switch (language)
+                            {
+                            case LNG_ENGLISH:
+                                SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Can't connect", "Can't connect to given address", app.window);
+                                break;
+                            
+                            case LNG_RUSSIAN:
+                                SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Невозможно присоединится", "Невозможно присоединится по указанному адресу", app.window);
+                                break;
+                            }
                         }
                     }
                 }
@@ -525,13 +583,18 @@ void multiMainClient(){
                     return;
                 }
                 else{
-                    if(IPbox.in(MouseX, MouseY)){
+                    if(typeBoxes[0].in(MouseX, MouseY)){
                         inBox = 1;
+                        typeBoxes[0].select();
                     }
-                    else if(Portbox.in(MouseX, MouseY)){
+                    else if(typeBoxes[1].in(MouseX, MouseY)){
                         inBox = 2;
+                        typeBoxes[1].select();
                     }
                     else{
+                        if(inBox){
+                            typeBoxes[inBox - 1].removeSelect();
+                        }
                         inBox = 0;
                     }
                     break;
@@ -543,9 +606,9 @@ void multiMainClient(){
         SDL_RenderClear(app.renderer);
 
         texts[TXT_CLIENT_IP].blit();
-        IPbox.blit();
+        typeBoxes[0].blit();
         texts[TXT_CLIENT_PORT].blit();
-        Portbox.blit();
+        typeBoxes[1].blit();
 
         connectButton.blit();
         menuButton.blit();
@@ -627,8 +690,8 @@ void multiMainClient(){
     }
     else{
         // Saving exntered parametrs for next conncetion
-        basePort = IPbox.buffer;
-        basePort = Portbox.buffer;
+        baseIP = (std::string)typeBoxes[0].buffer;
+        basePort = (std::string)typeBoxes[1].buffer;
     }
 
     // Preparing for game

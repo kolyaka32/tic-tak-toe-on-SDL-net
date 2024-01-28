@@ -56,6 +56,17 @@ void loadInitFile(){
             basePort = line.substr(line.rfind('=')+2);
         }
     }
+    // Checking of minimal posible values
+    if(fieldWidth < 3){
+        fieldWidth = 3;
+    }
+    if(fieldWidth > 21){
+        fieldWidth = 21;
+    }
+    if(drawFPS < 5){
+        drawFPS = 5;
+    }
+
 
     inSettings.close();  // Closing reading file
 }

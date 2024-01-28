@@ -210,7 +210,7 @@ typeBox::typeBox(Uint8 size, float posX, float posY, const char* startText, ALIG
     color = newColor;
 
     strcpy(buffer, startText);
-    caret = strlen(buffer);
+    length = caret = strlen(buffer);
     if(caret){
         updateTexture();
     }
@@ -236,32 +236,110 @@ void typeBox::updateTexture(){
     dest.x -= dest.w * aligment / 2;
 }
 
-void typeBox::press(SDL_Keycode code){
+void swapChar(char* a, char* b){
+    char t = *a;
+    *a = *b;
+    *b = t;
+}
+
+void typeBox::writeString(char* str, bool freeData){
+    // Inserting text from clipboard
+    Uint8 clipboardSize = strlen(str);
+
+    // Checking, if all clipboard can be placed in buffer
+    if(clipboardSize > bufferSize - length){
+        clipboardSize = bufferSize - length;
+    }
+
+    // Moving part after caret at end
+    for(Uint8 i = length; i > caret; --i){
+        buffer[i + clipboardSize] = buffer[i];
+    }
+
+    // Coping main clipboard text
+    strcpy_s(buffer + caret, clipboardSize, str);
+
+    if(freeData){
+        SDL_free(str);
+    }
+};
+
+void typeBox::enterAction(SDL_TextEditingEvent code){
+
+}
+
+/*void typeBox::press(SDL_Keycode code){
     switch (code)
     {
     case SDLK_BACKSPACE:
+        // Coping after caret
         if(caret > 0){
-            buffer[--caret] = '\0';
+            for(Uint8 t = --caret; t <= length; t++){
+                buffer[t] = buffer[t+1];
+            }
+            length--;
         }
         break;
     
-    default:
-        // Checking, if letter can be placed
-        if(caret < bufferSize){
-            // Copying all letters after caret
-            /*for(Uint8 t = length; t > caret;){
-                buffer[t] = buffer[--t];
-            }*/
-            // Setting new letter
-            buffer[caret++] = code;
-            buffer[caret] = '\0';
-            //length++;
+    case SDLK_LEFT:
+        if(caret > 0){
+            swapChar(buffer + caret--, buffer + caret - 1);
         }
         break;
+    
+    case SDLK_RIGHT:
+        if(caret < length-1){
+            swapChar(buffer + caret++, buffer + caret + 1);
+        }
+        break;
+    
+    case SDLK_PASTE:
+        // Inserting text from clipboard
+        writeString(SDL_GetClipboardText(), true);
+        break;
+    
+    default:
+        // Checking if normal letter
+        if(code > 27 && code < 200){
+            // Checking, if letter can be placed
+            if(length < bufferSize){
+                // Copying all letters after caret
+                for(Uint8 t = ++length; t > caret; --t){
+                    buffer[t] = buffer[t-1];
+                }
+                // Setting new letter
+                buffer[caret++] = code;
+            }
+        }
     }
 
     updateTexture();
-}
+};
+//*/
+
+void typeBox::select(){
+    /*buffer[length] = '|';
+    caret = length++;
+    buffer[length] = '\0';
+    updateTexture();*/
+
+    // Setting rect for typing text
+    SDL_SetTextInputRect(&backRect);
+
+    // Starting using keyboard
+    SDL_StartTextInput();
+};
+
+void typeBox::removeSelect(){
+    // Stoping entering any letters
+    SDL_StopTextInput();
+
+    /*for(Uint8 t = caret; t <= length; t++){
+        buffer[t] = buffer[t+1];
+    }
+    length--;
+    updateTexture();*/
+};
 
 bool typeBox::in(int x, int y){
     return ((x > backRect.x && x < backRect.x + backRect.w) &&
@@ -274,9 +352,9 @@ void typeBox::blit(){
 
     // Rendering text
     SDL_RenderCopy(app.renderer, Texture, NULL, &dest);
-}
+};
 
-/*
+
 // Dropbox class
 DropBox::DropBox(SDL_Rect place, Uint8 newCount, char* newText, Uint8 size, SDL_Color newFrontColor, SDL_Color newBackColor){
     closeDest = place;
@@ -338,4 +416,3 @@ void DropBox::blit(){
         SDL_RenderDrawRect(app.renderer, &closeDest);
     }
 }
-//*/

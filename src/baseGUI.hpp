@@ -107,7 +107,8 @@ namespace GUI{
         SDL_Color color;
 
         // Variables
-        Uint8 caret = 0;
+        Uint8 caret;
+        Uint8 length;
         
         TTF_Font* Font;
         SDL_Rect dest;
@@ -115,19 +116,23 @@ namespace GUI{
         SDL_Texture* Texture = NULL;
 
         void updateTexture();  // Function of creating new texture and updating his position
+        
 
     public:
-        char buffer[bufferSize];  // Read only data, which write in this typebox
-        Uint8 length;
+        char buffer[bufferSize+1];  // Read only data, which write in this typebox
 
         typeBox(Uint8 size, float posX, float posY, const char* startText = "", ALIGNMENT_types newAligment = MIDLE_text, SDL_Color newColor = BLACK);
         ~typeBox();
         void blit();
-        void press(SDL_Keycode code);
+        //void enterText(SDL_TextInputEvent code);
+        void writeString(char* str, bool freeData);
+        void enterAction(SDL_TextEditingEvent code);
+        void select();
+        void removeSelect();
         bool in(int mouseX, int mouseY);
     };
 
-    /*
+    
     // Class of 
     class DropBox
     {
@@ -148,5 +153,5 @@ namespace GUI{
         void updateText(LNG_types language);
         void click(const int mouseX, const int mouseY);
         void blit();
-    };*/
+    };
 }
