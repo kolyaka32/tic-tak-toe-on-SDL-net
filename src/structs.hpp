@@ -50,8 +50,9 @@ extern bool nobody;   // Flag of showing screen with nobody win
 extern bool restart;  // Flag of restarting game with other parametrs
 
 // Game parametrs
-extern coord fieldWidth;    // Width and height of field
+extern Uint8 fieldWidth;    // Width and height of field
+extern Uint8 winWidth;      // Width, which need for win
 extern Uint8 queue;         // Queue of current player
 extern Uint8 player;        // Number of player, which selected
 extern std::string baseIP;  // Saved ip for better expirience
-extern std::string basePort;     // Saved connection port for better expirience
+extern std::string basePort;  // Saved connection port for better expirience

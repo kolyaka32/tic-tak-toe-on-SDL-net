@@ -5,7 +5,6 @@
 #include "pause.hpp"
 #include "game.hpp"
 
-
 static bool runGame;     // Flag of running internal game cycle
 static bool start;       // Flag of showing welcome screen of choosing command
 static bool twoPlayers;  // Flag of mode with two players to show text of 1/2 player instead of you
@@ -15,7 +14,8 @@ bool loosing;            // Flag of showing loosing screen
 bool winning;            // Flag of showing winning screen
 bool nobody;             // Flag of showing screen with nobody win
 
-coord fieldWidth;        // Width and height of field
+Uint8 fieldWidth;        // Width and height of field
+Uint8 winWidth;          // Width, which need for win
 Uint8 queue;             // Modifictor to change picture of current player (0 for cross, 1 for circle)
 Uint8 player;            // Number of player, which selected
 
@@ -235,6 +235,8 @@ void twoMainCycle(){
     twoPlayers = false;
 }
 
+// Data for multiplayer version
+#define INTERNET_BUFFER 5
 bool waitTurn;  // Flag of waiting, until another user have his turn
 
 //
@@ -313,9 +315,9 @@ void multiMainServer(){
     }
 
     // Checking correction of client version
-    Uint8 sendData[5] = {0, 1, fieldWidth, fieldWidth, 0};  // Array to send data to client
-    Uint8 recieveData[5];    // Array to save data from client
-    SDLNet_TCP_Send(client, sendData, 5);
+    Uint8 sendData[INTERNET_BUFFER] = {0, 1, fieldWidth, winWidth, 0};  // Array to send data to client
+    Uint8 recieveData[INTERNET_BUFFER];    // Array to save data from client
+    SDLNet_TCP_Send(client, sendData, INTERNET_BUFFER);
 
     // Creating socket set to control trafic
     SDLNet_SocketSet set = SDLNet_AllocSocketSet(1);
@@ -366,7 +368,7 @@ void multiMainServer(){
                     sendData[0] = 1;      // Flag of starting game
                     sendData[1] = queue;  // Second position - which move first
                     
-                    SDLNet_TCP_Send(client, sendData, 5);
+                    SDLNet_TCP_Send(client, sendData, INTERNET_BUFFER);
                 }
                 else if(!waitTurn){
                     field.clickMulti(MouseX / (CELL_SIDE + SEPARATOR), MouseY / (CELL_SIDE + SEPARATOR), client);
@@ -377,16 +379,12 @@ void multiMainServer(){
         }
         // Checking get data
         if(SDLNet_CheckSockets(set, 0)){
-            SDLNet_TCP_Recv(client, recieveData, 5);
+            SDLNet_TCP_Recv(client, recieveData, INTERNET_BUFFER);
             switch (recieveData[0])
             {
             case 3:
                 // Code of placing at client
                 field.clickTwo(recieveData[1], recieveData[2]);
-                if(!running){
-                    runGame = false;
-                    running = true;
-                }
 
                 // Allow to current user to make turn
                 waitTurn = false;
@@ -408,7 +406,7 @@ void multiMainServer(){
                 sendData[0] = 5;  // Flag of restarting game
                 sendData[1] = 0;  // Second position
                 
-                SDLNet_TCP_Send(client, sendData, 5);
+                SDLNet_TCP_Send(client, sendData, INTERNET_BUFFER);
             }
         }
 
@@ -444,7 +442,7 @@ void multiMainServer(){
     // Sending message of server disabling
     sendData[0] = 4;
     sendData[1] = 0;
-    SDLNet_TCP_Send(client, sendData, 5);
+    SDLNet_TCP_Send(client, sendData, INTERNET_BUFFER);
 
     // Clearing socket set
     SDLNet_FreeSocketSet(set);
@@ -477,6 +475,7 @@ void multiMainClient(){
     bool waiting = true;
     runGame = true;
     Uint8 inBox = 0;  // Selected window to interact with (or 0 for none)
+    Uint64 lastTypeBoxUpdate;
 
     while(waiting){
         while( SDL_PollEvent(&event) != 0 ){
@@ -491,15 +490,7 @@ void multiMainClient(){
             case SDL_TEXTINPUT:
                 // Typing text on which object is selected
                 if(inBox){
-                    //typeBoxes[inBox - 1].enterText(event.text);
-                    typeBoxes[inBox - 1].writeString(event.text.text, 0);
-                }
-                break;
-
-            case SDL_TEXTEDITING:
-                // Editing text
-                if(inBox){
-                    typeBoxes[inBox - 1].enterAction(event.edit);
+                    typeBoxes[inBox - 1].writeString(event.text.text, false);
                 }
                 break;
 
@@ -509,10 +500,12 @@ void multiMainClient(){
                 case SDLK_ESCAPE:
                     if(inBox){
                         typeBoxes[inBox - 1].removeSelect();
+                        inBox = 0;
                     }
-                    inBox = 0;
                     break;
                 
+                case SDLK_RETURN:
+                case SDLK_RETURN2:
                 case SDLK_KP_ENTER:
                     // Stopping entering any letters
                     if(inBox){
@@ -540,12 +533,12 @@ void multiMainClient(){
                             }
                         }
                     }
-                    // 
-                    if(inBox){
-                        typeBoxes[inBox - 1].removeSelect();
-                    }
-                    inBox = 0;
                     break;
+                
+                default:
+                    if(inBox){
+                        typeBoxes[inBox - 1].press(event.key.keysym.sym);
+                    }
                 }
                 break;
 
@@ -554,6 +547,11 @@ void multiMainClient(){
                 SDL_GetMouseState(&MouseX, &MouseY);  // Getting mouse position
                 // Checking pressing on connect button
                 if(connectButton.in(MouseX, MouseY)){
+                    // Stopping entering any letters
+                    if(inBox){
+                        typeBoxes[inBox - 1].removeSelect();
+                        inBox = 0;
+                    }
                     // Trying connecting at writed coordinats
                     if(SDLNet_ResolveHost(&ip, typeBoxes[0].buffer, std::stoi(typeBoxes[1].buffer)) != -1){
                         client = SDLNet_TCP_Open(&ip);
@@ -576,30 +574,46 @@ void multiMainClient(){
                     }
                 }
                 else if(menuButton.in(MouseX, MouseY)){
+                    // Stopping entering any letters
+                    if(inBox){
+                        typeBoxes[inBox - 1].removeSelect();
+                        inBox = 0;
+                    }
                     // Going to menu
                     if(client){
                         SDLNet_TCP_Close(client);
                     }
                     return;
                 }
-                else{
-                    if(typeBoxes[0].in(MouseX, MouseY)){
+                else if(typeBoxes[0].in(MouseX, MouseY)){
+                    if(inBox != 1){
                         inBox = 1;
                         typeBoxes[0].select();
+                        lastTypeBoxUpdate = SDL_GetTicks64() + 700;
                     }
-                    else if(typeBoxes[1].in(MouseX, MouseY)){
+                }
+                else if(typeBoxes[1].in(MouseX, MouseY)){
+                    if(inBox != 2){
                         inBox = 2;
                         typeBoxes[1].select();
+                        lastTypeBoxUpdate = SDL_GetTicks64() + 700;
                     }
-                    else{
-                        if(inBox){
-                            typeBoxes[inBox - 1].removeSelect();
-                        }
+                }
+                else{
+                    if(inBox){
+                        typeBoxes[inBox - 1].removeSelect();
                         inBox = 0;
                     }
-                    break;
                 }
+                break;
             }
+        }
+
+        // Checking, if need to blink in type box
+        if(inBox && (SDL_GetTicks64() > lastTypeBoxUpdate)){
+            // Updating type box for show place to type
+            typeBoxes[inBox-1].updateCaret();
+            lastTypeBoxUpdate = SDL_GetTicks64() + 500;
         }
 
         // Drawing
@@ -624,12 +638,12 @@ void multiMainClient(){
     SDLNet_SocketSet set = SDLNet_AllocSocketSet(1);
     SDLNet_TCP_AddSocket(set, client);
 
-    Uint8 recieveData[5];  // Array to save data from server
-    Uint8 sendData[5];     // Arrat to send data to server
+    Uint8 recieveData[INTERNET_BUFFER];  // Array to save data from server
+    Uint8 sendData[INTERNET_BUFFER];     // Arrat to send data to server
  
     // Getting test data from server to control correction
-    while(SDLNet_TCP_Recv(client, recieveData, 5) == 0);
-    if(recieveData[0] || recieveData[1] != 1 || recieveData[2] != fieldWidth || recieveData[3] != fieldWidth || recieveData[4]){
+    while(SDLNet_TCP_Recv(client, recieveData, INTERNET_BUFFER) == 0);
+    if(recieveData[0] || recieveData[1] != 1 || recieveData[2] != fieldWidth || recieveData[3] != winWidth || recieveData[4]){
         // Something wrong with test pachage
         running = false;
         runGame = false;
@@ -684,6 +698,7 @@ void multiMainClient(){
             // If user want to reload
             restart = true;
             fieldWidth = recieveData[2];
+            winWidth = recieveData[3];
         }
         running = false;
         runGame = false;
@@ -724,7 +739,7 @@ void multiMainClient(){
         // Checking closing connection
         // Checking get data
         if(SDLNet_CheckSockets(set, 0)){
-            SDLNet_TCP_Recv(client, recieveData, 5);
+            SDLNet_TCP_Recv(client, recieveData, INTERNET_BUFFER);
             switch (recieveData[0])
             {
             case 1:
@@ -747,7 +762,16 @@ void multiMainClient(){
             case 4:
                 // Code of closing game - going to menu
                 runGame = false;
-                SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, "Disconect", "Your connection lost, server disconect", app.window);
+                switch (language)
+                {
+                case LNG_ENGLISH:
+                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, "Server disconect", "Your connection lost, server disconect", app.window);
+                    break;
+                
+                case LNG_RUSSIAN:
+                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, "Соединение потеряно", "Соединение потерено, сервер отключён", app.window);
+                    break;
+                }
                 break;
             }
         }
@@ -788,7 +812,7 @@ void multiMainClient(){
                 }
                 // Getting network conncetion
                 if(SDLNet_CheckSockets(set, 0)){
-                    SDLNet_TCP_Recv(client, recieveData, 5);
+                    SDLNet_TCP_Recv(client, recieveData, INTERNET_BUFFER);
                     switch (recieveData[0])
                     {
                     case 4:
@@ -796,7 +820,16 @@ void multiMainClient(){
                         // Going to menu
                         runGame = false;
                         waiting = false;
-                        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, "Disconect", "Your connection lost, server disconect", app.window);
+                        switch (language)
+                        {
+                        case LNG_ENGLISH:
+                            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, "Server disconect", "Your connection lost, server disconect", app.window);
+                            break;
+                        
+                        case LNG_RUSSIAN:
+                            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, "Соединение потеряно", "Соединение потерено, сервер отключён", app.window);
+                            break;
+                        }
                         break;
                     
                     case 5:
@@ -863,7 +896,7 @@ void multiMainClient(){
     // Sending message of client disable
     sendData[0] = 4;
     sendData[1] = 0;
-    SDLNet_TCP_Send(client, sendData, 5);
+    SDLNet_TCP_Send(client, sendData, INTERNET_BUFFER);
 
     // Clearing socket set
     SDLNet_FreeSocketSet(set);

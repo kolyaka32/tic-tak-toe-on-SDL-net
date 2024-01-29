@@ -152,7 +152,7 @@ void pause(){
     #endif
 
     // Starting loop for waiting for start
-    while(waiting && running){  
+    while(waiting){  
         while( SDL_PollEvent(&event) != 0 ){
             switch (event.type)
             {
@@ -301,7 +301,21 @@ void selectMenu(){
                     pause();
                 }
                 else if(buttons[0].in(MouseX, MouseY)){
-                    singleMainCycle();
+                    if(fieldWidth > 3){
+                        switch (language)
+                        {
+                        case LNG_ENGLISH:
+                            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, "Can't launch", "At width of field more than 3 singleplayer can't be launched.", app.window);
+                            break;
+                        
+                        case LNG_RUSSIAN:
+                            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, "Невозможно запустить", "При данном размере поля одиночный режим не может быть запущён.", app.window);
+                            break;
+                        }
+                    }
+                    else{
+                        singleMainCycle();
+                    }
                 }
                 else if(buttons[1].in(MouseX, MouseY)){
                     twoMainCycle();

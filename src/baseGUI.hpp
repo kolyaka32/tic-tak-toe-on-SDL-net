@@ -124,9 +124,10 @@ namespace GUI{
         typeBox(Uint8 size, float posX, float posY, const char* startText = "", ALIGNMENT_types newAligment = MIDLE_text, SDL_Color newColor = BLACK);
         ~typeBox();
         void blit();
-        //void enterText(SDL_TextInputEvent code);
         void writeString(char* str, bool freeData);
-        void enterAction(SDL_TextEditingEvent code);
+        void press(SDL_Keycode code);
+        void updateCaret();
+        
         void select();
         void removeSelect();
         bool in(int mouseX, int mouseY);

@@ -252,29 +252,43 @@ void typeBox::writeString(char* str, bool freeData){
     }
 
     // Moving part after caret at end
-    for(Uint8 i = length; i > caret; --i){
+    for(Sint8 i = length; i >= caret; --i){
         buffer[i + clipboardSize] = buffer[i];
     }
 
     // Coping main clipboard text
-    strcpy_s(buffer + caret, clipboardSize, str);
+    for(Uint8 i=0; i < clipboardSize; ++i){
+        buffer[caret + i] = str[i];
+    }
+
+    length += clipboardSize;
+    caret += clipboardSize;
+
+    updateTexture();
 
     if(freeData){
         SDL_free(str);
     }
 };
 
-void typeBox::enterAction(SDL_TextEditingEvent code){
-
-}
-
-/*void typeBox::press(SDL_Keycode code){
+void typeBox::press(SDL_Keycode code){
+    static SDL_Keycode preCode;
     switch (code)
     {
     case SDLK_BACKSPACE:
         // Coping after caret
         if(caret > 0){
             for(Uint8 t = --caret; t <= length; t++){
+                buffer[t] = buffer[t+1];
+            }
+            length--;
+        }
+        break;
+
+    case SDLK_DELETE:
+        // Coping after caret
+        if(caret < length){
+            for(Uint8 t = caret + 1; t <= length; t++){
                 buffer[t] = buffer[t+1];
             }
             length--;
@@ -288,43 +302,38 @@ void typeBox::enterAction(SDL_TextEditingEvent code){
         break;
     
     case SDLK_RIGHT:
-        if(caret < length-1){
+        if(caret+1 < length){
             swapChar(buffer + caret++, buffer + caret + 1);
         }
         break;
     
+    // Control-v mode
     case SDLK_PASTE:
         // Inserting text from clipboard
         writeString(SDL_GetClipboardText(), true);
         break;
-    
-    default:
-        // Checking if normal letter
-        if(code > 27 && code < 200){
-            // Checking, if letter can be placed
-            if(length < bufferSize){
-                // Copying all letters after caret
-                for(Uint8 t = ++length; t > caret; --t){
-                    buffer[t] = buffer[t-1];
-                }
-                // Setting new letter
-                buffer[caret++] = code;
-            }
+        
+    case SDLK_v:
+        if(preCode == SDLK_LCTRL){
+            writeString(SDL_GetClipboardText(), true);
         }
-    }
+        break;
 
+    case SDLK_LCTRL:
+        if(preCode == SDLK_v){
+            writeString(SDL_GetClipboardText(), true);
+        }
+        break;
+    };
     updateTexture();
+    preCode = code;
 };
-//*/
 
 void typeBox::select(){
-    /*buffer[length] = '|';
+    buffer[length] = '|';
     caret = length++;
     buffer[length] = '\0';
-    updateTexture();*/
-
-    // Setting rect for typing text
-    SDL_SetTextInputRect(&backRect);
+    updateTexture();
 
     // Starting using keyboard
     SDL_StartTextInput();
@@ -334,11 +343,17 @@ void typeBox::removeSelect(){
     // Stoping entering any letters
     SDL_StopTextInput();
 
-    /*for(Uint8 t = caret; t <= length; t++){
+    for(Uint8 t = caret; t <= length; t++){
         buffer[t] = buffer[t+1];
     }
     length--;
-    updateTexture();*/
+    updateTexture();
+};
+
+void typeBox::updateCaret(){
+    static char b[] = {' '};
+    swapChar(buffer + caret, b);
+    updateTexture();
 };
 
 bool typeBox::in(int x, int y){

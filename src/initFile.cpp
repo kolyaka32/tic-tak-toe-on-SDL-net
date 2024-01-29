@@ -21,6 +21,7 @@ void loadInitFile(){
     EffectsVolume = MIX_MAX_VOLUME/2;
     drawFPS = 60;
     fieldWidth = 3;
+    winWidth = 3;
     baseIP = "127.0.0.1";
     basePort = "2000";
 
@@ -49,6 +50,9 @@ void loadInitFile(){
         else if( first == "width" ){
             fieldWidth = std::stoi( line.substr(line.rfind('=')+2) );
         }
+        else if( first == "win width" ){
+            winWidth = std::stoi( line.substr(line.rfind('=')+2) );
+        }
         else if( first == "IP" ){
             baseIP = line.substr(line.rfind('=')+2);
         }
@@ -57,16 +61,21 @@ void loadInitFile(){
         }
     }
     // Checking of minimal posible values
+    if(drawFPS < 5){
+        drawFPS = 5;
+    }
     if(fieldWidth < 3){
         fieldWidth = 3;
     }
     if(fieldWidth > 21){
         fieldWidth = 21;
     }
-    if(drawFPS < 5){
-        drawFPS = 5;
+    if(winWidth < 2){
+        winWidth = 2;
     }
-
+    if(winWidth > fieldWidth){
+        winWidth = fieldWidth;
+    }
 
     inSettings.close();  // Closing reading file
 }
@@ -88,13 +97,15 @@ void saveInitFile(){
         fprintf(outSettings, "language = english\n");
         break;
     }
+
     fprintf(outSettings, "\n# Technical part:\n");               // Extra comment
     fprintf(outSettings, "music = %u\n", MusicVolume);           // Writing music volume
     fprintf(outSettings, "effects = %u\n", EffectsVolume);       // Writing effects volume
     fprintf(outSettings, "max FPS = %u\n", drawFPS);             // Writing frames per seconds
 
     fprintf(outSettings, "\n# Sizes of game field:\n");          // Extra comment
-    fprintf(outSettings, "width = %d\n", fieldWidth);            // Writing width of grid in mines
+    fprintf(outSettings, "width = %u\n", fieldWidth);            // Writing width of grid of field
+    fprintf(outSettings, "win width = %u\n", winWidth);          // Writing width to win
 
     fprintf(outSettings, "\n# Intrnet base parameters\n");               // Extra comment
     fprintf(outSettings, "IP = %s\n", baseIP.std::string::c_str());      // Base connect IP

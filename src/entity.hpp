@@ -13,19 +13,19 @@ enum cellTypes{
 class Field
 {
 private:
-    Uint8 *data;  // type of cell in grid from cellTypes
-    Sint8 recSolve(Uint8 round);
+    Uint8 *data;  // Grid of cells type from cellTypes
+    Sint8 recSolve(Uint8 round);  // Function for solve game in singleplayer recursivly
 public:
-    Field(/* args */);
+    Field();
     ~Field();
     void reset();
 
-    void clickSingle(Uint8 x, Uint8 y);  // Clicking in singleplayer mode
-    void clickTwo(Uint8 x, Uint8 y);     // Clicking in two-player mode
-    void clickMulti(Uint8 x, Uint8 y, TCPsocket sendPlace);   // Clicking inmultiplayer mode
+    void clickSingle(Uint8 x, Uint8 y);                       // Clicking in singleplayer mode
+    void clickTwo(Uint8 x, Uint8 y);                          // Clicking in two-player mode
+    void clickMulti(Uint8 x, Uint8 y, TCPsocket sendPlace);   // Clicking in multiplayer mode
     
     void AImove();
-    int checkWin(Uint8 X, Uint8 Y);
+    Uint8 checkWin(const Uint8 X, const Uint8 Y);
 
     void blit();
 };

@@ -5,7 +5,7 @@
 #include "dataLoader.hpp"
 
 
-Field::Field(/* args */)
+Field::Field()
 {
     data = (Uint8*)malloc(sizeof(Uint8) * fieldWidth * fieldWidth);
     reset();
@@ -157,7 +157,7 @@ void Field::AImove(){
     //
     data[maxPos] = CELL_ENEMY;
 
-    //Checking for win
+    // Checking for win
     switch (checkWin(maxPos % fieldWidth, maxPos / fieldWidth))
     {
     case CELL_MY:
@@ -173,47 +173,69 @@ void Field::AImove(){
     }
 }
 
+// New checkWin function 
 // Return 0, if none win, 1, if win player, 2 if win bot(2 player)
-int Field::checkWin(coord X, coord Y){
-    Uint8 state = data[Y * fieldWidth];
-    for(coord x = 1; x < fieldWidth; ++x){
-        state &= data[Y * fieldWidth + x];
-    }
-    if(state){
-        return state;
+Uint8 Field::checkWin(const coord X, const coord Y){
+    // Flag, which save type for control win
+    Uint8 state;
+    // Finding first starting point for X
+    for(Uint8 startX = MAX(0, X - winWidth + 1); startX <= MIN(X, fieldWidth - winWidth); ++startX){
+        // Checking all line
+        state = CELL_MY | CELL_ENEMY;
+
+        for(coord x = startX; (x < startX + winWidth) && state; ++x){
+            state &= data[Y * fieldWidth + x];
+        }
+
+        if(state){
+            return state;
+        }
     }
 
-    state = data[X];
-    for(coord y = 1; y < fieldWidth; ++y){
-        state &= data[y * fieldWidth + X];
-    }
-    if(state){
-        return state;
+    // Finding same first starting point for Y
+    for(Uint8 startY = MAX(0, Y - winWidth + 1); startY <= MIN(Y, fieldWidth - winWidth); ++startY){
+        // Checking all collumn
+        state = CELL_MY | CELL_ENEMY;
+
+        for(coord y = startY; (y < startY + winWidth) && state; ++y){
+            state &= data[y * fieldWidth + X];
+        }
+
+        if(state){
+            return state;
+        }
     }
 
-    // Checking diagonal
-    if(X == Y){
-        state = data[0];
-        for(coord t = 1; t < fieldWidth; ++t){
-            state &= data[(fieldWidth + 1) * t];
+    // Checking primal diagonal
+    for(Uint8 startT = MAX(X - Y, 0); startT <= MIN(fieldWidth - winWidth, fieldWidth + X - Y - winWidth); ++startT){
+        state = CELL_MY | CELL_ENEMY;
+
+        for(Uint8 t = startT; (t < winWidth + startT) && state; ++t){
+            state &= data[t + (Y + t - X) * fieldWidth];
         }
         if(state){
             return state;
         }
     }
-    else if(fieldWidth - 1 == X + Y){
-        state = data[fieldWidth - 1];
-        for(coord t = fieldWidth; t > 1; --t){
-            state &= data[(fieldWidth - 1) * t];
+
+    // Checking second diagonal
+    for(Sint8 startT = MIN(X + Y, fieldWidth); startT+1 > MIN(winWidth, winWidth - X - Y); --startT){
+        state = CELL_MY | CELL_ENEMY;
+
+        for(Sint8 t = startT; (t > startT - winWidth); --t){
+            state &= data[X + Y + t * (fieldWidth-1)];
         }
         if(state){
             return state;
         }
     }
+
+    // Checking, is field full
     bool c = true;
     for(coord t=0; t < fieldWidth * fieldWidth; ++t){
-        if(!data[t]){
+        if(data[t] == CELL_EMPTY){
             c = false;
+            break;
         }
     }
     if(c){
