@@ -44,7 +44,7 @@ enum TXT_types{
     TXT_INTERNET_WAIT,
     // Server massages
     TXT_SERVER_WAIT,
-    TXT_SREVER_PORT,
+    TXT_SERVER_PORT,
     // Client messages
     TXT_CLIENT_IP,
     TXT_CLIENT_PORT,

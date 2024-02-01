@@ -3,7 +3,7 @@
 #include "structs.hpp"
 
 #include "dataLoader.hpp"
-
+#include "gameServer.hpp"
 
 Field::Field()
 {
@@ -76,8 +76,8 @@ void Field::clickMulti(coord x, coord y, TCPsocket sendPlace){
         data[x + y * fieldWidth] = CELL_MY + player;
 
         // Sending data to another player
-        Uint8 sendData[5] = {3, x, y, player, 0};
-        SDLNet_TCP_Send(sendPlace, sendData, 5);
+        Uint8 sendData[INTERNET_BUFFER] = {MES_TURN, x, y};
+        SDLNet_TCP_Send(sendPlace, sendData, INTERNET_BUFFER);
 
         player = (player + 1) % 2;  // Changing player
 

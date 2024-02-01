@@ -11,10 +11,12 @@
 #define SEPARATOR 4                      // Width of separator between cells
 #define GAME_WIDTH (CELL_SIDE + SEPARATOR) * fieldWidth  // Width of game area
 #define GAME_HEIGHT GAME_WIDTH           // Height of game area
-
 #define SCREEN_WIDTH (GAME_WIDTH)        // Width of all screen
 #define SCREEN_HEIGHT (GAME_HEIGHT)      // Height of all screen
+
+// Internet numbers
 #define BASE_PORT 2000                   // Base port to create/connect
+#define INTERNET_BUFFER 3                // Size of data to send/recieve by connecion
 
 // Base file names
 #define SETTING_FILE "settings4.ini"     // File with all starting data (width, height...)

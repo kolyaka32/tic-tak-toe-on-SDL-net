@@ -1,11 +1,7 @@
 #include "include.hpp"
 #include "define.hpp"
 #include "pause.hpp"
-#include "game.hpp"
-
-// Internal flags of working (for better timer and counter work)
-//static bool disableUpdate;  // Flag of disabling updating timer
-//static count saveTime;      // Value of time, saved for 
+#include "gameSingle.hpp"
 
 // Types of selected box
 enum{  
@@ -112,7 +108,7 @@ void updateTranslation(LNG_types language){
     }
     
     // Updating texts
-    for(int i=0; i<TXT_count;++i){
+    for(int i=0; i < TXT_count; ++i){
         texts[i].updateText(language);
     }
 }

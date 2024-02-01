@@ -33,9 +33,17 @@ add_executable( ${CMAKE_PROJECT_NAME}
     src/entity.hpp
     src/entity.cpp
 
-    # Main game cycles
-    src/game.hpp
-    src/game.cpp
+    # Singleplayer game cycles
+    src/gameSingle.hpp
+    src/gameSingle.cpp
+
+    # Server game cycle
+    src/gameServer.hpp
+    src/gameServer.cpp
+
+    # Client game cycle
+    src/gameClient.hpp
+    src/gameClient.cpp
 
     # Main function
     src/main.cpp
