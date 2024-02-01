@@ -1,8 +1,8 @@
 #pragma once
 
-#include "include.hpp"
 #include "SDL_net.h"
 
+// Types of cells on field
 enum cellTypes{
     CELL_EMPTY,
     CELL_MY,
@@ -20,12 +20,12 @@ public:
     ~Field();
     void reset();
 
-    void clickSingle(Uint8 x, Uint8 y);                       // Clicking in singleplayer mode
-    void clickTwo(Uint8 x, Uint8 y);                          // Clicking in two-player mode
-    void clickMulti(Uint8 x, Uint8 y, TCPsocket sendPlace);   // Clicking in multiplayer mode
+    void clickSingle(Uint8 x, Uint8 y);  // Clicking in singleplayer mode
+    void clickTwo(Uint8 x, Uint8 y);     // Clicking in two-player mode
+    bool clickMulti(Uint8 x, Uint8 y, TCPsocket sendPlace, Uint64* timer);  // Clicking in multiplayer mode
     
-    void AImove();
-    Uint8 checkWin(const Uint8 X, const Uint8 Y);
+    void AImove();  // Move of computer
+    Uint8 checkWin(const Uint8 X, const Uint8 Y);  // Check, if anyone win after his turn, return how win or 3 if nobody
 
-    void blit();
+    void blit();  // Drawing field with his background
 };

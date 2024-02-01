@@ -47,9 +47,9 @@ extern bool running;  // Flag of main cycle work
 extern bool loosing;  // Flag of showing loosing screen
 extern bool winning;  // Flag of showing winning screen
 extern bool nobody;   // Flag of showing screen with nobody win
-extern bool restart;  // Flag of restarting game with other parametrs
+extern bool restart;  // Flag of restarting game with other parameters
 
-// Game parametrs
+// Game parameters
 extern Uint8 fieldWidth;    // Width and height of field
 extern Uint8 winWidth;      // Width, which need for win
 extern Uint8 queue;         // Queue of current player

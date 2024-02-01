@@ -70,7 +70,7 @@ void Field::clickTwo(coord x, coord y){
     }
 }
 
-void Field::clickMulti(coord x, coord y, TCPsocket sendPlace){
+bool Field::clickMulti(coord x, coord y, TCPsocket sendPlace, Uint64* timer){
     // Checking, if cell empty
     if(data[x + y * fieldWidth] == CELL_EMPTY){
         data[x + y * fieldWidth] = CELL_MY + player;
@@ -78,6 +78,7 @@ void Field::clickMulti(coord x, coord y, TCPsocket sendPlace){
         // Sending data to another player
         Uint8 sendData[INTERNET_BUFFER] = {MES_TURN, x, y};
         SDLNet_TCP_Send(sendPlace, sendData, INTERNET_BUFFER);
+        *timer = SDL_GetTicks64() + MESSAGE_NULL;
 
         player = (player + 1) % 2;  // Changing player
 
@@ -96,7 +97,9 @@ void Field::clickMulti(coord x, coord y, TCPsocket sendPlace){
             nobody = true;
             break;
         }
+        return true;
     }
+    return false;
 }
 
 // Recursivly solve, where cell need to be placed

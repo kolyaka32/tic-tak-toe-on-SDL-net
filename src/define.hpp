@@ -6,7 +6,7 @@
 #define SCROLLER_SOUND SND_count
 
 // System numbers
-#define WINDOWNAME "Tic tak toe on SDL"  // System game name
+#define WINDOWNAME "Tic-tac-toe on SDL"  // System game name
 #define CELL_SIDE 64                     // Width and height of mine in pixels
 #define SEPARATOR 4                      // Width of separator between cells
 #define GAME_WIDTH (CELL_SIDE + SEPARATOR) * fieldWidth  // Width of game area
@@ -17,6 +17,8 @@
 // Internet numbers
 #define BASE_PORT 2000                   // Base port to create/connect
 #define INTERNET_BUFFER 3                // Size of data to send/recieve by connecion
+#define MESSAGE_TIMEOUT 5000             // Time after which connection is considered lost
+#define MESSAGE_NULL 2000                // Time to send NULL message to keep connecion
 
 // Base file names
 #define SETTING_FILE "settings4.ini"     // File with all starting data (width, height...)

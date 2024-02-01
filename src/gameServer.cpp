@@ -17,6 +17,8 @@ static TCPsocket client;                    // Socket for connection to client
 static SDLNet_SocketSet set;                // Network set for checking for new messages
 static Uint8 recieveData[INTERNET_BUFFER];  // Array to save data from server
 static Uint8 sendData[INTERNET_BUFFER];     // Arrat to send data to server
+static Uint64 lastMessageArrive;            // Timer, when last message arrive to control connection
+static Uint64 lastMessageSend;              // Timer, when last message send to control connection
 
 
 // Waiting menu
@@ -118,6 +120,7 @@ static inline void stopMenu(){
                     sendData[1] = 0;  // Second position
                 
                     SDLNet_TCP_Send(client, sendData, INTERNET_BUFFER);
+                    lastMessageSend = SDL_GetTicks64() + MESSAGE_NULL;
                 }
                 else if(stopButtons[1].in(MouseX, MouseY)){
                     // Going to menu
@@ -127,7 +130,12 @@ static inline void stopMenu(){
                 break;
             }
         }
-        // Checking for closing connection
+        // Checking, if need to send NULL-message
+        if(SDL_GetTicks64() > lastMessageSend){
+            sendData[0] = MES_NONE;
+            SDLNet_TCP_Send(client, sendData, INTERNET_BUFFER);
+            lastMessageSend = SDL_GetTicks64();
+        }
         // Checking for avalible data
         if(SDLNet_CheckSockets(set, 0)){
             SDLNet_TCP_Recv(client, recieveData, INTERNET_BUFFER);
@@ -139,6 +147,15 @@ static inline void stopMenu(){
                 waiting = false;
                 showDisconect();
                 break;
+            }
+            lastMessageArrive = SDL_GetTicks64() + MESSAGE_TIMEOUT;
+        }
+        else{
+            if(SDL_GetTicks64() > lastMessageArrive){
+                // Something wrong with connection
+                showDisconect();
+                runGame = false;
+                return;
             }
         }
 
@@ -186,6 +203,9 @@ static inline void gameCycle(){
     SDL_Event event;
     field.reset();
     start = true;
+    // Resetting messgae timeout
+    lastMessageArrive = SDL_GetTicks64() + MESSAGE_TIMEOUT * 2;
+    lastMessageSend = SDL_GetTicks64() + MESSAGE_NULL * 2;
 
     // Activating main cycle
     while(runGame){
@@ -195,7 +215,7 @@ static inline void gameCycle(){
             case SDL_QUIT:
                 running = false;  // Exit from program
                 runGame = false;
-                break;;
+                return;
 
             case SDL_MOUSEBUTTONDOWN:
                 int MouseX, MouseY;
@@ -220,13 +240,21 @@ static inline void gameCycle(){
                     sendData[1] = queue;  // Second position - which move first
                     
                     SDLNet_TCP_Send(client, sendData, INTERNET_BUFFER);
+                    lastMessageSend = SDL_GetTicks64() + MESSAGE_NULL;
                 }
                 else if(!waitTurn){
-                    field.clickMulti(MouseX / (CELL_SIDE + SEPARATOR), MouseY / (CELL_SIDE + SEPARATOR), client);
+                    field.clickMulti(MouseX / (CELL_SIDE + SEPARATOR), MouseY / (CELL_SIDE + SEPARATOR), client, &lastMessageSend);
+                    lastMessageSend = SDL_GetTicks64() + MESSAGE_NULL;
                     waitTurn = true;
                 }
                 break;
             }
+        }
+        // Checking, if need to send NULL-message
+        if(SDL_GetTicks64() > lastMessageSend){
+            sendData[0] = MES_NONE;
+            SDLNet_TCP_Send(client, sendData, INTERNET_BUFFER);
+            lastMessageSend = SDL_GetTicks64() + MESSAGE_NULL;
         }
         // Checking get data
         if(SDLNet_CheckSockets(set, 0)){
@@ -245,7 +273,16 @@ static inline void gameCycle(){
                 // Code of closing game - going to menu
                 runGame = false;
                 showDisconect();
-                break;
+                return;
+            };
+            lastMessageArrive = SDL_GetTicks64() + MESSAGE_TIMEOUT;
+        }
+        else{
+            if(SDL_GetTicks64() > lastMessageArrive){
+                // Something wrong with connection
+                showDisconect();
+                runGame = false;
+                return;
             }
         }
 
@@ -303,7 +340,7 @@ void multiMainServer(){
     client = nullptr;
 
     // Updating text with port to show it
-    texts[TXT_SERVER_PORT].updateText(language, port);
+    texts[TXT_SERVER_PORT].updateText(port);
 
     runGame = true;
 

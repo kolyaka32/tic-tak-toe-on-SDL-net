@@ -18,7 +18,7 @@ enum{
 // Global static texts
 GUI::staticText texts[TXT_count] = {
     // Selection menu
-    {"Tic tac toe\nКрестики нолики\n", 
+    {"Tic-tac-toe\nКрестики нолики\n", 
         24, 0.5, 0.1},
     {"Singleplayer\nОдиночная игра\n", 
         24, 0.5, 0.3},
@@ -39,7 +39,7 @@ GUI::staticText texts[TXT_count] = {
 
     // Game start
     {"Select type\nВыберите тип\n",
-        31, 0.5, 0.2, GUI::MIDLE_text, BLACK},
+        31, 0.5, 0.2, BLACK},
 
     // Game stop
     {"You win!\nВы выйграли!\n",
@@ -61,9 +61,9 @@ GUI::staticText texts[TXT_count] = {
 
     // Internet texts
     {"Your turn\nВаш ход\n",
-        20, 0.5, 0.1, GUI::MIDLE_text, BLACK},
+        20, 0.5, 0.1, BLACK},
     {"Wait for turn\nОжидайте ход\n",
-        20, 0.5, 0.1, GUI::MIDLE_text, BLACK},
+        20, 0.5, 0.1, BLACK},
     
     // Server side
     {"Wait for connect\nОжидайте\n",
@@ -78,7 +78,7 @@ GUI::staticText texts[TXT_count] = {
     {"Connect\nПрисоединится\n",
         24, 0.5, 0.7},
     {"Wait start\nОжидайте начала\n",
-        24, 0.5, 0.1, GUI::MIDLE_text, BLACK}
+        24, 0.5, 0.1, BLACK}
 };
 
 #if ANI_count
@@ -99,7 +99,7 @@ void updateTranslation(LNG_types language){
     switch (language)
     {
     case LNG_ENGLISH:
-        SDL_SetWindowTitle(app.window, "Tic tak toe on SDL");
+        SDL_SetWindowTitle(app.window, "Tic-tac-toe on SDL");
         break;
 
     case LNG_RUSSIAN:
@@ -109,7 +109,7 @@ void updateTranslation(LNG_types language){
     
     // Updating texts
     for(int i=0; i < TXT_count; ++i){
-        texts[i].updateText(language);
+        texts[i].updateText();
     }
 }
 

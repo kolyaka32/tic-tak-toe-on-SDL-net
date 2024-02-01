@@ -6,7 +6,7 @@
 #include "baseGUI.hpp"
 #include "pause.hpp"
 
-#define BUFFER_LENGTH 100
+//#define BUFFER_LENGTH 100
 
 using namespace GUI;
 
@@ -18,13 +18,17 @@ inline TTF_Font* createFont(Uint8 size){
 
 
 // Class of static text
-staticText::staticText(char* newText, Uint8 size, float x, float y, ALIGNMENT_types newAligment, SDL_Color newColor){
+staticText::staticText(char* newText, Uint8 size, float x, float y, SDL_Color newColor, ALIGNMENT_types newAligment){
     fontHeight = size;
     text = newText;
     posX = x;
     posY = y;
     aligment = newAligment;
     color = newColor;
+};
+
+void staticText::init(){
+    Font = createFont(fontHeight);
 };
 
 inline void writeNumber(char* buffer, int number, Uint8* pos){
@@ -44,22 +48,18 @@ inline void writeNumber(char* buffer, int number, Uint8* pos){
         number /= 10;
     } while (number);
     *pos += end;
-}
+};
 
-void staticText::init(){
-    Font = createFont(fontHeight);
-}
-
-void staticText::updateText(LNG_types language, int number){
-    char buffer[BUFFER_LENGTH];
+void staticText::updateText(int number){
+    char buffer[BUFFER_SIZE];
     Uint8 start = 0;
-    for(Uint8 end = 0; (end != language) && (start < BUFFER_LENGTH); ++start){
+    for(Uint8 end = 0; (end != language) && (start < BUFFER_SIZE); ++start){
         if(text[start] == '\n'){
             end++;
         }
     }
     Uint8 d = 0;
-    for(int i = start; text[i] && (text[i] != '\n') && (start < BUFFER_LENGTH); ++i ){
+    for(int i = start; text[i] && (text[i] != '\n') && (start < BUFFER_SIZE); ++i ){
         switch (text[i])
         {
         case '%':
@@ -77,8 +77,8 @@ void staticText::updateText(LNG_types language, int number){
     Texture = SDL_CreateTextureFromSurface(app.renderer, Surface);
     SDL_FreeSurface(Surface);
     SDL_QueryTexture(Texture, NULL, NULL, &Rect.w, &Rect.h);
-    Rect.x = (SCREEN_WIDTH) * posX - (Rect.w * aligment / 2); 
-    Rect.y = SCREEN_HEIGHT * posY - Rect.h/2;
+    Rect.x = SCREEN_WIDTH * posX - (Rect.w * aligment / 2); 
+    Rect.y = SCREEN_HEIGHT * posY - Rect.h / 2;
 };
 
 void staticText::blit(){
@@ -97,7 +97,7 @@ Slider::Slider(const float Y, const IMG_names lineImage, const IMG_names buttonI
     textureButton = Textures[buttonImage];
     SDL_QueryTexture(textureLine, NULL, NULL, &destLine.w, &destLine.h);
     SDL_QueryTexture(textureButton, NULL, NULL, &destButton.w, &destButton.h);
-    destLine.x = SCREEN_WIDTH/2-destLine.w/2; 
+    destLine.x = SCREEN_WIDTH / 2 - destLine.w / 2; 
     destLine.y = SCREEN_HEIGHT * Y - destLine.h / 2; 
     destButton.y = SCREEN_HEIGHT * Y - destButton.h / 2;
 };
@@ -127,8 +127,7 @@ Button::Button(const float X, const float Y, const IMG_names newIndex, staticTex
 };
 
 void Button::init(){
-    texture = Textures[textureIndex];
-    SDL_QueryTexture(texture, NULL, NULL, &dest.w, &dest.h);
+    SDL_QueryTexture(Textures[textureIndex], NULL, NULL, &dest.w, &dest.h);
     dest.x = SCREEN_WIDTH * posX - dest.w / 2; 
     dest.y = SCREEN_HEIGHT * posY - dest.h / 2;
 };
@@ -146,6 +145,7 @@ bool Button::in(int x, int y){
 };
 
 
+// Animation class
 #if ANI_count
 // GIF animation class
 Animation::Animation( SDL_Rect destination, ANI_names newType ){
@@ -177,33 +177,40 @@ Bar::Bar( const SDL_Rect dest, SDL_Color newColor, IMG_names icone ){
     Back_rect = dest;
     Front_rect = dest;
     color = newColor;
+
     // Icone part
-    IconeTexture = Textures[icone];  // Texture of icone
+    if(icone){
+        IconeTexture = Textures[icone];  // Texture of icone
+        IconeRect = dest;
+        //SDL_QueryTexture(IconeTexture, NULL, NULL, &IconeRect.w, &IconeRect.h);
+        //IconeRect.w = 14;
+        //IconeRect.h = 16;
 
-    IconeRect = dest;
-    SDL_QueryTexture(IconeTexture, NULL, NULL, &IconeRect.w, &IconeRect.h);
-    //IconeRect.w = 14;
-    //IconeRect.h = 16;
-
-    IconeRect.y -= 2;
-    IconeRect.x -= IconeRect.w + 2;
+        IconeRect.y -= 2;
+        IconeRect.x -= IconeRect.w + 2;
+    }
 };
 
 void Bar::blit( int width ){
-    Front_rect.w = width;  // Setting width (health bar) 
-    SDL_SetRenderDrawColor(app.renderer, 255, 255, 255, 255);  // Drawing back part
+    Front_rect.w = width;  // Setting width
+    SDL_SetRenderDrawColor(app.renderer, 255, 255, 255, 255);  
+    // Drawing back part
     SDL_RenderFillRect(app.renderer, &Back_rect);  
-    SDL_SetRenderDrawColor(app.renderer, color.r, color.g, color.b, color.a);  // Drawing front part
+    SDL_SetRenderDrawColor(app.renderer, color.r, color.g, color.b, color.a);  
+    // Drawing front part
     SDL_RenderFillRect(app.renderer, &Front_rect);
-    SDL_RenderCopy(app.renderer, IconeTexture, NULL, &IconeRect);  // Rendering icone
+    // Drawing icone
+    if(IconeTexture){
+        SDL_RenderCopy(app.renderer, IconeTexture, NULL, &IconeRect);
+    }
 };
 
 
-
+// Type box class
 typeBox::typeBox(Uint8 size, float posX, float posY, const char* startText, ALIGNMENT_types newAligment, SDL_Color newColor){
     Font = createFont(size);
     dest.x = SCREEN_WIDTH * posX;
-    dest.y = SCREEN_HEIGHT * posY - size/2;
+    dest.y = SCREEN_HEIGHT * posY - size / 2;
     dest.w = dest.h = 0;
 
     aligment = newAligment;
@@ -236,7 +243,8 @@ void typeBox::updateTexture(){
     dest.x -= dest.w * aligment / 2;
 }
 
-void swapChar(char* a, char* b){
+// Function for swap characters by his addreses
+static inline void swapChar(char* a, char* b){
     char t = *a;
     *a = *b;
     *b = t;
@@ -390,7 +398,7 @@ DropBox::~DropBox(){
     free(Texture);
 }
 
-void DropBox::updateText(LNG_types language){
+void DropBox::updateText(){
     Texture = (SDL_Texture**)malloc(count * sizeof(SDL_Texture*));
     char txt[20];
     Uint8 textCounter = 0;

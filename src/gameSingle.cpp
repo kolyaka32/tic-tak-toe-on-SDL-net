@@ -10,7 +10,7 @@ static bool twoPlayers;  // Flag of mode with two players to show text of 1/2 pl
 bool loosing;            // Flag of showing loosing screen
 bool winning;            // Flag of showing winning screen
 bool nobody;             // Flag of showing screen with nobody win
-bool restart = false;    // Flag of restarting game with other parametrs
+bool restart = false;    // Flag of restarting game with other parameters
 
 Uint8 fieldWidth;        // Width and height of field
 Uint8 winWidth;          // Width, which need for win

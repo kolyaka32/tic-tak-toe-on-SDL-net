@@ -17,6 +17,8 @@ static SDLNet_SocketSet set;                // Network set for checking for new 
 static IPaddress ip;                        // Summary ip addres, connect to
 static Uint8 recieveData[INTERNET_BUFFER];  // Array to save data from server
 static Uint8 sendData[INTERNET_BUFFER];     // Array to send data to server
+static Uint64 lastMessageArrive;            // Timer, when last message arrive to control connection
+static Uint64 lastMessageSend;              // Timer, when last message send to control connection
 
 
 // Macros for removing select from typeBox
@@ -204,6 +206,12 @@ static inline void stopMenu(){
                 break;
             }
         }
+        // Checking, if need to send NULL-message
+        if(SDL_GetTicks64() > lastMessageSend){
+            sendData[0] = MES_NONE;
+            SDLNet_TCP_Send(client, sendData, INTERNET_BUFFER);
+            lastMessageSend = SDL_GetTicks64();
+        }
         // Getting network conncetion
         if(SDLNet_CheckSockets(set, 0)){
             SDLNet_TCP_Recv(client, recieveData, INTERNET_BUFFER);
@@ -220,7 +228,18 @@ static inline void stopMenu(){
                 // Restart game code
                 waiting = false;
                 field.reset();
+                player = 0;
+                start = true;
                 break;
+            };
+            lastMessageArrive = SDL_GetTicks64() + MESSAGE_TIMEOUT;
+        }
+        else{
+            if(SDL_GetTicks64() > lastMessageArrive){
+                // Something wrong with connection
+                showDisconect();
+                runGame = false;
+                return;
             }
         }
 
@@ -247,8 +266,6 @@ static inline void stopMenu(){
     winning = false;
     loosing = false;
     nobody = false;
-    player = 0;
-    start = true;
 }
 
 // Main game cycle
@@ -258,6 +275,9 @@ static inline void gameCycle(){
     field.reset();
     waitTurn = true;
     start = true;
+    // Resetting messgae timeout
+    lastMessageArrive = SDL_GetTicks64() + MESSAGE_TIMEOUT * 2;
+    lastMessageSend = SDL_GetTicks64() + MESSAGE_NULL * 2;
 
     // Activating main cycle
     while(runGame){
@@ -275,11 +295,18 @@ static inline void gameCycle(){
 
                 // Finding place of clicking
                 if(!(start || waitTurn)){
-                    field.clickMulti(MouseX / (CELL_SIDE + SEPARATOR), MouseY / (CELL_SIDE + SEPARATOR), client);
-                    waitTurn = true;
+                    if(field.clickMulti(MouseX / (CELL_SIDE + SEPARATOR), MouseY / (CELL_SIDE + SEPARATOR), client, &lastMessageSend)){
+                        waitTurn = true;
+                    }
                 }
                 break;
             }
+        }
+        // Checking, if need to send NULL-message
+        if(SDL_GetTicks64() > lastMessageSend){
+            sendData[0] = MES_NONE;
+            SDLNet_TCP_Send(client, sendData, INTERNET_BUFFER);
+            lastMessageSend = SDL_GetTicks64();
         }
         // Checking closing connection
         // Checking get data
@@ -300,7 +327,6 @@ static inline void gameCycle(){
                 // Code of opponent placing shape
                 if(!start){
                     field.clickTwo(recieveData[1], recieveData[2]);
-
                     // Allow to current user to make turn
                     waitTurn = false;
                 }
@@ -311,6 +337,23 @@ static inline void gameCycle(){
                 runGame = false;
                 showDisconect();
                 break;
+
+            case MES_REST:
+                // Code of restart game
+                field.reset();
+                player = 0;
+                start = true;
+                waitTurn = true;
+                break;
+            }
+            lastMessageArrive = SDL_GetTicks64() + MESSAGE_TIMEOUT;
+        }
+        else{
+            if(SDL_GetTicks64() > lastMessageArrive){
+                // Something wrong with connection
+                showDisconect();
+                runGame = false;
+                return;
             }
         }
 
@@ -417,6 +460,9 @@ void multiMainClient(){
             winWidth = recieveData[2];
             running = false;
         }
+        // Sending code of stopping
+        sendData[0] = MES_STOP;
+        SDLNet_TCP_Send(client, sendData, INTERNET_BUFFER);
         
         // Clearing network socket
         SDLNet_TCP_Close(client);
