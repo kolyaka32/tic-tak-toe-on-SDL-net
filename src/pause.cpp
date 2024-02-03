@@ -48,11 +48,11 @@ GUI::staticText texts[TXT_count] = {
         24, 0.5, 0.3},
     {"Nobody win.\nНичья.\n", 
         24, 0.5, 0.3},
+    {"Game stopped.\nИгра остановлена.\n",
+        24, 0.5, 0.3},
     {"Cross win\nКрестик выйграл\n",
         24, 0.5, 0.3},
     {"Circle win\nКружок выйграл\n",
-
-    // Buttons after stop
         24, 0.5, 0.1},
     {"Restart\nПерезапустить\n",
         24, 0.5, 0.7},
@@ -65,12 +65,13 @@ GUI::staticText texts[TXT_count] = {
     {"Wait for turn\nОжидайте ход\n",
         20, 0.5, 0.1, BLACK},
     
-    // Server side
+    // Server texts
     {"Wait for connect\nОжидайте\n",
         24, 0.5, 0.1},
     {"Your port: %\nВаш порт: %\n",
         24, 0.5, 0.3},
-    // Client side
+    
+    // Client texts
     {"Enter IP\nВведите IP\n",
         24, 0.5, 0.1},
     {"Enter port\nВведите порт\n",
@@ -78,7 +79,7 @@ GUI::staticText texts[TXT_count] = {
     {"Connect\nПрисоединится\n",
         24, 0.5, 0.7},
     {"Wait start\nОжидайте начала\n",
-        24, 0.5, 0.1, BLACK}
+        24, 0.5, 0.1, BLACK},
 };
 
 #if ANI_count
@@ -352,10 +353,6 @@ void selectMenu(){
         MenuAdvertisment.clear();
     }
     #endif
-
-    // Resetting values
-    winning = false;
-    loosing = false;
 
     // Starting playing main game theme
     //Mix_PlayMusic( Musics[MUS_MAIN_THEME], -1 );

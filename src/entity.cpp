@@ -3,7 +3,7 @@
 #include "structs.hpp"
 
 #include "dataLoader.hpp"
-#include "gameServer.hpp"
+#include "gameSingle.hpp"
 
 Field::Field()
 {
@@ -20,27 +20,18 @@ void Field::reset(){
     for(Uint8 i=0; i < fieldWidth * fieldWidth; ++i){
         data[i] = CELL_EMPTY;
     }
+    count = 0;
 }
 
 void Field::clickSingle(coord x, coord y){
     // Checking, if cell empty
     if(data[x + y * fieldWidth] == CELL_EMPTY){
         data[x + y * fieldWidth] = CELL_MY;
+        count++;
 
         //Checking for win
-        switch (checkWin(x, y))
-        {
-        case CELL_MY:
-            winning = true;
-            break;
+        gameState = checkWin(x, y);
         
-        case CELL_ENEMY:
-            loosing = true;
-            break;
-        case 3:
-            nobody = true;
-            break;
-        }
         AImove();
     }
 }
@@ -50,53 +41,24 @@ void Field::clickTwo(coord x, coord y){
     if(data[x + y * fieldWidth] == CELL_EMPTY){
         data[x + y * fieldWidth] = CELL_MY + player;
 
-        player = (player+1)%2;  // Changing player
+        player = (player + 1) % 2;  // Changing player
+        count++;
 
         //Checking for win
-        switch (checkWin(x, y))
-        {
-        case CELL_MY:
-            winning = true;
-            break;
-        
-        case CELL_ENEMY:
-            loosing = true;
-            break;
-
-        case 3:
-            nobody = true;
-            break;
-        }
+        gameState = checkWin(x, y);
     }
 }
 
-bool Field::clickMulti(coord x, coord y, TCPsocket sendPlace, Uint64* timer){
+bool Field::clickMulti(coord x, coord y){
     // Checking, if cell empty
     if(data[x + y * fieldWidth] == CELL_EMPTY){
         data[x + y * fieldWidth] = CELL_MY + player;
 
-        // Sending data to another player
-        Uint8 sendData[INTERNET_BUFFER] = {MES_TURN, x, y};
-        SDLNet_TCP_Send(sendPlace, sendData, INTERNET_BUFFER);
-        *timer = SDL_GetTicks64() + MESSAGE_NULL;
-
         player = (player + 1) % 2;  // Changing player
+        count++;
 
         //Checking for win
-        switch (checkWin(x, y))
-        {
-        case CELL_MY:
-            winning = true;
-            break;
-        
-        case CELL_ENEMY:
-            loosing = true;
-            break;
-
-        case 3:
-            nobody = true;
-            break;
-        }
+        gameState = checkWin(x, y);
         return true;
     }
     return false;
@@ -111,6 +73,7 @@ Sint8 Field::recSolve(Uint8 round){
             if(data[y * fieldWidth + x] == CELL_EMPTY){
                 // Trying set cell and think, what happen next
                 data[y * fieldWidth + x] = (round % 2) + 1;  // Set player cell on odd rounds and enemy cell in even
+                count++;
                 switch (checkWin(x, y))
                 {
                 case CELL_MY:
@@ -136,6 +99,7 @@ Sint8 Field::recSolve(Uint8 round){
                     result -= recSolve(round+1);
                 };
                 data[y * fieldWidth + x] = CELL_EMPTY;
+                count--;
             }
     }
     return result;
@@ -149,31 +113,22 @@ void Field::AImove(){
     for(coord i=0; i < fieldWidth * fieldWidth; ++i){
         if(data[i] == CELL_EMPTY){
             data[i] = CELL_ENEMY;
+            count++;
             Sint8 cur = recSolve(1);
             if(cur > maxScore){
                 maxScore = cur;
                 maxPos = i;
             }
+            count--;
             data[i] = CELL_EMPTY;
         }
     }
     //
     data[maxPos] = CELL_ENEMY;
+    count++;
 
     // Checking for win
-    switch (checkWin(maxPos % fieldWidth, maxPos / fieldWidth))
-    {
-    case CELL_MY:
-        winning = true;
-        break;
-    
-    case CELL_ENEMY:
-        loosing = true;
-        break;
-    case 3:
-        nobody = true;
-        break;
-    }
+    gameState = checkWin(maxPos % fieldWidth, maxPos / fieldWidth);
 }
 
 // New checkWin function 
@@ -234,17 +189,10 @@ Uint8 Field::checkWin(const coord X, const coord Y){
     }
 
     // Checking, is field full
-    bool c = true;
-    for(coord t=0; t < fieldWidth * fieldWidth; ++t){
-        if(data[t] == CELL_EMPTY){
-            c = false;
-            break;
-        }
+    if(count == fieldWidth * fieldWidth){
+        return END_NOBODY;
     }
-    if(c){
-        return 3;
-    }
-    return 0;
+    return END_NONE;
 }
 
 void Field::blit(){

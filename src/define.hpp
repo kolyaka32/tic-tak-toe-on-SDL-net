@@ -17,8 +17,9 @@
 // Internet numbers
 #define BASE_PORT 2000                   // Base port to create/connect
 #define INTERNET_BUFFER 3                // Size of data to send/recieve by connecion
-#define MESSAGE_TIMEOUT 5000             // Time after which connection is considered lost
-#define MESSAGE_NULL 2000                // Time to send NULL message to keep connecion
+#define MESSAGE_GET_TIMEOUT 2000         // Time after which connection is considered lost
+#define MESSAGE_NULL_TIMEOUT 800         // Time to send NULL message to keep connecion
+#define MESSAGE_APPLY_TIMEOUT 400        // Time to apply arriving message
 
 // Base file names
 #define SETTING_FILE "settings4.ini"     // File with all starting data (width, height...)

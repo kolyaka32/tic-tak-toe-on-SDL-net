@@ -19,39 +19,47 @@ void selectMenu();
 
 // Types of numerated static texts
 enum TXT_types{
-    TXT_SELECT_ENTER,
-    TXT_SELECT_SINGLE,
-    TXT_SELECT_TWO,
-    TXT_SELECT_SERVER,
-    TXT_SELECT_CLIENT,
+    // Selection menu 
+    TXT_SELECT_ENTER,    // Game name
+    TXT_SELECT_SINGLE,   // Singleplayer gamemode
+    TXT_SELECT_TWO,      // Two player gamemode
+    TXT_SELECT_SERVER,   // Host server
+    TXT_SELECT_CLIENT,   // Connect to server
 
-    TXT_PAUSE_PAUSE,
-    TXT_PAUSE_MUSIC,
-    TXT_PAUSE_SOUND,
+    // Pause texts
+    TXT_PAUSE_PAUSE,     // Pause name
+    TXT_PAUSE_MUSIC,     // Pause music slider text
+    TXT_PAUSE_SOUND,     // Pause sound slider text
 
-    TXT_START_SELECT,
+    // Game start texts
+    TXT_START_SELECT,    // Text of selecting start shape
 
-    TXT_STOP_WIN,
-    TXT_STOP_LOOSE,
-    TXT_STOP_NOBODY,
-    TXT_STOP_WIN_1,
-    TXT_STOP_WIN_2,
-    TXT_STOP_RESTART,
-    TXT_STOP_MENU,
+    // Stop menu
+    TXT_STOP_WIN,        // Winning topic
+    TXT_STOP_LOOSE,      // Loosing topic
+    TXT_STOP_NOBODY,     // Topic of nobody win
+    TXT_STOP_SKIP,       // Topping of skipping round
+    TXT_STOP_WIN_1,      // First player win topic (for two players)
+    TXT_STOP_WIN_2,      // Second player win topic (for two players)
+    TXT_STOP_RESTART,    // Resatrt game button text
+    TXT_STOP_MENU,       // Menu going button text
 
     // Internet texts
-    TXT_INTERNET_TURN,
-    TXT_INTERNET_WAIT,
-    // Server massages
-    TXT_SERVER_WAIT,
-    TXT_SERVER_PORT,
-    // Client messages
-    TXT_CLIENT_IP,
-    TXT_CLIENT_PORT,
-    TXT_CLIENT_CONNECT,
-    TXT_CLIENT_START
+    TXT_INTERNET_TURN,   // Topic of turn of current player
+    TXT_INTERNET_WAIT,   // Topic of waiting for turn
+
+    // Server texts
+    TXT_SERVER_WAIT,     // Server label of waiting to connect
+    TXT_SERVER_PORT,     // Server label of current connect port
+
+    // Client texts
+    TXT_CLIENT_IP,       // IP enter label
+    TXT_CLIENT_PORT,     // Port enter label
+    TXT_CLIENT_CONNECT,  // Connect button text
+    TXT_CLIENT_WAIT      // Start waiting label
 };
-#define TXT_count 24
+// Summary text counter
+#define TXT_count 25
 
 // Declaring static text
 extern GUI::staticText texts[TXT_count];

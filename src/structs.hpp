@@ -44,10 +44,7 @@ extern Mix_Chunk* Sounds[SND_count];  // Array of all sound effects
 
 // Flags of running
 extern bool running;  // Flag of main cycle work
-extern bool loosing;  // Flag of showing loosing screen
-extern bool winning;  // Flag of showing winning screen
-extern bool nobody;   // Flag of showing screen with nobody win
-extern bool restart;  // Flag of restarting game with other parameters
+extern bool restart;  // Flag of restarting whole game with other parameters
 
 // Game parameters
 extern Uint8 fieldWidth;    // Width and height of field

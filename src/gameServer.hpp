@@ -19,6 +19,16 @@ inline void showDisconect(){
     }
 };
 
+// Data for internet connection
+extern UDPsocket socket;          // Socket to send/recieve data
+extern UDPpacket* sendData;       // Packet to send data
+extern UDPpacket* recieveData;    // Packet to recieve data
+
+extern Uint64 lastMessageArrive;  // Timer, when last message arrive to control connection
+extern Uint64 lastMessageSend;    // Timer, when last message send to control connection
+extern bool waitApply;            // Flag of waiting apply message
+
+
 // Types of internet messages
 enum MESSAGE_types{
     MES_INIT = 0,   // Type of starting server and checking compatibility
@@ -26,5 +36,16 @@ enum MESSAGE_types{
     MES_NONE = 2,   // Type of nothing for reset connection timer
     MES_TURN = 3,   // Type of setting shape on field, sending to opponent
     MES_STOP = 4,   // Type of closing game and go to menu
-    MES_REST = 5    // Type of restarting game and waiting for new MES_START
+    MES_REST = 5,   // Type of restarting game and waiting for new start
+    MES_APPL = 6,   // Type of applying, that last message was get
+    MES_SKIP = 7    // Type of skipping current round
+};
+
+// Types of end of game
+enum END_types{
+    END_NONE = 0,    // Nothing happen
+    END_WIN = 1,     // Current player (first) win game
+    END_LOOSE = 2,   // Current player (first) loose game
+    END_NOBODY = 3,  // Nobody win game
+    END_SKIP = 4     // Game was skipped
 };

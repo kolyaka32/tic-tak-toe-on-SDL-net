@@ -2,14 +2,9 @@
 #include "structs.hpp"
 #include "define.hpp"
 #include "pause.hpp"
+#include "gameSingle.hpp"
 
-static bool runGame;     // Flag of running internal game cycle
-static bool start;       // Flag of showing welcome screen with choosing command
 static bool twoPlayers;  // Flag of mode with two players to show text of 1/2 player instead of you
-
-bool loosing;            // Flag of showing loosing screen
-bool winning;            // Flag of showing winning screen
-bool nobody;             // Flag of showing screen with nobody win
 bool restart = false;    // Flag of restarting game with other parameters
 
 Uint8 fieldWidth;        // Width and height of field
@@ -65,18 +60,13 @@ inline void stopMenu(){
         // Drawing
         SDL_RenderClear(app.renderer);
 
-        if(winning)
-            if(twoPlayers)
-                texts[TXT_STOP_WIN_1].blit();
-            else
-                texts[TXT_STOP_WIN].blit();
-        else if(loosing)
-            if(twoPlayers)
-                texts[TXT_STOP_WIN_2].blit();
-            else
-                texts[TXT_STOP_LOOSE].blit();
-        else if(nobody)
-            texts[TXT_STOP_NOBODY].blit();
+        // Draw game stop reason
+        if(gameState < END_NOBODY && twoPlayers){
+            texts[TXT_STOP_WIN_1 - 1 + gameState].blit();
+        }
+        else{
+            texts[TXT_STOP_WIN - 1 + gameState].blit();
+        }
         
         // Showing buttons
         for(Uint8 i=0; i < 2; ++i){
@@ -90,15 +80,12 @@ inline void stopMenu(){
         SDL_Delay(1000 / drawFPS);  
     }
     // Clearing data
-    winning = false;
-    loosing = false;
-    nobody = false;
+    gameState = END_NONE;
     player = 0;
 }
 
 // Singleplayer mode of game
 void singleMainCycle(){
-
     // Creating start buttons
     GUI::Button queueButton[] = {
         {0.25, 0.5, IMG_GREEN_CROSS},
@@ -128,6 +115,17 @@ void singleMainCycle(){
                 runGame = false;
                 return;
 
+            case SDL_KEYDOWN:
+                // Checking for restart key
+                switch (event.key.keysym.sym)
+                {
+                case SDLK_r:
+                    // Skipping game
+                    gameState = END_SKIP;
+                    break;
+                }
+                break;
+
             case SDL_MOUSEBUTTONDOWN:
                 int MouseX, MouseY;
                 SDL_GetMouseState(&MouseX, &MouseY);  // Getting mouse position
@@ -155,7 +153,7 @@ void singleMainCycle(){
         }
 
         // Checking end of game
-        if(winning || loosing || nobody){
+        if(gameState){
             stopMenu();
         }
 
@@ -204,6 +202,17 @@ void twoMainCycle(){
                 runGame = false;
                 return;
 
+            case SDL_KEYDOWN:
+                // Checking for restart key
+                switch (event.key.keysym.sym)
+                {
+                case SDLK_r:
+                    // Skipping game
+                    gameState = END_SKIP;
+                    break;
+                }
+                break;
+
             case SDL_MOUSEBUTTONDOWN:
                 int MouseX, MouseY;
                 SDL_GetMouseState(&MouseX, &MouseY);  // Getting mouse position
@@ -215,7 +224,7 @@ void twoMainCycle(){
         }
 
         // Checking end of game
-        if(winning || loosing || nobody){
+        if(gameState){
             stopMenu();
         }
 

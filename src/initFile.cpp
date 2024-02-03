@@ -61,21 +61,11 @@ void loadInitFile(){
         }
     }
     // Checking of minimal posible values
-    if(drawFPS < 5){
-        drawFPS = 5;
-    }
-    if(fieldWidth < 3){
-        fieldWidth = 3;
-    }
-    if(fieldWidth > 21){
-        fieldWidth = 21;
-    }
-    if(winWidth < 2){
-        winWidth = 2;
-    }
-    if(winWidth > fieldWidth){
-        winWidth = fieldWidth;
-    }
+    SET_MIN(drawFPS, 5);
+    SET_MIN(fieldWidth, 3);
+    SET_MAX(fieldWidth, 21);
+    SET_MIN(winWidth, 3);
+    SET_MAX(winWidth, fieldWidth);
 
     inSettings.close();  // Closing reading file
 }

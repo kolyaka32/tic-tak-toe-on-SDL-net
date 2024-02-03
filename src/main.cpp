@@ -63,18 +63,16 @@ int main(int argv, char** args){
     setAllText();  // Setting all text
     updateTranslation(language);  // Updating text
 
-
     // Main game cycle
     // Selection menu
 	selectMenu();
-
 
     // Exiting program
     // Stopping playing music
     Mix_PauseMusic();
 
     // Saving all data to setting file for next starts
-    saveInitFile();  
+    saveInitFile();
 
     // Clearing static texts
     #if TXT_count
