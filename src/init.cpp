@@ -32,7 +32,7 @@ void initLibraries(){
     // Initializing audio library
     #if MUS_count || SND_count
     if(!Mix_Init(MIX_INIT_OGG | MIX_INIT_FLAC)){
-        printf("Couldn't initialize audio library: %d\n", Mix_GetError());
+        printf("Couldn't initialize audio library: %s\n", Mix_GetError());
         exit(ERR_SDL_SND);
     }
     #endif
