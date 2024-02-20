@@ -1,7 +1,7 @@
 #pragma once
 
 #include "baseGUI.hpp"
-#include "structs.hpp"
+#include "values.hpp"
 
 // Working with text
 // Functions for setting text at his place and his text

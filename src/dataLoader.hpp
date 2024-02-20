@@ -2,7 +2,7 @@
 
 #include "include.hpp"
 #include "define.hpp"
-#include "structs.hpp"
+#include "values.hpp"
 
 // Load file with all data
 void loadData();

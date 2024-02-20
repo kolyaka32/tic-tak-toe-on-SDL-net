@@ -1,7 +1,7 @@
 #include "include.hpp"
 #include <fstream>
 #include "define.hpp"
-#include "structs.hpp"
+#include "values.hpp"
 
 #include "initFile.hpp"
 #include "pause.hpp"

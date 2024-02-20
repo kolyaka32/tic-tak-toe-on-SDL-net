@@ -1,6 +1,6 @@
 #include "include.hpp"
 #include "define.hpp"
-#include "structs.hpp"
+#include "values.hpp"
 
 #include "init.hpp"
 #include "initFile.hpp"
@@ -13,13 +13,14 @@
 App app;
 
 // Pause and init settings
-LNG_types language;         // Switched languaged from language_types
+LNG_types language;     // Switched languaged from language_types
 Uint8 MusicVolume;      // Volume of music
 Uint8 EffectsVolume;    // Volume of effects
-Uint16 drawFPS;         // Max terget FPS to draw
+count drawFPS;          // Max terget FPS to draw
 
 // Global running flags
-bool running;   // Flag of main cycle work
+bool running;            // Flag of main cycle work
+bool restart = false;    // Flag of restarting game with other parameters
 
 // Texts variables and constants
 #if IMG_count
@@ -38,8 +39,7 @@ SDL_RWops* MusicsData[MUS_count];  // Array of data for music
 Mix_Chunk* Sounds[SND_count];  // Array of all sound effects
 #endif
 #if FNT_count
-Uint8* fontMemory;    // Memory with font data
-uint64_t fontSize;    // Size of memory buffer
+Data fontData;  // Data for creating fonts
 #endif
 
 // Main function
@@ -89,7 +89,7 @@ int main(int argv, char** args){
     // Reloading game
     if(restart){
         restart = false;
-        main(0, nullptr);
+        main(argv, args);
     }
 	return 0;
 }

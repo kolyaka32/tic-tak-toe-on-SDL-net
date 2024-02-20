@@ -1,11 +1,10 @@
 #include "include.hpp"
-#include "structs.hpp"
+#include "values.hpp"
 #include "define.hpp"
 #include "pause.hpp"
 #include "gameSingle.hpp"
 
 static bool twoPlayers;  // Flag of mode with two players to show text of 1/2 player instead of you
-bool restart = false;    // Flag of restarting game with other parameters
 
 Uint8 fieldWidth;        // Width and height of field
 Uint8 winWidth;          // Width, which need for win

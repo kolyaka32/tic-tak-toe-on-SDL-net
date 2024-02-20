@@ -2,7 +2,7 @@
 
 #include "include.hpp"
 #include "define.hpp"
-#include "structs.hpp"
+#include "values.hpp"
 
 // Namespace of objects for UI
 namespace GUI{
@@ -20,7 +20,7 @@ namespace GUI{
     private:
         const static Uint8 BUFFER_SIZE = 50;  // Length of buffers for text
         char *text;                // Text to show on screen
-        Uint8 fontHeight;          // Font size to create font
+        textHeight height;         // Font size to create font
         float posX, posY;          // Relative positions on screen
         ALIGNMENT_types aligment;  // Aligment type to improve displasment
         SDL_Color color;           // Base draw color
@@ -29,7 +29,8 @@ namespace GUI{
         SDL_Texture *Texture;      // Texture of text
         SDL_Rect Rect;             // Position to draw
     public:
-        staticText(char* newText, Uint8 newSize, float newX, float newY, SDL_Color newColor = WHITE, ALIGNMENT_types newAlignment = MIDLE_text);
+        staticText(char* newText, textHeight newSize, float newX, 
+            float newY, SDL_Color newColor = WHITE, ALIGNMENT_types newAlignment = MIDLE_text);
         void init();                      // Creating font seted size
         void free();                      // Free texture and font
         void updateText(int number = 0);  // Create new texture with displasment '%' to entered number
@@ -39,15 +40,20 @@ namespace GUI{
     // Class of slider bar with point on it to control some parameter
     class Slider{
     private:
-        SDL_Texture *textureLine;
-        SDL_Texture *textureButton;
-        SDL_Rect destLine;
-        SDL_Rect destButton;
+        SDL_Texture *textureLine;    // Texture of line (lower part of slider)
+        SDL_Texture *textureButton;  // Texture of line (upper part of slider)
+        SDL_Rect destLine;           // Place for rendering lower part
+        SDL_Rect destButton;         // Place for rendering upper part
+        Uint16 maxValue;             // Maximal value of state
     public:
-        Slider(const float Y, const IMG_names lineImage = IMG_MENU_SCROLLER_LINE, const IMG_names buttonImage = IMG_MENU_SCROLLER_BUTTON);  // Create slide with need line and button images
-        void blit(Uint8 state);  // Drawing slider with need button position
-        bool in(int X, int Y);   // Check, if mouse press on current area
-        int getX();              // Getting current position of button
+        Uint16 state;                // Current state of slider
+
+        Slider(float Y, Uint16 max = 255, IMG_names lineImage = IMG_MENU_SCROLLER_LINE, 
+            IMG_names buttonImage = IMG_MENU_SCROLLER_BUTTON);  // Create slide with need line and button images
+        bool checkIn(int mouseX, int mouseY);                   // Function of checking mouse in
+        void setValue(int mouseX);                              // Setting new mouse position
+        bool scroll(Sint32 wheelY, int mouseX, int mouseY);     // Checking mouse wheel action
+        void blit();                                            // Drawing slider with need button position
     };
 
     // Class of GUI objects, which use to activate something
@@ -59,7 +65,8 @@ namespace GUI{
         SDL_Rect dest;           // Position of current button
         staticText* topText;     // Pointer to text on this button (shortcut)
     public:
-        Button(float X, float Y, IMG_names textureIndex, staticText* top = nullptr);  // Create new button, posible with pointer to text on it
+        Button(float X, float Y, IMG_names textureIndex, 
+            staticText* top = nullptr);   // Create new button, posible with pointer to text on it
         void init();                      // Initialise position, width and height of current button
         void blit();                      // Drawing current button
         bool in(int mouseX, int mouseY);  // Check, if mouse press on current area
@@ -73,7 +80,7 @@ namespace GUI{
         ANI_names type;
         SDL_Texture* texture;
         Uint32 frame;
-        Uint64 prevTick;
+        timer prevTick;
         SDL_Rect dest;
     public:
         Animation( SDL_Rect destination, ANI_names newType );
@@ -93,7 +100,8 @@ namespace GUI{
         SDL_Texture* IconeTexture;  // Icone texture, or NULL, if not need
         SDL_Color color;
     public:
-        Bar( const SDL_Rect dest, SDL_Color newColor, IMG_names icone);  // Create new bar with it position, primal color and icone near it
+        // Create new bar with it position, primal color and icone near it
+        Bar( const SDL_Rect dest, SDL_Color newColor, IMG_names icone);  
         void blit( int width );  // Drawing bar with icone need width
     };
 
@@ -121,7 +129,8 @@ namespace GUI{
     public:
         char buffer[bufferSize + 1];  // Read only data, which write in this typebox
 
-        typeBox(Uint8 size, float posX, float posY, const char* startText = "", ALIGNMENT_types newAligment = MIDLE_text, SDL_Color newColor = BLACK);
+        typeBox(textHeight size, float posX, float posY, const char* startText = "", 
+            ALIGNMENT_types newAligment = MIDLE_text, SDL_Color newColor = BLACK);
         ~typeBox();                                  // Clearing font and texture
         void blit();                                 // Function of drawing text with background plate
         void writeString(char* str, bool freeData);  // Function of writing any string to buffer at caret position
@@ -130,29 +139,5 @@ namespace GUI{
         void select();                               // Function of setting caret for typing after
         void removeSelect();                         // Function of removing caret after typing
         bool in(int mouseX, int mouseY);             // Function of checking, if mouse press on this typeBox
-    };
-
-    
-    // Class of object to select from some variants
-    // !WIP
-    class DropBox
-    {
-    private:
-        SDL_Rect closeDest;
-        SDL_Rect openDest;
-        TTF_Font* Font;
-        SDL_Texture **Texture;
-        SDL_Color backColor;
-        SDL_Color frontColor;
-        Uint8 count;
-        Uint8 state;
-        bool open;
-        char* text;
-    public:
-        DropBox(SDL_Rect place, Uint8 newCount, char* newText, Uint8 size, SDL_Color newFrontColor = BLACK, SDL_Color newBackColor = WHITE);
-        ~DropBox();
-        void updateText();
-        void click(const int mouseX, const int mouseY);
-        void blit();
     };
 }

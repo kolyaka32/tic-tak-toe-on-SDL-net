@@ -1,6 +1,6 @@
 #include "include.hpp"
 #include "define.hpp"
-#include "structs.hpp"
+#include "values.hpp"
 
 #include "init.hpp"
 #include "dataLoader.hpp"
@@ -150,15 +150,16 @@ static unsigned loadFont(const char* name){
     
     zip_stat_t st;
 	zip_stat(archive, name, 0, &st);  // Getting data from file
+
     // Checking correction of file
     if(st.size == 0){  
         return 0;
     }
 
     // Copping data to buffer
-    fontMemory = (Uint8*)malloc(sizeof(Uint8*) * st.size);
-    fontSize = st.size;
-    zip_fread(file, fontMemory, st.size);
+    fontData.data = (char*)malloc(sizeof(char) * st.size);
+    fontData.size = st.size;
+    zip_fread(file, fontData.data, fontData.size);
     zip_fclose(file);
 
     // Checking correction
@@ -247,13 +248,16 @@ static unsigned loadFont(const char* name){
     SDL_RWops* fontFile = SDL_RWFromFile(name, "r");
 
     // Getting file size for creating memory for it
-    fontSize = SDL_RWsize(fontFile);
+    fontData.size = SDL_RWsize(fontFile);
+
     // Checking correction of file
-    if(fontSize == 0){
+    if(!fontData.size){
         return 0;
     }
-    fontMemory = (Uint8*)malloc(fontSize);
-    SDL_RWread(fontFile, fontMemory, fontSize, 1);
+
+    fontData.data = (char*)malloc(sizeof(char) * fontData.size);
+    SDL_RWread(fontFile, fontData.data, fontData.size, 1);
+
     // Closing font file
     SDL_RWclose(fontFile);
 
@@ -394,7 +398,7 @@ void unloadData(){
 
     // Deliting font data
     #if FNT_count
-    free(fontMemory);
+    free(fontData.data);
     #endif
     // Unloading sound effects
     #if SND_count

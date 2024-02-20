@@ -123,15 +123,18 @@ void clearAllText(){
 // Pause menu
 void pause(){
     // Save time, when pause start
-    Uint64 saveTimer = SDL_GetTicks64();
+    timer saveTimer = SDL_GetTicks64();
 
     // Creating pause text
-    GUI::Slider MusicSlider(0.7, IMG_MENU_SCROLLER_LINE, IMG_MENU_SCROLLER_BUTTON);
-    GUI::Slider SoundSlider(0.9, IMG_MENU_SCROLLER_LINE, IMG_MENU_SCROLLER_BUTTON);
+    GUI::Slider MusicSlider(0.7);
+    GUI::Slider SoundSlider(0.9);
     GUI::Button flags[LNG_count] = {
         {0.25, 0.35, IMG_FLAG_USA },
         {0.75, 0.35, IMG_FLAG_RUS }
     };
+
+    MusicSlider.state = MusicVolume;
+    SoundSlider.state = EffectsVolume;
 
     for(Uint8 i=0; i < LNG_count; ++i){
         flags[i].init();
@@ -145,7 +148,7 @@ void pause(){
     Uint8 backMove = 0;
 
     #if SCROLLER_SOUND
-    Uint64 prevSND = SDL_GetTicks64();
+    time prevSND = SDL_GetTicks64();
     #endif
 
     // Starting loop for waiting for start
@@ -156,6 +159,16 @@ void pause(){
             case SDL_QUIT:
                 running = false;  // Exit from program
                 waiting = false;
+                break;
+
+            case SDL_MOUSEWHEEL:
+                // Mouse position on screen
+                int MouseX, MouseY;
+                SDL_GetMouseState(&MouseX, &MouseY);  // Getting mouse position
+
+                // Checking scroll on sliders
+                if(MusicSlider.scroll(event.wheel.y, MouseX, MouseY));
+                else if(SoundSlider.scroll(event.wheel.y, MouseX, MouseY));
                 break;
 
             case SDL_KEYDOWN:
@@ -177,10 +190,11 @@ void pause(){
         int MouseX, MouseY;
         SDL_GetMouseState(&MouseX, &MouseY);  // Getting mouse position
         if(MouseDown && inBox == NORMAL_BOX){
-            if(MusicSlider.in(MouseX, MouseY)){
+            // Checking on clicking on any of boxes
+            if(MusicSlider.checkIn(MouseX, MouseY)){
                 inBox = MUSIC_SLIDER_BOX;
             }
-            else if(SoundSlider.in(MouseX, MouseY)){
+            else if(SoundSlider.checkIn(MouseX, MouseY)){
                 inBox = EFFECT_SLIDER_BOX;
             }
             else if(flags[0].in(MouseX, MouseY)){
@@ -200,16 +214,12 @@ void pause(){
         switch(inBox)
         {
         case MUSIC_SLIDER_BOX:  // If touch music slider
-            MusicVolume = (MouseX - MusicSlider.getX()) / 2;
-            if(MouseX - MusicSlider.getX() < 0) MusicVolume = 0;
-            if(MouseX - MusicSlider.getX() > 255) MusicVolume = 255;
-            Mix_VolumeMusic(MusicVolume);  // Setting volume of music
+            MusicSlider.setValue(MouseX);
+            Mix_VolumeMusic(MusicSlider.state);  // Setting volume of music
             break;
         case EFFECT_SLIDER_BOX:  // If touch effects slider
-            EffectsVolume = (MouseX - SoundSlider.getX()) / 2;
-            if(MouseX - SoundSlider.getX() < 0) EffectsVolume = 0;
-            if(MouseX - SoundSlider.getX() > 255) EffectsVolume = 255;
-            Mix_Volume(-1, EffectsVolume);  // Setting volume of effects
+            SoundSlider.setValue(MouseX);
+            Mix_Volume(-1, SoundSlider.state);  // Setting volume of effects
             
             // Playing sound effect for understanding loud
             #if SCROLLER_SOUND
@@ -244,8 +254,8 @@ void pause(){
         texts[TXT_PAUSE_MUSIC].blit();
         texts[TXT_PAUSE_SOUND].blit();
         // Drawing sliders
-        MusicSlider.blit(MusicVolume * 2);
-        SoundSlider.blit(EffectsVolume * 2);
+        MusicSlider.blit();
+        SoundSlider.blit();
         // Drawing buttons
         esc.blit();
         for(Uint8 i=0; i < LNG_count; ++i){
