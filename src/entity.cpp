@@ -1,13 +1,13 @@
 #include "include.hpp"
 #include "SDL_net.h"
-#include "structs.hpp"
+#include "values.hpp"
 
 #include "dataLoader.hpp"
 #include "gameSingle.hpp"
 
 Field::Field()
 {
-    data = (Uint8*)malloc(sizeof(Uint8) * fieldWidth * fieldWidth);
+    data = (cell*)malloc(sizeof(cell) * fieldWidth * fieldWidth);
     reset();
 }
 
@@ -23,7 +23,7 @@ void Field::reset(){
     count = 0;
 }
 
-void Field::clickSingle(coord x, coord y){
+void Field::clickSingle(const coord x, const coord y){
     // Checking, if cell empty
     if(data[x + y * fieldWidth] == CELL_EMPTY){
         data[x + y * fieldWidth] = CELL_MY;
@@ -36,7 +36,7 @@ void Field::clickSingle(coord x, coord y){
     }
 }
 
-void Field::clickTwo(coord x, coord y){
+void Field::clickTwo(const coord x, const coord y){
     // Checking, if cell empty
     if(data[x + y * fieldWidth] == CELL_EMPTY){
         data[x + y * fieldWidth] = CELL_MY + player;
@@ -49,7 +49,7 @@ void Field::clickTwo(coord x, coord y){
     }
 }
 
-bool Field::clickMulti(coord x, coord y){
+bool Field::clickMulti(const coord x, const coord y){
     // Checking, if cell empty
     if(data[x + y * fieldWidth] == CELL_EMPTY){
         data[x + y * fieldWidth] = CELL_MY + player;
@@ -131,7 +131,6 @@ void Field::AImove(){
     gameState = checkWin(maxPos % fieldWidth, maxPos / fieldWidth);
 }
 
-// New checkWin function 
 // Return 0, if none win, 1, if win player, 2 if win bot(2 player)
 Uint8 Field::checkWin(const coord X, const coord Y){
     // Flag, which save type for control win

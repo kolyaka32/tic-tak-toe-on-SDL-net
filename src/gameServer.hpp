@@ -19,13 +19,27 @@ inline void showDisconect(){
     }
 };
 
+// Function of showing connection normal stop
+inline void showStopConnection(){
+    switch (language)
+    {
+    case LNG_ENGLISH:
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, "Connection stopped", "Connection stopped by another side", app.window);
+        break;
+    
+    case LNG_RUSSIAN:
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING, "Соединение остановлено", "Соединение остановлено по инициативе второй стороны", app.window);
+        break;
+    }
+}
+
 // Data for internet connection
 extern UDPsocket socket;          // Socket to send/recieve data
 extern UDPpacket* sendData;       // Packet to send data
 extern UDPpacket* recieveData;    // Packet to recieve data
 
-extern Uint64 lastMessageArrive;  // Timer, when last message arrive to control connection
-extern Uint64 lastMessageSend;    // Timer, when last message send to control connection
+extern timer lastMessageArrive;  // Timer, when last message arrive to control connection
+extern timer lastMessageSend;    // Timer, when last message send to control connection
 extern bool waitApply;            // Flag of waiting apply message
 
 

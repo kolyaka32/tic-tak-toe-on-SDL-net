@@ -1,7 +1,7 @@
 #include "include.hpp"
 #include <string.h>
 #include "define.hpp"
-#include "structs.hpp"
+#include "values.hpp"
 #include "dataLoader.hpp"
 #include "baseGUI.hpp"
 #include "pause.hpp"
@@ -11,15 +11,15 @@
 using namespace GUI;
 
 // Function of creating font with need height
-inline TTF_Font* createFont(Uint8 size){
-    SDL_RWops* fontData = SDL_RWFromMem(fontMemory, fontSize);
-    return TTF_OpenFontRW(fontData, 1, size);
+inline TTF_Font* createFont(textHeight size){
+    SDL_RWops* RWopsData = SDL_RWFromMem(fontData.data, fontData.size);
+    return TTF_OpenFontRW(RWopsData, 1, size);
 };
 
 
 // Class of static text
-staticText::staticText(char* newText, Uint8 size, float x, float y, SDL_Color newColor, ALIGNMENT_types newAligment){
-    fontHeight = size;
+staticText::staticText(char* newText, textHeight size, float x, float y, SDL_Color newColor, ALIGNMENT_types newAligment){
+    height = size;
     text = newText;
     posX = x;
     posY = y;
@@ -28,7 +28,7 @@ staticText::staticText(char* newText, Uint8 size, float x, float y, SDL_Color ne
 };
 
 void staticText::init(){
-    Font = createFont(fontHeight);
+    Font = createFont(height);
 };
 
 inline void writeNumber(char* buffer, int number, Uint8* pos){
@@ -92,7 +92,7 @@ void staticText::free(){
 
 
 // Slider class
-Slider::Slider(const float Y, const IMG_names lineImage, const IMG_names buttonImage){
+Slider::Slider(const float Y, Uint16 max, const IMG_names lineImage, const IMG_names buttonImage){
     textureLine = Textures[lineImage];
     textureButton = Textures[buttonImage];
     SDL_QueryTexture(textureLine, NULL, NULL, &destLine.w, &destLine.h);
@@ -100,21 +100,43 @@ Slider::Slider(const float Y, const IMG_names lineImage, const IMG_names buttonI
     destLine.x = SCREEN_WIDTH / 2 - destLine.w / 2; 
     destLine.y = SCREEN_HEIGHT * Y - destLine.h / 2; 
     destButton.y = SCREEN_HEIGHT * Y - destButton.h / 2;
+    maxValue = max;
 };
 
-void Slider::blit(Uint8 state){
-    destButton.x = destLine.x + state - destButton.w/2;
+void Slider::blit(){
     SDL_RenderCopy(app.renderer, textureLine, NULL, &destLine);
     SDL_RenderCopy(app.renderer, textureButton, NULL, &destButton);
 };
 
-bool Slider::in(int X, int Y){
-    return ((X > destLine.x && X < destLine.x + destLine.w) &&
-        (Y > destLine.y && Y < destLine.y+destLine.h));
+bool Slider::checkIn(int mouseX, int mouseY){
+    return ((mouseX > destLine.x && mouseX < destLine.x + destLine.w) &&
+        (mouseY > destLine.y && mouseY < destLine.y + destLine.h));
 };
 
-int Slider::getX(){
-    return destLine.x;
+void Slider::setValue(const int mouseX){
+    // Getting new position
+    destButton.x = mouseX;
+    SET_MAX(destButton.x, destLine.x + destLine.w);
+    SET_MIN(destButton.x, destLine.x);
+
+    state = (destButton.x - destLine.x) * maxValue / destLine.w;
+
+    destButton.x -= destButton.w / 2;
+};
+
+bool Slider::scroll(const Sint32 wheelY, const int mouseX, const int mouseY){
+    const static Uint8 deadZone = 1;
+    
+    if(checkIn(mouseX, mouseY)){
+        if(wheelY > deadZone){
+            state++;
+        }
+        else if(wheelY < deadZone){
+            state--;
+        }
+        return true;
+    }
+    return false;
 };
 
 
@@ -191,7 +213,7 @@ Bar::Bar( const SDL_Rect dest, SDL_Color newColor, IMG_names icone ){
     }
 };
 
-void Bar::blit( int width ){
+void Bar::blit(int width){
     Front_rect.w = width;  // Setting width
     SDL_SetRenderDrawColor(app.renderer, 255, 255, 255, 255);  
     // Drawing back part
@@ -207,7 +229,7 @@ void Bar::blit( int width ){
 
 
 // Type box class
-typeBox::typeBox(Uint8 size, float posX, float posY, const char* startText, ALIGNMENT_types newAligment, SDL_Color newColor){
+typeBox::typeBox(textHeight size, float posX, float posY, const char* startText, ALIGNMENT_types newAligment, SDL_Color newColor){
     Font = createFont(size);
     dest.x = SCREEN_WIDTH * posX;
     dest.y = SCREEN_HEIGHT * posY - size / 2;
@@ -241,13 +263,6 @@ void typeBox::updateTexture(){
     dest.x += dest.w * aligment / 2;
     SDL_QueryTexture(Texture, NULL, NULL, &dest.w, &dest.h);
     dest.x -= dest.w * aligment / 2;
-}
-
-// Function for swap characters by his addreses
-static inline void swapChar(char* a, char* b){
-    char t = *a;
-    *a = *b;
-    *b = t;
 }
 
 void typeBox::writeString(char* str, bool freeData){
@@ -305,13 +320,13 @@ void typeBox::press(SDL_Keycode code){
     
     case SDLK_LEFT:
         if(caret > 0){
-            swapChar(buffer + caret--, buffer + caret - 1);
+            std::swap(buffer[caret--], buffer[caret - 1]);
         }
         break;
     
     case SDLK_RIGHT:
         if(caret+1 < length){
-            swapChar(buffer + caret++, buffer + caret + 1);
+            std::swap(buffer[caret++], buffer[caret + 1]);
         }
         break;
     
@@ -359,8 +374,8 @@ void typeBox::removeSelect(){
 };
 
 void typeBox::updateCaret(){
-    static char b[] = {' '};
-    swapChar(buffer + caret, b);
+    static char b = ' ';
+    std::swap(buffer[caret], b);
     updateTexture();
 };
 
@@ -376,66 +391,3 @@ void typeBox::blit(){
     // Rendering text
     SDL_RenderCopy(app.renderer, Texture, NULL, &dest);
 };
-
-
-// Dropbox class
-DropBox::DropBox(SDL_Rect place, Uint8 newCount, char* newText, Uint8 size, SDL_Color newFrontColor, SDL_Color newBackColor){
-    closeDest = place;
-    count = newCount;
-    Font = createFont(size);
-    frontColor = newFrontColor;
-    backColor = newBackColor;
-    openDest = closeDest;
-    state = 0;
-    openDest.h *= count;
-    text = newText;
-}
-
-DropBox::~DropBox(){
-    for(int i=0; i < count; ++i){
-        SDL_DestroyTexture(Texture[i]);
-    }
-    free(Texture);
-}
-
-void DropBox::updateText(){
-    Texture = (SDL_Texture**)malloc(count * sizeof(SDL_Texture*));
-    char txt[20];
-    Uint8 textCounter = 0;
-    
-    for(Uint8 i=0; i < count; ++i){
-        Uint8 bufferCounter = 0;
-        for(; text[textCounter] != '\n'; ++textCounter){
-            txt[bufferCounter++] = text[textCounter];
-        }
-        txt[bufferCounter] = '\0';
-        SDL_Surface* Surface = TTF_RenderUTF8_Solid(Font, text + textCounter, frontColor);
-        Texture[i] = SDL_CreateTextureFromSurface(app.renderer, Surface);
-        SDL_FreeSurface(Surface);
-    }
-}
-
-void DropBox::click(const int mouseX, const int mouseY){
-    if(open){
-        if((mouseX > openDest.x && mouseX < openDest.x + openDest.w) &&
-        (mouseY > openDest.y && mouseY < openDest.y + openDest.h)){
-            open = false;
-            state = (mouseY - openDest.y) / openDest.h;
-        }
-    }
-    else if((mouseX > closeDest.x && mouseX < closeDest.x + closeDest.w) &&
-        (mouseY > closeDest.y && mouseY < closeDest.y + closeDest.h)){
-            open = true;
-        }
-}
-
-void DropBox::blit(){
-    if(open){
-        SDL_SetRenderDrawColor(app.renderer, backColor.r, backColor.g, backColor.b, backColor.a);
-        SDL_RenderDrawRect(app.renderer, &closeDest);
-    }
-    else{
-        SDL_SetRenderDrawColor(app.renderer, backColor.r, backColor.g, backColor.b, backColor.a);
-        SDL_RenderDrawRect(app.renderer, &closeDest);
-    }
-}

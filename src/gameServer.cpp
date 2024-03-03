@@ -1,7 +1,7 @@
 #include "include.hpp"
 #include "SDL_net.h"
 #include "define.hpp"
-#include "structs.hpp"
+#include "values.hpp"
 #include "pause.hpp"
 #include "gameSingle.hpp"
 #include "gameServer.hpp"
@@ -18,8 +18,8 @@ UDPsocket socket;          // Socket to send/recieve data
 UDPpacket* sendData;       // Packet to send data
 UDPpacket* recieveData;    // Packet to recieve data
 
-Uint64 lastMessageArrive;  // Timer, when last message arrive to control connection
-Uint64 lastMessageSend;    // Timer, when last message send to control connection
+timer lastMessageArrive;  // Timer, when last message arrive to control connection
+timer lastMessageSend;    // Timer, when last message send to control connection
 bool waitApply;            // Flag of waiting apply message
 
 
@@ -155,7 +155,7 @@ static inline void stopMenu(){
             case MES_STOP:
                 // Code of closing game - going to menu
                 runGame = false;
-                showDisconect();
+                showStopConnection();
                 break;
             };
             lastMessageArrive = SDL_GetTicks64() + MESSAGE_GET_TIMEOUT;
@@ -288,7 +288,7 @@ static inline void gameCycle(){
             case MES_STOP:
                 // Code of closing game - going to menu
                 runGame = false;
-                showDisconect();
+                showStopConnection();
                 return;
 
             case MES_APPL:
@@ -353,6 +353,11 @@ void multiMainServer(){
         // Checking, if not open port - setting random 
         port = rand() % 4000;
     }
+    // Simulated packet loss for packets for better testing
+    #if DEBUG
+    SDLNet_UDP_SetPacketLoss(socket, CONNECTION_LOST_PERCENT);
+    #endif
+
     // Allocating memory to send and recieve packets
     recieveData = SDLNet_AllocPacket(INTERNET_BUFFER);
 

@@ -1,7 +1,7 @@
 #include "include.hpp"
 #include "SDL_net.h"
 #include "define.hpp"
-#include "structs.hpp"
+#include "values.hpp"
 #include "pause.hpp"
 #include "gameSingle.hpp"
 #include "gameServer.hpp"
@@ -80,7 +80,7 @@ static inline Uint8 enteringCycle(){
     
     bool waiting = true;       // Flag of internal cycle
     Uint8 inBox = 0;           // Selected window to interact with (or 0 for none)
-    Uint64 lastTypeBoxUpdate;  // Timer for change symbol of caret
+    timer lastTypeBoxUpdate;  // Timer for change symbol of caret
 
     while(waiting){
         while( SDL_PollEvent(&event) != 0 ){
@@ -229,7 +229,7 @@ static inline void stopMenu(){
             case MES_STOP:
                 // Going to menu
                 runGame = false;
-                showDisconect();
+                showStopConnection();
                 return;
             
             case MES_REST:
@@ -343,7 +343,7 @@ static inline void gameCycle(){
             case MES_STOP:
                 // Code of closing game - going to menu
                 runGame = false;
-                showDisconect();
+                showStopConnection();
                 return;
 
             case MES_REST:
@@ -361,7 +361,7 @@ static inline void gameCycle(){
 
             case MES_SKIP:
                 // Skipping round
-                gameState = MES_SKIP;
+                gameState = END_SKIP;
                 break;
             };
             lastMessageArrive = SDL_GetTicks64() + MESSAGE_GET_TIMEOUT;
@@ -413,6 +413,12 @@ void multiMainClient(){
 
     // Creating socket to send first data
     socket = SDLNet_UDP_Open(0);
+    // Simulated packet loss for packets for better testing
+    #if DEBUG
+    SDLNet_UDP_SetPacketLoss(socket, CONNECTION_LOST_PERCENT);
+    #endif
+
+    // Allocating packets
     sendData = SDLNet_AllocPacket(INTERNET_BUFFER);
     recieveData = SDLNet_AllocPacket(INTERNET_BUFFER);
 

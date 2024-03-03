@@ -2,18 +2,13 @@
 #pragma once
 
 #include "include.hpp"
+#include "dataTypes.hpp"
 #include "dataLoader.hpp"
 #include "entity.hpp"
 
-struct App{
-    SDL_Renderer *renderer;
-    SDL_Window *window;
-};
-
 // Data for creating fonts
 #if FNT_count
-extern Uint8* fontMemory;  // Memory with font data
-extern uint64_t fontSize;  // Size of memory buffer
+extern Data fontData;  // Data for creating fonts
 #endif
 
 // Creating main varables
@@ -47,9 +42,9 @@ extern bool running;  // Flag of main cycle work
 extern bool restart;  // Flag of restarting whole game with other parameters
 
 // Game parameters
-extern Uint8 fieldWidth;    // Width and height of field
-extern Uint8 winWidth;      // Width, which need for win
-extern Uint8 queue;         // Queue of current player
-extern Uint8 player;        // Number of player, which selected
-extern std::string baseIP;  // Saved ip for better expirience
+extern Uint8 fieldWidth;      // Width and height of field
+extern Uint8 winWidth;        // Width, which need for win
+extern Uint8 queue;           // Queue of current player
+extern Uint8 player;          // Number of player, which selected
+extern std::string baseIP;    // Saved ip for better expirience
 extern std::string basePort;  // Saved connection port for better expirience

@@ -1,7 +1,7 @@
 #include "stdio.h"
 #include "include.hpp"
 #include "SDL_net.h"
-#include "structs.hpp"
+#include "values.hpp"
 
 #include "init.hpp"
 
