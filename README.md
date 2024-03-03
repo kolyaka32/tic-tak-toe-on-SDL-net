@@ -25,10 +25,12 @@ Also you can change numbers of width, win width and other usefull things from "s
 
 ## Instalation for own use
 Need external soft:
-1. C++ compiler (such as [GCC](https://gcc.gnu.org/releases.html), [MINGW](https://sourceforge.net/projects/mingw/) or [MSYS2](https://www.msys2.org/#installation));
-2. [CMake](https://sourceforge.net/projects/cmake.mirror/);
-3. External libraries ([SDL2](https://github.com/libsdl-org/SDL/releases), [SDL image](https://github.com/libsdl-org/SDL_image/releases), [SDL mixer](https://github.com/libsdl-org/SDL_mixer), [SDL ttf](https://github.com/libsdl-org/SDL_ttf), [SDL net](https://github.com/libsdl-org/SDL_net), [libzip](https://github.com/nih-at/libzip));
-4. (Optional) [Visual Studio Code](https://code.visualstudio.com/download) (for better usage).
+1. C++ compiler (such as [MSYS2](https://www.msys2.org/#installation));
+2. [Make](https://sourceforge.net/projects/gnuwin32/files/make/3.81/make-3.81.exe/download);
+3. [CMake](https://sourceforge.net/projects/cmake.mirror/);
+4. External SDL libraries ([SDL2](https://github.com/libsdl-org/SDL/releases), [SDL image](https://github.com/libsdl-org/SDL_image/releases), [SDL mixer](https://github.com/libsdl-org/SDL_mixer/releases), [SDL ttf](https://github.com/libsdl-org/SDL_ttf/releases), [SDL net](https://github.com/libsdl-org/SDL_net/releases));
+5. External archieve library - libzip (build by you own), required: 1. [zlib](https://www.zlib.net/), 2. bzip (came with GNU), 3. [libzip](https://libzip.org/download/);
+6. (Optional) Code editor [Visual Studio Code](https://code.visualstudio.com/download) (for better usage).
 
 Point 3 with all last builded sources is located at [releases](https://github.com/kolyaka32/tic-tac-toe-on-SDL-net/releases) (Development-kit).
 

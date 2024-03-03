@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.10.0)
 
 project(tic-tac-toe)  # Main game project
 
@@ -52,8 +52,17 @@ add_executable( ${CMAKE_PROJECT_NAME}
     src/set.rc
 )
 
-set(CMAKE_CXX_STANDARD_LIBRARIES "-static-libgcc -static-libstdc++ -lwsock32 -lws2_32 -mwindows ${CMAKE_CSS_STANDARD_LIBRARIES}")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive")
+# Static linking standart C/C++ libraries
+set(CMAKE_CXX_STANDARD_LIBRARIES "-static-libgcc -static-libstdc++ -mwindows")
+set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
+#set(CMAKE_GENERATOR_PLATFORM -A "x64")
+
+# Hidding console
+set(DCMAKE_C_FLAGS "-mwindows")
+
+# Setting other flags
+#set(CMAKE_CXX_STANDARD_LIBRARIES "-static-libgcc -static-libstdc++ -lwsock32 -lws2_32 -mwindows ${CMAKE_CSS_STANDARD_LIBRARIES}")
+#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive")
 #set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 
 # Including external libraries
@@ -68,7 +77,6 @@ find_package(SDL2_mixer CONFIG REQUIRED)
 find_package(SDL2_net CONFIG REQUIRED)
 
 # Including libzip
-set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/share")
 find_package(libzip CONFIG REQUIRED)
 
 # Including external included directories
