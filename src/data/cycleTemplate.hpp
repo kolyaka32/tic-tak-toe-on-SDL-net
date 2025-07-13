@@ -1,91 +1,68 @@
 /*
- * Copyright (C) 2024, Kazankov Nikolay 
+ * Copyright (C) 2025, Kazankov Nikolay 
  * <nik.kazankov.05@mail.ru>
  */
 
 #pragma once
 
-#include "data.hpp"
+#include <SDL3/SDL_Keyboard.h>
+#include <SDL3/SDL_events.h>
 #include "idleTimer.hpp"
+#include "app.hpp"
+
 
 // Template for any cycles
 class CycleTemplate {
+ private:
+    static bool running;           // Flag of current running state
+    static bool restarting;        // Flag, if game was restarted
+    static bool additionalRestart; // Flag of additional game restart
+    IdleTimer idleTimer{1000/60};  // Timer to idle in main cycle
+
  protected:
-    IdleTimer idleTimer{1000/data.drawFPS};  // Timer to idle in main cycle
-
-    // Data for cycle
-    bool running = true;    // Flag of running current cycle
-    int mouseX, mouseY;     // Current position of mouse
-
-    // Run internal cycle
-    template <class Cycle>
-    bool runCycle();
-
-    // Run internal cycle with parameters
-    template <class Cycle, typename Param>
-    bool runCycle(Param args);
+    Mouse mouse;         // Position of mouse on screen
 
     // Cycle functions for cycle (should be overriden)
-    void getInput();            // Getting all user input
-    virtual void draw() const;  // Draw all need objects
-    virtual void update();      // Getting special objects update (if need)
+    void getInput(App& app);                  // Getting all user input
+    virtual void update(App& app);            // Getting special objects update
+    virtual void draw(const App& app) const;  // Draw all need objects
 
-    // Subproframs for get need input
-    virtual bool getMouseInput();                          // Checking for any mouse actions
-    virtual bool getKeysInput(const SDL_Keysym& key);      // Checking for any keys actions
-    virtual bool getAnotherInput(const SDL_Event& event);  // Getting all rest user input
+    // Subprograms for get need input
+    virtual void inputMouseDown(App& app);                  // Actioning for mouse button pressing
+    virtual void inputMouseUp(App& app);                    // Actioning for mouse button unpressing
+    virtual void inputKeys(App& app, SDL_Keycode key);      // Actioning for any keys pressing
+    virtual void inputMouseWheel(App& app, float _wheelY);  // Actioning for scrolling wheel
+    virtual void inputText(App& app, const char* text);     // Actioning for typing text
 
  public:
-    explicit CycleTemplate();
-    virtual void run();
+    CycleTemplate();
+    void run(App& app);
+    // Function for stop current running cycle
+    static void stop();
+    static void restart();
+    static bool isRestarted();
+    static bool isAdditionalRestarted();
+    // Function for starting new cycle with posible arguments
+    template <class T, typename ...Args>
+    static void runCycle(App& app, const Args& ...args);
 };
 
 
-// Realisations
-// Run internal cycle
-template <class Cycle>
-bool CycleTemplate::runCycle() {
-    // Entering cycle for correct updations
-    data.updateList.enterCycle();
+template <class T, typename ...Args>
+void CycleTemplate::runCycle(App& _app, const Args& ...args) {
+    restarting = false;
+    additionalRestart = false;
 
-    // Launching new cycle
-    Cycle cycle;
+    // Running current cycle, while restarting
+    do {
+        // Updating title location
+        _app.window.updateTitle();
+        // Launching new cycle
+        T cycle(_app, args...);
+        cycle.run(_app);
+    } while (_app.isRunning() && (restarting | additionalRestart));
 
-    // Running cycle
-    cycle.run();
-
-    // Checking for exit
-    if (!data.appRunning) {
-        return true;
-    }
-
-    // Exiting updation cycle
-    data.updateList.exitCycle();
-
-    // Normal return
-    return false;
-}
-
-// Run cycle with parameters
-template <class Cycle, typename Param>
-bool CycleTemplate::runCycle(Param args) {
-    // Entering cycle for correct updations
-    data.updateList.enterCycle();
-
-    // Launching new cycle
-    Cycle cycle(args);
-
-    // Running cycle
-    cycle.run();
-
-    // Checking for exit
-    if (!data.appRunning) {
-        return true;
-    }
-
-    // Exiting updation cycle
-    data.updateList.exitCycle();
-
-    // Normal return
-    return false;
+    // Restarting external running cycle for correct language change
+    additionalRestart = true;
+    running = false;
 }

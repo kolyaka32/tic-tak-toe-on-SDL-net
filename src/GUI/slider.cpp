@@ -1,58 +1,53 @@
 /*
- * Copyright (C) 2024, Kazankov Nikolay 
+ * Copyright (C) 2025, Kazankov Nikolay 
  * <nik.kazankov.05@mail.ru>
  */
 
-#include "../data/data.hpp"
 #include "baseGUI.hpp"
-
-using namespace GUI;
 
 
 // Slider class
-Slider::Slider(float _X, float _Y, unsigned *_controlData,
+GUI::Slider::Slider(const Window& _target, float _X, float _Y, unsigned _startValue,
     IMG_names _lineImage, IMG_names _buttonImage, unsigned _max)
-: link(_controlData), maxValue(_max) {
+: maxValue(_max) {
     // Getting need texture
-    texture = data.textures[_lineImage];
-    textureButton = data.textures[_buttonImage];
-    SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
-    SDL_QueryTexture(textureButton, NULL, NULL, &destButton.w, &destButton.h);
+    texture = _target.getTexture(_lineImage);
+    textureButton = _target.getTexture(_buttonImage);
+    SDL_GetTextureSize(texture, nullptr, &rect.h);
+    rect.w = _max;
+    SDL_GetTextureSize(textureButton, &buttonRect.w, &buttonRect.h);
 
     // Setting it to need place
-    rect.x = SCREEN_WIDTH * _X - rect.w / 2;
-    rect.y = SCREEN_HEIGHT * _Y - rect.h / 2;
-    destButton.y = SCREEN_HEIGHT * _Y - destButton.h / 2;
-    destButton.x = rect.x + *link * rect.w / maxValue - destButton.w / 2;
+    rect.x = WINDOW_WIDTH * _X - rect.w / 2;
+    rect.y = WINDOW_HEIGHT * _Y - rect.h / 2;
+    buttonRect.y = WINDOW_HEIGHT * _Y - buttonRect.h / 2;
+    buttonRect.x = rect.x + _startValue - buttonRect.w / 2;
 }
 
-void Slider::blit() const {
-    SDL_RenderCopy(data.renderer, texture, NULL, &rect);
-    SDL_RenderCopy(data.renderer, textureButton, NULL, &destButton);
+void GUI::Slider::blit(const Window& _target) const {
+    _target.blit(texture, rect);
+    _target.blit(textureButton, buttonRect);
 }
 
-void Slider::setValue(int mouseX) {
+unsigned GUI::Slider::setValue(float _mouseX) {
     // Setting new position
-    destButton.x = mouseX;
+    buttonRect.x = _mouseX;
 
     // Setting borders for position
-    SET_MAX(destButton.x, rect.x + rect.w);
-    SET_MIN(destButton.x, rect.x);
+    setMax(buttonRect.x, rect.x + rect.w);
+    setMin(buttonRect.x, rect.x);
 
-    destButton.x -= destButton.w / 2;
+    buttonRect.x -= buttonRect.w / 2;
 
-    // Setting new linked value
-    *link = (destButton.x - rect.x + destButton.w / 2) * maxValue / rect.w;
+    // Returning new setted value
+    return buttonRect.x - rect.x + buttonRect.w/2;
 }
 
-bool Slider::scroll(Sint32 wheelY, int mouseX, int mouseY) {
-    if (in(mouseX, mouseY)) {
-        if (wheelY > 0) {
-            setValue(destButton.x + destButton.w/2 + 8);
-        } else {
-            setValue(destButton.x + destButton.w/2 - 8);
-        }
-        return true;
+unsigned GUI::Slider::scroll(float _wheelY) {
+    if (_wheelY > 0) {
+        return setValue(buttonRect.x + buttonRect.w/2 + 8);
+    } else {
+        return setValue(buttonRect.x + buttonRect.w/2 - 8);
     }
-    return false;
+    return 0;
 }

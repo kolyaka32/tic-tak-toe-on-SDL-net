@@ -1,13 +1,14 @@
 /*
- * Copyright (C) 2024, Kazankov Nikolay 
+ * Copyright (C) 2025, Kazankov Nikolay 
  * <nik.kazankov.05@mail.ru>
  */
 
 #pragma once
 
 #include <stdexcept>
-#include "SDL.h"
-#include "../define.hpp"
+#include <SDL3/SDL_log.h>
+#include "../testing.hpp"
+
 
 // Custom exceptions
 #if CHECK_CORRECTION

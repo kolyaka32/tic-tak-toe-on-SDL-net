@@ -1,131 +1,132 @@
 /*
- * Copyright (C) 2024, Kazankov Nikolay 
+ * Copyright (C) 2025, Kazankov Nikolay 
  * <nik.kazankov.05@mail.ru>
  */
 
-#include "SettingsMenu.hpp"
+#include "settingsMenu.hpp"
 
-SettingsMenu::SettingsMenu() {}
 
-bool SettingsMenu::click(int mouseX, int mouseY) {
+bool SettingsMenu::active = false;
+
+SettingsMenu::SettingsMenu(const App& _app)
+: settingButton{_app.window, 0.95, 0.05, IMG_GUI_PAUSE_BUTTON},
+background{_app.window, 0.5, 0.5, 0.65, 0.8, 20, 5},
+titleText{_app.window, 0.5, 0.15, {"Pause", "Пауза", "Pause", "Паўза"}, 2, 34, WHITE},
+flags {
+    {_app.window, 0.35, 0.28, IMG_GUI_FLAG_USA},
+    {_app.window, 0.65, 0.28, IMG_GUI_FLAG_RUS},
+    {_app.window, 0.35, 0.47, IMG_GUI_FLAG_GER},
+    {_app.window, 0.65, 0.47, IMG_GUI_FLAG_BEL},
+},
+musicText{_app.window, 0.5, 0.6, {"Music", "Музыка", "Die Musik", "Музыка"}, 1, 30, WHITE},
+musicSlider{_app.window, 0.5, 0.66, _app.music.getVolume()},
+soundText{_app.window, 0.5, 0.72, {"Sounds", "Звуки", "Geräusche", "Гук"}, 1, 30, WHITE},
+soundSlider{_app.window, 0.5, 0.78, _app.sounds.getVolume()},
+exitButton{_app.window, 0.5, 0.85, {"Exit", "Выход", "Ausfahrt", "Выхад"}, 24, WHITE} {}
+
+bool SettingsMenu::click(const Mouse _mouse) {
     // Check, if click on setting butoon
-    if (settingButton.in(mouseX, mouseY)) {
+    if (settingButton.in(_mouse)) {
         active ^= true;  // Changing state
-        return true;
+        return false;
     }
     // Clicking in menu
     if (active) {
-        // Setting old language to save
-        language newLanguage = data.language;
-
-        // Checking, if click on sliders or flag
-        if (musicSlider.in(mouseX, mouseY)) {
+        if (exitButton.in(_mouse)) {
+            // Checking on exit
+            active = false;
+        } else if (musicSlider.in(_mouse)) {
+            // Checking, if click on sliders or flag
             holdingSlider = 1;
-        } else if (soundSlider.in(mouseX, mouseY)) {
+        } else if (soundSlider.in(_mouse)) {
             holdingSlider = 2;
         } else {
-            for (language i = LNG_ENGLISH; i < LNG_BELARUSIAN; ++i) {
-                if (flags[i].in(mouseX, mouseY)) {
-                    newLanguage = i;
+            // Check on changing language
+            for (unsigned i = 0; i < (unsigned)Language::Count; ++i) {
+                if (flags[i].in(_mouse)) {
+                    if (LanguagedText::setLanguage((Language)i)) {
+                        // Restarting game
+                        CycleTemplate::restart();
+                        return true;
+                    }
                 }
             }
         }
-        // Updating texts language
-        if (newLanguage != data.language) {
-            data.language = newLanguage;
-
-            // Updating texture
-            data.updateTranslation();
-        }
-        return false;
+        return true;
     }
-    return true;
+    return false;
 }
 
-// Getting special input (with mousewheel and escape button)
-void SettingsMenu::getAnotherInput(const SDL_Event& event) {
+void SettingsMenu::unClick() {
     if (active) {
-        // Position of mouse
-        int mouseX, mouseY;
-
-        switch (event.type) {
         // Resetting selected box
-        case SDL_MOUSEBUTTONUP:
-            holdingSlider = 0;
-            return;
+        holdingSlider = 0;
+    }
+}
 
-        case SDL_MOUSEWHEEL:
-            // Getting new mouse position on screen
-            SDL_GetMouseState(&mouseX, &mouseY);
-
-            // Checking scroll on sliders
-            if (musicSlider.scroll(event.wheel.y, mouseX, mouseY)) {
-                Mix_VolumeMusic(data.musicVolume);
-            } else if (soundSlider.scroll(event.wheel.y, mouseX, mouseY)) {
-                Mix_Volume(-1, data.soundsVolume);
-            }
-            return;
-
-        default:
-            return;
+void SettingsMenu::scroll(App& _app, const Mouse mouse, float _wheelY) {
+    if (active) {
+        // Checking scroll on sliders
+        if (musicSlider.in(mouse)) {
+            _app.music.setVolume(musicSlider.scroll(_wheelY));
+        } else if (soundSlider.in(mouse)) {
+            _app.sounds.setVolume(soundSlider.scroll(_wheelY));
         }
     }
 }
 
-void SettingsMenu::update() {
+void SettingsMenu::update(App& _app) {
     if (active) {
-        // Horizontal position of mouse
-        int mouseX = 0;
+        // Creating and finding mouse position
+        Mouse mouse;
+        mouse.updatePos();
 
         // Updating pressing on sliders
         switch (holdingSlider) {
         case 1:
             // Updating music slider state
-            SDL_GetMouseState(&mouseX, nullptr);
-            musicSlider.setValue(mouseX);
-            Mix_VolumeMusic(data.musicVolume);
+            _app.music.setVolume(musicSlider.setValue(mouse.getX()));
             break;
 
         case 2:
             // Updating sound slider state
-            SDL_GetMouseState(&mouseX, nullptr);
-            soundSlider.setValue(mouseX);
-            Mix_Volume(-1, data.soundsVolume);
+            _app.sounds.setVolume(soundSlider.setValue(mouse.getX()));
 
             // Playing sound effect for understanding loud
-            #if SCROLLER_SOUND
-            if (SDL_GetTicks64() > nextSound) {
-                data.playSound(SND_TURN);
-                nextSound = SDL_GetTicks64() + 400;
+            if (getTime() > nextSound) {
+                _app.sounds.play(SND_TURN);
+
+                nextSound = getTime() + 400;
             }
-            #endif
             break;
         }
     }
 }
 
-void SettingsMenu::blit() const {
+void SettingsMenu::blit(const Window& _target) const {
     // Draw pause button
-    settingButton.blit();
+    settingButton.blit(_target);
 
     // Drawing menu if need
     if (active) {
-        background.blit();
-        titleText.blit();
+        background.blit(_target);
+        titleText.blit(_target);
 
         // Blitting language buttons
-        for (language i = 0; i < LNG_count; ++i) {
-            flags[i].blit();
+        for (unsigned i = 0; i < 4; ++i) {
+            flags[i].blit(_target);
         }
-
         // Sliders
-        musicText.blit();
-        soundSlider.blit();
-        soundText.blit();
-        musicSlider.blit();
+        musicText.blit(_target);
+        soundSlider.blit(_target);
+        soundText.blit(_target);
+        musicSlider.blit(_target);
+        // Quit
+        exitButton.blit(_target);
     }
 }
 
 void SettingsMenu::activate() {
-    active ^= true;  // Changing state
+    // Changing state to opposite
+    active ^= true;
 }

@@ -1,19 +1,25 @@
 /*
- * Copyright (C) 2024, Kazankov Nikolay 
+ * Copyright (C) 2025, Kazankov Nikolay 
  * <nik.kazankov.05@mail.ru>
  */
 
 #pragma once
 
-// Types of language
-enum LNG_types{
-    LNG_ENGLISH,     // English language
-    LNG_RUSSIAN,     // Russian language
-    LNG_GERMAN,      // German language
-    LNG_BELARUSIAN,  // Belarusian language
+#include <string>
+#include "../languagesNames.hpp"
 
-    LNG_count,       // Global counter of all languages
+
+// Class, storing one text variant in different locations
+class LanguagedText {
+private:
+    static Language currentLanguage;
+    const std::string textVariants[(unsigned)Language::Count];
+
+public:
+    LanguagedText(const std::string englishVariant, const std::string russianVariant,
+        const std::string germanVariant, const std::string bellarussianVariant);
+    const std::string& getString() const;
+    // Options for change current language
+    static bool setLanguage(Language newLanguage);
+    static Language getLanguage();
 };
-
-// Data type for language
-typedef unsigned char language;

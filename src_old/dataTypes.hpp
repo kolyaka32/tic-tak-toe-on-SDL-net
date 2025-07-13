@@ -1,29 +1,17 @@
+/*
+ * Copyright (C) 2024, Kazankov Nikolay 
+ * <nik.kazankov.05@mail.ru>
+ */
+
+#pragma once
+
+#include "SDL.h"
 
 // Types of data
-typedef Uint8 coord;       // Type of data for field coordinates
+typedef Uint8 coord;       // Type of data for 1 coordinate of cell
+typedef Uint8 position;    // Type of data for position in array (2 coordinats)
 typedef Uint8 cell;        // Type of cell content
+typedef Uint8 byte;        // Type for saving any side-data (like archieve)
 typedef Uint16 count;      // Type of data for any counters
 
-typedef Uint64 timer;      // Type of data for time (SDL_GetTicks64())
 typedef Uint8 textHeight;  // Type of heights of any letters
-
-// Structs
-// Global application data with render and window
-struct App{
-    SDL_Renderer *renderer;
-    SDL_Window *window;
-};
-
-// Structer of storing object
-struct Data{
-    char* data;   // Data of need object
-    Uint64 size;  // Size of need object
-};
-
-// Types of language
-enum LNG_types{
-    LNG_ENGLISH,  // English language
-    LNG_RUSSIAN   // Russian language
-};
-
-#define LNG_count 2  // Final counter of all languages
