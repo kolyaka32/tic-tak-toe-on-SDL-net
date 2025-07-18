@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -34,7 +34,7 @@ namespace GUI {
     class StaticText : public GUItemplate {
      public:
         StaticText(const Window& target, float X, float Y, const LanguagedText texts,
-            float size, Color color = BLACK, Aligment aligment = Aligment::Midle);
+            float size, Color color = WHITE, Aligment aligment = Aligment::Midle);
         ~StaticText();
     };
 
@@ -43,7 +43,7 @@ namespace GUI {
     class HighlightedStaticText : public GUItemplate {
      public:
         HighlightedStaticText(const Window& target, float X, float Y, const LanguagedText texts, 
-            int frameThickness, float size, Color color = BLACK, Aligment aligment = Aligment::Midle);
+            int frameThickness, float size, Color color = WHITE, Aligment aligment = Aligment::Midle);
         ~HighlightedStaticText();
     };
 
@@ -59,7 +59,7 @@ namespace GUI {
 
      public:
         DynamicText(const Window& _target, float X, float Y, const LanguagedText texts,
-            float size = 20, Color color = BLACK, Aligment aligment = Aligment::Midle);
+            float size = 20, Color color = WHITE, Aligment aligment = Aligment::Midle);
         ~DynamicText();
         template <typename ...Args>
         void setValues(const Window& _target, Args&& ...args) {
@@ -73,7 +73,7 @@ namespace GUI {
             // Moving draw rect to new place
             rect.w = texture->w;
             rect.h = texture->h;
-            rect.x = WINDOW_WIDTH * posX - (rect.w * (unsigned)aligment / 2);
+            rect.x = _target.getWidth() * posX - (rect.w * (unsigned)aligment / 2);
         }
     };
 
@@ -158,8 +158,8 @@ namespace GUI {
         void writeString(const char* str);   // Function of writing any string to buffer at caret position
         void type(SDL_Keycode code);         // Function of processing special keycodes
         void update(float mouseX);           // Function of change caret symbol from '|' to ' ' and back
-        void press(const Mouse mouse);       // Function of setting caret for typing after
-        void unpress();                      // Function of resetting pressing
+        bool click(const Mouse mouse);       // Function of setting caret for typing after
+        void unclick();                      // Function of resetting pressing
         const char* getString();             // Function of getting typed string
         void setString(const char* string);  // Function for replace text with new string
         void blit() const;                   // Function for draw at screen

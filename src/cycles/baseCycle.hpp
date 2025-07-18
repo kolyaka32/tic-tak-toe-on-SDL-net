@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -19,6 +19,7 @@ class BaseCycle : public CycleTemplate {
 
  public:
     BaseCycle(const App& app);
+    bool inputMouseDown(App& app) override;
     void update(App& app) override;
     void inputMouseUp(App& app) override;
     void inputMouseWheel(App& app, float _wheelY) override;

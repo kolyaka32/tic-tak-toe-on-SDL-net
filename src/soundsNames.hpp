@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -9,9 +9,6 @@
 
 // Names of sound effects
 enum SND_names{
-    SND_TURN,   // Sound of player's turn
-    SND_RESET,  // Sound of field reset
-
     // Global counter of all loaded sounds
     SND_count,
 };

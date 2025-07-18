@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -12,6 +12,6 @@ GUI::ImageButton::ImageButton(const Window& _target, float _X, float _Y, IMG_nam
 
     // Setting destination
     SDL_GetTextureSize(texture, &rect.w, &rect.h);
-    rect.x = WINDOW_WIDTH * _X - rect.w / 2;
-    rect.y = WINDOW_HEIGHT * _Y - rect.h / 2;
+    rect.x = _target.getWidth() * _X - rect.w / 2;
+    rect.y = _target.getHeight() * _Y - rect.h / 2;
 }

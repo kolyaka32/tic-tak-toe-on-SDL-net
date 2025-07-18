@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -13,12 +13,13 @@
 #include "languages.hpp"
 
 
-Window::Window(const DataLoader& _loader)
- : window(SDL_CreateWindow(WINDOW_NAME, WINDOW_WIDTH, WINDOW_HEIGHT, 0)),
+Window::Window(const DataLoader& _loader, int _width, int _height)
+: width(_width),
+height(_height),
+window(SDL_CreateWindow(WINDOW_NAME, width, height, 0)),
 renderer(SDL_CreateRenderer(window, NULL)),
 textures{_loader, renderer, texturesFilesNames},
-fonts{_loader, fontsFilesNames},
-animations{_loader, animationsFilesNames} {
+fonts{_loader, fontsFilesNames} {
     // Checking on correction of created objects
     #if CHECK_CORRECTION
     if (window == NULL) {
@@ -43,6 +44,26 @@ Window::~Window() noexcept {
 }
 
 
+// Work with window sizes
+int Window::getWidth() const {
+    return width;
+}
+
+int Window::getHeight() const {
+    return height;
+}
+
+void Window::setWidth(int _width) {
+    width = _width;
+    SDL_SetWindowSize(window, width, height);
+}
+
+void Window::setHeight(int _height) {
+    height = _height;
+    SDL_SetWindowSize(window, width, height);
+}
+
+
 void Window::setDrawColor(Color color) const {
     SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
 }
@@ -61,11 +82,6 @@ void Window::render() const {
 SDL_Texture* Window::getTexture(IMG_names _name) const {
     return textures[_name];
 }
-
-IMG_Animation* Window::getAnimation(ANI_names _name) const {
-    return animations[_name];
-}
-
 
 
 // Draw basic geometric shapes

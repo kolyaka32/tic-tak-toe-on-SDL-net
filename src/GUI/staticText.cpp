@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -14,8 +14,8 @@ GUI::StaticText::StaticText(const Window& _target, float _X, float _Y, const Lan
 
     // Updating rect height for correct button
     SDL_GetTextureSize(texture, &rect.w, &rect.h);
-    rect.x = SDL_roundf(WINDOW_WIDTH * _X - (rect.w * (unsigned)_aligment / 2));
-    rect.y = SDL_roundf(WINDOW_HEIGHT * _Y - rect.h / 2);
+    rect.x = SDL_roundf(_target.getWidth() * _X - (rect.w * (unsigned)_aligment / 2));
+    rect.y = SDL_roundf(_target.getHeight() * _Y - rect.h / 2);
 }
 
 GUI::StaticText::~StaticText() {

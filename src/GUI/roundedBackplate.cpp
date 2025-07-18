@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -9,8 +9,8 @@
 // Class of backplates (smoothed rects)
 GUI::Backplate::Backplate(const Window& _target, float _centerX, float _centerY, float _width, float _height,
     float _rad, float _bor, Color _frontColor, Color _backColor)
-: Backplate(_target, {SDL_roundf(WINDOW_WIDTH * (_centerX - _width/2)), SDL_roundf(WINDOW_HEIGHT * (_centerY - _height/2)),
-    SDL_roundf(WINDOW_WIDTH * _width), SDL_roundf(WINDOW_HEIGHT * _height)}, _rad, _bor, _frontColor, _backColor) {}
+: Backplate(_target, {_target.getWidth() * (_centerX - _width/2), _target.getHeight() * (_centerY - _height/2),
+    _target.getWidth() * _width, _target.getHeight() * _height}, _rad, _bor, _frontColor, _backColor) {}
 
 
 GUI::Backplate::Backplate(const Window& _target, const SDL_FRect& _rect, float _rad, float _bor, Color _frontColor, Color _backColor) {

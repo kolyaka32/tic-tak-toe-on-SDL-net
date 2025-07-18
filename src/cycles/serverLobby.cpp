@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -8,11 +8,11 @@
 #include "serverGame.hpp"
 
 
-bool ServerLobby::showAddress = false;
+bool ServerLobbyCycle::showAddress = false;
 
-ServerLobby::ServerLobby(App& _app)
+ServerLobbyCycle::ServerLobbyCycle(App& _app)
 : BaseCycle(_app),
-titleText(_app.window, 0.5, 0.1, {"Wait for connection", "Ожидайте подключений", "Verbindungen erwarten", "Чакайце падлучэнняў"}, 30, WHITE),
+titleText(_app.window, 0.5, 0.15, {"Wait for connection", "Ожидайте подключений", "Verbindungen erwarten", "Чакайце падлучэнняў"}, 30, WHITE),
 addressText(_app.window, 0.5, 0.3, {"Your address: %s", "Ваш адресс: %s", "Ihre Adresse: %s", "Ваш адрас: %s"}, 30, WHITE),
 copiedInfoBox(_app.window, 0.5, 0.37, {"Address copied", "Адрес скопирован", "Adresse kopiert", "Скапіяваны адрас"}, 30, WHITE),
 showAddressText(_app.window, 0.5, 0.45, {"Show address", "Показать адресс", "Adresse anzeigen", "Паказаць адрас"}, 24),
@@ -37,15 +37,9 @@ hideAddressText(_app.window, 0.5, 0.45, {"Hide address", "Скрыть адре�
     }
 }
 
-void ServerLobby::inputMouseDown(App& _app) {
-    // Clicking in settings menu
-    if (settings.click(mouse)) {
-        return;
-    }
-    // Exiting to menu
-    if (exitButton.in(mouse)) {
-        stop();
-        return;
+bool ServerLobbyCycle::inputMouseDown(App& _app) {
+    if (BaseCycle::inputMouseDown(_app)) {
+        return true;
     }
     // Check on copying address
     if (addressText.in(mouse)) {
@@ -54,26 +48,27 @@ void ServerLobby::inputMouseDown(App& _app) {
         strcpy(clipboardText, currentAddress);
         SDL_SetClipboardText(clipboardText);
         copiedInfoBox.reset();
-        return;
+        return true;
     }
     if (showAddress) {
         // Check on hiding address
         if (hideAddressText.in(mouse)) {
             showAddress = false;
             addressText.setValues(_app.window, "********");
-            return;
+            return true;
         }
     } else {
         // Check on showing address
         if (showAddressText.in(mouse)) {
             showAddress = true;
             addressText.setValues(_app.window, currentAddress);
-            return;
+            return true;
         }
     }
+    return false;
 }
 
-void ServerLobby::update(App& _app) {
+void ServerLobbyCycle::update(App& _app) {
     BaseCycle::update(_app);
 
     // Update infobox
@@ -86,14 +81,14 @@ void ServerLobby::update(App& _app) {
         server.connectToLastMessage();
 
         // Starting game (as server)
-        runCycle<ServerGame, Connection&>(_app, server);
+        runCycle<ServerGameCycle, Connection&>(_app, server);
         // Exiting to menu after game
         stop();
         return;
     }
 }
 
-void ServerLobby::draw(const App& _app) const {
+void ServerLobbyCycle::draw(const App& _app) const {
     // Bliting background
     _app.window.setDrawColor(BLACK);
     _app.window.clear();

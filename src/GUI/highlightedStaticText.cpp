@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -15,7 +15,7 @@ GUI::HighlightedStaticText::HighlightedStaticText(const Window& _target, float _
 
     // Creating surface
     SDL_Surface* surface = TTF_RenderText_Solid(font, _texts.getString().c_str(), 0, {1, 0, 0, 255});
-    
+
     // Resetting outline
     TTF_SetFontOutline(font, 0);
     SDL_Surface* frontSurface = TTF_RenderText_Solid(font, _texts.getString().c_str(), 0, _color);
@@ -31,8 +31,8 @@ GUI::HighlightedStaticText::HighlightedStaticText(const Window& _target, float _
 
     // Updating rect height for correct button
     SDL_GetTextureSize(texture, &rect.w, &rect.h);
-    rect.x = SDL_roundf(WINDOW_WIDTH * _X - (rect.w * (unsigned)_aligment / 2));
-    rect.y = SDL_roundf(WINDOW_HEIGHT * _Y - rect.h / 2);
+    rect.x = SDL_roundf(_target.getWidth() * _X - (rect.w * (unsigned)_aligment / 2));
+    rect.y = SDL_roundf(_target.getHeight() * _Y - rect.h / 2);
 }
 
 GUI::HighlightedStaticText::~HighlightedStaticText() {

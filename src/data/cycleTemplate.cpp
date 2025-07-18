@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -88,10 +88,11 @@ void CycleTemplate::update(App& app) {}
 
 // Getting input
 // Example for getting mouse input
-void CycleTemplate::inputMouseDown(App& app) {
+bool CycleTemplate::inputMouseDown(App& app) {
     /*if (startOptions[0].in(mouse)) {
-        return;
+        return true;
     }*/
+   return false;
 }
 
 void CycleTemplate::inputMouseUp(App& app) {}

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -10,7 +10,7 @@
 
 
 // Cycle with waiting for client connect
-class ServerLobby : public BaseCycle {
+class ServerLobbyCycle : public BaseCycle {
  private:
     // Internet connection part
     Server server;
@@ -27,10 +27,10 @@ class ServerLobby : public BaseCycle {
     GUI::TextButton hideAddressText;
 
     // Main run functions
-    void inputMouseDown(App& app) override;
+    bool inputMouseDown(App& app) override;
     void update(App& app) override;
     void draw(const App& app) const override;
 
  public:
-    ServerLobby(App& app);
+    ServerLobbyCycle(App& app);
 };

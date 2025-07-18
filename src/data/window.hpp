@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -10,23 +10,27 @@
 #include "time.hpp"
 #include "../texturesNames.hpp"
 #include "../fontsNames.hpp"
-#include "../animationsNames.hpp"
 
 
 // Class of window, where all happen
 class Window {
  private:
+    int width, height;
     SDL_Window* window;
     SDL_Renderer* renderer;
     const TexturesData<IMG_count> textures;
     const Fonts fonts;
-    const Animations animations;
 
  public:
-    Window(const DataLoader& loader);
+    Window(const DataLoader& loader, int width, int height);
     ~Window() noexcept;
 
     // Functions for work with graphics
+    // Operate with sizes of window
+    int getWidth() const;
+    int getHeight() const;
+    void setWidth(int width);
+    void setHeight(int height);
     // Set current draw color
     void setDrawColor(Color color = EMPTY) const;
     // Clear all stage with setted color
@@ -41,7 +45,6 @@ class Window {
 
     // Work with loaded data
     SDL_Texture* getTexture(IMG_names name) const;
-    IMG_Animation* getAnimation(ANI_names name) const;
 
     // Work with own surfaces
     SDL_Surface* createSurface(int width, int height, SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA32) const;
@@ -75,6 +78,5 @@ class Window {
     // Work with window
     void startTextInput() const;
     void stopTextInput() const;
-    void updateTitle() const;
     void updateTitle(const char* name) const;
 };

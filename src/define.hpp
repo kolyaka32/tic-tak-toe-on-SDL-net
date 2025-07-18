@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -7,8 +7,9 @@
 
 // System numbers
 #define WINDOW_NAME "Tic-tac-toe on SDL"  // System game name
-#define CELL_SIDE 64                      // Width and height of mine in pixels
-#define SEPARATOR 4                       // Width of separator between cells in pixels
+#define UPPER_LINE 50                     // Height of line above main game part for system info
+#define CELL_SIDE 100                     // Width and height of mine in pixels
+#define SEPARATOR 5                       // Width of separator between cells in pixels
 
 // Internet constants
 #define BASE_PORT 8000                      // Base port to create/connect

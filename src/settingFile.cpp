@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -9,7 +9,7 @@
 
 // Files to setup
 #include "data/languages.hpp"
-#include "game/board.hpp"
+#include "game/field.hpp"
 #include "cycles/clientLobby.hpp"
 
 
@@ -39,16 +39,18 @@ void InitFile::loadSettings() {
             music.setVolume(getValue(currentLine));
         } else if (parameter == "sounds") {
             sounds.setVolume(getValue(currentLine));
-        } else if (parameter == "startBoardConfig") {
-            strcpy_s(boardConfig, sizeof(boardConfig), getText(currentLine).c_str());
+        } else if (parameter == "width") {
+            Field::setWidth(std::stoi(getText(currentLine).c_str()));
+        } else if (parameter == "winWidth") {
+            Field::setWinWidth(std::stoi(getText(currentLine).c_str()));
         } else if (parameter == "IP") {
-            strcpy_s(baseIP, sizeof(baseIP), getText(currentLine).c_str());
+            strncpy(baseIP, getText(currentLine).c_str(), sizeof(baseIP));
         } else if (parameter == "port") {
-            strcpy_s(basePort, sizeof(basePort), getText(currentLine).c_str());
+            strncpy(basePort, getText(currentLine).c_str(), sizeof(basePort));
         }
     }
-
-    inSettings.close();  // Closing reading file
+    // Closing reading file
+    inSettings.close();
 }
 
 // Data, saved to setting file
@@ -85,7 +87,8 @@ void InitFile::saveSettings() {
 
     // Writing starting config (order of figures)
     outSettings << "\nGame configuration:\n";
-    outSettings << "startBoardConfig = " << boardConfig << "\n";
+    outSettings << "width = " << Field::getWidth() << "\n";
+    outSettings << "winWidth = " << Field::getWinWidth() << "\n";
 
     // Writing internet connection data
     outSettings << "\n# Internet base parameters:\n";

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -8,22 +8,23 @@
 // File names of the corresponding textures
 const char* texturesFilesNames[IMG_count] = {
     // Graphic interface sprites
-    "GUI/esc_button.png",
-    "GUI/quit_button.png",
-    "GUI/slider_button.png",
-    "GUI/slider_line.png",
-    "GUI/type_box.png",
+    "img/GUI/esc_button.png",
+    "img/GUI/slider_button.png",
+    "img/GUI/slider_line.png",
+    "img/GUI/type_box.png",
+    "img/GUI/quit_button.png",
+    "img/GUI/restart_button.png",
 
     // Flags
-    "GUI/Flag_USA.png",
-    "GUI/Flag_RUS.png",
-    "GUI/Flag_GER.png",
-    "GUI/Flag_BEL.png",
+    "img/GUI/Flag_USA.png",
+    "img/GUI/Flag_RUS.png",
+    "img/GUI/Flag_GER.png",
+    "img/GUI/Flag_BEL.png",
 
     // Game part
-    "game/green_circle.png",
-    "game/green_cross.png",
-    "game/red_circle.png",
-    "game/red_cross.png",
-    "game/cell.png",
+    "img/game/green_circle.png",
+    "img/game/green_cross.png",
+    "img/game/red_circle.png",
+    "img/game/red_cross.png",
+    "img/game/cell.png",
 };

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -16,6 +16,7 @@
 class ArchieveLoader : public DataLoader {
 private:
     zip_t* archive;  // Archive, where data is located
+
 public:
     ArchieveLoader();
     ~ArchieveLoader() override;

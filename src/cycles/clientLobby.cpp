@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -12,73 +12,71 @@ char baseIP[12] = "127.0.0.1";
 char basePort[6] = "8000";
 
 
-ClientLobby::ClientLobby(App& _app)
+ClientLobbyCycle::ClientLobbyCycle(App& _app)
 : BaseCycle(_app),
-enterIPText(_app.window, 0.5, 0.1, {"Enter IP:", "Введите IP:", "-", "Увядзіце IP:"}, 30, WHITE),
-enterIPField(_app.window, 0.5, 0.2, 20, baseIP),
-enterPortText(_app.window, 0.5, 0.4, {"Enter port:", "Введите порт:", "Port eingeben:", "Увядзіце порт:"}, 30, WHITE),
-enterPortField(_app.window, 0.5, 0.5, 20, basePort),
+enterIPText(_app.window, 0.5, 0.2, {"Enter IP:", "Введите IP:", "-", "Увядзіце IP:"}, 30, WHITE),
+enterIPField(_app.window, 0.5, 0.3, 20, baseIP),
+enterPortText(_app.window, 0.5, 0.5, {"Enter port:", "Введите порт:", "Port eingeben:", "Увядзіце порт:"}, 30, WHITE),
+enterPortField(_app.window, 0.5, 0.6, 20, basePort),
 connectButton(_app.window, 0.5, 0.7, {"Connect", "Присоединится", "Beitritt", "Далучыцца"}, 24, WHITE),
-pasteButton(_app.window, 0.5, 0.9, {"Paste the copied address", "Вставить скопированный адрес", "Kopierte Adresse einfügen", "Уставіць скапіяваны адрас"}, 24, WHITE) {
+pasteButton(_app.window, 0.5, 0.9, {"Paste the address", "Вставить адрес", "Kopierte Adresse", "Уставіць адрас"}, 24, WHITE) {
     if (isAdditionalRestarted()) {
         stop();
         return;
     }
 }
 
-void ClientLobby::inputMouseDown(App& _app) {
-    // Clicking in settings menu
-    if (settings.click(mouse)) {
-        return;
-    }
-    // Checking on exit
-    if (exitButton.in(mouse)) {
-        stop();
-        return;
+bool ClientLobbyCycle::inputMouseDown(App& _app) {
+    if (BaseCycle::inputMouseDown(_app)) {
+        return true;
     }
 
     // Connection part
-    enterIPField.press(mouse);
-    enterPortField.press(mouse);
+    if (enterIPField.click(mouse)) {
+        return true;
+    }
+    if (enterPortField.click(mouse)) {
+        return true;
+    }
 
     // Check, if press paste data
     if (pasteButton.in(mouse)) {
         pasteFromClipboard();
-        return;
+        return true;
     }
 
     // Trying to connect at specified address
     if (connectButton.in(mouse)) {
-        // Correcting port text
+        // Checking correction of port text
         char portTextCorrected[7];
         memcpy(portTextCorrected, enterPortField.getString(), 7);
-
         for (char* c = portTextCorrected; *c; ++c) {
             if (*c < '0' || *c > '9') {
                 #if CHECK_ALL
                 SDL_Log("Couldn't connect - wrong port");
                 #endif
-                return;
+                return true;
             }
         }
-
+        // Trying connect at specified address
         client.tryConnect(enterIPField.getString(), std::stoi(portTextCorrected));
-        return;
+        return true;
     }
+    return false;
 }
 
-void ClientLobby::inputMouseUp(App& app) {
+void ClientLobbyCycle::inputMouseUp(App& app) {
     settings.unClick();
-    enterIPField.unpress();
-    enterPortField.unpress(); 
+    enterIPField.unclick();
+    enterPortField.unclick(); 
 }
 
-void ClientLobby::inputKeys(App& app, SDL_Keycode key) {
+void ClientLobbyCycle::inputKeys(App& app, SDL_Keycode key) {
     enterIPField.type(key);
     enterPortField.type(key);
 }
 
-void ClientLobby::update(App& _app) {
+void ClientLobbyCycle::update(App& _app) {
     BaseCycle::update(_app);
 
     // Updating typeboxes
@@ -91,21 +89,27 @@ void ClientLobby::update(App& _app) {
     case ConnectionCode::Init:
         // Settings options to this connection
         client.connectToLastMessage();
+        // Applying field size
+        Field::setWidth(client.lastPacket->getData<Uint8>(2));
+        Field::setWinWidth(client.lastPacket->getData<Uint8>(3));
+        // Changing window size
+        _app.window.setWidth(Field::getWindowWidth());
+        _app.window.setHeight(Field::getWindowHeight());
         // Starting game
-        runCycle<ClientGame, Connection&>(_app, client);
+        runCycle<ClientGameCycle, Connection&>(_app, client);
         // Exiting to menu after game
         stop();
         return;
     }
 }
 
-void ClientLobby::inputText(App& app, const char* text) {
+void ClientLobbyCycle::inputText(App& app, const char* text) {
     // Inputing text
     enterIPField.writeString(text);
     enterPortField.writeString(text);
 }
 
-void ClientLobby::draw(const App& _app) const {
+void ClientLobbyCycle::draw(const App& _app) const {
     // Bliting background
     _app.window.setDrawColor(BLACK);
     _app.window.clear();
@@ -128,7 +132,7 @@ void ClientLobby::draw(const App& _app) const {
     _app.window.render();
 }
 
-void ClientLobby::pasteFromClipboard() {
+void ClientLobbyCycle::pasteFromClipboard() {
     // Getting data from clipboard
     char* clipboard = SDL_GetClipboardText();
 

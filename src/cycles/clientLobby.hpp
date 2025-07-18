@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -14,7 +14,7 @@ extern char baseIP[12];
 extern char basePort[6];
 
 // Game cycle (for single player (special animation))
-class ClientLobby : public BaseCycle {
+class ClientLobbyCycle : public BaseCycle {
  private:
     // Internet parameters
     Client client;
@@ -30,7 +30,7 @@ class ClientLobby : public BaseCycle {
     void pasteFromClipboard();
 
     // Main run functions
-    void inputMouseDown(App& app) override;
+    bool inputMouseDown(App& app) override;
     void inputMouseUp(App& app) override;
     void inputKeys(App& app, SDL_Keycode key) override;
     void inputText(App& app, const char* text) override;
@@ -38,5 +38,5 @@ class ClientLobby : public BaseCycle {
     void draw(const App& app) const override;
 
  public:
-    ClientLobby(App& app);
+    ClientLobbyCycle(App& app);
 };

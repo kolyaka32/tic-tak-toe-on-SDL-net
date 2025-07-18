@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -28,7 +28,7 @@ class CycleTemplate {
     virtual void draw(const App& app) const;  // Draw all need objects
 
     // Subprograms for get need input
-    virtual void inputMouseDown(App& app);                  // Actioning for mouse button pressing
+    virtual bool inputMouseDown(App& app);                  // Actioning for mouse button pressing
     virtual void inputMouseUp(App& app);                    // Actioning for mouse button unpressing
     virtual void inputKeys(App& app, SDL_Keycode key);      // Actioning for any keys pressing
     virtual void inputMouseWheel(App& app, float _wheelY);  // Actioning for scrolling wheel
@@ -55,8 +55,6 @@ void CycleTemplate::runCycle(App& _app, const Args& ...args) {
 
     // Running current cycle, while restarting
     do {
-        // Updating title location
-        _app.window.updateTitle();
         // Launching new cycle
         T cycle(_app, args...);
         cycle.run(_app);

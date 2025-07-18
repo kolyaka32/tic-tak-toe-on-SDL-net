@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -10,21 +10,21 @@ bool SettingsMenu::active = false;
 
 SettingsMenu::SettingsMenu(const App& _app)
 : settingButton{_app.window, 0.95, 0.05, IMG_GUI_PAUSE_BUTTON},
-background{_app.window, 0.5, 0.5, 0.65, 0.8, 20, 5},
-titleText{_app.window, 0.5, 0.15, {"Pause", "Пауза", "Pause", "Паўза"}, 2, 34, WHITE},
+background{_app.window, 0.5, 0.5, 0.65, 0.85, 20, 5},
+titleText{_app.window, 0.5, 0.13, {"Pause", "Пауза", "Pause", "Паўза"}, 2, 30, WHITE},
 flags {
-    {_app.window, 0.35, 0.28, IMG_GUI_FLAG_USA},
-    {_app.window, 0.65, 0.28, IMG_GUI_FLAG_RUS},
-    {_app.window, 0.35, 0.47, IMG_GUI_FLAG_GER},
-    {_app.window, 0.65, 0.47, IMG_GUI_FLAG_BEL},
+    {_app.window, 0.35, 0.27, IMG_GUI_FLAG_USA},
+    {_app.window, 0.65, 0.27, IMG_GUI_FLAG_RUS},
+    {_app.window, 0.35, 0.45, IMG_GUI_FLAG_GER},
+    {_app.window, 0.65, 0.45, IMG_GUI_FLAG_BEL},
 },
-musicText{_app.window, 0.5, 0.6, {"Music", "Музыка", "Die Musik", "Музыка"}, 1, 30, WHITE},
-musicSlider{_app.window, 0.5, 0.66, _app.music.getVolume()},
-soundText{_app.window, 0.5, 0.72, {"Sounds", "Звуки", "Geräusche", "Гук"}, 1, 30, WHITE},
-soundSlider{_app.window, 0.5, 0.78, _app.sounds.getVolume()},
+musicText{_app.window, 0.5, 0.58, {"Music", "Музыка", "Die Musik", "Музыка"}, 1, 24, WHITE},
+musicSlider{_app.window, 0.5, 0.64, _app.music.getVolume()},
+soundText{_app.window, 0.5, 0.7, {"Sounds", "Звуки", "Geräusche", "Гук"}, 1, 24, WHITE},
+soundSlider{_app.window, 0.5, 0.76, _app.sounds.getVolume()},
 exitButton{_app.window, 0.5, 0.85, {"Exit", "Выход", "Ausfahrt", "Выхад"}, 24, WHITE} {}
 
-bool SettingsMenu::click(const Mouse _mouse) {
+bool SettingsMenu::click(const Mouse _mouse, const App& _app) {
     // Check, if click on setting butoon
     if (settingButton.in(_mouse)) {
         active ^= true;  // Changing state
@@ -45,6 +45,8 @@ bool SettingsMenu::click(const Mouse _mouse) {
             for (unsigned i = 0; i < (unsigned)Language::Count; ++i) {
                 if (flags[i].in(_mouse)) {
                     if (LanguagedText::setLanguage((Language)i)) {
+                        // Changing language
+                        _app.updateTitle();
                         // Restarting game
                         CycleTemplate::restart();
                         return true;
@@ -94,8 +96,7 @@ void SettingsMenu::update(App& _app) {
 
             // Playing sound effect for understanding loud
             if (getTime() > nextSound) {
-                _app.sounds.play(SND_TURN);
-
+                //_app.sounds.play(SND_TURN);
                 nextSound = getTime() + 400;
             }
             break;

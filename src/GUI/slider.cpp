@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -18,9 +18,9 @@ GUI::Slider::Slider(const Window& _target, float _X, float _Y, unsigned _startVa
     SDL_GetTextureSize(textureButton, &buttonRect.w, &buttonRect.h);
 
     // Setting it to need place
-    rect.x = WINDOW_WIDTH * _X - rect.w / 2;
-    rect.y = WINDOW_HEIGHT * _Y - rect.h / 2;
-    buttonRect.y = WINDOW_HEIGHT * _Y - buttonRect.h / 2;
+    rect.x = _target.getWidth() * _X - rect.w / 2;
+    rect.y = _target.getHeight() * _Y - rect.h / 2;
+    buttonRect.y = _target.getHeight() * _Y - buttonRect.h / 2;
     buttonRect.x = rect.x + _startValue - buttonRect.w / 2;
 }
 

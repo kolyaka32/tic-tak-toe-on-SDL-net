@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -12,14 +12,14 @@
 template <unsigned bufferSize>
 GUI::TypeField<bufferSize>::TypeField(const Window& _target, float _X, float _Y, float _height, const char* _text, Aligment _aligment, Color _color)
 : target(_target),
-posX(WINDOW_WIDTH*_X),
+posX(_target.getWidth()*_X),
 aligment(_aligment),
 textColor(_color),
 font(_target.createFontCopy(FNT_MAIN, _height)),
-backRect({_X*WINDOW_WIDTH-(6.5f*bufferSize+2), _Y*WINDOW_HEIGHT-_height*0.9f, 13.0f*bufferSize+4, _height*1.8f}) {
+backRect({_X*_target.getWidth()-(6.5f*bufferSize+2), _Y*_target.getHeight()-_height*0.9f, 13.0f*bufferSize+4, _height*1.8f}) {
     // Setting rects
-    textRect = {0, WINDOW_HEIGHT*_Y-_height/2-1, 0, 0};
-    caretRect = {0, WINDOW_HEIGHT*_Y-_height/2-1, 2, _height*1.3f};
+    textRect = {0, _target.getHeight()*_Y-_height/2-1, 0, 0};
+    caretRect = {0, _target.getHeight()*_Y-_height/2-1, 2, _height*1.3f};
 
     // Copying text to caret
     length = strlen(_text);
@@ -354,7 +354,7 @@ void GUI::TypeField<bufferSize>::type(SDL_Keycode _code) {
 
 
 template <unsigned bufferSize>
-void GUI::TypeField<bufferSize>::press(const Mouse mouse) {
+bool GUI::TypeField<bufferSize>::click(const Mouse mouse) {
     if (in(mouse)) {
         pressed = true;
         if (!selected) {
@@ -369,6 +369,7 @@ void GUI::TypeField<bufferSize>::press(const Mouse mouse) {
             selectLength = 0;
             select(mouse.getX());
         }
+        return true;
     } else if (selected) {
         // Resetting selection
         selected = false;
@@ -383,10 +384,11 @@ void GUI::TypeField<bufferSize>::press(const Mouse mouse) {
 
         updateTexture();
     }
+    return false;
 }
 
 template <unsigned bufferSize>
-void GUI::TypeField<bufferSize>::unpress() {
+void GUI::TypeField<bufferSize>::unclick() {
     pressed = false;
 }
 

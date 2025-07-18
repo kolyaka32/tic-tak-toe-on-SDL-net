@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -18,6 +18,7 @@ enum class ConnectionCode : Uint8 {
     ApplyConnection,  // Code of confirmation of continued connection
 
     // Game codes
-    GameRestart,  // Code of restart game with options of new game (field, turn)
-    GameTurn,     // Code of normal game turn with it options
+    GameClear,  // Code of clearing field
+    GameStart,  // Code of restart game with options of new game (field, turn)
+    GameTurn,   // Code of normal game turn with it options
 };

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -34,15 +34,20 @@ private:
     // Flags of work
     static bool running;
 
+    // Title text
+    const LanguagedText titleText;
+
 public:
-    App();
+    App(const LanguagedText title);
 
     // Commands to operate with global running
     static void stop();
     static bool isRunning();
 
+    void updateTitle() const;
+
+    InitFile initFile;
     Music music;
     Sounds sounds;
-    InitFile initFile;
-    const Window window;
+    Window window;
 };

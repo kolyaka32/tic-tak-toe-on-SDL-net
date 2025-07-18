@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -35,7 +35,7 @@ class SettingsMenu : public GUI::GUItemplate {
  public:
 	SettingsMenu(const App& app);
 	void blit(const Window& target) const override;
-	bool click(const Mouse mouse);
+	bool click(const Mouse mouse, const App& app);
 	void unClick();
 	void scroll(App& app, const Mouse mouse, float wheelY);
 	void update(App& app);

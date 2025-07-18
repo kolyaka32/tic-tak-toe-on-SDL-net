@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025, Kazankov Nikolay 
+ * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -10,16 +10,20 @@
 
 
 // Game cycle with game part of server
-class ServerGame : public InternetCycle {
+class ServerGameCycle : public InternetCycle {
  protected:
     GameConnection connection;
 
+    // Starting options
+    GUI::TextButton startFirst;
+    GUI::TextButton startSecond;
+
     // Main run functions
-    void inputMouseDown(App& app) override;
+    bool inputMouseDown(App& app) override;
     void inputKeys(App& app, SDL_Keycode key);
     void update(App& app) override;
     void draw(const App& app) const override;
 
  public:
-    ServerGame(App& app, Connection& server);
+    ServerGameCycle(App& app, Connection& server);
 };
