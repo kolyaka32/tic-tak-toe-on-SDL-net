@@ -1,96 +1,33 @@
-cmake_minimum_required(VERSION 3.10.0)
+# Setting minimum required for cmake versions
+cmake_minimum_required(VERSION 3.5)
 
-project(tic-tac-toe)  # Main game project
+# Setting minimal c++ version for work
+set(CMAKE_CXX_STANDARD 14)
 
-# Set source files
-add_executable( ${CMAKE_PROJECT_NAME}
-    # Base includes and defines
-    src/include.hpp
-    src/define.hpp
-    src/dataTypes.hpp
-    src/values.hpp
-
-    # Function of initialasing all data
-    src/init.hpp
-    src/init.cpp
-
-    # Functions of loading all in-game data
-    src/dataLoader.hpp
-    src/dataLoader.cpp
-
-    # Base interface
-    src/baseGUI.hpp
-    src/baseGUI.cpp
-
-    # Interface of game pausing
-    src/pause.hpp
-    src/pause.cpp
-
-    # System of initialasing file loading and unloading
-    src/initFile.hpp
-    src/initFile.cpp
-
-    # In game classes
-    src/entity.hpp
-    src/entity.cpp
-
-    # Singleplayer game cycles
-    src/gameSingle.hpp
-    src/gameSingle.cpp
-
-    # Server game cycle
-    src/gameServer.hpp
-    src/gameServer.cpp
-
-    # Client game cycle
-    src/gameClient.hpp
-    src/gameClient.cpp
-
-    # Main function
-    src/main.cpp
-    
-    # Adding game icone
-    src/set.rc
-)
-
-# Static linking standart C/C++ libraries
-set(CMAKE_CXX_STANDARD_LIBRARIES "-static-libgcc -static-libstdc++ -mwindows")
-set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
-#set(CMAKE_GENERATOR_PLATFORM -A "x64")
+# Creating project
+project(Tic-tak-toe)
 
 # Hidding console
-set(DCMAKE_C_FLAGS "-mwindows")
+set(CMAKE_CXX_FLAGS "-mwindows -static")
 
-# Setting other flags
-#set(CMAKE_CXX_STANDARD_LIBRARIES "-static-libgcc -static-libstdc++ -lwsock32 -lws2_32 -mwindows ${CMAKE_CSS_STANDARD_LIBRARIES}")
-#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive")
+# Setting prefix path for finding library
+set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 
-set(CMAKE_CXX_STANDARD_LIBRARIES "-static-libgcc -static-libstdc++")
+# Setting to link standart libraries statickly
+set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 
-#set(CMAKE_CXX_STANDARD_LIBRARIES "-static-libgcc -static-libstdc++ -lwsock32 -lws2_32 -mwindows ${CMAKE_CSS_STANDARD_LIBRARIES}")
-#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive")
-#set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
+# Add all source files (that needed) under the src directory
+file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp" "src/*.rc")
+add_executable(${PROJECT_NAME} ${SOURCES})
 
-# Including external libraries
-set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-
-# Finding place of external libraries
-# Including SDL-family
-find_package(SDL2 CONFIG REQUIRED)
-find_package(SDL2_image CONFIG REQUIRED)
-find_package(SDL2_ttf CONFIG REQUIRED)
-find_package(SDL2_mixer CONFIG REQUIRED)
-find_package(SDL2_net CONFIG REQUIRED)
-
-# Including libzip
+# Look for a SDL3 package
+find_package(SDL3 REQUIRED)
+find_package(SDL3_image REQUIRED)
+find_package(SDL3_ttf REQUIRED)
+find_package(SDL3_mixer REQUIRED)
+find_package(SDL3_net REQUIRED)
 find_package(libzip CONFIG REQUIRED)
 
-# Including external included directories
-include_directories(${SDL2_INCLUDE_DIRS})
-
-# Including linked libraries
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES} SDL2_image::SDL2_image)
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE SDL2_ttf::SDL2_ttf)
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE SDL2_mixer::SDL2_mixer)
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE SDL2_net::SDL2_net)
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${libzip_LIBRARIES} libzip::zip)
+# Link to the actual SDL3 library.
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL3_net::SDL3_net SDL3_mixer::SDL3_mixer SDL3_ttf::SDL3_ttf SDL3_image::SDL3_image SDL3::SDL3)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE libzip::zip)
