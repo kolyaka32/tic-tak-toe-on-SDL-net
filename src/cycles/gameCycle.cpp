@@ -16,8 +16,8 @@ menuRestartButton(_app.window, 0.5, 0.5, {"Restart", "Перезапустить
 menuExitButton(_app.window, 0.5, 0.6, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}, 24, WHITE),
 gameRestartButton(_app.window, 0.15, 0.05, IMG_GUI_RESTART_BUTTON),
 playersTurnsTexts {
-    {_app.window, 0.5, 0.1, {"First player turn", "Ход первого игрока", "Der Zug des ersten Spielers", "Ход першага гульца"}, 24, WHITE},
-    {_app.window, 0.5, 0.1, {"Second player turn", "Ход второго игрока", "Zug des zweiten Spielers", "Ход другога гульца"}, 24, WHITE}
+    {_app.window, 0.5, 0.05, {"First player turn", "Ход первого игрока", "Der Zug des ersten Spielers", "Ход першага гульца"}, 24, WHITE},
+    {_app.window, 0.5, 0.05, {"Second player turn", "Ход второго игрока", "Zug des zweiten Spielers", "Ход другога гульца"}, 24, WHITE}
 },
 menuBackplate(_app.window, 0.5, 0.5, 1, 0.4, 40, 5),
 firstWinText(_app.window, 0.5, 0.38, {"Fist player win", "Первый игрок выйграл", "Der erste Spieler hat gewonnen", "Першы гулец выйграў"}, 30, WHITE),

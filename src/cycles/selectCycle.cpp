@@ -17,7 +17,8 @@ titleText(_app.window, 0.5, 0.15, {"Tic-tac-toe", "Крестики нолики
 singleplayerButton(_app.window, 0.5, 0.3, {"Singleplayer", "Одиночная игра", "Einzelspiel", "Адзіночная гульня"}, 24, WHITE),
 twoPlayerButton(_app.window, 0.5, 0.5, {"Two players", "Два игрока", "Zwei Spieler", "Два гульца"}, 24, WHITE),
 serverButton(_app.window, 0.5, 0.7, {"Create server", "Создать сервер", "Server erstellen", "Стварыць сервер"}, 24, WHITE),
-connectButton(_app.window, 0.5, 0.9, {"Connect", "Присоединиться", "Beitreten", "Далучыцца"}, 24, WHITE) {
+connectButton(_app.window, 0.5, 0.9, {"Connect", "Присоединиться", "Beitreten", "Далучыцца"}, 24, WHITE),
+bigFieldInfobox(_app.window, 0.5, 0.4, {"Too big field", "Слишком большое поле", "", ""}, 24) {
     // Starting menu song (if wasn't started)
     if(!isRestarted()) {
         // _app.music.start(MUS_MENU);
@@ -30,7 +31,11 @@ bool SelectCycle::inputMouseDown(App& _app) {
         return true;
     }
     if (singleplayerButton.in(mouse)) {
-        runCycle<SinglePlayerGameCycle>(_app);
+        if (Field::getWidth() == 3) {
+            runCycle<SinglePlayerGameCycle>(_app);
+        } else {
+            bigFieldInfobox.reset();
+        }
         return true;
     } else if (twoPlayerButton.in(mouse)) {
         runCycle<TwoPlayerGameCycle>(_app);
@@ -45,7 +50,6 @@ bool SelectCycle::inputMouseDown(App& _app) {
     return false;
 }
 
-// Example for getting keys input
 void SelectCycle::inputKeys(App& _app, SDL_Keycode _key) {
     switch (_key) {
     case SDLK_ESCAPE:
@@ -56,6 +60,7 @@ void SelectCycle::inputKeys(App& _app, SDL_Keycode _key) {
 
 void SelectCycle::update(App& _app) {
     BaseCycle::update(_app);
+    bigFieldInfobox.update();
 }
 
 void SelectCycle::draw(const App& _app) const {
@@ -74,6 +79,8 @@ void SelectCycle::draw(const App& _app) const {
 
     // Settings menu
     settings.blit(_app.window);
+
+    bigFieldInfobox.blit(_app.window);
 
     // Bliting all to screen
     _app.window.render();
