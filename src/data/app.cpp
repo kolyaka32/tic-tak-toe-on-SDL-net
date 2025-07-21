@@ -14,8 +14,7 @@ App::App(const LanguagedText _title)
 : music{loader, musicFilesNames},
 sounds{loader, soundsFilesNames},
 initFile(music, sounds),
-window{loader, Field::getWindowWidth(), Field::getWindowHeight()},
-titleText(_title) {
+window{loader, Field::getWindowWidth(), Field::getWindowHeight(), _title} {
     #if CHECK_CORRECTION
     SDL_Log("All loaded and created corretly");
     #endif
@@ -28,8 +27,4 @@ void App::stop() {
 
 bool App::isRunning() {
     return running;
-}
-
-void App::updateTitle() const {
-    window.updateTitle(titleText.getString().c_str());
 }

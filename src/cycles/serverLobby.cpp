@@ -12,11 +12,11 @@ bool ServerLobbyCycle::showAddress = false;
 
 ServerLobbyCycle::ServerLobbyCycle(App& _app)
 : BaseCycle(_app),
-titleText(_app.window, 0.5, 0.15, {"Wait for connection", "Ожидайте подключений", "Verbindungen erwarten", "Чакайце падлучэнняў"}, 30, WHITE),
-addressText(_app.window, 0.5, 0.3, {"Your address: %s", "Ваш адресс: %s", "Ihre Adresse: %s", "Ваш адрас: %s"}, 30, WHITE),
-copiedInfoBox(_app.window, 0.5, 0.37, {"Address copied", "Адрес скопирован", "Adresse kopiert", "Скапіяваны адрас"}, 30, WHITE),
-showAddressText(_app.window, 0.5, 0.45, {"Show address", "Показать адресс", "Adresse anzeigen", "Паказаць адрас"}, 24),
-hideAddressText(_app.window, 0.5, 0.45, {"Hide address", "Скрыть адресс", "Adresse verbergen", "Схаваць адрас"}, 24) {
+titleText(_app.window, 0.5, 0.15, {"Wait for connection", "Ожидайте подключения", "Verbindungen erwarten", "Чакайце падлучэнняў"}, 30, WHITE),
+addressText(_app.window, 0.5, 0.3, {"Your address: %s", "Ваш адресс: %s", "Ihre Adresse: %s", "Ваш адрас: %s"}, 22, WHITE),
+copiedInfoBox(_app.window, 0.5, 0.37, {"Address copied", "Адрес скопирован", "Adresse kopiert", "Скапіяваны адрас"}, 22, WHITE),
+showAddressText(_app.window, 0.5, 0.45, {"Show address", "Показать адресс", "Adresse anzeigen", "Паказаць адрас"}, 22),
+hideAddressText(_app.window, 0.5, 0.45, {"Hide address", "Скрыть адресс", "Adresse verbergen", "Схаваць адрас"}, 22) {
     // Resetting flag of showing address
     if (!isRestarted()) {
         showAddress = false;

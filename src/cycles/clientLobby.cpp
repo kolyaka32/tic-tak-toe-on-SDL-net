@@ -15,11 +15,11 @@ char basePort[6] = "8000";
 ClientLobbyCycle::ClientLobbyCycle(App& _app)
 : BaseCycle(_app),
 enterIPText(_app.window, 0.5, 0.2, {"Enter IP:", "Введите IP:", "-", "Увядзіце IP:"}, 30, WHITE),
-enterIPField(_app.window, 0.5, 0.3, 20, baseIP),
+enterIPField(_app.window, 0.5, 0.32, 20, baseIP),
 enterPortText(_app.window, 0.5, 0.5, {"Enter port:", "Введите порт:", "Port eingeben:", "Увядзіце порт:"}, 30, WHITE),
-enterPortField(_app.window, 0.5, 0.6, 20, basePort),
-connectButton(_app.window, 0.5, 0.7, {"Connect", "Присоединится", "Beitritt", "Далучыцца"}, 24, WHITE),
-pasteButton(_app.window, 0.5, 0.9, {"Paste the address", "Вставить адрес", "Kopierte Adresse", "Уставіць адрас"}, 24, WHITE) {
+enterPortField(_app.window, 0.5, 0.62, 20, basePort),
+connectButton(_app.window, 0.5, 0.78, {"Connect", "Присоединится", "Beitritt", "Далучыцца"}, 22, WHITE),
+pasteButton(_app.window, 0.5, 0.9, {"Paste the address", "Вставить адрес", "Kopierte Adresse", "Уставіць адрас"}, 22, WHITE) {
     if (isAdditionalRestarted()) {
         stop();
         return;

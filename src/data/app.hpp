@@ -10,7 +10,6 @@
 #include "preloaded/sounds.hpp"
 #include "initFile.hpp"
 #include "window.hpp"
-#include "languages.hpp"
 
 
 // Load needed loader, depend on teting
@@ -34,17 +33,12 @@ private:
     // Flags of work
     static bool running;
 
-    // Title text
-    const LanguagedText titleText;
-
 public:
     App(const LanguagedText title);
 
     // Commands to operate with global running
     static void stop();
     static bool isRunning();
-
-    void updateTitle() const;
 
     InitFile initFile;
     Music music;

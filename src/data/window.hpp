@@ -10,19 +10,21 @@
 #include "time.hpp"
 #include "../texturesNames.hpp"
 #include "../fontsNames.hpp"
+#include "languages.hpp"
 
 
 // Class of window, where all happen
 class Window {
  private:
     int width, height;
+    const LanguagedText titleText;
     SDL_Window* window;
     SDL_Renderer* renderer;
     const TexturesData<IMG_count> textures;
     const Fonts fonts;
 
  public:
-    Window(const DataLoader& loader, int width, int height);
+    Window(const DataLoader& loader, int width, int height, const LanguagedText title);
     ~Window() noexcept;
 
     // Functions for work with graphics
@@ -78,5 +80,6 @@ class Window {
     // Work with window
     void startTextInput() const;
     void stopTextInput() const;
-    void updateTitle(const char* name) const;
+    void updateTitle(const char* name) const;  // Set new title
+    void updateTitle() const;                  // Update title from basic
 };

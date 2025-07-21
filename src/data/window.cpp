@@ -13,10 +13,11 @@
 #include "languages.hpp"
 
 
-Window::Window(const DataLoader& _loader, int _width, int _height)
+Window::Window(const DataLoader& _loader, int _width, int _height, const LanguagedText _title)
 : width(_width),
 height(_height),
-window(SDL_CreateWindow(WINDOW_NAME, width, height, 0)),
+titleText(_title),
+window(SDL_CreateWindow(titleText.getString().c_str(), width, height, 0)),
 renderer(SDL_CreateRenderer(window, NULL)),
 textures{_loader, renderer, texturesFilesNames},
 fonts{_loader, fontsFilesNames} {
@@ -219,4 +220,8 @@ void Window::stopTextInput() const {
 
 void Window::updateTitle(const char* _name) const {
     SDL_SetWindowTitle(window, _name);
+}
+
+void Window::updateTitle() const {
+    updateTitle(titleText.getString().c_str());
 }

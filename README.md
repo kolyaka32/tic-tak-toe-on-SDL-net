@@ -1,38 +1,142 @@
-# The standard "Tic-tac-toe" game on c++ using SDL2
+# The standard "Tic-tac-toe" game on c++ using SDL3
+[![en](https://img.shields.io/badge/lang-en-green.svg)](https://github.com/kolyaka32/tic-tak-toe-on-SDL-net/blob/main/README.md)  [![ru](https://img.shields.io/badge/lang-ru-green.svg)](https://github.com/kolyaka32/tic-tak-toe-on-SDL-net/blob/main/README-ru.md)
 
-This repository contains sources for standart game  I made based on SDL2 library.
+This codebase implement standart tic-tac-toe game with cooperative and online mods.
 
-![Screenshot of game](/screenshots/game-main.png?raw=true)
+![Screenshot of game](/screenshots/game-main-en.png?raw=true)
 
-## Installing
-1. Simply download archieve from [releases](https://github.com/kolyaka32/tic-tac-toe-on-SDL-net/releases), unzip and run 'tic-tac-toe.exe'!
-2. Also you can download game installer from [releases](https://github.com/kolyaka32/tic-tac-toe-on-SDL-net/releases).
-3. Also you can build project by yourself, watch point 'Instalation for own use'.
 
 ## Usage
 Classical game "tic-tac-toe", ported on computer. Rules are simple you need to set crosses or circles at field.
 You goal - have pre-set number of your shape in one line/column/diagonal.
 As server or first player you can choose, how place first.
 Game have 3 mode: 
-* Singleplayer (only if field width equal 3);
+* Singleplayer (only for field with width 3);
 * Local two-person mode (for two people at one machine, walking in turns);
-* Intrnet two person mode (for two people at two different machines, by LAN);
-Also you can change numbers of width, win width and other usefull things from "settings.ini" file.
+* Internet two person mode (for two people at two different machines, by LAN, UDP);
+
+Also you can change start field configuration and other usefull things from "settings-tic-tac-toe.ini" file.
+
 
 ## Supported languages
 * English
 * Russian (Русский)
+* German (Deutsch) (WIP)
+* Bellarussian (Беларускі) (WIP)
 
-## Instalation for own use
-Need external soft:
-1. C++ compiler (such as [MSYS2](https://www.msys2.org/#installation));
-2. [Make](https://sourceforge.net/projects/gnuwin32/files/make/3.81/make-3.81.exe/download);
-3. [CMake](https://sourceforge.net/projects/cmake.mirror/);
-4. External SDL libraries ([SDL2](https://github.com/libsdl-org/SDL/releases), [SDL image](https://github.com/libsdl-org/SDL_image/releases), [SDL mixer](https://github.com/libsdl-org/SDL_mixer/releases), [SDL ttf](https://github.com/libsdl-org/SDL_ttf/releases), [SDL net](https://github.com/libsdl-org/SDL_net/releases));
-5. External archieve library - libzip (build by you own), required: 1. [zlib](https://www.zlib.net/), 2. bzip (came with GNU), 3. [libzip](https://libzip.org/download/);
-6. (Optional) Code editor [Visual Studio Code](https://code.visualstudio.com/download) (for better usage).
 
-Point 3 with all last builded sources is located at [releases](https://github.com/kolyaka32/tic-tac-toe-on-SDL-net/releases) (Development-kit).
+![Screenshot of extended game](/screenshots/game-extended-en.png?raw=true)
+
+
+## Launching of the game
+Download archieve from [releases](https://github.com/kolyaka32/tic-tak-toe-on-SDL-net/releases), depend on platform, unzip and run 'Tic-tak-toe.exe'/'Tic-tak-toe'!
+
+
+## Building by yourself (windows)
+1. Install C++ compiler (such as [MSYS2](https://www.msys2.org/#installation));
+2. Install [Make](https://sourceforge.net/projects/gnuwin32/files/make/3.81/make-3.81.exe/download);
+3. Install [CMake](https://sourceforge.net/projects/cmake.mirror/);
+4. Download and extract external SDL libraries:
+4.1. [SDL3](https://github.com/libsdl-org/SDL/releases);
+4.2. [SDL3-image](https://github.com/libsdl-org/SDL_image/releases);
+4.3. [SDL3-mixer](https://github.com/libsdl-org/SDL_mixer/releases);
+4.4. [SDL3-ttf](https://github.com/libsdl-org/SDL_ttf/releases);
+4.5. [SDL3-net](https://github.com/libsdl-org/SDL_net/releases);
+5. Extra library - libzip (build by your own), required:
+5.1. [zlib](https://www.zlib.net/);
+5.2. bzip (came with GNU);
+5.3. [libzip itself](https://libzip.org/download/), build (required launch command line **as a administator**):
+```bash
+git clone https://github.com/nih-at/libzip.git
+cd ./libzip; mkdir build; cd build;
+cmake ../; make .; make install
+```
+6. (Optional) Code editor [Visual Studio Code](https://code.visualstudio.com/download) (for better usage) (Recomended to use with plugins on c++ and cmake).
+6.1. (Recomended) Install extensions: C/C++ Extension pack, CMake Language Supports, CMake Tools.
+7. Compile project itself
+7.1. Without visual studio code:
+```bash
+cd ./Shaft-production-planner
+mkdir build
+cmake --build ./build --config Release --target all --
+```
+7.2. With visual studio code:
+Open folder with project, select complier kit, select build configuration, and build.
+
+### Prepaired sources for windows
+Sources with all builded libraries can be located at [releases](https://github.com/kolyaka32/tic-tak-toe-on-SDL-net/releases) (Development-kit-windows).
+
+
+## Building by yourself (unux systems)
+1. Check updates
+2. Check availability of compiler, make and cmake;
+3. Check availability of git;
+4. Install all necesery external libraries:
+4.1 Necesary external libraries: libasound2-dev wavpack libxmp libfreetype-dev;
+4.2. External SDL libraries ([SDL3](https://github.com/libsdl-org/SDL/releases), [SDL3-image](https://github.com/libsdl-org/SDL_image/releases), [SDL3-mixer](https://github.com/libsdl-org/SDL_mixer/releases), [SDL3-ttf](https://github.com/libsdl-org/SDL_ttf/releases), [SDL3-net](https://github.com/libsdl-org/SDL_net/releases));
+4.3. External archieve library (build by you own), required: [libzip](https://libzip.org/download/);
+5. (Optional) Code editor [Visual Studio Code](https://code.visualstudio.com/download) (for easier usage).
+5.1. (Recomended) Install extensions: C/C++ Extension pack, CMake Language Supports, CMake Tools.
+6. Compile project itself
+
+### Installing on Debian-like systems
+```bash
+sudo apt-get update
+# Installing c++ compiling system
+sudo apt-get install -y g++ git make cmake
+# Installing libraries for SDL_mixer
+sudo apt-get install -y libasound2-dev wavpack libxmp
+# Installing libraries for SDL_ttf
+sudo apt-get install -y libfreetype-dev
+# Installing libraries for libzip
+sudo apt-get install -y libzip-dev
+
+# Building external libraries
+# SDL
+git clone https://github.com/libsdl-org/SDL.git
+cd SDL; mkdir build; cd build
+cmake ..
+make; sudo make install
+cd ../../
+# SDL_image
+git clone https://github.com/libsdl-org/SDL_image.git
+cd SDL_image; mkdir build; cd build
+cmake ..
+make; sudo make install
+cd ../../
+# SDL_mixer
+git clone https://github.com/libsdl-org/SDL_mixer.git
+cd SDL_mixer; mkdir build; cd build
+cmake ..
+make; sudo make install
+cd ../../
+# SDL_ttf
+git clone https://github.com/libsdl-org/SDL_ttf.git
+cd SDL_ttf; mkdir build; cd build
+cmake ..
+make; sudo make install
+cd ../../
+# SDL_net
+git clone https://github.com/libsdl-org/SDL_net.git
+cd SDL_net; mkdir build; cd build
+cmake ..
+make; sudo make install
+cd ../../
+# libzip
+git clone https://github.com/nih-at/libzip.git
+cd libzip; mkdir build; cd build
+cmake ..
+make; sudo make install
+cd ../../
+
+# Building app itself
+git clone https://github.com/kolyaka32/tic-tak-toe-on-SDL-net.git
+cd tic-tak-toe-on-SDL-net; mkdir build
+cmake --build ./build --config Release --target all
+```
+### Prepaired sources for unix
+Sources with all builded libraries can be located at [releases](https://github.com/kolyaka32/tic-tak-toe-on-SDL-net/releases) (Development-kit-unix).
+
 
 ## Used external libraries:
 * https://github.com/libsdl-org/SDL

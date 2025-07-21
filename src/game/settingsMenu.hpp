@@ -25,10 +25,10 @@ class SettingsMenu : public GUI::GUItemplate {
 	// Flags for select language
 	const GUI::ImageButton flags[(unsigned)Language::Count];
 	// Sliders and it texts
-	GUI::HighlightedStaticText musicText;
+	/*GUI::HighlightedStaticText musicText;
 	GUI::Slider musicSlider;
 	GUI::HighlightedStaticText soundText;
-	GUI::Slider soundSlider;
+	GUI::Slider soundSlider;*/
 	// Quit button
 	GUI::TextButton exitButton;
 

@@ -20,5 +20,5 @@
 #define CONNECTION_LOST_PERCENT 0           // Option for better testing of connection stability
 
 // Base file names
-#define SETTING_FILE "settings4.ini"        // File with all starting data (width, height...)
-#define DATA_FILE "data4.dat"               // File with all GFX
+#define SETTING_FILE "settings-tic-tac-toe.ini"  // File with all starting data (width, height...)
+#define DATA_FILE "data-tic-tac-toe.dat"         // File with all GFX
