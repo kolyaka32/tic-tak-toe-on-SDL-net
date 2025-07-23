@@ -10,7 +10,7 @@
 ClientGameCycle::ClientGameCycle(App& _app, Connection& _client)
 : InternetCycle(_app),
 connection(_client),
-waitText(_app.window, 0.5, 0.38, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}, 24) {
+waitText(_app.window, 0.5, 0.05, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}, 24) {
     if (!isRestarted()) {
         field.reset();
     }
@@ -74,9 +74,17 @@ void ClientGameCycle::update(App& _app) {
         SDL_Log("Starting new round: %u", connection.lastPacket->getData<Uint8>(2));
         #endif
         // Resetting game
-        GameState state = (GameState)connection.lastPacket->getData<Uint8>(2);
-        field.start(state);
-        field.setActivePlayer(state);
+        switch (connection.lastPacket->getData<Uint8>(2)) {
+        case int(GameState::CurrentPlay):
+            field.start(GameState::CurrentPlay);
+            field.setTextureOffset(1);
+            break;
+        
+        case int(GameState::OpponentPlay):
+            field.start(GameState::OpponentPlay);
+            field.setTextureOffset(0);
+            break;
+        }
         // Making sound
         // _app.sounds.play(SND_RESET);
         return;
@@ -93,6 +101,9 @@ void ClientGameCycle::draw(const App& _app) const {
 
     // Drawing buttons
     exitButton.blit(_app.window);
+
+    // Drawing setting menu
+    settings.blit(_app.window);
 
     // Bliting game state, if need
     if (field.isWaitingStart()) {
@@ -129,8 +140,9 @@ void ClientGameCycle::draw(const App& _app) const {
         nobodyWinText.blit(_app.window);
         break;
     }
-    // Drawing setting menu
-    settings.blit(_app.window);
+    // Messages
+    disconnectedBox.blit(_app.window);
+    termianatedBox.blit(_app.window);
 
     // Bliting all to screen
     _app.window.render();

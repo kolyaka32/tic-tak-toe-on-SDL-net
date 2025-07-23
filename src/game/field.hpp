@@ -31,7 +31,7 @@ private:
     Cell *data;           // Grid of cells, representing game field
     int count;            // Counter of filled cells
     GameState gameState;  // Current state of the game
-    GameState currentPlayer;  // Code of selected player for internet connection
+    int offset;           // TExture offset for draw with different colors
     static int width;     // Size of field
     static int winWidth;  // Length of line to win
 
@@ -55,7 +55,7 @@ public:
     GameState getState();
     bool isWaitingStart();
     void start(GameState player);
-    void setActivePlayer(GameState player);
+    void setTextureOffset(int offset);
 
     // Turns of sides
     void clickSingle(int x, int y);  // Clicking in singleplayer mode

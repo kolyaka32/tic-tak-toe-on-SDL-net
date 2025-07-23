@@ -23,6 +23,7 @@ void Field::reset() {
     }
     count = 0;
     gameState = GameState::None;
+    offset = 0;
 }
 
 GameState Field::getState() {
@@ -30,15 +31,15 @@ GameState Field::getState() {
 }
 
 bool Field::isWaitingStart() {
-    return gameState == GameState::None || (gameState >= GameState::CurrentWin);
+    return gameState >= GameState::CurrentWin;
 }
 
 void Field::start(GameState _player) {
     gameState = _player;
 }
 
-void Field::setActivePlayer(GameState _player) {
-    currentPlayer = _player;
+void Field::setTextureOffset(int _state) {
+    offset = _state;
 }
 
 
@@ -74,6 +75,9 @@ void Field::clickTwo(int x, int y) {
         }
         count++;
 
+        // Inversing color of active player
+        offset ^= 1;
+
         // Checking for win
         gameState = checkWin(x, y);
     }
@@ -81,13 +85,13 @@ void Field::clickTwo(int x, int y) {
 
 bool Field::clickMultiplayerCurrent(int x, int y) {
     // Checking, if turn avaliable
-    if (y >= 0 && currentPlayer == gameState && data[x + y * width] == Cell::Empty) {
+    if (y >= 0 && gameState == GameState::CurrentPlay && data[x + y * width] == Cell::Empty) {
         switch (gameState) {
         case GameState::CurrentPlay:
             data[x + y * width] = Cell::Current;
             gameState = GameState::OpponentPlay;
             break;
-        
+
         case GameState::OpponentPlay:
             data[x + y * width] = Cell::Opponent;
             gameState = GameState::CurrentPlay;
@@ -103,13 +107,13 @@ bool Field::clickMultiplayerCurrent(int x, int y) {
 }
 
 void Field::clickMultiplayerOpponent(int x, int y) {
-    if (currentPlayer != gameState) {
+    if (gameState == GameState::OpponentPlay) {
         switch (gameState) {
         case GameState::CurrentPlay:
             data[x + y * width] = Cell::Current;
             gameState = GameState::OpponentPlay;
             break;
-        
+
         case GameState::OpponentPlay:
             data[x + y * width] = Cell::Opponent;
             gameState = GameState::CurrentPlay;
@@ -248,27 +252,6 @@ GameState Field::checkWin(int X, int Y) {
     return gameState;
 }
 
-void Field::blit(const Window& _target) const {
-    // Rendering cells with their background
-    for (int y=0; y < width; ++y)
-        for (int x=0; x < width; ++x) {
-            const SDL_FRect dest = {x * float(CELL_SIDE + SEPARATOR), y * float(CELL_SIDE + SEPARATOR) + UPPER_LINE, CELL_SIDE, CELL_SIDE};
-            // Rendering background
-            _target.blit(IMG_CELL, dest);
-
-            // Rendering cells
-            switch (data[y * width + x]) {
-            case Cell::Current:
-                _target.blit(IMG_GREEN_CROSS, dest);
-                break;
-
-            case Cell::Opponent:
-                _target.blit(IMG_RED_CIRCLE, dest);
-                break;
-            }
-        }
-}
-
 int Field::getWidth() {
     return width;
 }
@@ -295,4 +278,26 @@ int Field::getWindowWidth() {
 
 int Field::getWindowHeight() {
     return getWindowWidth() + UPPER_LINE;
+}
+
+void Field::blit(const Window& _target) const {
+    // Rendering cells with their background
+    for (int y=0; y < width; ++y) {
+        for (int x=0; x < width; ++x) {
+            const SDL_FRect dest = {x * float(CELL_SIDE + SEPARATOR), y * float(CELL_SIDE + SEPARATOR) + UPPER_LINE, CELL_SIDE, CELL_SIDE};
+            // Rendering background
+            _target.blit(IMG_CELL, dest);
+
+            // Rendering cells
+            switch (data[y * width + x]) {
+            case Cell::Current:
+                _target.blit(IMG_names(IMG_GREEN_CROSS + offset), dest);
+                break;
+
+            case Cell::Opponent:
+                _target.blit(IMG_names(IMG_RED_CIRCLE - offset), dest);
+                break;
+            }
+        }
+    }
 }

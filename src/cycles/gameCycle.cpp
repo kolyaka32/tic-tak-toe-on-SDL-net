@@ -13,16 +13,16 @@ Field GameCycle::field;
 GameCycle::GameCycle(const App& _app)
 : BaseCycle(_app),
 menuRestartButton(_app.window, 0.5, 0.5, {"Restart", "Перезапустить", "Starten", "Перазапуск"}, 24, WHITE),
-menuExitButton(_app.window, 0.5, 0.6, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}, 24, WHITE),
+menuExitButton(_app.window, 0.5, 0.65, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}, 24, WHITE),
 gameRestartButton(_app.window, 0.15, 0.05, IMG_GUI_RESTART_BUTTON),
 playersTurnsTexts {
     {_app.window, 0.5, 0.05, {"First player turn", "Ход первого игрока", "Der Zug des ersten Spielers", "Ход першага гульца"}, 24, WHITE},
     {_app.window, 0.5, 0.05, {"Second player turn", "Ход второго игрока", "Zug des zweiten Spielers", "Ход другога гульца"}, 24, WHITE}
 },
-menuBackplate(_app.window, 0.5, 0.5, 1, 0.4, 40, 5),
-firstWinText(_app.window, 0.5, 0.38, {"Fist player win", "Первый игрок выйграл", "Der erste Spieler hat gewonnen", "Першы гулец выйграў"}, 30, WHITE),
-secondWinText(_app.window, 0.5, 0.38, {"Second player win", "Второй игрок выйграл", "Der zweite Spieler hat gewonnen", "Другі гулец выйграў"}, 30, WHITE),
-nobodyWinText(_app.window, 0.5, 0.38, {"Nobody win", "Ничья", "Unentschieden", "Чые"}, 30, WHITE) {
+menuBackplate(_app.window, 0.5, 0.5, 1, 0.46, 40, 5),
+firstWinText(_app.window, 0.5, 0.35, {"Fist player win", "Первый игрок выйграл", "Der erste Spieler hat gewonnen", "Першы гулец выйграў"}, 30, WHITE),
+secondWinText(_app.window, 0.5, 0.35, {"Second player win", "Второй игрок выйграл", "Der zweite Spieler hat gewonnen", "Другі гулец выйграў"}, 30, WHITE),
+nobodyWinText(_app.window, 0.5, 0.35, {"Nobody win", "Ничья", "Unentschieden", "Чые"}, 30, WHITE) {
     if (!isRestarted()) {
         // Resetting field
         field.reset();
@@ -69,7 +69,7 @@ void GameCycle::draw(const App& _app) const {
     gameRestartButton.blit(_app.window);
 
     // Bliting waiting menu
-    if (field.isWaitingStart()) {
+    if (field.isWaitingStart() || field.getState() == GameState::None) {
         // Bliting end background
         menuBackplate.blit(_app.window);
 

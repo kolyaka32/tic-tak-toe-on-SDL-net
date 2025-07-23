@@ -22,9 +22,9 @@ const char* texturesFilesNames[IMG_count] = {
     "img/GUI/Flag_BEL.png",
 
     // Game part
-    "img/game/green_circle.png",
     "img/game/green_cross.png",
-    "img/game/red_circle.png",
     "img/game/red_cross.png",
+    "img/game/green_circle.png",
+    "img/game/red_circle.png",
     "img/game/cell.png",
 };

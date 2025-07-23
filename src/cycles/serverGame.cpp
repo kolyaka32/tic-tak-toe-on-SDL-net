@@ -9,8 +9,8 @@
 ServerGameCycle::ServerGameCycle(App& _app, Connection& _server)
 : InternetCycle(_app),
 connection(_server),
-startFirst(_app.window, 0.5, 0.38, {"Start as cross", "Начать за крестик", "Am Kreuz anfangen", "Пачаць за крыжык"}, 24, WHITE),
-startSecond(_app.window, 0.5, 0.49, {"Start as circle", "Начать за кружок", "Für einen Kreis beginnen", "Пачаць за гурток"}, 24, WHITE) {
+startFirst(_app.window, 0.5, 0.45, {"Start as cross", "Начать за крестик", "Am Kreuz anfangen", "Пачаць за крыжык"}, 24, WHITE),
+startSecond(_app.window, 0.5, 0.55, {"Start as circle", "Начать за кружок", "Für einen Kreis beginnen", "Пачаць за гурток"}, 24, WHITE) {
     if(!isRestarted()) {
         // Sending applying initialsiation message
         connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::Init, Field::getWidth(), Field::getWinWidth());
@@ -31,18 +31,18 @@ bool ServerGameCycle::inputMouseDown(App& _app) {
         return true;
     }
     // Checking, if game start
-    if (field.isWaitingStart()) {
+    if (field.isWaitingStart() || field.getState() == GameState::None) {
         // Check for game start
         if (startFirst.in(mouse)) {
             field.start(GameState::CurrentPlay);
             connection.sendConfirmed<Uint8>(ConnectionCode::GameStart, (Uint8)GameState::OpponentPlay);
-            field.setActivePlayer(GameState::CurrentPlay);
+            field.setTextureOffset(0);
             return true;
         }
         if (startSecond.in(mouse)) {
             field.start(GameState::OpponentPlay);
             connection.sendConfirmed<Uint8>(ConnectionCode::GameStart, (Uint8)GameState::CurrentPlay);
-            field.setActivePlayer(GameState::OpponentPlay);
+            field.setTextureOffset(1);
             return true;
         }
         if (menuExitButton.in(mouse)) {
@@ -102,8 +102,11 @@ void ServerGameCycle::draw(const App& _app) const {
     exitButton.blit(_app.window);
     gameRestartButton.blit(_app.window);
 
+    // Drawing setting menu
+    settings.blit(_app.window);
+
     // Bliting waiting menu, if need
-    if (field.isWaitingStart()) {
+    if (field.isWaitingStart() || field.getState() == GameState::None) {
         // Bliting end background
         menuBackplate.blit(_app.window);
 
@@ -135,8 +138,9 @@ void ServerGameCycle::draw(const App& _app) const {
         nobodyWinText.blit(_app.window);
         break;
     }
-    // Drawing setting menu
-    settings.blit(_app.window);
+    // Messages
+    disconnectedBox.blit(_app.window);
+    termianatedBox.blit(_app.window);
 
     // Bliting all to screen
     _app.window.render();
