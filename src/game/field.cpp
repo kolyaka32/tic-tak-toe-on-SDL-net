@@ -259,7 +259,7 @@ int Field::getWidth() {
 void Field::setWidth(int _width) {
     width = _width;
     setMin(width, 3);
-    setMax(width, 21);
+    setMax(width, 9);
 }
 
 int Field::getWinWidth() {

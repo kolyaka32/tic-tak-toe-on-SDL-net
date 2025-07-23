@@ -5,10 +5,12 @@ cmake_minimum_required(VERSION 3.5)
 set(CMAKE_CXX_STANDARD 14)
 
 # Creating project
-project(Tic-tak-toe)
+project(Chess)
 
-# Hidding console
-set(CMAKE_CXX_FLAGS "-mwindows -static")
+# Hidding console on windows
+if (WIN32)
+    set(CMAKE_CXX_FLAGS "-mwindows -static")
+endif (WIN32)
 
 # Setting prefix path for finding library
 set(CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
