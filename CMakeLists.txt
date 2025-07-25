@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.5)
 set(CMAKE_CXX_STANDARD 14)
 
 # Creating project
-project(Chess)
+project(Tic-tak-toe)
 
 # Hidding console on windows
 if (WIN32)
