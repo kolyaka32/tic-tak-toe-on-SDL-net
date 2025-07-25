@@ -31,38 +31,37 @@ private:
     Cell *data;           // Grid of cells, representing game field
     int count;            // Counter of filled cells
     GameState gameState;  // Current state of the game
-    int offset;           // TExture offset for draw with different colors
-    static int width;     // Size of field
-    static int winWidth;  // Length of line to win
 
 protected:
+    // Sizes of field
+    int width = 3;     // Size of field
+    int winWidth = 3;  // Length of line to win
+
+    Cell getCell(int x, int y) const;
+
     void AImove();  // Move of computer
     int recursivelySolve(Uint8 round);  // Function for solve game in singleplayer recursively
     GameState checkWin(int X, int Y);  // Check, if anyone win after his turn, return who win
-
-public:
-    // Global size of field
-    static int getWidth();
-    static void setWidth(int width);
-    static int getWinWidth();
-    static void setWinWidth(int winWidth);
-    static int getWindowWidth();
-    static int getWindowHeight();
-
-    Field();
-    ~Field();
-    void reset();
-    GameState getState();
-    bool isWaitingStart();
-    void start(GameState player);
-    void setTextureOffset(int offset);
 
     // Turns of sides
     void clickSingle(int x, int y);  // Clicking in singleplayer mode
     void clickTwo(int x, int y);     // Clicking in two-player mode
     bool clickMultiplayerCurrent(int x, int y);   // Clicking in multiplayer mode, return if have turn
-    void clickMultiplayerOpponent(int x, int y);  // Clicking in multiplayer mode by internet connection
 
-    // Drawing field with his background
-    void blit(const Window& target) const;
+public:
+    Field();
+    ~Field();
+    // Global size of field
+    int getWidth();
+    void setWidth(int width);
+    int getWinWidth();
+    void setWinWidth(int winWidth);
+
+    void reset();
+    GameState getState();
+    bool isWaitingStart();
+    void start(GameState player);
+
+    // Clicking in multiplayer mode by internet connection
+    void clickMultiplayerOpponent(int x, int y);
 };

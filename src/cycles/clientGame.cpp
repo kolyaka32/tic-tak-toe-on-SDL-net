@@ -30,9 +30,9 @@ bool ClientGameCycle::inputMouseDown(App& _app) {
         }
     } else {
         // Normal turn
-        if (field.clickMultiplayerCurrent((mouse.getX()/CELL_SIDE), (mouse.getY() - UPPER_LINE)/CELL_SIDE)) {
+        if (field.clickMultiplayerCurrent(mouse)) {
             // Sending to opponent
-            connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn, (mouse.getX()/CELL_SIDE), (mouse.getY() - UPPER_LINE)/CELL_SIDE);
+            connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn, field.getXPos(mouse), field.getYPos(mouse));
         }
     }
     return false;
@@ -51,12 +51,14 @@ void ClientGameCycle::update(App& _app) {
     // Getting internet messages
     switch (connection.updateMessages()) {
     case ConnectionCode::GameTurn:
-        #if CHECK_CORRECTION
-        SDL_Log("Turn of opponent player: from %u to %u", connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
-        #endif
-        field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
-        // Making sound
-        //_app.sounds.play(SND_RESET);
+        if (connection.lastPacket->isBytesAvaliable(4)) {
+            #if CHECK_CORRECTION
+            SDL_Log("Turn of opponent player: from %u to %u", connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
+            #endif
+            field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
+            // Making sound
+            //_app.sounds.play(SND_RESET);
+        }
         return;
 
     case ConnectionCode::GameClear:
@@ -70,23 +72,25 @@ void ClientGameCycle::update(App& _app) {
         return;
 
     case ConnectionCode::GameStart:
-        #if CHECK_CORRECTION
-        SDL_Log("Starting new round: %u", connection.lastPacket->getData<Uint8>(2));
-        #endif
-        // Resetting game
-        switch (connection.lastPacket->getData<Uint8>(2)) {
-        case int(GameState::CurrentPlay):
-            field.start(GameState::CurrentPlay);
-            field.setTextureOffset(1);
-            break;
-        
-        case int(GameState::OpponentPlay):
-            field.start(GameState::OpponentPlay);
-            field.setTextureOffset(0);
-            break;
+        if (connection.lastPacket->isBytesAvaliable(3)) {
+            #if CHECK_CORRECTION
+            SDL_Log("Starting new round: %u", connection.lastPacket->getData<Uint8>(2));
+            #endif
+            // Resetting game
+            switch (connection.lastPacket->getData<Uint8>(2)) {
+            case int(GameState::CurrentPlay):
+                field.start(GameState::CurrentPlay);
+                field.setTextureOffset(1);
+                break;
+            
+            case int(GameState::OpponentPlay):
+                field.start(GameState::OpponentPlay);
+                field.setTextureOffset(0);
+                break;
+            }
+            // Making sound
+            // _app.sounds.play(SND_RESET);
         }
-        // Making sound
-        // _app.sounds.play(SND_RESET);
         return;
     }
 }

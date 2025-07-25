@@ -5,7 +5,7 @@
 
 #include "app.hpp"
 #include "cycleTemplate.hpp"
-#include "../game/field.hpp"
+#include "../cycles/gameCycle.hpp"
 
 
 bool App::running = true;
@@ -14,7 +14,7 @@ App::App(const LanguagedText _title)
 : music{loader, musicFilesNames},
 sounds{loader, soundsFilesNames},
 initFile(music, sounds),
-window{loader, Field::getWindowWidth(), Field::getWindowHeight(), _title} {
+window{loader, GameCycle::getWindowWidth(), GameCycle::getWindowHeight(), _title} {
     #if CHECK_CORRECTION
     SDL_Log("All loaded and created corretly");
     #endif

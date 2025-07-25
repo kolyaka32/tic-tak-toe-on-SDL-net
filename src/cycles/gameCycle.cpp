@@ -8,7 +8,7 @@
 
 
 // Static class members
-Field GameCycle::field;
+GameField GameCycle::field;
 
 GameCycle::GameCycle(const App& _app)
 : BaseCycle(_app),
@@ -105,4 +105,28 @@ void GameCycle::draw(const App& _app) const {
 
     // Bliting all to screen
     _app.window.render();
+}
+
+int GameCycle::getWidth() {
+    return field.getWidth();
+}
+
+void GameCycle::setWidth(int _width) {
+    field.setWidth(_width);
+}
+
+int GameCycle::getWinWidth() {
+    return field.getWinWidth();
+}
+
+void GameCycle::setWinWidth(int _winWidth) {
+    field.setWinWidth(_winWidth);
+}
+
+int GameCycle::getWindowWidth() {
+    return getWidth() * CELL_SIDE + (getWidth() - 1) * SEPARATOR;
+}
+
+int GameCycle::getWindowHeight() {
+    return getWindowWidth() + UPPER_LINE;
 }

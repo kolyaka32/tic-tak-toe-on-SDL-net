@@ -52,13 +52,11 @@ public:
 class GetPacket : public Data {
 private:
     int offset = 0;
-    // Additional errors checks
-    #if CHECK_CORRECTION
-    int size;
-    #endif
+    int size;  // Size of packet for check on correction
 
 public:
     GetPacket(NET_Datagram* datagramm);
+    bool isBytesAvaliable(int bytes);
     // Functions for get data from message by order
     template <typename T>
     T getData();

@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
@@ -6,9 +5,6 @@
 
 #include "field.hpp"
 
-
-int Field::width = 3;
-int Field::winWidth = 3;
 
 Field::Field()
 : data(new Cell[width * width]) {}
@@ -23,7 +19,6 @@ void Field::reset() {
     }
     count = 0;
     gameState = GameState::None;
-    offset = 0;
 }
 
 GameState Field::getState() {
@@ -38,14 +33,14 @@ void Field::start(GameState _player) {
     gameState = _player;
 }
 
-void Field::setTextureOffset(int _state) {
-    offset = _state;
+Cell Field::getCell(int x, int y) const {
+    return data[x + y * width];
 }
 
 
 void Field::clickSingle(int x, int y) {
     // Checking, if cell empty
-    if (y >= 0 && data[x + y * width] == Cell::Empty) {
+    if (getCell(x, y) == Cell::Empty) {
         data[x + y * width] = Cell::Current;
         count++;
 
@@ -60,7 +55,7 @@ void Field::clickSingle(int x, int y) {
 
 void Field::clickTwo(int x, int y) {
     // Checking, if turn avaliable
-    if (y >= 0 && data[x + y * width] == Cell::Empty) {
+    if (getCell(x, y) == Cell::Empty) {
         // Setting new cell and changing player
         switch (gameState) {
         case GameState::CurrentPlay:
@@ -75,9 +70,6 @@ void Field::clickTwo(int x, int y) {
         }
         count++;
 
-        // Inversing color of active player
-        offset ^= 1;
-
         // Checking for win
         gameState = checkWin(x, y);
     }
@@ -85,7 +77,7 @@ void Field::clickTwo(int x, int y) {
 
 bool Field::clickMultiplayerCurrent(int x, int y) {
     // Checking, if turn avaliable
-    if (y >= 0 && gameState == GameState::CurrentPlay && data[x + y * width] == Cell::Empty) {
+    if (gameState == GameState::CurrentPlay && getCell(x, y) == Cell::Empty) {
         switch (gameState) {
         case GameState::CurrentPlay:
             data[x + y * width] = Cell::Current;
@@ -258,6 +250,8 @@ int Field::getWidth() {
 
 void Field::setWidth(int _width) {
     width = _width;
+    delete[] data;
+    data = new Cell[width * width];
     setMin(width, 3);
     setMax(width, 9);
 }
@@ -270,34 +264,4 @@ void Field::setWinWidth(int _winWidth) {
     winWidth = _winWidth;
     setMin(winWidth, 3);
     setMax(winWidth, width);
-}
-
-int Field::getWindowWidth() {
-    return width * CELL_SIDE + (width - 1) * SEPARATOR;
-}
-
-int Field::getWindowHeight() {
-    return getWindowWidth() + UPPER_LINE;
-}
-
-void Field::blit(const Window& _target) const {
-    // Rendering cells with their background
-    for (int y=0; y < width; ++y) {
-        for (int x=0; x < width; ++x) {
-            const SDL_FRect dest = {x * float(CELL_SIDE + SEPARATOR), y * float(CELL_SIDE + SEPARATOR) + UPPER_LINE, CELL_SIDE, CELL_SIDE};
-            // Rendering background
-            _target.blit(IMG_CELL, dest);
-
-            // Rendering cells
-            switch (data[y * width + x]) {
-            case Cell::Current:
-                _target.blit(IMG_names(IMG_GREEN_CROSS + offset), dest);
-                break;
-
-            case Cell::Opponent:
-                _target.blit(IMG_names(IMG_RED_CIRCLE - offset), dest);
-                break;
-            }
-        }
-    }
 }

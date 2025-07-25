@@ -13,7 +13,7 @@ startFirst(_app.window, 0.5, 0.45, {"Start as cross", "Начать за кре�
 startSecond(_app.window, 0.5, 0.55, {"Start as circle", "Начать за кружок", "Für einen Kreis beginnen", "Пачаць за гурток"}, 24, WHITE) {
     if(!isRestarted()) {
         // Sending applying initialsiation message
-        connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::Init, Field::getWidth(), Field::getWinWidth());
+        connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::Init, field.getWidth(), field.getWinWidth());
     }
 }
 
@@ -52,9 +52,9 @@ bool ServerGameCycle::inputMouseDown(App& _app) {
         }
     } else {
         // Normal turn
-        if (field.clickMultiplayerCurrent((mouse.getX()/CELL_SIDE), (mouse.getY() - UPPER_LINE)/CELL_SIDE)) {
+        if (field.clickMultiplayerCurrent(mouse)) {
             // Sending to opponent
-            connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn, (mouse.getX()/CELL_SIDE), (mouse.getY() - UPPER_LINE)/CELL_SIDE);
+            connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn, field.getXPos(mouse), field.getYPos(mouse));
         }
     }
     return false;
