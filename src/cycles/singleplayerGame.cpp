@@ -11,6 +11,7 @@ SinglePlayerGameCycle::SinglePlayerGameCycle(App& _app)
     if(!isRestarted()) {
         // Starting game
         field.start(GameState::CurrentPlay);
+        field.setTextureOffset(0);
     }
 }
 
@@ -46,7 +47,7 @@ bool SinglePlayerGameCycle::inputMouseDown(App& _app) {
         }
     } else {
         // Normal turn
-        field.clickSingle((mouse.getX()/CELL_SIDE), (mouse.getY() - UPPER_LINE)/CELL_SIDE);
+        field.clickSingle(mouse);
     }
     return false;
 }

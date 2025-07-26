@@ -31,7 +31,7 @@ bool SelectCycle::inputMouseDown(App& _app) {
         return true;
     }
     if (singleplayerButton.in(mouse)) {
-        if (Field::getWidth() == 3) {
+        if (GameCycle::getWidth() == 3) {
             runCycle<SinglePlayerGameCycle>(_app);
         } else {
             bigFieldInfobox.reset();

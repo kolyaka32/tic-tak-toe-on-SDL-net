@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2024-2025, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
@@ -6,9 +5,6 @@
 
 #include "field.hpp"
 
-
-int Field::width = 3;
-int Field::winWidth = 3;
 
 Field::Field()
 : data(new Cell[width * width]) {}
@@ -30,21 +26,21 @@ GameState Field::getState() {
 }
 
 bool Field::isWaitingStart() {
-    return gameState == GameState::None || (gameState >= GameState::CurrentWin);
+    return gameState >= GameState::CurrentWin;
 }
 
 void Field::start(GameState _player) {
     gameState = _player;
 }
 
-void Field::setActivePlayer(GameState _player) {
-    currentPlayer = _player;
+Cell Field::getCell(int x, int y) const {
+    return data[x + y * width];
 }
 
 
 void Field::clickSingle(int x, int y) {
     // Checking, if cell empty
-    if (y >= 0 && data[x + y * width] == Cell::Empty) {
+    if (getCell(x, y) == Cell::Empty) {
         data[x + y * width] = Cell::Current;
         count++;
 
@@ -59,7 +55,7 @@ void Field::clickSingle(int x, int y) {
 
 void Field::clickTwo(int x, int y) {
     // Checking, if turn avaliable
-    if (y >= 0 && data[x + y * width] == Cell::Empty) {
+    if (getCell(x, y) == Cell::Empty) {
         // Setting new cell and changing player
         switch (gameState) {
         case GameState::CurrentPlay:
@@ -81,13 +77,13 @@ void Field::clickTwo(int x, int y) {
 
 bool Field::clickMultiplayerCurrent(int x, int y) {
     // Checking, if turn avaliable
-    if (y >= 0 && currentPlayer == gameState && data[x + y * width] == Cell::Empty) {
+    if (gameState == GameState::CurrentPlay && getCell(x, y) == Cell::Empty) {
         switch (gameState) {
         case GameState::CurrentPlay:
             data[x + y * width] = Cell::Current;
             gameState = GameState::OpponentPlay;
             break;
-        
+
         case GameState::OpponentPlay:
             data[x + y * width] = Cell::Opponent;
             gameState = GameState::CurrentPlay;
@@ -103,13 +99,13 @@ bool Field::clickMultiplayerCurrent(int x, int y) {
 }
 
 void Field::clickMultiplayerOpponent(int x, int y) {
-    if (currentPlayer != gameState) {
+    if (gameState == GameState::OpponentPlay) {
         switch (gameState) {
         case GameState::CurrentPlay:
             data[x + y * width] = Cell::Current;
             gameState = GameState::OpponentPlay;
             break;
-        
+
         case GameState::OpponentPlay:
             data[x + y * width] = Cell::Opponent;
             gameState = GameState::CurrentPlay;
@@ -248,35 +244,16 @@ GameState Field::checkWin(int X, int Y) {
     return gameState;
 }
 
-void Field::blit(const Window& _target) const {
-    // Rendering cells with their background
-    for (int y=0; y < width; ++y)
-        for (int x=0; x < width; ++x) {
-            const SDL_FRect dest = {x * float(CELL_SIDE + SEPARATOR), y * float(CELL_SIDE + SEPARATOR) + UPPER_LINE, CELL_SIDE, CELL_SIDE};
-            // Rendering background
-            _target.blit(IMG_CELL, dest);
-
-            // Rendering cells
-            switch (data[y * width + x]) {
-            case Cell::Current:
-                _target.blit(IMG_GREEN_CROSS, dest);
-                break;
-
-            case Cell::Opponent:
-                _target.blit(IMG_RED_CIRCLE, dest);
-                break;
-            }
-        }
-}
-
 int Field::getWidth() {
     return width;
 }
 
 void Field::setWidth(int _width) {
     width = _width;
+    delete[] data;
+    data = new Cell[width * width];
     setMin(width, 3);
-    setMax(width, 21);
+    setMax(width, 9);
 }
 
 int Field::getWinWidth() {
@@ -287,12 +264,4 @@ void Field::setWinWidth(int _winWidth) {
     winWidth = _winWidth;
     setMin(winWidth, 3);
     setMax(winWidth, width);
-}
-
-int Field::getWindowWidth() {
-    return width * CELL_SIDE + (width - 1) * SEPARATOR;
-}
-
-int Field::getWindowHeight() {
-    return getWindowWidth() + UPPER_LINE;
 }

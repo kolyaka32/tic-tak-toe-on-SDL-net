@@ -27,10 +27,10 @@ enum IMG_names : unsigned {
     // Main game part
     // Green (current player) figures
     IMG_GREEN_CROSS,
-    IMG_GREEN_CIRCLE,
+    IMG_RED_CROSS,
 
     // Red (opponent player) figures
-    IMG_RED_CROSS,
+    IMG_GREEN_CIRCLE,
     IMG_RED_CIRCLE,
 
     // Empty cell

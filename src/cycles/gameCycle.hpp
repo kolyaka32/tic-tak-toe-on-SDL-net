@@ -6,14 +6,14 @@
 #pragma once
 
 #include "baseCycle.hpp"
-#include "../game/field.hpp"
+#include "../game/gameField.hpp"
 
 
 // Cycle with game template
 class GameCycle : public BaseCycle {
  protected:
     // Active game part
-    static Field field;  // Main game field
+    static GameField field;  // Main game field
 
     const GUI::ImageButton gameRestartButton;  // Button for restart game
     GUI::StaticText playersTurnsTexts[2];
@@ -34,4 +34,10 @@ class GameCycle : public BaseCycle {
 
  public:
     GameCycle(const App& app);
+    static int getWidth();
+    static void setWidth(int width);
+    static int getWinWidth();
+    static void setWinWidth(int winWidth);
+    static int getWindowWidth();
+    static int getWindowHeight();
 };

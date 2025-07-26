@@ -22,6 +22,7 @@ bool TwoPlayerGameCycle::inputMouseDown(App& _app) {
     if (gameRestartButton.in(mouse)) {
         // Restarting current game
         field.reset();
+        field.setTextureOffset(0);
         field.start(GameState::CurrentPlay);
 
         // Making sound
@@ -34,6 +35,7 @@ bool TwoPlayerGameCycle::inputMouseDown(App& _app) {
         if (menuRestartButton.in(mouse)) {
             // Restarting current game
             field.reset();
+            field.setTextureOffset(0);
             field.start(GameState::CurrentPlay);
 
             // Making sound
@@ -47,7 +49,7 @@ bool TwoPlayerGameCycle::inputMouseDown(App& _app) {
         }
     } else {
         // Normal turn
-        field.clickTwo((mouse.getX()/CELL_SIDE), (mouse.getY() - UPPER_LINE)/CELL_SIDE);
+        field.clickTwo(mouse);
     }
     return false;
 }

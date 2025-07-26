@@ -71,7 +71,9 @@ int SendPacket::getLength() {
 // Get packet class
 GetPacket::GetPacket(NET_Datagram* datagramm) {
     data = datagramm->buf;
-    #if CHECK_CORRECTION
     size = datagramm->buflen;
-    #endif
+}
+
+bool GetPacket::isBytesAvaliable(int bytes) {
+    return size >= bytes;
 }
