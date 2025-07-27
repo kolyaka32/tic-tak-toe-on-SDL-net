@@ -5,7 +5,13 @@
 
 #include "musicNames.hpp"
 
+
 // File names of the corresponding music
 const char* musicFilesNames[MUS_count] = {
-    
+    // Menu part
+    "mus/menu.mp3",
+
+    // Game part
+    "mus/main-calm.mp3"
+    "mus/main-combat.mp3",
 };

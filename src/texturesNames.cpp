@@ -5,6 +5,7 @@
 
 #include "texturesNames.hpp"
 
+
 // File names of the corresponding textures
 const char* texturesFilesNames[IMG_count] = {
     // Graphic interface sprites

@@ -8,5 +8,13 @@
 
 // File names of the corresponding sounds
 const char* soundsFilesNames[SND_count] = {
-    
+    // Game part
+    "snd/turn.wav",
+    "snd/reset.wav",
+
+    // Internet connection part
+    "snd/disconnect.wav",
+
+    // Screamer
+    "snd/laugh.wav",
 };

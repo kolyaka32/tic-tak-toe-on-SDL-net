@@ -5,6 +5,7 @@
 
 #pragma once
 
+
 // Selectable languages to use
 enum class Language : unsigned {
     English,
