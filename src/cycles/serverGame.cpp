@@ -22,12 +22,12 @@ bool ServerGameCycle::inputMouseDown(App& _app) {
         return true;
     }
     if (gameRestartButton.in(mouse)) {
+        // Making sound
+        _app.sounds.play(SND_RESET);
         // Clearing field
         field.reset();
         // Sending message of game clear
         connection.sendConfirmed(ConnectionCode::GameClear);
-        // Making sound
-        // _app.sounds.play(SND_RESET);
         return true;
     }
     // Checking, if game start
@@ -52,7 +52,9 @@ bool ServerGameCycle::inputMouseDown(App& _app) {
         }
     } else {
         // Normal turn
-        if (field.clickMultiplayerCurrent(mouse)) {
+        if (field.tryClickMultiplayerCurrent(mouse)) {
+            // Making sound
+            _app.sounds.play(SND_TURN);
             // Sending to opponent
             connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn, field.getXPos(mouse), field.getYPos(mouse));
         }
@@ -62,12 +64,12 @@ bool ServerGameCycle::inputMouseDown(App& _app) {
 
 void ServerGameCycle::inputKeys(App& _app, SDL_Keycode _key) {
     if (_key == SDLK_R) {
+        // Making sound
+        _app.sounds.play(SND_RESET);
         // Clearing field
         field.reset();
         // Sending message of game clear
         connection.sendConfirmed(ConnectionCode::GameClear);
-        // Making sound
-        //_app.sounds.play(SND_RESET);
         return;
     } else {
         GameCycle::inputKeys(_app, _key);
@@ -86,7 +88,7 @@ void ServerGameCycle::update(App& _app) {
             #endif
             field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
             // Making sound
-            //_app.sounds.play(SND_RESET);
+            _app.sounds.play(SND_TURN);
         }
         return;
     }

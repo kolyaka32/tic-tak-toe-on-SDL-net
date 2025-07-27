@@ -111,6 +111,10 @@ int GameCycle::getWidth() {
     return field.getWidth();
 }
 
+void GameCycle::initWidth() {
+    field.initWidth();
+}
+
 void GameCycle::setWidth(int _width) {
     field.setWidth(_width);
 }

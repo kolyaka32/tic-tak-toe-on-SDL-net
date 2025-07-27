@@ -6,8 +6,7 @@
 #include "field.hpp"
 
 
-Field::Field()
-: data(new Cell[width * width]) {}
+Field::Field() {}
 
 Field::~Field() {
     delete[] data;
@@ -38,7 +37,7 @@ Cell Field::getCell(int x, int y) const {
 }
 
 
-void Field::clickSingle(int x, int y) {
+bool Field::clickSingle(int x, int y) {
     // Checking, if cell empty
     if (getCell(x, y) == Cell::Empty) {
         data[x + y * width] = Cell::Current;
@@ -50,10 +49,12 @@ void Field::clickSingle(int x, int y) {
         if (gameState < GameState::CurrentWin) {
             AImove();
         }
+        return true;
     }
+    return false;
 }
 
-void Field::clickTwo(int x, int y) {
+bool Field::clickTwo(int x, int y) {
     // Checking, if turn avaliable
     if (getCell(x, y) == Cell::Empty) {
         // Setting new cell and changing player
@@ -72,7 +73,9 @@ void Field::clickTwo(int x, int y) {
 
         // Checking for win
         gameState = checkWin(x, y);
+        return true;
     }
+    return false;
 }
 
 bool Field::clickMultiplayerCurrent(int x, int y) {
@@ -246,6 +249,12 @@ GameState Field::checkWin(int X, int Y) {
 
 int Field::getWidth() {
     return width;
+}
+
+void Field::initWidth() {
+    width = 3;
+    winWidth = 3;
+    data = new Cell[width * width];
 }
 
 void Field::setWidth(int _width) {

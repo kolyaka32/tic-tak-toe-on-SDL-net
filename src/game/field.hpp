@@ -34,8 +34,8 @@ private:
 
 protected:
     // Sizes of field
-    int width = 3;     // Size of field
-    int winWidth = 3;  // Length of line to win
+    int width;     // Size of field
+    int winWidth;  // Length of line to win
 
     Cell getCell(int x, int y) const;
 
@@ -44,8 +44,8 @@ protected:
     GameState checkWin(int X, int Y);  // Check, if anyone win after his turn, return who win
 
     // Turns of sides
-    void clickSingle(int x, int y);  // Clicking in singleplayer mode
-    void clickTwo(int x, int y);     // Clicking in two-player mode
+    bool clickSingle(int x, int y);  // Clicking in singleplayer mode
+    bool clickTwo(int x, int y);     // Clicking in two-player mode
     bool clickMultiplayerCurrent(int x, int y);   // Clicking in multiplayer mode, return if have turn
 
 public:
@@ -53,6 +53,7 @@ public:
     ~Field();
     // Global size of field
     int getWidth();
+    void initWidth();
     void setWidth(int width);
     int getWinWidth();
     void setWinWidth(int winWidth);

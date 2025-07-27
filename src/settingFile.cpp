@@ -19,6 +19,8 @@ void InitFile::loadSettings() {
     std::ifstream inSettings(SETTING_FILE);
     // Input string line
     std::string currentLine;
+    // Resetting values
+    GameCycle::initWidth();
 
     // Reading file until it end
     while (std::getline(inSettings, currentLine)) {

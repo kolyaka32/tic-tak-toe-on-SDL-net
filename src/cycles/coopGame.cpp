@@ -26,7 +26,7 @@ bool TwoPlayerGameCycle::inputMouseDown(App& _app) {
         field.start(GameState::CurrentPlay);
 
         // Making sound
-        // _app.sounds.play(SND_RESET);
+        _app.sounds.play(SND_RESET);
         return true;
     }
     // Checking, if game start
@@ -39,7 +39,7 @@ bool TwoPlayerGameCycle::inputMouseDown(App& _app) {
             field.start(GameState::CurrentPlay);
 
             // Making sound
-            //_app.sounds.play(SND_RESET);
+            _app.sounds.play(SND_RESET);
             return true;
         }
         if (menuExitButton.in(mouse)) {
@@ -49,7 +49,10 @@ bool TwoPlayerGameCycle::inputMouseDown(App& _app) {
         }
     } else {
         // Normal turn
-        field.clickTwo(mouse);
+        if (field.tryClickTwo(mouse)) {
+            // Making sound
+            _app.sounds.play(SND_TURN);
+        }
     }
     return false;
 }

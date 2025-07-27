@@ -25,24 +25,28 @@ int GameField::getYPos(const Mouse _mouse) {
     return (_mouse.getY() - UPPER_LINE) / (CELL_SIDE + SEPARATOR);
 }
 
-void GameField::clickSingle(const Mouse _mouse) {
+bool GameField::tryClickSingle(const Mouse _mouse) {
     if (_mouse.getY() > UPPER_LINE) {
-        Field::clickSingle(getXPos(_mouse), getYPos(_mouse));
+        return clickSingle(getXPos(_mouse), getYPos(_mouse));
     }
+    return false;
 }
 
-void GameField::clickTwo(const Mouse _mouse) {
+bool GameField::tryClickTwo(const Mouse _mouse) {
     if (_mouse.getY() > UPPER_LINE) {
-        Field::clickTwo(getXPos(_mouse), getYPos(_mouse));
-        // Changing active player, if in game
-        if (getState() <= GameState::OpponentPlay) {
-            // Inversing color of active player
-            offset ^= 1;
+        if (clickTwo(getXPos(_mouse), getYPos(_mouse))) {
+            // Changing active player, if in game
+            if (getState() <= GameState::OpponentPlay) {
+                // Inversing color of active player
+                offset ^= 1;
+            }
+            return true;
         }
     }
+    return false;
 }
 
-bool GameField::clickMultiplayerCurrent(const Mouse _mouse) {
+bool GameField::tryClickMultiplayerCurrent(const Mouse _mouse) {
     if (_mouse.getY() > UPPER_LINE) {
         return Field::clickMultiplayerCurrent(getXPos(_mouse), getYPos(_mouse));
     }

@@ -25,9 +25,9 @@ public:
     int getYPos(const Mouse mouse);
 
     // Game turns
-    void clickSingle(const Mouse mouse);  // Clicking in singleplayer mode
-    void clickTwo(const Mouse mouse);     // Clicking in two-player mode
-    bool clickMultiplayerCurrent(const Mouse mouse);   // Clicking in multiplayer mode, return if have turn
+    bool tryClickSingle(const Mouse mouse);  // Clicking in singleplayer mode, return if have turn
+    bool tryClickTwo(const Mouse mouse);     // Clicking in two-player mode, return if have turn
+    bool tryClickMultiplayerCurrent(const Mouse mouse);   // Clicking in multiplayer mode, return if have turn
 
     // Drawing field with his background
     void blit(const Window& target) const;

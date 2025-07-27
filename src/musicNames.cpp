@@ -12,6 +12,6 @@ const char* musicFilesNames[MUS_count] = {
     "mus/menu.mp3",
 
     // Game part
-    "mus/main-calm.mp3"
+    "mus/main-calm.mp3",
     "mus/main-combat.mp3",
 };

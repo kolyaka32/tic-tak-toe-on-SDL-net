@@ -30,7 +30,9 @@ bool ClientGameCycle::inputMouseDown(App& _app) {
         }
     } else {
         // Normal turn
-        if (field.clickMultiplayerCurrent(mouse)) {
+        if (field.tryClickMultiplayerCurrent(mouse)) {
+            // Making sound
+            _app.sounds.play(SND_TURN);
             // Sending to opponent
             connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn, field.getXPos(mouse), field.getYPos(mouse));
         }
@@ -57,7 +59,7 @@ void ClientGameCycle::update(App& _app) {
             #endif
             field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
             // Making sound
-            //_app.sounds.play(SND_RESET);
+            _app.sounds.play(SND_TURN);
         }
         return;
 
@@ -68,7 +70,7 @@ void ClientGameCycle::update(App& _app) {
         // Resetting game
         field.reset();
         // Making sound
-        // _app.sounds.play(SND_RESET);
+        _app.sounds.play(SND_RESET);
         return;
 
     case ConnectionCode::GameStart:
@@ -88,8 +90,6 @@ void ClientGameCycle::update(App& _app) {
                 field.setTextureOffset(0);
                 break;
             }
-            // Making sound
-            // _app.sounds.play(SND_RESET);
         }
         return;
     }

@@ -47,7 +47,9 @@ bool SinglePlayerGameCycle::inputMouseDown(App& _app) {
         }
     } else {
         // Normal turn
-        field.clickSingle(mouse);
+        if (field.tryClickSingle(mouse)) {
+            _app.sounds.play(SND_TURN);
+        }
     }
     return false;
 }
