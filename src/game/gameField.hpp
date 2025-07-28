@@ -15,7 +15,6 @@ private:
 
 public:
     GameField();
-    ~GameField();
 
     // Setting texture for changing color of cells
     void setTextureOffset(int offset);

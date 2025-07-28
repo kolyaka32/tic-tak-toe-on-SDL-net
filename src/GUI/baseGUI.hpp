@@ -84,9 +84,10 @@ namespace GUI {
         SDL_Texture *textureButton;  // Texture of line (upper part of slider)
         SDL_FRect buttonRect;        // Place for rendering upper part
         const unsigned maxValue;     // Maximal value of state
+
      public:
         // Create slide with need line and button images
-        Slider(const Window& _target, float X, float Y, unsigned startValue, IMG_names lineImage = IMG_GUI_SLIDER_LINE,
+        Slider(const Window& _target, float X, float Y, float width, unsigned startValue, IMG_names lineImage = IMG_GUI_SLIDER_LINE,
             IMG_names buttonImage = IMG_GUI_SLIDER_BUTTON, unsigned max = 255);
         unsigned setValue(float mouseX);                  // Setting new state from mouse position
         unsigned scroll(float wheelY);                    // Checking mouse wheel action
@@ -97,7 +98,7 @@ namespace GUI {
     // Class of buttons with image on it
     class ImageButton : public GUItemplate {
     public:
-        ImageButton(const Window& _target, float X, float Y, IMG_names textureIndex);
+        ImageButton(const Window& _target, float X, float Y, float width, IMG_names textureIndex);
     };
 
 

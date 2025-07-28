@@ -10,6 +10,7 @@ Field::Field() {}
 
 Field::~Field() {
     delete[] data;
+    data = nullptr;
 }
 
 void Field::reset() {
@@ -234,7 +235,7 @@ GameState Field::checkWin(int X, int Y) {
     }
 
     // Checking second diagonal
-    for (int startT = max(X + Y, width); startT+1 > min(winWidth, winWidth - X - Y); --startT) {
+    for (int startT = min(X + Y, width); startT+1 > max(winWidth, winWidth - X - Y); --startT) {
         Uint8 state = (Uint8)Cell::Current | (Uint8)Cell::Opponent;
 
         for (Sint8 t = startT; (t > startT - winWidth); --t) {

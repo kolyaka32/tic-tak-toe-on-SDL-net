@@ -9,10 +9,6 @@
 GameField::GameField()
 : Field() {}
 
-GameField::~GameField() {
-    Field::~Field();
-}
-
 void GameField::setTextureOffset(int _state) {
     offset = _state;
 }

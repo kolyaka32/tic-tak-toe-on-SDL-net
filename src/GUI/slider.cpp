@@ -7,15 +7,16 @@
 
 
 // Slider class
-GUI::Slider::Slider(const Window& _target, float _X, float _Y, unsigned _startValue,
+GUI::Slider::Slider(const Window& _target, float _X, float _Y, float _width, unsigned _startValue,
     IMG_names _lineImage, IMG_names _buttonImage, unsigned _max)
 : maxValue(_max) {
     // Getting need texture
     texture = _target.getTexture(_lineImage);
     textureButton = _target.getTexture(_buttonImage);
-    SDL_GetTextureSize(texture, nullptr, &rect.h);
-    rect.w = _max;
-    SDL_GetTextureSize(textureButton, &buttonRect.w, &buttonRect.h);
+    rect.w = _target.getWidth() * _width;
+    rect.h = texture->h * rect.w / texture->w;
+    buttonRect.w = textureButton->w* rect.w / texture->w;
+    buttonRect.h = textureButton->h* rect.w / texture->w;
 
     // Setting it to need place
     rect.x = _target.getWidth() * _X - rect.w / 2;
@@ -37,10 +38,10 @@ unsigned GUI::Slider::setValue(float _mouseX) {
     setMax(buttonRect.x, rect.x + rect.w);
     setMin(buttonRect.x, rect.x);
 
+    unsigned value = (buttonRect.x - rect.x)/rect.w*maxValue;
     buttonRect.x -= buttonRect.w / 2;
 
-    // Returning new setted value
-    return buttonRect.x - rect.x + buttonRect.w/2;
+    return value;
 }
 
 unsigned GUI::Slider::scroll(float _wheelY) {

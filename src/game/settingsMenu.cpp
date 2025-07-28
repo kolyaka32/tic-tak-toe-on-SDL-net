@@ -9,19 +9,19 @@
 bool SettingsMenu::active = false;
 
 SettingsMenu::SettingsMenu(const App& _app)
-: settingButton{_app.window, 0.95, 0.05, IMG_GUI_PAUSE_BUTTON},
+: settingButton{_app.window, 0.95, 0.05, 0.1, IMG_GUI_PAUSE_BUTTON},
 background{_app.window, 0.5, 0.5, 0.65, 0.85, 20, 5},
 titleText{_app.window, 0.5, 0.13, {"Pause", "Пауза", "Pause", "Паўза"}, 2, 30, WHITE},
 flags {
-    {_app.window, 0.35, 0.27, IMG_GUI_FLAG_USA},
-    {_app.window, 0.65, 0.27, IMG_GUI_FLAG_RUS},
-    {_app.window, 0.35, 0.45, IMG_GUI_FLAG_GER},
-    {_app.window, 0.65, 0.45, IMG_GUI_FLAG_BEL},
+    {_app.window, 0.35, 0.27, 0.25, IMG_GUI_FLAG_USA},
+    {_app.window, 0.65, 0.27, 0.25, IMG_GUI_FLAG_RUS},
+    {_app.window, 0.35, 0.45, 0.25, IMG_GUI_FLAG_GER},
+    {_app.window, 0.65, 0.45, 0.25, IMG_GUI_FLAG_BEL},
 },
-/*musicText{_app.window, 0.5, 0.58, {"Music", "Музыка", "Die Musik", "Музыка"}, 1, 24, WHITE},
-musicSlider{_app.window, 0.5, 0.64, _app.music.getVolume()},
+musicText{_app.window, 0.5, 0.58, {"Music", "Музыка", "Die Musik", "Музыка"}, 1, 24, WHITE},
+musicSlider{_app.window, 0.5, 0.64, 0.5, _app.music.getVolume()},
 soundText{_app.window, 0.5, 0.7, {"Sounds", "Звуки", "Geräusche", "Гук"}, 1, 24, WHITE},
-soundSlider{_app.window, 0.5, 0.76, _app.sounds.getVolume()},*/
+soundSlider{_app.window, 0.5, 0.76, 0.5, _app.sounds.getVolume()},
 exitButton{_app.window, 0.5, 0.85, {"Exit", "Выход", "Ausfahrt", "Выхад"}, 24, WHITE} {}
 
 bool SettingsMenu::click(const Mouse _mouse, const App& _app) {
@@ -44,7 +44,7 @@ bool SettingsMenu::click(const Mouse _mouse, const App& _app) {
                 }
             }
         }
-        /* if (musicSlider.in(_mouse)) {
+        if (musicSlider.in(_mouse)) {
             // Checking, if click on sliders or flag
             holdingSlider = 1;
             return true;
@@ -52,7 +52,7 @@ bool SettingsMenu::click(const Mouse _mouse, const App& _app) {
         if (soundSlider.in(_mouse)) {
             holdingSlider = 2;
             return true;
-        }*/
+        }
         if (exitButton.in(_mouse)) {
             // Checking on exit
             active = false;
@@ -73,21 +73,21 @@ void SettingsMenu::unClick() {
 void SettingsMenu::scroll(App& _app, const Mouse mouse, float _wheelY) {
     if (active) {
         // Checking scroll on sliders
-        /*if (musicSlider.in(mouse)) {
+        if (musicSlider.in(mouse)) {
             _app.music.setVolume(musicSlider.scroll(_wheelY));
             return;
         }
         if (soundSlider.in(mouse)) {
             _app.sounds.setVolume(soundSlider.scroll(_wheelY));
             return;
-        }*/
+        }
     }
 }
 
 void SettingsMenu::update(App& _app) {
     if (active) {
         // Creating and finding mouse position
-        /*Mouse mouse;
+        Mouse mouse;
         mouse.updatePos();
 
         // Updating pressing on sliders
@@ -103,11 +103,11 @@ void SettingsMenu::update(App& _app) {
 
             // Playing sound effect for understanding loud
             if (getTime() > nextSound) {
-                //_app.sounds.play(SND_TURN);
+                _app.sounds.play(SND_TURN);
                 nextSound = getTime() + 400;
             }
             break;
-        }*/
+        }
     }
 }
 
@@ -125,10 +125,10 @@ void SettingsMenu::blit(const Window& _target) const {
             flags[i].blit(_target);
         }
         // Sliders
-        /*musicText.blit(_target);
+        musicText.blit(_target);
         soundSlider.blit(_target);
         soundText.blit(_target);
-        musicSlider.blit(_target);*/
+        musicSlider.blit(_target);
         // Quit
         exitButton.blit(_target);
     }

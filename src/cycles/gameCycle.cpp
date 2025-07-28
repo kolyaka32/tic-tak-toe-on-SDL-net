@@ -14,7 +14,7 @@ GameCycle::GameCycle(const App& _app)
 : BaseCycle(_app),
 menuRestartButton(_app.window, 0.5, 0.5, {"Restart", "Перезапустить", "Starten", "Перазапуск"}, 24, WHITE),
 menuExitButton(_app.window, 0.5, 0.65, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}, 24, WHITE),
-gameRestartButton(_app.window, 0.15, 0.05, IMG_GUI_RESTART_BUTTON),
+gameRestartButton(_app.window, 0.15, 0.05, 0.1, IMG_GUI_RESTART_BUTTON),
 playersTurnsTexts {
     {_app.window, 0.5, 0.05, {"First player turn", "Ход первого игрока", "Der Zug des ersten Spielers", "Ход першага гульца"}, 24, WHITE},
     {_app.window, 0.5, 0.05, {"Second player turn", "Ход второго игрока", "Zug des zweiten Spielers", "Ход другога гульца"}, 24, WHITE}
