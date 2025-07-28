@@ -26,6 +26,10 @@ bool ServerGameCycle::inputMouseDown(App& _app) {
         _app.sounds.play(SND_RESET);
         // Clearing field
         field.reset();
+        if (!firstTurn) {
+            _app.music.startFromCurrent(MUS_MAIN_CALM);
+        }
+        firstTurn = true;
         // Sending message of game clear
         connection.sendConfirmed(ConnectionCode::GameClear);
         return true;
@@ -57,6 +61,11 @@ bool ServerGameCycle::inputMouseDown(App& _app) {
             _app.sounds.play(SND_TURN);
             // Sending to opponent
             connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn, field.getXPos(mouse), field.getYPos(mouse));
+            // Changing music theme
+            if (firstTurn) {
+                _app.music.startFromCurrent(MUS_MAIN_COMBAT);
+                firstTurn = false;
+            }
         }
     }
     return false;
@@ -68,6 +77,10 @@ void ServerGameCycle::inputKeys(App& _app, SDL_Keycode _key) {
         _app.sounds.play(SND_RESET);
         // Clearing field
         field.reset();
+        if (!firstTurn) {
+            _app.music.startFromCurrent(MUS_MAIN_CALM);
+        }
+        firstTurn = true;
         // Sending message of game clear
         connection.sendConfirmed(ConnectionCode::GameClear);
         return;
@@ -86,9 +99,15 @@ void ServerGameCycle::update(App& _app) {
             #if CHECK_CORRECTION
             SDL_Log("Turn of opponent player: from %u to %u", connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
             #endif
-            field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
             // Making sound
             _app.sounds.play(SND_TURN);
+            // Making turn
+            field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
+            // Changing music theme
+            if (!firstTurn) {
+                _app.music.startFromCurrent(MUS_MAIN_COMBAT);
+                firstTurn = false;
+            }
         }
         return;
     }

@@ -14,6 +14,7 @@ class GameCycle : public BaseCycle {
  protected:
     // Active game part
     static GameField field;  // Main game field
+    bool firstTurn;
 
     const GUI::ImageButton gameRestartButton;  // Button for restart game
     GUI::StaticText playersTurnsTexts[2];

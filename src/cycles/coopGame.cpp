@@ -20,26 +20,33 @@ bool TwoPlayerGameCycle::inputMouseDown(App& _app) {
         return true;
     }
     if (gameRestartButton.in(mouse)) {
-        // Restarting current game
-        field.reset();
-        field.setTextureOffset(0);
-        field.start(GameState::CurrentPlay);
-
         // Making sound
         _app.sounds.play(SND_RESET);
+
+        // Restarting current game
+        field.reset();
+        if (!firstTurn) {
+            _app.music.startFromCurrent(MUS_MAIN_CALM);
+        }
+        firstTurn = true;
+        field.setTextureOffset(0);
+        field.start(GameState::CurrentPlay);
         return true;
     }
     // Checking, if game start
     if (field.isWaitingStart()) {
         // Check for game start
         if (menuRestartButton.in(mouse)) {
-            // Restarting current game
-            field.reset();
-            field.setTextureOffset(0);
-            field.start(GameState::CurrentPlay);
-
             // Making sound
             _app.sounds.play(SND_RESET);
+            // Restarting current game
+            field.reset();
+            if (!firstTurn) {
+                _app.music.startFromCurrent(MUS_MAIN_CALM);
+            }
+            firstTurn = true;
+            field.setTextureOffset(0);
+            field.start(GameState::CurrentPlay);
             return true;
         }
         if (menuExitButton.in(mouse)) {
@@ -52,6 +59,11 @@ bool TwoPlayerGameCycle::inputMouseDown(App& _app) {
         if (field.tryClickTwo(mouse)) {
             // Making sound
             _app.sounds.play(SND_TURN);
+            // Changing music theme
+            if (firstTurn) {
+                _app.music.startFromCurrent(MUS_MAIN_COMBAT);
+                firstTurn = false;
+            }
         }
     }
     return false;

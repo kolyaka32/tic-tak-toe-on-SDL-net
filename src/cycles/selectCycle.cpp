@@ -21,7 +21,7 @@ connectButton(_app.window, 0.5, 0.9, {"Connect", "Присоединиться",
 bigFieldInfobox(_app.window, 0.5, 0.4, {"Too big field", "Слишком большое поле", "", ""}, 24) {
     // Starting menu song (if wasn't started)
     if(!isRestarted()) {
-        // _app.music.start(MUS_MENU);
+        _app.music.start(MUS_MENU);
     }
 }
 

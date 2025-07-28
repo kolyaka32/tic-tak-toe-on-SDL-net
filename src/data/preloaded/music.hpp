@@ -21,6 +21,8 @@ class MusicData {
     MusicData(const DataLoader& loader, const char* names[count]);
     ~MusicData();
     void start(unsigned name) const;
+    void startFading(unsigned name) const;
+    void startFromCurrent(unsigned name) const;
     void setVolume(unsigned volume);
     unsigned getVolume() const;
 };

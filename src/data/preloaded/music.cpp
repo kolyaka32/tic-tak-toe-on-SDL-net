@@ -64,6 +64,19 @@ void MusicData<count>::start(unsigned _index) const {
 }
 
 template <unsigned count>
+void MusicData<count>::startFading(unsigned _index) const {
+    // Infinite playing selected music
+    Mix_FadeInMusic(music[_index], -1, 1000);
+}
+
+template <unsigned count>
+void MusicData<count>::startFromCurrent(unsigned _index) const {
+    // Infinite playing selected music
+    double currentPos = Mix_GetMusicPosition(nullptr);
+    Mix_FadeInMusicPos(music[_index], -1, 1000, currentPos);
+}
+
+template <unsigned count>
 void MusicData<count>::setVolume(unsigned _volume) {
     // Checking correction given volume
     #if CHECK_CORRECTION

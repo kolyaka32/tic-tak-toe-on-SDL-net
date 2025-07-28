@@ -10,11 +10,7 @@
 ClientGameCycle::ClientGameCycle(App& _app, Connection& _client)
 : InternetCycle(_app),
 connection(_client),
-waitText(_app.window, 0.5, 0.05, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}, 24) {
-    if (!isRestarted()) {
-        field.reset();
-    }
-}
+waitText(_app.window, 0.5, 0.05, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}, 24) {}
 
 bool ClientGameCycle::inputMouseDown(App& _app) {
     if (InternetCycle::inputMouseDown(_app)) {
@@ -35,6 +31,11 @@ bool ClientGameCycle::inputMouseDown(App& _app) {
             _app.sounds.play(SND_TURN);
             // Sending to opponent
             connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn, field.getXPos(mouse), field.getYPos(mouse));
+            // Changing music theme
+            if (firstTurn) {
+                _app.music.startFromCurrent(MUS_MAIN_COMBAT);
+                firstTurn = false;
+            }
         }
     }
     return false;
@@ -60,6 +61,11 @@ void ClientGameCycle::update(App& _app) {
             field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
             // Making sound
             _app.sounds.play(SND_TURN);
+            // Changing music theme
+            if (firstTurn) {
+                _app.music.startFromCurrent(MUS_MAIN_COMBAT);
+                firstTurn = false;
+            }
         }
         return;
 
@@ -69,6 +75,10 @@ void ClientGameCycle::update(App& _app) {
         #endif
         // Resetting game
         field.reset();
+        if (!firstTurn) {
+            _app.music.startFromCurrent(MUS_MAIN_CALM);
+        }
+        firstTurn = true;
         // Making sound
         _app.sounds.play(SND_RESET);
         return;
@@ -78,7 +88,7 @@ void ClientGameCycle::update(App& _app) {
             #if CHECK_CORRECTION
             SDL_Log("Starting new round: %u", connection.lastPacket->getData<Uint8>(2));
             #endif
-            // Resetting game
+            // Starting game
             switch (connection.lastPacket->getData<Uint8>(2)) {
             case int(GameState::CurrentPlay):
                 field.start(GameState::CurrentPlay);

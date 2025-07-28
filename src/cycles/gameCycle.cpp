@@ -26,8 +26,9 @@ nobodyWinText(_app.window, 0.5, 0.35, {"Nobody win", "Ничья", "Unentschiede
     if (!isRestarted()) {
         // Resetting field
         field.reset();
+        firstTurn = true;
         // Starting main song (if wasn't started)
-        // _app.music.start(MUS_MAIN);
+        _app.music.startFading(MUS_MAIN_CALM);
     }
 }
 
@@ -45,8 +46,12 @@ void GameCycle::inputKeys(App& _app, SDL_Keycode key) {
     case SDLK_R:
         // Restarting game
         field.reset();
+        if (!firstTurn) {
+            _app.music.startFromCurrent(MUS_MAIN_CALM);
+        }
+        firstTurn = true;
         // Making sound
-        // _app.sounds.play(SND_RESET);
+        _app.sounds.play(SND_RESET);
         return;
 
     case SDLK_Q:
