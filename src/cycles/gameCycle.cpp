@@ -7,14 +7,11 @@
 #include "selectCycle.hpp"
 
 
-// Static class members
-GameField GameCycle::field;
-
 GameCycle::GameCycle(const App& _app)
 : BaseCycle(_app),
 menuRestartButton(_app.window, 0.5, 0.5, {"Restart", "Перезапустить", "Starten", "Перазапуск"}, 24, WHITE),
 menuExitButton(_app.window, 0.5, 0.65, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}, 24, WHITE),
-gameRestartButton(_app.window, 0.15, 0.05, 0.1, IMG_GUI_RESTART_BUTTON),
+gameRestartButton(_app.window, 0.12, 0.05, 0.08, IMG_GUI_RESTART_BUTTON),
 playersTurnsTexts {
     {_app.window, 0.5, 0.05, {"First player turn", "Ход первого игрока", "Der Zug des ersten Spielers", "Ход першага гульца"}, 24, WHITE},
     {_app.window, 0.5, 0.05, {"Second player turn", "Ход второго игрока", "Zug des zweiten Spielers", "Ход другога гульца"}, 24, WHITE}
@@ -74,7 +71,7 @@ void GameCycle::draw(const App& _app) const {
     gameRestartButton.blit(_app.window);
 
     // Bliting waiting menu
-    if (field.isWaitingStart() || field.getState() == GameState::None) {
+    if (field.getState() >= GameState::CurrentWin || field.getState() == GameState::None) {
         // Bliting end background
         menuBackplate.blit(_app.window);
 
@@ -110,32 +107,4 @@ void GameCycle::draw(const App& _app) const {
 
     // Bliting all to screen
     _app.window.render();
-}
-
-int GameCycle::getWidth() {
-    return field.getWidth();
-}
-
-void GameCycle::initWidth() {
-    field.initWidth();
-}
-
-void GameCycle::setWidth(int _width) {
-    field.setWidth(_width);
-}
-
-int GameCycle::getWinWidth() {
-    return field.getWinWidth();
-}
-
-void GameCycle::setWinWidth(int _winWidth) {
-    field.setWinWidth(_winWidth);
-}
-
-int GameCycle::getWindowWidth() {
-    return getWidth() * CELL_SIDE + (getWidth() - 1) * SEPARATOR;
-}
-
-int GameCycle::getWindowHeight() {
-    return getWindowWidth() + UPPER_LINE;
 }

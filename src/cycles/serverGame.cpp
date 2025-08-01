@@ -35,16 +35,16 @@ bool ServerGameCycle::inputMouseDown(App& _app) {
         return true;
     }
     // Checking, if game start
-    if (field.isWaitingStart() || field.getState() == GameState::None) {
+    if (field.getState() >= GameState::CurrentWin || field.getState() == GameState::None) {
         // Check for game start
         if (startFirst.in(mouse)) {
-            field.start(GameState::CurrentPlay);
+            field.setState(GameState::CurrentPlay);
             connection.sendConfirmed<Uint8>(ConnectionCode::GameStart, (Uint8)GameState::OpponentPlay);
             field.setTextureOffset(0);
             return true;
         }
         if (startSecond.in(mouse)) {
-            field.start(GameState::OpponentPlay);
+            field.setState(GameState::OpponentPlay);
             connection.sendConfirmed<Uint8>(ConnectionCode::GameStart, (Uint8)GameState::CurrentPlay);
             field.setTextureOffset(1);
             return true;
@@ -129,7 +129,7 @@ void ServerGameCycle::draw(const App& _app) const {
     settings.blit(_app.window);
 
     // Bliting waiting menu, if need
-    if (field.isWaitingStart() || field.getState() == GameState::None) {
+    if (field.getState() >= GameState::CurrentWin || field.getState() == GameState::None) {
         // Bliting end background
         menuBackplate.blit(_app.window);
 

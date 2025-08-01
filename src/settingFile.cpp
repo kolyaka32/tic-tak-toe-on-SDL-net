@@ -9,7 +9,7 @@
 
 // Files to setup
 #include "data/languages.hpp"
-#include "cycles/gameCycle.hpp"
+#include "game/gameField.hpp"
 #include "cycles/clientLobby.hpp"
 
 
@@ -20,7 +20,8 @@ void InitFile::loadSettings() {
     // Input string line
     std::string currentLine;
     // Resetting values
-    GameCycle::initWidth();
+    GameField::setWidth(3);
+    GameField::setWinWidth(3);
 
     // Reading file until it end
     while (std::getline(inSettings, currentLine)) {
@@ -43,9 +44,9 @@ void InitFile::loadSettings() {
         } else if (parameter == "sounds") {
             sounds.setVolume(getValue(currentLine));
         } else if (parameter == "width") {
-            GameCycle::setWidth(std::stoi(getText(currentLine).c_str()));
+            GameField::setWidth(std::stoi(getText(currentLine).c_str()));
         } else if (parameter == "winWidth") {
-            GameCycle::setWinWidth(std::stoi(getText(currentLine).c_str()));
+            GameField::setWinWidth(std::stoi(getText(currentLine).c_str()));
         } else if (parameter == "IP") {
             strncpy(baseIP, getText(currentLine).c_str(), sizeof(baseIP));
         } else if (parameter == "port") {
@@ -90,8 +91,8 @@ void InitFile::saveSettings() {
 
     // Writing starting config (order of figures)
     outSettings << "\nGame configuration:\n";
-    outSettings << "width = " << GameCycle::getWidth() << "\n";
-    outSettings << "winWidth = " << GameCycle::getWinWidth() << "\n";
+    outSettings << "width = " << GameField::getWidth() << "\n";
+    outSettings << "winWidth = " << GameField::getWinWidth() << "\n";
 
     // Writing internet connection data
     outSettings << "\n# Internet base parameters:\n";

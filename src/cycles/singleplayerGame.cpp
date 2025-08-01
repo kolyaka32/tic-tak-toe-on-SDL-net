@@ -10,7 +10,7 @@ SinglePlayerGameCycle::SinglePlayerGameCycle(App& _app)
 : GameCycle(_app) {
     if(!isRestarted()) {
         // Starting game
-        field.start(GameState::CurrentPlay);
+        field.setState(GameState::CurrentPlay);
         field.setTextureOffset(0);
     }
 }
@@ -29,11 +29,11 @@ bool SinglePlayerGameCycle::inputMouseDown(App& _app) {
             _app.music.startFromCurrent(MUS_MAIN_CALM);
         }
         firstTurn = true;
-        field.start(GameState::CurrentPlay);
+        field.setState(GameState::CurrentPlay);
         return true;
     }
     // Checking, if game start
-    if (field.isWaitingStart()) {
+    if (field.getState() >= GameState::CurrentWin) {
         // Check for game start
         if (menuRestartButton.in(mouse)) {
             // Making sound
@@ -41,7 +41,7 @@ bool SinglePlayerGameCycle::inputMouseDown(App& _app) {
 
             // Restarting current game
             field.reset();
-            field.start(GameState::CurrentPlay);
+            field.setState(GameState::CurrentPlay);
             if (!firstTurn) {
                 _app.music.startFromCurrent(MUS_MAIN_CALM);
             }

@@ -9,7 +9,7 @@
 bool SettingsMenu::active = false;
 
 SettingsMenu::SettingsMenu(const App& _app)
-: settingButton{_app.window, 0.95, 0.05, 0.1, IMG_GUI_PAUSE_BUTTON},
+: settingButton{_app.window, 0.96, 0.05, 0.08, IMG_GUI_PAUSE_BUTTON},
 background{_app.window, 0.5, 0.5, 0.65, 0.85, 20, 5},
 titleText{_app.window, 0.5, 0.13, {"Pause", "Пауза", "Pause", "Паўза"}, 2, 30, WHITE},
 flags {

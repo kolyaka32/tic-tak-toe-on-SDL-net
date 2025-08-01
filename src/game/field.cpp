@@ -6,31 +6,12 @@
 #include "field.hpp"
 
 
-Field::Field() {}
-
-Field::~Field() {
-    delete[] data;
-    data = nullptr;
-}
-
 void Field::reset() {
     for (Uint8 i=0; i < width * width; ++i) {
         data[i] = Cell::Empty;
     }
     count = 0;
     gameState = GameState::None;
-}
-
-GameState Field::getState() {
-    return gameState;
-}
-
-bool Field::isWaitingStart() {
-    return gameState >= GameState::CurrentWin;
-}
-
-void Field::start(GameState _player) {
-    gameState = _player;
 }
 
 Cell Field::getCell(int x, int y) const {
@@ -246,32 +227,4 @@ GameState Field::checkWin(int X, int Y) {
         }
     }
     return gameState;
-}
-
-int Field::getWidth() {
-    return width;
-}
-
-void Field::initWidth() {
-    width = 3;
-    winWidth = 3;
-    data = new Cell[width * width];
-}
-
-void Field::setWidth(int _width) {
-    width = _width;
-    delete[] data;
-    data = new Cell[width * width];
-    setMin(width, 3);
-    setMax(width, 9);
-}
-
-int Field::getWinWidth() {
-    return winWidth;
-}
-
-void Field::setWinWidth(int _winWidth) {
-    winWidth = _winWidth;
-    setMin(winWidth, 3);
-    setMax(winWidth, width);
 }

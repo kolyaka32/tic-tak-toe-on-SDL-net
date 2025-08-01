@@ -11,7 +11,7 @@ TwoPlayerGameCycle::TwoPlayerGameCycle(const App& _app)
 : GameCycle(_app) {
     if (!isRestarted()) {
         // Starting game
-        field.start(GameState::CurrentPlay);
+        field.setState(GameState::CurrentPlay);
     }
 }
 
@@ -30,11 +30,11 @@ bool TwoPlayerGameCycle::inputMouseDown(App& _app) {
         }
         firstTurn = true;
         field.setTextureOffset(0);
-        field.start(GameState::CurrentPlay);
+        field.setState(GameState::CurrentPlay);
         return true;
     }
     // Checking, if game start
-    if (field.isWaitingStart()) {
+    if (field.getState() >= GameState::CurrentWin) {
         // Check for game start
         if (menuRestartButton.in(mouse)) {
             // Making sound
@@ -46,7 +46,7 @@ bool TwoPlayerGameCycle::inputMouseDown(App& _app) {
             }
             firstTurn = true;
             field.setTextureOffset(0);
-            field.start(GameState::CurrentPlay);
+            field.setState(GameState::CurrentPlay);
             return true;
         }
         if (menuExitButton.in(mouse)) {

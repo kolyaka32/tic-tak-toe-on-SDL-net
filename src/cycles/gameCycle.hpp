@@ -13,7 +13,7 @@
 class GameCycle : public BaseCycle {
  protected:
     // Active game part
-    static GameField field;  // Main game field
+    GameField field;
     bool firstTurn;
 
     const GUI::ImageButton gameRestartButton;  // Button for restart game
@@ -35,11 +35,4 @@ class GameCycle : public BaseCycle {
 
  public:
     GameCycle(const App& app);
-    static int getWidth();
-    static void initWidth();
-    static void setWidth(int width);
-    static int getWinWidth();
-    static void setWinWidth(int winWidth);
-    static int getWindowWidth();
-    static int getWindowHeight();
 };

@@ -17,7 +17,7 @@ bool ClientGameCycle::inputMouseDown(App& _app) {
         return true;
     }
     // Checking, if game start
-    if (field.isWaitingStart()) {
+    if (field.getState() >= GameState::CurrentWin) {
         // Check for game start
         if (menuExitButton.in(mouse)) {
             // Going to menu
@@ -91,12 +91,12 @@ void ClientGameCycle::update(App& _app) {
             // Starting game
             switch (connection.lastPacket->getData<Uint8>(2)) {
             case int(GameState::CurrentPlay):
-                field.start(GameState::CurrentPlay);
+                field.setState(GameState::CurrentPlay);
                 field.setTextureOffset(1);
                 break;
             
             case int(GameState::OpponentPlay):
-                field.start(GameState::OpponentPlay);
+                field.setState(GameState::OpponentPlay);
                 field.setTextureOffset(0);
                 break;
             }
@@ -120,7 +120,7 @@ void ClientGameCycle::draw(const App& _app) const {
     settings.blit(_app.window);
 
     // Bliting game state, if need
-    if (field.isWaitingStart()) {
+    if (field.getState() >= GameState::CurrentWin) {
         // Bliting end background
         menuBackplate.blit(_app.window);
 
