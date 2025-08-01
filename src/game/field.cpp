@@ -216,14 +216,33 @@ GameState Field::checkWin(int X, int Y) {
     }
 
     // Checking second diagonal
-    for (int startT = min(X + Y, width); startT+1 > max(winWidth, winWidth - X - Y); --startT) {
-        Uint8 state = (Uint8)Cell::Current | (Uint8)Cell::Opponent;
+    if ((width - Y) > X) {
+        // Upper left part
+        for (int startX = max(X - winWidth + 1, 0); startX <= min(X, Y+X-winWidth+1); ++startX) {
+            Uint8 state = (Uint8)Cell::Current | (Uint8)Cell::Opponent;
 
-        for (Sint8 t = startT; (t > startT - winWidth); --t) {
-            state &= (Uint8)data[X + Y + t * (width-1)];
+            int pos = (X+Y)*width - startX * (width-1);
+            for (int t = 0; t < winWidth; ++t) {
+                state &= (Uint8)data[pos];
+                pos -= (width-1);
+            }
+            if (state) {
+                return (GameState)(state+2);
+            }
         }
-        if (state) {
-            return (GameState)(state+2);
+    } else {
+        // Bottom right part
+        for (int startX = max(X - winWidth + 1, X + Y - width + 1); startX <= min(X, width - winWidth); ++startX) {
+            Uint8 state = (Uint8)Cell::Current | (Uint8)Cell::Opponent;
+
+            int pos = (X+Y)*width - startX * (width-1);
+            for (int t = 0; t < winWidth; ++t) {
+                state &= (Uint8)data[pos];
+                t -= (width-1);
+            }
+            if (state) {
+                return (GameState)(state+2);
+            }
         }
     }
     return gameState;
