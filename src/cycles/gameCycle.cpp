@@ -9,6 +9,7 @@
 
 GameCycle::GameCycle(const App& _app)
 : BaseCycle(_app),
+screamer(_app.window),
 menuRestartButton(_app.window, 0.5, 0.5, {"Restart", "Перезапустить", "Starten", "Перазапуск"}, 24, WHITE),
 menuExitButton(_app.window, 0.5, 0.65, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}, 24, WHITE),
 gameRestartButton(_app.window, 0.12, 0.05, 0.08, IMG_GUI_RESTART_BUTTON),
@@ -30,6 +31,9 @@ nobodyWinText(_app.window, 0.5, 0.35, {"Nobody win", "Ничья", "Unentschiede
 }
 
 bool GameCycle::inputMouseDown(App& _app) {
+    if (screamer.click(mouse)) {
+        return true;
+    }
     return BaseCycle::inputMouseDown(_app);
 }
 
@@ -56,6 +60,11 @@ void GameCycle::inputKeys(App& _app, SDL_Keycode key) {
         stop();
         return;
     }
+}
+
+void GameCycle::update(App& _app) {
+    screamer.update(_app.sounds);
+    BaseCycle::update(_app);
 }
 
 void GameCycle::draw(const App& _app) const {
@@ -104,6 +113,8 @@ void GameCycle::draw(const App& _app) const {
     }
     // Drawing setting menu
     settings.blit(_app.window);
+
+    screamer.blit(_app.window);
 
     // Bliting all to screen
     _app.window.render();

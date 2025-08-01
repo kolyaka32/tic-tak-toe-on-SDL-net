@@ -37,6 +37,9 @@ enum IMG_names : unsigned {
     // Empty cell
     IMG_CELL,
 
+    // Additional part
+    IMG_SCREAMER,
+
     // Global counter of all textures
     IMG_count,
 };

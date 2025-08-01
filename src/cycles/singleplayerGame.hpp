@@ -13,7 +13,6 @@ class SinglePlayerGameCycle : public GameCycle {
  private:
     // Main run functions
     bool inputMouseDown(App& app) override;
-    void update(App& app) override;
 
  public:
     SinglePlayerGameCycle(App& app);

@@ -165,6 +165,8 @@ void ServerGameCycle::draw(const App& _app) const {
     disconnectedBox.blit(_app.window);
     termianatedBox.blit(_app.window);
 
+    screamer.blit(_app.window);
+
     // Bliting all to screen
     _app.window.render();
 }

@@ -116,8 +116,12 @@ void Window::destroy(SDL_Surface* _surface) const {
 
 
 // Work with loaded textures
-void Window::blit(IMG_names _index, const SDL_FRect& _dest, const SDL_FRect* _src) const {
-    SDL_RenderTexture(renderer, textures[_index], _src, &_dest);
+void Window::blit(IMG_names _index, const SDL_FRect& _dest) const {
+    SDL_RenderTexture(renderer, textures[_index], nullptr, &_dest);
+}
+
+void Window::blit(IMG_names _index, const SDL_FRect* _dest, const SDL_FRect* _src) const {
+    SDL_RenderTexture(renderer, textures[_index], _src, _dest);
 }
 
 void Window::blit(IMG_names _index, float _angle, const SDL_FRect& _dest, const SDL_FRect* _src, SDL_FPoint _center) const {

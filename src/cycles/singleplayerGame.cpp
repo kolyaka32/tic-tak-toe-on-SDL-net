@@ -66,7 +66,3 @@ bool SinglePlayerGameCycle::inputMouseDown(App& _app) {
     }
     return false;
 }
-
-void SinglePlayerGameCycle::update(App& _app) {
-    BaseCycle::update(_app);
-}

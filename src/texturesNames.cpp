@@ -28,4 +28,6 @@ const char* texturesFilesNames[IMG_count] = {
     "img/game/green_circle.png",
     "img/game/red_circle.png",
     "img/game/cell.png",
+
+    "img/game/screamer.png",
 };

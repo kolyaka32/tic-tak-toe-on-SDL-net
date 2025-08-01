@@ -54,7 +54,8 @@ class Window {
     void destroy(SDL_Surface* surface) const;
 
     // Work with loaded textures
-    void blit(IMG_names index, const SDL_FRect& dest, const SDL_FRect* src = nullptr) const;
+    void blit(IMG_names index, const SDL_FRect& dest) const;
+    void blit(IMG_names index, const SDL_FRect* dest = nullptr, const SDL_FRect* src = nullptr) const;
     void blit(IMG_names index, float angle, const SDL_FRect& rect, const SDL_FRect* src = nullptr, SDL_FPoint center = {0, 0}) const;
     void setBlendMode(IMG_names index, SDL_BlendMode blendMode = SDL_BLENDMODE_NONE) const;
     void setColorMode(IMG_names index, Color color = EMPTY) const;
