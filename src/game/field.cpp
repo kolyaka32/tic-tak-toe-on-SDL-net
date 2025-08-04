@@ -6,13 +6,6 @@
 #include "field.hpp"
 
 
-Field::Field()
-: data(new Cell[width * width]) {}
-
-Field::~Field() {
-    delete[] data;
-}
-
 void Field::reset() {
     for (Uint8 i=0; i < width * width; ++i) {
         data[i] = Cell::Empty;
@@ -21,24 +14,12 @@ void Field::reset() {
     gameState = GameState::None;
 }
 
-GameState Field::getState() {
-    return gameState;
-}
-
-bool Field::isWaitingStart() {
-    return gameState >= GameState::CurrentWin;
-}
-
-void Field::start(GameState _player) {
-    gameState = _player;
-}
-
 Cell Field::getCell(int x, int y) const {
     return data[x + y * width];
 }
 
 
-void Field::clickSingle(int x, int y) {
+bool Field::clickSingle(int x, int y) {
     // Checking, if cell empty
     if (getCell(x, y) == Cell::Empty) {
         data[x + y * width] = Cell::Current;
@@ -50,10 +31,12 @@ void Field::clickSingle(int x, int y) {
         if (gameState < GameState::CurrentWin) {
             AImove();
         }
+        return true;
     }
+    return false;
 }
 
-void Field::clickTwo(int x, int y) {
+bool Field::clickTwo(int x, int y) {
     // Checking, if turn avaliable
     if (getCell(x, y) == Cell::Empty) {
         // Setting new cell and changing player
@@ -72,7 +55,9 @@ void Field::clickTwo(int x, int y) {
 
         // Checking for win
         gameState = checkWin(x, y);
+        return true;
     }
+    return false;
 }
 
 bool Field::clickMultiplayerCurrent(int x, int y) {
@@ -144,8 +129,10 @@ int Field::recursivelySolve(Uint8 round) {
                         result--;
                     }
                     break;
+
                 case GameState::NobodyWin:  // If field already filled
                     break;
+
                 default:
                     result -= recursivelySolve(round+1);
                 };
@@ -231,37 +218,34 @@ GameState Field::checkWin(int X, int Y) {
     }
 
     // Checking second diagonal
-    for (int startT = max(X + Y, width); startT+1 > min(winWidth, winWidth - X - Y); --startT) {
-        Uint8 state = (Uint8)Cell::Current | (Uint8)Cell::Opponent;
+    if ((width - Y) > X) {
+        // Upper left part
+        for (int startX = max(X - winWidth + 1, 0); startX <= min(X, Y+X-winWidth+1); ++startX) {
+            Uint8 state = (Uint8)Cell::Current | (Uint8)Cell::Opponent;
 
-        for (Sint8 t = startT; (t > startT - winWidth); --t) {
-            state &= (Uint8)data[X + Y + t * (width-1)];
+            int pos = (X+Y)*width - startX * (width-1);
+            for (int t = 0; t < winWidth; ++t) {
+                state &= (Uint8)data[pos];
+                pos -= (width-1);
+            }
+            if (state) {
+                return (GameState)(state+2);
+            }
         }
-        if (state) {
-            return (GameState)(state+2);
+    } else {
+        // Bottom right part
+        for (int startX = max(X - winWidth + 1, X + Y - width + 1); startX <= min(X, width - winWidth); ++startX) {
+            Uint8 state = (Uint8)Cell::Current | (Uint8)Cell::Opponent;
+
+            int pos = (X+Y)*width - startX * (width-1);
+            for (int t = 0; t < winWidth; ++t) {
+                state &= (Uint8)data[pos];
+                pos -= (width-1);
+            }
+            if (state) {
+                return (GameState)(state+2);
+            }
         }
     }
     return gameState;
-}
-
-int Field::getWidth() {
-    return width;
-}
-
-void Field::setWidth(int _width) {
-    width = _width;
-    delete[] data;
-    data = new Cell[width * width];
-    setMin(width, 3);
-    setMax(width, 9);
-}
-
-int Field::getWinWidth() {
-    return winWidth;
-}
-
-void Field::setWinWidth(int _winWidth) {
-    winWidth = _winWidth;
-    setMin(winWidth, 3);
-    setMax(winWidth, width);
 }

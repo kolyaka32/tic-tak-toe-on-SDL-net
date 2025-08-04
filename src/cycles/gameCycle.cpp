@@ -7,14 +7,12 @@
 #include "selectCycle.hpp"
 
 
-// Static class members
-GameField GameCycle::field;
-
 GameCycle::GameCycle(const App& _app)
 : BaseCycle(_app),
+screamer(_app.window),
 menuRestartButton(_app.window, 0.5, 0.5, {"Restart", "Перезапустить", "Starten", "Перазапуск"}, 24, WHITE),
 menuExitButton(_app.window, 0.5, 0.65, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}, 24, WHITE),
-gameRestartButton(_app.window, 0.15, 0.05, IMG_GUI_RESTART_BUTTON),
+gameRestartButton(_app.window, 0.12, 0.05, 0.08, IMG_GUI_RESTART_BUTTON),
 playersTurnsTexts {
     {_app.window, 0.5, 0.05, {"First player turn", "Ход первого игрока", "Der Zug des ersten Spielers", "Ход першага гульца"}, 24, WHITE},
     {_app.window, 0.5, 0.05, {"Second player turn", "Ход второго игрока", "Zug des zweiten Spielers", "Ход другога гульца"}, 24, WHITE}
@@ -26,12 +24,16 @@ nobodyWinText(_app.window, 0.5, 0.35, {"Nobody win", "Ничья", "Unentschiede
     if (!isRestarted()) {
         // Resetting field
         field.reset();
+        firstTurn = true;
         // Starting main song (if wasn't started)
-        // _app.music.start(MUS_MAIN);
+        _app.music.startFading(MUS_MAIN_CALM);
     }
 }
 
 bool GameCycle::inputMouseDown(App& _app) {
+    if (screamer.click(mouse)) {
+        return true;
+    }
     return BaseCycle::inputMouseDown(_app);
 }
 
@@ -45,8 +47,12 @@ void GameCycle::inputKeys(App& _app, SDL_Keycode key) {
     case SDLK_R:
         // Restarting game
         field.reset();
+        if (!firstTurn) {
+            _app.music.startFromCurrent(MUS_MAIN_CALM);
+        }
+        firstTurn = true;
         // Making sound
-        // _app.sounds.play(SND_RESET);
+        _app.sounds.play(SND_RESET);
         return;
 
     case SDLK_Q:
@@ -54,6 +60,11 @@ void GameCycle::inputKeys(App& _app, SDL_Keycode key) {
         stop();
         return;
     }
+}
+
+void GameCycle::update(App& _app) {
+    screamer.update(_app.sounds);
+    BaseCycle::update(_app);
 }
 
 void GameCycle::draw(const App& _app) const {
@@ -69,7 +80,7 @@ void GameCycle::draw(const App& _app) const {
     gameRestartButton.blit(_app.window);
 
     // Bliting waiting menu
-    if (field.isWaitingStart() || field.getState() == GameState::None) {
+    if (field.getState() >= GameState::CurrentWin || field.getState() == GameState::None) {
         // Bliting end background
         menuBackplate.blit(_app.window);
 
@@ -103,30 +114,8 @@ void GameCycle::draw(const App& _app) const {
     // Drawing setting menu
     settings.blit(_app.window);
 
+    screamer.blit(_app.window);
+
     // Bliting all to screen
     _app.window.render();
-}
-
-int GameCycle::getWidth() {
-    return field.getWidth();
-}
-
-void GameCycle::setWidth(int _width) {
-    field.setWidth(_width);
-}
-
-int GameCycle::getWinWidth() {
-    return field.getWinWidth();
-}
-
-void GameCycle::setWinWidth(int _winWidth) {
-    field.setWinWidth(_winWidth);
-}
-
-int GameCycle::getWindowWidth() {
-    return getWidth() * CELL_SIDE + (getWidth() - 1) * SEPARATOR;
-}
-
-int GameCycle::getWindowHeight() {
-    return getWindowWidth() + UPPER_LINE;
 }

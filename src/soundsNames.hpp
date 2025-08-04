@@ -7,8 +7,19 @@
 
 #include "data/preloaded/sounds.cpp"
 
+
 // Names of sound effects
-enum SND_names{
+enum SND_names {
+    // Game part
+    SND_TURN,
+    SND_RESET,
+
+    // Internet connection part
+    SND_DISCONNECT,
+
+    // Screamer
+    SND_SCREAMER,
+
     // Global counter of all loaded sounds
     SND_count,
 };

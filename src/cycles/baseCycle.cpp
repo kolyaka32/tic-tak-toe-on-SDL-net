@@ -8,7 +8,7 @@
 
 // Base cycle class
 BaseCycle::BaseCycle(const App& _app)
-: exitButton(_app.window, 0.05, 0.05, IMG_GUI_QUIT_BUTTON),
+: exitButton(_app.window, 0.04, 0.05, 0.08, IMG_GUI_QUIT_BUTTON),
 settings(_app) {}
 
 bool BaseCycle::inputMouseDown(App& _app) {

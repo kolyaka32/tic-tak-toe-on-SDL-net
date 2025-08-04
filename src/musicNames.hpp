@@ -7,8 +7,15 @@
 
 #include "data/preloaded/music.cpp"
 
+
 // Names of music tracks
-enum MUS_names{
+enum MUS_names {
+    // Menu part
+    MUS_MENU,
+
+    // Game part
+    MUS_MAIN_CALM,
+    MUS_MAIN_COMBAT,
 
     // Global counter of all loaded sounds
     MUS_count,

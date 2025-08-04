@@ -6,11 +6,20 @@
 #include "gameField.hpp"
 
 
-GameField::GameField()
-: Field() {}
+Field GameField::field;
+float GameField::upperLineHeight;
+int GameField::offset;
 
-GameField::~GameField() {
-    Field::~Field();
+void GameField::reset() {
+    field.reset();
+}
+
+void GameField::setState(GameState _state) {
+    field.gameState = _state;
+}
+
+GameState GameField::getState() const {
+    return field.gameState;
 }
 
 void GameField::setTextureOffset(int _state) {
@@ -22,43 +31,51 @@ int GameField::getXPos(const Mouse _mouse) {
 }
 
 int GameField::getYPos(const Mouse _mouse) {
-    return (_mouse.getY() - UPPER_LINE) / (CELL_SIDE + SEPARATOR);
+    return (_mouse.getY() - upperLineHeight) / (CELL_SIDE + SEPARATOR);
 }
 
-void GameField::clickSingle(const Mouse _mouse) {
-    if (_mouse.getY() > UPPER_LINE) {
-        Field::clickSingle(getXPos(_mouse), getYPos(_mouse));
-    }
-}
-
-void GameField::clickTwo(const Mouse _mouse) {
-    if (_mouse.getY() > UPPER_LINE) {
-        Field::clickTwo(getXPos(_mouse), getYPos(_mouse));
-        // Changing active player, if in game
-        if (getState() <= GameState::OpponentPlay) {
-            // Inversing color of active player
-            offset ^= 1;
-        }
-    }
-}
-
-bool GameField::clickMultiplayerCurrent(const Mouse _mouse) {
-    if (_mouse.getY() > UPPER_LINE) {
-        return Field::clickMultiplayerCurrent(getXPos(_mouse), getYPos(_mouse));
+bool GameField::tryClickSingle(const Mouse _mouse) {
+    if (_mouse.getY() > upperLineHeight) {
+        return field.clickSingle(getXPos(_mouse), getYPos(_mouse));
     }
     return false;
 }
 
+bool GameField::tryClickTwo(const Mouse _mouse) {
+    if (_mouse.getY() > upperLineHeight) {
+        if (field.clickTwo(getXPos(_mouse), getYPos(_mouse))) {
+            // Changing active player, if in game
+            if (field.gameState <= GameState::OpponentPlay) {
+                // Inversing color of active player
+                offset ^= 1;
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
+bool GameField::tryClickMultiplayerCurrent(const Mouse _mouse) {
+    if (_mouse.getY() > upperLineHeight) {
+        return field.clickMultiplayerCurrent(getXPos(_mouse), getYPos(_mouse));
+    }
+    return false;
+}
+
+void GameField::clickMultiplayerOpponent(Uint8 x, Uint8 y) {
+    field.clickMultiplayerOpponent(x, y);
+}
+
 void GameField::blit(const Window& _target) const {
     // Rendering cells with their background
-    for (int y=0; y < width; ++y) {
-        for (int x=0; x < width; ++x) {
-            const SDL_FRect dest = {float(x * (CELL_SIDE + SEPARATOR)), float(y * (CELL_SIDE + SEPARATOR) + UPPER_LINE), CELL_SIDE, CELL_SIDE};
+    for (int y=0; y < field.width; ++y) {
+        for (int x=0; x < field.width; ++x) {
+            const SDL_FRect dest = {float(x * (CELL_SIDE + SEPARATOR)), float(y * (CELL_SIDE + SEPARATOR) + upperLineHeight), CELL_SIDE, CELL_SIDE};
             // Rendering background
             _target.blit(IMG_CELL, dest);
 
             // Rendering cells
-            switch (getCell(x, y)) {
+            switch (field.getCell(x, y)) {
             case Cell::Current:
                 _target.blit(IMG_names(IMG_GREEN_CROSS + offset), dest);
                 break;
@@ -69,4 +86,34 @@ void GameField::blit(const Window& _target) const {
             }
         }
     }
+}
+
+int GameField::getWidth() {
+    return field.width;
+}
+
+void GameField::setWidth(int _width) {
+    field.width = _width;
+    setMin(field.width, 3);
+    setMax(field.width, 9);
+}
+
+int GameField::getWinWidth() {
+    return field.winWidth;
+}
+
+void GameField::setWinWidth(int _winWidth) {
+    field.winWidth = _winWidth;
+    setMin(field.winWidth, 3);
+    setMax(field.winWidth, field.width);
+}
+
+int GameField::getWindowWidth() {
+    int windowWidth = field.width * CELL_SIDE + (field.width - 1) * SEPARATOR;
+    upperLineHeight = windowWidth*0.1;
+    return windowWidth;
+}
+
+int GameField::getWindowHeight() {
+    return getWindowWidth() + upperLineHeight;
 }

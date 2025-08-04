@@ -22,25 +22,29 @@ bool ServerGameCycle::inputMouseDown(App& _app) {
         return true;
     }
     if (gameRestartButton.in(mouse)) {
+        // Making sound
+        _app.sounds.play(SND_RESET);
         // Clearing field
         field.reset();
+        if (!firstTurn) {
+            _app.music.startFromCurrent(MUS_MAIN_CALM);
+        }
+        firstTurn = true;
         // Sending message of game clear
         connection.sendConfirmed(ConnectionCode::GameClear);
-        // Making sound
-        // _app.sounds.play(SND_RESET);
         return true;
     }
     // Checking, if game start
-    if (field.isWaitingStart() || field.getState() == GameState::None) {
+    if (field.getState() >= GameState::CurrentWin || field.getState() == GameState::None) {
         // Check for game start
         if (startFirst.in(mouse)) {
-            field.start(GameState::CurrentPlay);
+            field.setState(GameState::CurrentPlay);
             connection.sendConfirmed<Uint8>(ConnectionCode::GameStart, (Uint8)GameState::OpponentPlay);
             field.setTextureOffset(0);
             return true;
         }
         if (startSecond.in(mouse)) {
-            field.start(GameState::OpponentPlay);
+            field.setState(GameState::OpponentPlay);
             connection.sendConfirmed<Uint8>(ConnectionCode::GameStart, (Uint8)GameState::CurrentPlay);
             field.setTextureOffset(1);
             return true;
@@ -52,9 +56,16 @@ bool ServerGameCycle::inputMouseDown(App& _app) {
         }
     } else {
         // Normal turn
-        if (field.clickMultiplayerCurrent(mouse)) {
+        if (field.tryClickMultiplayerCurrent(mouse)) {
+            // Making sound
+            _app.sounds.play(SND_TURN);
             // Sending to opponent
             connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn, field.getXPos(mouse), field.getYPos(mouse));
+            // Changing music theme
+            if (firstTurn) {
+                _app.music.startFromCurrent(MUS_MAIN_COMBAT);
+                firstTurn = false;
+            }
         }
     }
     return false;
@@ -62,12 +73,16 @@ bool ServerGameCycle::inputMouseDown(App& _app) {
 
 void ServerGameCycle::inputKeys(App& _app, SDL_Keycode _key) {
     if (_key == SDLK_R) {
+        // Making sound
+        _app.sounds.play(SND_RESET);
         // Clearing field
         field.reset();
+        if (!firstTurn) {
+            _app.music.startFromCurrent(MUS_MAIN_CALM);
+        }
+        firstTurn = true;
         // Sending message of game clear
         connection.sendConfirmed(ConnectionCode::GameClear);
-        // Making sound
-        //_app.sounds.play(SND_RESET);
         return;
     } else {
         GameCycle::inputKeys(_app, _key);
@@ -84,9 +99,15 @@ void ServerGameCycle::update(App& _app) {
             #if CHECK_CORRECTION
             SDL_Log("Turn of opponent player: from %u to %u", connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
             #endif
-            field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
             // Making sound
-            //_app.sounds.play(SND_RESET);
+            _app.sounds.play(SND_TURN);
+            // Making turn
+            field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
+            // Changing music theme
+            if (!firstTurn) {
+                _app.music.startFromCurrent(MUS_MAIN_COMBAT);
+                firstTurn = false;
+            }
         }
         return;
     }
@@ -108,7 +129,7 @@ void ServerGameCycle::draw(const App& _app) const {
     settings.blit(_app.window);
 
     // Bliting waiting menu, if need
-    if (field.isWaitingStart() || field.getState() == GameState::None) {
+    if (field.getState() >= GameState::CurrentWin || field.getState() == GameState::None) {
         // Bliting end background
         menuBackplate.blit(_app.window);
 
@@ -143,6 +164,8 @@ void ServerGameCycle::draw(const App& _app) const {
     // Messages
     disconnectedBox.blit(_app.window);
     termianatedBox.blit(_app.window);
+
+    screamer.blit(_app.window);
 
     // Bliting all to screen
     _app.window.render();

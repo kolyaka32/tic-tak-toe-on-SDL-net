@@ -5,6 +5,7 @@
 
 #include "texturesNames.hpp"
 
+
 // File names of the corresponding textures
 const char* texturesFilesNames[IMG_count] = {
     // Graphic interface sprites
@@ -27,4 +28,6 @@ const char* texturesFilesNames[IMG_count] = {
     "img/game/green_circle.png",
     "img/game/red_circle.png",
     "img/game/cell.png",
+
+    "img/game/screamer.png",
 };

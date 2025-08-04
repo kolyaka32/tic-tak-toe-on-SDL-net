@@ -10,18 +10,14 @@
 ClientGameCycle::ClientGameCycle(App& _app, Connection& _client)
 : InternetCycle(_app),
 connection(_client),
-waitText(_app.window, 0.5, 0.05, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}, 24) {
-    if (!isRestarted()) {
-        field.reset();
-    }
-}
+waitText(_app.window, 0.5, 0.05, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}, 24) {}
 
 bool ClientGameCycle::inputMouseDown(App& _app) {
     if (InternetCycle::inputMouseDown(_app)) {
         return true;
     }
     // Checking, if game start
-    if (field.isWaitingStart()) {
+    if (field.getState() >= GameState::CurrentWin) {
         // Check for game start
         if (menuExitButton.in(mouse)) {
             // Going to menu
@@ -30,9 +26,16 @@ bool ClientGameCycle::inputMouseDown(App& _app) {
         }
     } else {
         // Normal turn
-        if (field.clickMultiplayerCurrent(mouse)) {
+        if (field.tryClickMultiplayerCurrent(mouse)) {
+            // Making sound
+            _app.sounds.play(SND_TURN);
             // Sending to opponent
             connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn, field.getXPos(mouse), field.getYPos(mouse));
+            // Changing music theme
+            if (firstTurn) {
+                _app.music.startFromCurrent(MUS_MAIN_COMBAT);
+                firstTurn = false;
+            }
         }
     }
     return false;
@@ -57,7 +60,12 @@ void ClientGameCycle::update(App& _app) {
             #endif
             field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
             // Making sound
-            //_app.sounds.play(SND_RESET);
+            _app.sounds.play(SND_TURN);
+            // Changing music theme
+            if (firstTurn) {
+                _app.music.startFromCurrent(MUS_MAIN_COMBAT);
+                firstTurn = false;
+            }
         }
         return;
 
@@ -67,8 +75,12 @@ void ClientGameCycle::update(App& _app) {
         #endif
         // Resetting game
         field.reset();
+        if (!firstTurn) {
+            _app.music.startFromCurrent(MUS_MAIN_CALM);
+        }
+        firstTurn = true;
         // Making sound
-        // _app.sounds.play(SND_RESET);
+        _app.sounds.play(SND_RESET);
         return;
 
     case ConnectionCode::GameStart:
@@ -76,20 +88,18 @@ void ClientGameCycle::update(App& _app) {
             #if CHECK_CORRECTION
             SDL_Log("Starting new round: %u", connection.lastPacket->getData<Uint8>(2));
             #endif
-            // Resetting game
+            // Starting game
             switch (connection.lastPacket->getData<Uint8>(2)) {
             case int(GameState::CurrentPlay):
-                field.start(GameState::CurrentPlay);
+                field.setState(GameState::CurrentPlay);
                 field.setTextureOffset(1);
                 break;
             
             case int(GameState::OpponentPlay):
-                field.start(GameState::OpponentPlay);
+                field.setState(GameState::OpponentPlay);
                 field.setTextureOffset(0);
                 break;
             }
-            // Making sound
-            // _app.sounds.play(SND_RESET);
         }
         return;
     }
@@ -110,7 +120,7 @@ void ClientGameCycle::draw(const App& _app) const {
     settings.blit(_app.window);
 
     // Bliting game state, if need
-    if (field.isWaitingStart()) {
+    if (field.getState() >= GameState::CurrentWin) {
         // Bliting end background
         menuBackplate.blit(_app.window);
 
@@ -147,6 +157,8 @@ void ClientGameCycle::draw(const App& _app) const {
     // Messages
     disconnectedBox.blit(_app.window);
     termianatedBox.blit(_app.window);
+
+    screamer.blit(_app.window);
 
     // Bliting all to screen
     _app.window.render();

@@ -90,11 +90,11 @@ void ClientLobbyCycle::update(App& _app) {
         // Settings options to this connection
         client.connectToLastMessage();
         // Applying field size
-        GameCycle::setWidth(client.lastPacket->getData<Uint8>(2));
-        GameCycle::setWinWidth(client.lastPacket->getData<Uint8>(3));
+        GameField::setWidth(client.lastPacket->getData<Uint8>(2));
+        GameField::setWinWidth(client.lastPacket->getData<Uint8>(3));
         // Changing window size
-        _app.window.setWidth(GameCycle::getWindowWidth());
-        _app.window.setHeight(GameCycle::getWindowHeight());
+        _app.window.setWidth(GameField::getWindowWidth());
+        _app.window.setHeight(GameField::getWindowHeight());
         // Starting game
         runCycle<ClientGameCycle, Connection&>(_app, client);
         // Exiting to menu after game

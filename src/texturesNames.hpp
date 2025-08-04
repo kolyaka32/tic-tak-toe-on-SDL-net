@@ -7,6 +7,7 @@
 
 #include "data/preloaded/textures.cpp"
 
+
 // Names of all images with related numbers
 enum IMG_names : unsigned {
     // Base part
@@ -35,6 +36,9 @@ enum IMG_names : unsigned {
 
     // Empty cell
     IMG_CELL,
+
+    // Additional part
+    IMG_SCREAMER,
 
     // Global counter of all textures
     IMG_count,

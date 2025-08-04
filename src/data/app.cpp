@@ -14,7 +14,7 @@ App::App(const LanguagedText _title)
 : music{loader, musicFilesNames},
 sounds{loader, soundsFilesNames},
 initFile(music, sounds),
-window{loader, GameCycle::getWindowWidth(), GameCycle::getWindowHeight(), _title} {
+window{loader, GameField::getWindowWidth(), GameField::getWindowHeight(), _title} {
     #if CHECK_CORRECTION
     SDL_Log("All loaded and created corretly");
     #endif
