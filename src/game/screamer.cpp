@@ -25,7 +25,7 @@ bool Screamer::click(const Mouse _mouse) {
 
 void Screamer::update(const Sounds& _sound) {
     // Randomly in near 2 minutes
-    if (SDL_rand(60*50) == 0) {
+    if (SDL_rand(60*60) == 0) {
         // Checking, if not already activated
         if (!active) {
             active = true;

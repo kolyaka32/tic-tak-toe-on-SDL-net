@@ -129,8 +129,10 @@ int Field::recursivelySolve(Uint8 round) {
                         result--;
                     }
                     break;
+
                 case GameState::NobodyWin:  // If field already filled
                     break;
+
                 default:
                     result -= recursivelySolve(round+1);
                 };
@@ -238,7 +240,7 @@ GameState Field::checkWin(int X, int Y) {
             int pos = (X+Y)*width - startX * (width-1);
             for (int t = 0; t < winWidth; ++t) {
                 state &= (Uint8)data[pos];
-                t -= (width-1);
+                pos -= (width-1);
             }
             if (state) {
                 return (GameState)(state+2);
