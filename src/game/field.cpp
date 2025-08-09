@@ -35,6 +35,7 @@ bool Field::clickSingle(int x, int y) {
         if (gameState < GameState::CurrentWin) {
             AImove();
         }
+        checkSound();
         return true;
     }
     return false;
@@ -59,6 +60,7 @@ bool Field::clickTwo(int x, int y) {
 
         // Checking for win
         gameState = checkWin(x, y);
+        checkSound();
         return true;
     }
     return false;
@@ -82,6 +84,7 @@ bool Field::clickMultiplayerCurrent(int x, int y) {
 
         // Checking for win
         gameState = checkWin(x, y);
+        checkSound();
         return true;
     }
     return false;
@@ -104,6 +107,8 @@ void Field::clickMultiplayerOpponent(int x, int y) {
 
         // Checking for win
         gameState = checkWin(x, y);
+        checkSound();
+        return;
     }
 }
 
@@ -252,4 +257,20 @@ GameState Field::checkWin(int X, int Y) {
         }
     }
     return gameState;
+}
+
+void Field::checkSound() {
+    switch (gameState) {
+    case GameState::CurrentWin:
+        sounds.play(Sounds::Win);
+        break;
+    
+    case GameState::OpponentWin:
+        sounds.play(Sounds::Loose);
+        break;
+
+    case GameState::NobodyWin:  
+        sounds.play(Sounds::Loose);
+        break;
+    }
 }

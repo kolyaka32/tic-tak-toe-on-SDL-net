@@ -66,7 +66,7 @@ void SoundsData::setVolume(unsigned _volume) {
     }
     #endif
     volume = _volume/2;
-    for (int i=0; i < unsigned(); ++i) {
+    for (int i=0; i < unsigned(Sounds::Count); ++i) {
         Mix_VolumeChunk(sounds[i], volume);
     }
 }

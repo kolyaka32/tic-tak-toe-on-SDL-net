@@ -7,9 +7,7 @@
 
 #include <utility>
 #include "codes.hpp"
-#include "../data/macroses.hpp"
-#include "../define.hpp"
-#include "../testing.hpp"
+#include "../data/app.hpp"
 
 
 // Class with any ordered data

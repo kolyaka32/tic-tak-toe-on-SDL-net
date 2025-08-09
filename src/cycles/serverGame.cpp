@@ -22,6 +22,8 @@ bool ServerGameCycle::inputMouseDown() {
         return true;
     }
     if (gameRestartButton.in(mouse)) {
+        // Sending message of game clear
+        connection.sendConfirmed(ConnectionCode::GameClear);
         // Making sound
         sounds.play(Sounds::Reset);
         // Clearing field
@@ -30,20 +32,20 @@ bool ServerGameCycle::inputMouseDown() {
             music.startFromCurrent(Music::MainCalm);
         }
         firstTurn = true;
-        // Sending message of game clear
-        connection.sendConfirmed(ConnectionCode::GameClear);
         return true;
     }
     // Checking, if game start
     if (field.getState() >= GameState::CurrentWin || field.getState() == GameState::None) {
         // Check for game start
         if (startFirst.in(mouse)) {
+            field.reset();
             field.setState(GameState::CurrentPlay);
             connection.sendConfirmed<Uint8>(ConnectionCode::GameStart, (Uint8)GameState::OpponentPlay);
             field.setTextureOffset(0);
             return true;
         }
         if (startSecond.in(mouse)) {
+            field.reset();
             field.setState(GameState::OpponentPlay);
             connection.sendConfirmed<Uint8>(ConnectionCode::GameStart, (Uint8)GameState::CurrentPlay);
             field.setTextureOffset(1);
@@ -121,13 +123,6 @@ void ServerGameCycle::draw() const {
     // Blitting field
     field.blit();
 
-    // Drawing buttons
-    exitButton.blit();
-    gameRestartButton.blit();
-
-    // Drawing setting menu
-    settings.blit();
-
     // Bliting waiting menu, if need
     if (field.getState() >= GameState::CurrentWin || field.getState() == GameState::None) {
         // Bliting end background
@@ -161,6 +156,13 @@ void ServerGameCycle::draw() const {
         nobodyWinText.blit();
         break;
     }
+    // Drawing buttons
+    exitButton.blit();
+    gameRestartButton.blit();
+
+    // Drawing setting menu
+    settings.blit();
+
     // Messages
     disconnectedBox.blit();
     termianatedBox.blit();

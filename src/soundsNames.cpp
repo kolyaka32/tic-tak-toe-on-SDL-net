@@ -11,6 +11,8 @@ const char* soundsFilesNames[unsigned(Sounds::Count)] = {
     // Game part
     "snd/turn.wav",
     "snd/reset.wav",
+    "snd/win.wav",
+    "snd/loose.wav",
 
     // Internet connection part
     "snd/disconnect.wav",

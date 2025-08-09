@@ -90,12 +90,14 @@ void ClientGameCycle::update() {
             #endif
             // Starting game
             switch (connection.lastPacket->getData<Uint8>(2)) {
-            case int(GameState::CurrentPlay):
+            case Uint8(GameState::CurrentPlay):
+                field.reset();
                 field.setState(GameState::CurrentPlay);
                 field.setTextureOffset(1);
                 break;
-            
-            case int(GameState::OpponentPlay):
+
+            case Uint8(GameState::OpponentPlay):
+                field.reset();
                 field.setState(GameState::OpponentPlay);
                 field.setTextureOffset(0);
                 break;
@@ -112,12 +114,6 @@ void ClientGameCycle::draw() const {
 
     // Blitting field
     field.blit();
-
-    // Drawing buttons
-    exitButton.blit();
-
-    // Drawing setting menu
-    settings.blit();
 
     // Bliting game state, if need
     if (field.getState() >= GameState::CurrentWin) {
@@ -154,6 +150,12 @@ void ClientGameCycle::draw() const {
         nobodyWinText.blit();
         break;
     }
+    // Drawing buttons
+    exitButton.blit();
+
+    // Drawing setting menu
+    settings.blit();
+
     // Messages
     disconnectedBox.blit();
     termianatedBox.blit();
