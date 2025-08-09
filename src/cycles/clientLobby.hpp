@@ -30,13 +30,13 @@ class ClientLobbyCycle : public BaseCycle {
     void pasteFromClipboard();
 
     // Main run functions
-    bool inputMouseDown(App& app) override;
-    void inputMouseUp(App& app) override;
-    void inputKeys(App& app, SDL_Keycode key) override;
-    void inputText(App& app, const char* text) override;
-    void update(App& app) override;
-    void draw(const App& app) const override;
+    bool inputMouseDown() override;
+    void inputMouseUp() override;
+    void inputKeys(SDL_Keycode key) override;
+    void inputText(const char* text) override;
+    void update() override;
+    void draw() const override;
 
  public:
-    ClientLobbyCycle(App& app);
+    ClientLobbyCycle();
 };

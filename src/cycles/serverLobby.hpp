@@ -27,10 +27,10 @@ class ServerLobbyCycle : public BaseCycle {
     GUI::TextButton hideAddressText;
 
     // Main run functions
-    bool inputMouseDown(App& app) override;
-    void update(App& app) override;
-    void draw(const App& app) const override;
+    bool inputMouseDown() override;
+    void update() override;
+    void draw() const override;
 
  public:
-    ServerLobbyCycle(App& app);
+    ServerLobbyCycle();
 };

@@ -18,11 +18,11 @@ class ClientGameCycle : public InternetCycle {
     GUI::StaticText waitText;
 
     // Main run functions
-    bool inputMouseDown(App& app) override;
-    void inputKeys(App& app, const SDL_Keycode key) override;
-    void update(App& app) override;
-    void draw(const App& app) const override;
+    bool inputMouseDown() override;
+    void inputKeys(const SDL_Keycode key) override;
+    void update() override;
+    void draw() const override;
 
  public:
-    ClientGameCycle(App& app, Connection& client);
+    ClientGameCycle(Connection& client);
 };

@@ -6,8 +6,7 @@
 #include "initFile.hpp"
 
 
-InitFile::InitFile(Music& _music, Sounds& _sounds)
-: music(_music), sounds(_sounds) {
+InitFile::InitFile() {
     loadSettings();
 }
 

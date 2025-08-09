@@ -7,7 +7,7 @@
 
 
 template <unsigned count>
-SoundsData<count>::SoundsData(const DataLoader& _loader, const char* _names[count]) {
+SoundsData<count>::SoundsData(const char* _names[count]) {
     // Resetting all sounds
     #if CHECK_CORRECTION
     for (unsigned i=0; i < count; ++i) {
@@ -17,7 +17,7 @@ SoundsData<count>::SoundsData(const DataLoader& _loader, const char* _names[coun
 
     // Loading all needed sounds
     for (unsigned i=0; i < count; ++i) {
-        loadSound(_loader, i, _names[i]);
+        loadSound(i, _names[i]);
     }
 
     // Checking massive on loading correction
@@ -42,9 +42,9 @@ SoundsData<count>::~SoundsData() {
 }
 
 template <unsigned count>
-void SoundsData<count>::loadSound(const DataLoader& _loader, unsigned _index, const char* _name) {
+void SoundsData<count>::loadSound(unsigned _index, const char* _name) {
     // Load data of current sound
-    SDL_IOStream* iodata = _loader.load(_name);
+    SDL_IOStream* iodata = dataLoader.load(_name);
 
     // Creating surface
     sounds[_index] = Mix_LoadWAV_IO(iodata, true);

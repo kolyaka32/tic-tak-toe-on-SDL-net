@@ -6,13 +6,10 @@
 #include "app.hpp"
 #include "../cycles/selectCycle.hpp"
 
-// Global application data
-App application({"Tic-tac-toe", "Крестики нолики", "Tic-tac-toe", "Крыжыкі нулікі"});
-
 // Main function
 int main(int argv, char **args) {
     // Running menu
-    CycleTemplate::runCycle<SelectCycle>(application);
+    CycleTemplate::runCycle<SelectCycle>();
 
     // Successful end of program
     return 0;

@@ -6,8 +6,8 @@
 #include "singleplayerGame.hpp"
 
 
-SinglePlayerGameCycle::SinglePlayerGameCycle(App& _app)
-: GameCycle(_app) {
+SinglePlayerGameCycle::SinglePlayerGameCycle()
+: GameCycle() {
     if(!isRestarted()) {
         // Starting game
         field.setState(GameState::CurrentPlay);
@@ -15,18 +15,18 @@ SinglePlayerGameCycle::SinglePlayerGameCycle(App& _app)
     }
 }
 
-bool SinglePlayerGameCycle::inputMouseDown(App& _app) {
-    if (GameCycle::inputMouseDown(_app)) {
+bool SinglePlayerGameCycle::inputMouseDown() {
+    if (GameCycle::inputMouseDown()) {
         return true;
     }
     if (gameRestartButton.in(mouse)) {
         // Making sound
-        _app.sounds.play(SND_RESET);
+        sounds.play(SND_RESET);
 
         // Restarting current game
         field.reset();
         if (!firstTurn) {
-            _app.music.startFromCurrent(MUS_MAIN_CALM);
+            music.startFromCurrent(MUS_MAIN_CALM);
         }
         firstTurn = true;
         field.setState(GameState::CurrentPlay);
@@ -37,13 +37,13 @@ bool SinglePlayerGameCycle::inputMouseDown(App& _app) {
         // Check for game start
         if (menuRestartButton.in(mouse)) {
             // Making sound
-            _app.sounds.play(SND_RESET);
+            sounds.play(SND_RESET);
 
             // Restarting current game
             field.reset();
             field.setState(GameState::CurrentPlay);
             if (!firstTurn) {
-                _app.music.startFromCurrent(MUS_MAIN_CALM);
+                music.startFromCurrent(MUS_MAIN_CALM);
             }
             firstTurn = true;
             return true;
@@ -56,10 +56,10 @@ bool SinglePlayerGameCycle::inputMouseDown(App& _app) {
     } else {
         // Normal turn
         if (field.tryClickSingle(mouse)) {
-            _app.sounds.play(SND_TURN);
+            sounds.play(SND_TURN);
             // Changing music theme
             if (firstTurn) {
-                _app.music.startFromCurrent(MUS_MAIN_COMBAT);
+                music.startFromCurrent(MUS_MAIN_COMBAT);
                 firstTurn = false;
             }
         }

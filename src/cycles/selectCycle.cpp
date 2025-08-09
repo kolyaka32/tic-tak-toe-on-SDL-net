@@ -11,46 +11,46 @@
 
 
 // Starting basic template with main theme
-SelectCycle::SelectCycle(const App& _app)
-: BaseCycle(_app),
-titleText(_app.window, 0.5, 0.15, {"Tic-tac-toe", "Крестики нолики", "Tic-tac-toe", "Крыжыкі нулікі"}, 3, 40, WHITE),
-singleplayerButton(_app.window, 0.5, 0.3, {"Singleplayer", "Одиночная игра", "Einzelspiel", "Адзіночная гульня"}, 24, WHITE),
-twoPlayerButton(_app.window, 0.5, 0.5, {"Two players", "Два игрока", "Zwei Spieler", "Два гульца"}, 24, WHITE),
-serverButton(_app.window, 0.5, 0.7, {"Create server", "Создать сервер", "Server erstellen", "Стварыць сервер"}, 24, WHITE),
-connectButton(_app.window, 0.5, 0.9, {"Connect", "Присоединиться", "Beitreten", "Далучыцца"}, 24, WHITE),
-bigFieldInfobox(_app.window, 0.5, 0.4, {"Too big field", "Слишком большое поле", "", ""}, 24) {
+SelectCycle::SelectCycle()
+: BaseCycle(),
+titleText(0.5, 0.15, {"Tic-tac-toe", "Крестики нолики", "Tic-tac-toe", "Крыжыкі нулікі"}, 3, 40, WHITE),
+singleplayerButton(0.5, 0.3, {"Singleplayer", "Одиночная игра", "Einzelspiel", "Адзіночная гульня"}, 24, WHITE),
+twoPlayerButton(0.5, 0.5, {"Two players", "Два игрока", "Zwei Spieler", "Два гульца"}, 24, WHITE),
+serverButton(0.5, 0.7, {"Create server", "Создать сервер", "Server erstellen", "Стварыць сервер"}, 24, WHITE),
+connectButton(0.5, 0.9, {"Connect", "Присоединиться", "Beitreten", "Далучыцца"}, 24, WHITE),
+bigFieldInfobox(0.5, 0.4, {"Too big field", "Слишком большое поле", "", ""}, 24) {
     // Starting menu song (if wasn't started)
     if(!isRestarted()) {
-        _app.music.start(MUS_MENU);
+        music.start(MUS_MENU);
     }
 }
 
 // Getting selected button
-bool SelectCycle::inputMouseDown(App& _app) {
-    if (settings.click(mouse, _app)) {
+bool SelectCycle::inputMouseDown() {
+    if (settings.click(mouse)) {
         return true;
     }
     if (singleplayerButton.in(mouse)) {
         if (GameField::getWidth() == 3) {
-            runCycle<SinglePlayerGameCycle>(_app);
+            runCycle<SinglePlayerGameCycle>();
         } else {
             bigFieldInfobox.reset();
         }
         return true;
     } else if (twoPlayerButton.in(mouse)) {
-        runCycle<TwoPlayerGameCycle>(_app);
+        runCycle<TwoPlayerGameCycle>();
         return true;
     } else if (serverButton.in(mouse)) {
-        runCycle<ServerLobbyCycle>(_app);
+        runCycle<ServerLobbyCycle>();
         return true;
     } else if (connectButton.in(mouse)) {
-        runCycle<ClientLobbyCycle>(_app);
+        runCycle<ClientLobbyCycle>();
         return true;
     }
     return false;
 }
 
-void SelectCycle::inputKeys(App& _app, SDL_Keycode _key) {
+void SelectCycle::inputKeys(SDL_Keycode _key) {
     switch (_key) {
     case SDLK_ESCAPE:
         settings.activate();
@@ -58,30 +58,30 @@ void SelectCycle::inputKeys(App& _app, SDL_Keycode _key) {
     }
 }
 
-void SelectCycle::update(App& _app) {
-    BaseCycle::update(_app);
+void SelectCycle::update() {
+    BaseCycle::update();
     bigFieldInfobox.update();
 }
 
-void SelectCycle::draw(const App& _app) const {
+void SelectCycle::draw() const {
     // Bliting background
-    _app.window.setDrawColor(BLACK);
-    _app.window.clear();
+    window.setDrawColor(BLACK);
+    window.clear();
 
     // Bliting title
-    titleText.blit(_app.window);
+    titleText.blit();
 
     // Blitting start buttons
-    singleplayerButton.blit(_app.window);
-    twoPlayerButton.blit(_app.window);
-    serverButton.blit(_app.window);
-    connectButton.blit(_app.window);
+    singleplayerButton.blit();
+    twoPlayerButton.blit();
+    serverButton.blit();
+    connectButton.blit();
 
     // Settings menu
-    settings.blit(_app.window);
+    settings.blit();
 
-    bigFieldInfobox.blit(_app.window);
+    bigFieldInfobox.blit();
 
     // Bliting all to screen
-    _app.window.render();
+    window.render();
 }

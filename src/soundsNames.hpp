@@ -25,7 +25,7 @@ enum SND_names {
 };
 
 // Shortcut for sounds data class
-typedef SoundsData<SND_count> Sounds;
+extern SoundsData<SND_count> sounds;
 
 // File names of the corresponding sounds
 extern const char* soundsFilesNames[SND_count];

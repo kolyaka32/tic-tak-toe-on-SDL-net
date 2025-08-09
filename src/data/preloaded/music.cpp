@@ -7,7 +7,7 @@
 
 
 template <unsigned count>
-MusicData<count>::MusicData(const DataLoader& _loader, const char* _names[count]){
+MusicData<count>::MusicData(const char* _names[count]){
     // Resetting all tracks
     #if CHECK_CORRECTION
     for (unsigned i=0; i < count; ++i) {
@@ -17,7 +17,7 @@ MusicData<count>::MusicData(const DataLoader& _loader, const char* _names[count]
 
     // Loading all needed music tracks
     for (unsigned i=0; i < count; ++i) {
-        loadMusic(_loader, i, _names[i]);
+        loadMusic(i, _names[i]);
     }
 
     // Checking massive on loading correction
@@ -42,9 +42,9 @@ MusicData<count>::~MusicData(){
 }
 
 template <unsigned count>
-void MusicData<count>::loadMusic(const DataLoader& _loader, unsigned _index, const char* _name) {
+void MusicData<count>::loadMusic(unsigned _index, const char* _name) {
     // Load data of current music track
-    SDL_IOStream* iodata = _loader.load(_name);
+    SDL_IOStream* iodata = dataLoader.load(_name);
 
     // Loading track
     music[_index] = Mix_LoadMUS_IO(iodata, true);

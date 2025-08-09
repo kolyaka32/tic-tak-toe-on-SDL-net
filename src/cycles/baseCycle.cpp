@@ -7,12 +7,12 @@
 
 
 // Base cycle class
-BaseCycle::BaseCycle(const App& _app)
-: exitButton(_app.window, 0.04, 0.05, 0.08, IMG_GUI_QUIT_BUTTON),
-settings(_app) {}
+BaseCycle::BaseCycle()
+: exitButton(0.04, 0.05, 0.08, IMG_GUI_QUIT_BUTTON),
+settings() {}
 
-bool BaseCycle::inputMouseDown(App& _app) {
-    if (settings.click(mouse, _app)) {
+bool BaseCycle::inputMouseDown() {
+    if (settings.click(mouse)) {
         return true;
     }
     if (exitButton.in(mouse)) {
@@ -22,14 +22,14 @@ bool BaseCycle::inputMouseDown(App& _app) {
     return false;
 }
 
-void BaseCycle::update(App& _app) {
-    settings.update(_app);
+void BaseCycle::update() {
+    settings.update();
 }
 
-void BaseCycle::inputMouseUp(App& _app) {
+void BaseCycle::inputMouseUp() {
     settings.unClick();
 }
 
-void BaseCycle::inputMouseWheel(App& _app, float _wheelY) {
-    settings.scroll(_app, mouse, _wheelY);
+void BaseCycle::inputMouseWheel(float _wheelY) {
+    settings.scroll(mouse, _wheelY);
 }

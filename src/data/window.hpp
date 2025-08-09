@@ -24,7 +24,7 @@ class Window {
     const Fonts fonts;
 
  public:
-    Window(const DataLoader& loader, int width, int height, const LanguagedText title);
+    Window(int width, int height, const LanguagedText title);
     ~Window() noexcept;
 
     // Functions for work with graphics
@@ -84,3 +84,5 @@ class Window {
     void updateTitle(const char* name) const;  // Set new title
     void updateTitle() const;                  // Update title from basic
 };
+
+extern Window window;

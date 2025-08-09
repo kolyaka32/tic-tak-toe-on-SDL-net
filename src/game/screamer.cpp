@@ -7,8 +7,8 @@
 #include "random"
 
 
-Screamer::Screamer(const Window& _target)
-: acceptButton(_target, 0.5, 0.95, {"Okay...", "Ладно...", "Okay...", "Добра..."}, 24) {
+Screamer::Screamer()
+: acceptButton(0.5, 0.95, {"Okay...", "Ладно...", "Okay...", "Добра..."}, 24) {
     SDL_srand(0);
 }
 
@@ -23,24 +23,24 @@ bool Screamer::click(const Mouse _mouse) {
     return false;
 }
 
-void Screamer::update(const Sounds& _sound) {
+void Screamer::update() {
     // Randomly in near 2 minutes
     if (SDL_rand(60*60) == 0) {
         // Checking, if not already activated
         if (!active) {
             active = true;
             // Playing 'scary' sound
-            _sound.play(SND_SCREAMER);
+            sounds.play(SND_SCREAMER);
         }
     }
 }
 
-void Screamer::blit(const Window& _target) const {
+void Screamer::blit() const {
     if (active) {
         // Draw image itself
-        _target.blit(IMG_SCREAMER);
+        window.blit(IMG_SCREAMER);
 
         // Draw exit button
-        acceptButton.blit(_target);
+        acceptButton.blit();
     }
 }

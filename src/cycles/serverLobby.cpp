@@ -10,13 +10,13 @@
 
 bool ServerLobbyCycle::showAddress = false;
 
-ServerLobbyCycle::ServerLobbyCycle(App& _app)
-: BaseCycle(_app),
-titleText(_app.window, 0.5, 0.15, {"Wait for connection", "Ожидайте подключения", "Verbindungen erwarten", "Чакайце падлучэнняў"}, 30, WHITE),
-addressText(_app.window, 0.5, 0.3, {"Your address: %s", "Ваш адресс: %s", "Ihre Adresse: %s", "Ваш адрас: %s"}, 22, WHITE),
-copiedInfoBox(_app.window, 0.5, 0.37, {"Address copied", "Адрес скопирован", "Adresse kopiert", "Скапіяваны адрас"}, 22, WHITE),
-showAddressText(_app.window, 0.5, 0.45, {"Show address", "Показать адресс", "Adresse anzeigen", "Паказаць адрас"}, 22),
-hideAddressText(_app.window, 0.5, 0.45, {"Hide address", "Скрыть адресс", "Adresse verbergen", "Схаваць адрас"}, 22) {
+ServerLobbyCycle::ServerLobbyCycle()
+: BaseCycle(),
+titleText(0.5, 0.15, {"Wait for connection", "Ожидайте подключения", "Verbindungen erwarten", "Чакайце падлучэнняў"}, 30, WHITE),
+addressText(0.5, 0.3, {"Your address: %s", "Ваш адресс: %s", "Ihre Adresse: %s", "Ваш адрас: %s"}, 22, WHITE),
+copiedInfoBox(0.5, 0.37, {"Address copied", "Адрес скопирован", "Adresse kopiert", "Скапіяваны адрас"}, 22, WHITE),
+showAddressText(0.5, 0.45, {"Show address", "Показать адресс", "Adresse anzeigen", "Паказаць адрас"}, 22),
+hideAddressText(0.5, 0.45, {"Hide address", "Скрыть адресс", "Adresse verbergen", "Схаваць адрас"}, 22) {
     // Resetting flag of showing address
     if (!isRestarted()) {
         showAddress = false;
@@ -31,14 +31,14 @@ hideAddressText(_app.window, 0.5, 0.45, {"Hide address", "Скрыть адре�
 
     // Setting showing/hidding address text
     if (showAddress) {
-        addressText.setValues(_app.window, currentAddress);
+        addressText.setValues(currentAddress);
     } else {
-        addressText.setValues(_app.window, "********");
+        addressText.setValues("********");
     }
 }
 
-bool ServerLobbyCycle::inputMouseDown(App& _app) {
-    if (BaseCycle::inputMouseDown(_app)) {
+bool ServerLobbyCycle::inputMouseDown() {
+    if (BaseCycle::inputMouseDown()) {
         return true;
     }
     // Check on copying address
@@ -54,22 +54,22 @@ bool ServerLobbyCycle::inputMouseDown(App& _app) {
         // Check on hiding address
         if (hideAddressText.in(mouse)) {
             showAddress = false;
-            addressText.setValues(_app.window, "********");
+            addressText.setValues("********");
             return true;
         }
     } else {
         // Check on showing address
         if (showAddressText.in(mouse)) {
             showAddress = true;
-            addressText.setValues(_app.window, currentAddress);
+            addressText.setValues(currentAddress);
             return true;
         }
     }
     return false;
 }
 
-void ServerLobbyCycle::update(App& _app) {
-    BaseCycle::update(_app);
+void ServerLobbyCycle::update() {
+    BaseCycle::update();
 
     // Update infobox
     copiedInfoBox.update();
@@ -81,35 +81,35 @@ void ServerLobbyCycle::update(App& _app) {
         server.connectToLastMessage();
 
         // Starting game (as server)
-        runCycle<ServerGameCycle, Connection&>(_app, server);
+        runCycle<ServerGameCycle, Connection&>(server);
         // Exiting to menu after game
         stop();
         return;
     }
 }
 
-void ServerLobbyCycle::draw(const App& _app) const {
+void ServerLobbyCycle::draw() const {
     // Bliting background
-    _app.window.setDrawColor(BLACK);
-    _app.window.clear();
+    window.setDrawColor(BLACK);
+    window.clear();
 
     // Draw main part
-    titleText.blit(_app.window);
-    addressText.blit(_app.window);
-    copiedInfoBox.blit(_app.window);
+    titleText.blit();
+    addressText.blit();
+    copiedInfoBox.blit();
 
     if (showAddress) {
-        hideAddressText.blit(_app.window);
+        hideAddressText.blit();
     } else {
-        showAddressText.blit(_app.window);
+        showAddressText.blit();
     }
 
     // Drawing buttons
-    exitButton.blit(_app.window);
+    exitButton.blit();
 
     // Drawing settings
-    settings.blit(_app.window);
+    settings.blit();
 
     // Bliting all to screen
-    _app.window.render();
+    window.render();
 }

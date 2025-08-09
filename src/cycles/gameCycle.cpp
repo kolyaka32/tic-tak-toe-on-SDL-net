@@ -7,37 +7,37 @@
 #include "selectCycle.hpp"
 
 
-GameCycle::GameCycle(const App& _app)
-: BaseCycle(_app),
-screamer(_app.window),
-menuRestartButton(_app.window, 0.5, 0.5, {"Restart", "Перезапустить", "Starten", "Перазапуск"}, 24, WHITE),
-menuExitButton(_app.window, 0.5, 0.65, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}, 24, WHITE),
-gameRestartButton(_app.window, 0.12, 0.05, 0.08, IMG_GUI_RESTART_BUTTON),
+GameCycle::GameCycle()
+: BaseCycle(),
+screamer(),
+menuRestartButton(0.5, 0.5, {"Restart", "Перезапустить", "Starten", "Перазапуск"}, 24, WHITE),
+menuExitButton(0.5, 0.65, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}, 24, WHITE),
+gameRestartButton(0.12, 0.05, 0.08, IMG_GUI_RESTART_BUTTON),
 playersTurnsTexts {
-    {_app.window, 0.5, 0.05, {"First player turn", "Ход первого игрока", "Der Zug des ersten Spielers", "Ход першага гульца"}, 24, WHITE},
-    {_app.window, 0.5, 0.05, {"Second player turn", "Ход второго игрока", "Zug des zweiten Spielers", "Ход другога гульца"}, 24, WHITE}
+    {0.5, 0.05, {"First player turn", "Ход первого игрока", "Der Zug des ersten Spielers", "Ход першага гульца"}, 24, WHITE},
+    {0.5, 0.05, {"Second player turn", "Ход второго игрока", "Zug des zweiten Spielers", "Ход другога гульца"}, 24, WHITE}
 },
-menuBackplate(_app.window, 0.5, 0.5, 1, 0.46, 40, 5),
-firstWinText(_app.window, 0.5, 0.35, {"Fist player win", "Первый игрок выйграл", "Der erste Spieler hat gewonnen", "Першы гулец выйграў"}, 30, WHITE),
-secondWinText(_app.window, 0.5, 0.35, {"Second player win", "Второй игрок выйграл", "Der zweite Spieler hat gewonnen", "Другі гулец выйграў"}, 30, WHITE),
-nobodyWinText(_app.window, 0.5, 0.35, {"Nobody win", "Ничья", "Unentschieden", "Чые"}, 30, WHITE) {
+menuBackplate(0.5, 0.5, 1, 0.46, 40, 5),
+firstWinText(0.5, 0.35, {"Fist player win", "Первый игрок выйграл", "Der erste Spieler hat gewonnen", "Першы гулец выйграў"}, 30, WHITE),
+secondWinText(0.5, 0.35, {"Second player win", "Второй игрок выйграл", "Der zweite Spieler hat gewonnen", "Другі гулец выйграў"}, 30, WHITE),
+nobodyWinText(0.5, 0.35, {"Nobody win", "Ничья", "Unentschieden", "Чые"}, 30, WHITE) {
     if (!isRestarted()) {
         // Resetting field
         field.reset();
         firstTurn = true;
         // Starting main song (if wasn't started)
-        _app.music.startFading(MUS_MAIN_CALM);
+        music.startFading(MUS_MAIN_CALM);
     }
 }
 
-bool GameCycle::inputMouseDown(App& _app) {
+bool GameCycle::inputMouseDown() {
     if (screamer.click(mouse)) {
         return true;
     }
-    return BaseCycle::inputMouseDown(_app);
+    return BaseCycle::inputMouseDown();
 }
 
-void GameCycle::inputKeys(App& _app, SDL_Keycode key) {
+void GameCycle::inputKeys(SDL_Keycode key) {
     // Searching for key press
     switch (key) {
     case SDLK_ESCAPE:
@@ -48,11 +48,11 @@ void GameCycle::inputKeys(App& _app, SDL_Keycode key) {
         // Restarting game
         field.reset();
         if (!firstTurn) {
-            _app.music.startFromCurrent(MUS_MAIN_CALM);
+            music.startFromCurrent(MUS_MAIN_CALM);
         }
         firstTurn = true;
         // Making sound
-        _app.sounds.play(SND_RESET);
+        sounds.play(SND_RESET);
         return;
 
     case SDLK_Q:
@@ -62,60 +62,60 @@ void GameCycle::inputKeys(App& _app, SDL_Keycode key) {
     }
 }
 
-void GameCycle::update(App& _app) {
-    screamer.update(_app.sounds);
-    BaseCycle::update(_app);
+void GameCycle::update() {
+    screamer.update();
+    BaseCycle::update();
 }
 
-void GameCycle::draw(const App& _app) const {
+void GameCycle::draw() const {
     // Bliting background
-    _app.window.setDrawColor(BLACK);
-    _app.window.clear();
+    window.setDrawColor(BLACK);
+    window.clear();
 
     // Blitting field
-    field.blit(_app.window);
+    field.blit();
 
     // Drawing buttons
-    exitButton.blit(_app.window);
-    gameRestartButton.blit(_app.window);
+    exitButton.blit();
+    gameRestartButton.blit();
 
     // Bliting waiting menu
     if (field.getState() >= GameState::CurrentWin || field.getState() == GameState::None) {
         // Bliting end background
-        menuBackplate.blit(_app.window);
+        menuBackplate.blit();
 
         // Blitting buttons
-        menuRestartButton.blit(_app.window);
-        menuExitButton.blit(_app.window);
+        menuRestartButton.blit();
+        menuExitButton.blit();
     }
 
     // Draw game state
     switch (field.getState()) {
     case GameState::CurrentPlay:
-        playersTurnsTexts[0].blit(_app.window);
+        playersTurnsTexts[0].blit();
         break;
 
     case GameState::OpponentPlay:
-        playersTurnsTexts[1].blit(_app.window);
+        playersTurnsTexts[1].blit();
         break;
 
     case GameState::CurrentWin:
-        firstWinText.blit(_app.window);
+        firstWinText.blit();
         break;
 
     case GameState::OpponentWin:
-        secondWinText.blit(_app.window);
+        secondWinText.blit();
         break;
 
     case GameState::NobodyWin:
-        nobodyWinText.blit(_app.window);
+        nobodyWinText.blit();
         break;
     }
     // Drawing setting menu
-    settings.blit(_app.window);
+    settings.blit();
 
-    screamer.blit(_app.window);
+    screamer.blit();
 
     // Bliting all to screen
-    _app.window.render();
+    window.render();
 }

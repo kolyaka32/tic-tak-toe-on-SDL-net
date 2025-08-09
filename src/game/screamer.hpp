@@ -15,8 +15,8 @@ private:
     bool active = false;
 
 public:
-    Screamer(const Window& window);
+    Screamer();
     bool click(const Mouse mouse);
-    void update(const Sounds& sound);
-    void blit(const Window& window) const;
+    void update();
+    void blit() const;
 };

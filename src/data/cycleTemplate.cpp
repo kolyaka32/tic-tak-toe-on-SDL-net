@@ -37,7 +37,7 @@ bool CycleTemplate::isAdditionalRestarted() {
 }
 
 // Getting user input
-void CycleTemplate::getInput(App& _app) {
+void CycleTemplate::getInput() {
     // Creating event for get user input
     SDL_Event event;
 
@@ -53,52 +53,52 @@ void CycleTemplate::getInput(App& _app) {
         // Getting mouse input
         case SDL_EVENT_MOUSE_BUTTON_DOWN:
             mouse.updatePos();
-            inputMouseDown(_app);
+            inputMouseDown();
             break;
 
         case SDL_EVENT_MOUSE_BUTTON_UP:
             mouse.updatePos();
-            inputMouseUp(_app);
+            inputMouseUp();
             break;
 
         case SDL_EVENT_MOUSE_WHEEL:
             mouse.updatePos();
-            inputMouseWheel(_app, event.wheel.y);
+            inputMouseWheel(event.wheel.y);
             break;
 
         // Getting keys presses
         case SDL_EVENT_KEY_DOWN:
-            inputKeys(_app, event.key.key);
+            inputKeys(event.key.key);
             break;
 
         // Text inputing
         case SDL_EVENT_TEXT_INPUT:
-            inputText(_app, event.text.text);
+            inputText(event.text.text);
             break;
         }
     }
 }
 
 // Empty template for draw
-void CycleTemplate::draw(const App& app) const {}
+void CycleTemplate::draw() const {}
 
 // Getting special update (if need)
-void CycleTemplate::update(App& app) {}
+void CycleTemplate::update() {}
 
 
 // Getting input
 // Example for getting mouse input
-bool CycleTemplate::inputMouseDown(App& app) {
+bool CycleTemplate::inputMouseDown() {
     /*if (startOptions[0].in(mouse)) {
         return true;
     }*/
    return false;
 }
 
-void CycleTemplate::inputMouseUp(App& app) {}
+void CycleTemplate::inputMouseUp() {}
 
 // Example for getting keys input
-void CycleTemplate::inputKeys(App& app, SDL_Keycode _key) {
+void CycleTemplate::inputKeys(SDL_Keycode _key) {
     switch (_key) {
     case SDLK_ESCAPE:
         // Stopping ruuning by escape
@@ -108,19 +108,19 @@ void CycleTemplate::inputKeys(App& app, SDL_Keycode _key) {
 }
 
 // Example for getting mouse wheel input
-void CycleTemplate::inputMouseWheel(App& app, float _wheelY) {
+void CycleTemplate::inputMouseWheel(float _wheelY) {
     // if (MusicSlider.scroll(event.wheel.y, mouse));
     // else if (SoundSlider.scroll(event.wheel.y, mouse));
 }
 
 // Example for getting text input
-void CycleTemplate::inputText(App& app, const char* text) {
+void CycleTemplate::inputText(const char* text) {
     // typeBox.writeString(event.text.text);
     // press = false;
 }
 
 // Function for start need cycle
-void CycleTemplate::run(App& _app) {
+void CycleTemplate::run() {
     // Resetting restart flag after all started
     restarting = false;
     additionalRestart = false;
@@ -128,13 +128,13 @@ void CycleTemplate::run(App& _app) {
     // Starting main cycle
     while (running) {
         // Getting user input
-        getInput(_app);
+        getInput();
 
         // Updating things
-        update(_app);
+        update();
 
         // Drawing interface
-        draw(_app);
+        draw();
 
         // Standing in idle state
         idleTimer.sleep();

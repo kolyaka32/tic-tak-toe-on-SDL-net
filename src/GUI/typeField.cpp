@@ -10,16 +10,15 @@
 
 // Type field class
 template <unsigned bufferSize>
-GUI::TypeField<bufferSize>::TypeField(const Window& _target, float _X, float _Y, float _height, const char* _text, Aligment _aligment, Color _color)
-: target(_target),
-posX(_target.getWidth()*_X),
+GUI::TypeField<bufferSize>::TypeField(float _X, float _Y, float _height, const char* _text, Aligment _aligment, Color _color)
+: posX(window.getWidth()*_X),
 aligment(_aligment),
 textColor(_color),
-font(_target.createFontCopy(FNT_MAIN, _height)),
-backRect({_X*_target.getWidth()-(6.5f*bufferSize+2), _Y*_target.getHeight()-_height*0.9f, 13.0f*bufferSize+4, _height*1.8f}) {
+font(window.createFontCopy(FNT_MAIN, _height)),
+backRect({_X*window.getWidth()-(6.5f*bufferSize+2), _Y*window.getHeight()-_height*0.9f, 13.0f*bufferSize+4, _height*1.8f}) {
     // Setting rects
-    textRect = {0, _target.getHeight()*_Y-_height/2-1, 0, 0};
-    caretRect = {0, _target.getHeight()*_Y-_height/2-1, 2, _height*1.3f};
+    textRect = {0, window.getHeight()*_Y-_height/2-1, 0, 0};
+    caretRect = {0, window.getHeight()*_Y-_height/2-1, 2, _height*1.3f};
 
     // Copying text to caret
     length = strlen(_text);
@@ -27,13 +26,13 @@ backRect({_X*_target.getWidth()-(6.5f*bufferSize+2), _Y*_target.getHeight()-_hei
     memcpy(buffer, _text, length);
 
     // Creating backplate
-    backTexture = target.createTexture(backRect.w, backRect.h);
-    target.setRenderTarget(backTexture);
-    target.setDrawColor(GREY);
-    target.clear();
-    target.setDrawColor(WHITE);
-    target.drawRect({2, 2, backRect.w-4, backRect.h});
-    target.resetRenderTarget();
+    backTexture = window.createTexture(backRect.w, backRect.h);
+    window.setRenderTarget(backTexture);
+    window.setDrawColor(GREY);
+    window.clear();
+    window.setDrawColor(WHITE);
+    window.drawRect({2, 2, backRect.w-4, backRect.h});
+    window.resetRenderTarget();
 
     // Creating first texture, if there was any text
     if (length) {
@@ -93,7 +92,7 @@ void GUI::TypeField<bufferSize>::updateTexture() {
             SDL_DestroySurface(inverseSurface);
         }
         // Updating texture
-        textTexture = target.createTextureAndFree(mainSurface);
+        textTexture = window.createTextureAndFree(mainSurface);
         SDL_DestroySurface(mainSurface);
 
         // Resetting place of text with saving aligment
@@ -133,7 +132,7 @@ void GUI::TypeField<bufferSize>::select(float _mouseX) {
     updateTexture();
 
     // Starting using keyboard
-    target.startTextInput();
+    window.startTextInput();
 }
 
 // Write need string to buffer with ability to clear source
@@ -362,7 +361,7 @@ bool GUI::TypeField<bufferSize>::click(const Mouse mouse) {
             select(mouse.getX());
         } else {
             // Stoping entering any letters
-            target.stopTextInput();
+            window.stopTextInput();
 
             // Clearing caret
             showCaret = false;
@@ -376,7 +375,7 @@ bool GUI::TypeField<bufferSize>::click(const Mouse mouse) {
         pressed = false;
 
         // Stoping entering any letters
-        target.stopTextInput();
+        window.stopTextInput();
 
         // Clearing caret
         showCaret = false;
@@ -417,15 +416,15 @@ void GUI::TypeField<bufferSize>::update(float _mouseX) {
 template <unsigned bufferSize>
 void GUI::TypeField<bufferSize>::blit() const {
     // Rendering background picture for better typing
-    target.blit(backTexture, backRect);
+    window.blit(backTexture, backRect);
 
     // Rendering text
-    target.blit(textTexture, textRect);
+    window.blit(textTexture, textRect);
 
     // Rendering caret
     if (showCaret) {
-        target.setDrawColor({50, 50, 50, 50});
-        target.drawRect(caretRect);
+        window.setDrawColor({50, 50, 50, 50});
+        window.drawRect(caretRect);
     }
 }
 
@@ -450,7 +449,7 @@ void GUI::TypeField<bufferSize>::setString(const char* _newString) {
     pressed = false;
 
     // Stoping entering any letters
-    target.stopTextInput();
+    window.stopTextInput();
 
     // Clearing caret
     showCaret = false;

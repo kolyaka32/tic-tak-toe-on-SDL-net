@@ -34,7 +34,7 @@ public:
     void clickMultiplayerOpponent(Uint8 x, Uint8 y);      // Clicking in multiplayer mode by internet connection
 
     // Drawing field with his background
-    void blit(const Window& target) const;
+    void blit() const;
 
     // Global options to work with field
     static int getWidth();

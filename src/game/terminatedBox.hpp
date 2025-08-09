@@ -21,9 +21,9 @@ private:
     const GUI::Backplate background;
 
 public:
-    TerminatedBox(const Window& target);
+    TerminatedBox();
     bool click(const Mouse mouse);
-    void blit(const Window& target) const;
+    void blit() const;
     static void activate();
     static void reset();
     static bool isActive();

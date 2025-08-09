@@ -6,7 +6,7 @@
 #pragma once
 
 #include <SDL3_mixer/SDL_mixer.h>
-#include "loader/dataLoader.hpp"
+#include "loader/loader.hpp"
 
 
 // Class for play music
@@ -15,10 +15,10 @@ class MusicData {
  private:
     Mix_Music* music[count];
     Uint8 volume = 0;
-    void loadMusic(const DataLoader& loader, unsigned index, const char* name);
+    void loadMusic(unsigned index, const char* name);
 
  public:
-    MusicData(const DataLoader& loader, const char* names[count]);
+    MusicData(const char* names[count]);
     ~MusicData();
     void start(unsigned name) const;
     void startFading(unsigned name) const;

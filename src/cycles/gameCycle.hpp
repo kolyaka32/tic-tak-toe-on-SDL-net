@@ -12,7 +12,7 @@
 
 // Cycle with game template
 class GameCycle : public BaseCycle {
- protected:
+protected:
     // Active game part
     GameField field;
     bool firstTurn;
@@ -31,11 +31,11 @@ class GameCycle : public BaseCycle {
     GUI::StaticText nobodyWinText;
 
     // New overrided cycle functions
-    bool inputMouseDown(App& app) override;
-    void inputKeys(App& app, const SDL_Keycode key) override;
-    void update(App& app) override;
-    void draw(const App& app) const override;
+    bool inputMouseDown() override;
+    void inputKeys(const SDL_Keycode key) override;
+    void update() override;
+    void draw() const override;
 
- public:
-    GameCycle(const App& app);
+public:
+    GameCycle();
 };

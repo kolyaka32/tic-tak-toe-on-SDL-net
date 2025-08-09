@@ -9,10 +9,10 @@
 
 bool TerminatedBox::active = false;
 
-TerminatedBox::TerminatedBox(const Window& _target)
-: mainText(_target, 0.5, 0.45, {"Connection terminated", "Соединение разорвано", "Verbindung unterbrochen", "Злучэнне разарвана"}, 2, 40, WHITE),
-closeButton(_target, 0.5, 0.55, {"Close", "Закрыть", "Schließen", "Зачыніць"}, 24, WHITE),
-background(_target, 0.5, 0.5, 0.82, 0.2, 20, 4) {}
+TerminatedBox::TerminatedBox()
+: mainText(0.5, 0.45, {"Connection terminated", "Соединение разорвано", "Verbindung unterbrochen", "Злучэнне разарвана"}, 2, 40, WHITE),
+closeButton(0.5, 0.55, {"Close", "Закрыть", "Schließen", "Зачыніць"}, 24, WHITE),
+background(0.5, 0.5, 0.82, 0.2, 20, 4) {}
 
 bool TerminatedBox::click(const Mouse _mouse) {
     if (active) {
@@ -26,14 +26,6 @@ bool TerminatedBox::click(const Mouse _mouse) {
     return false;
 }
 
-void TerminatedBox::blit(const Window& _target) const {
-    if (active) {
-        background.blit(_target);
-        closeButton.blit(_target);
-        mainText.blit(_target);
-    }
-}
-
 void TerminatedBox::activate() {
     active = true;
 }
@@ -44,4 +36,12 @@ void TerminatedBox::reset() {
 
 bool TerminatedBox::isActive() {
     return active;
+}
+
+void TerminatedBox::blit() const {
+    if (active) {
+        background.blit();
+        closeButton.blit();
+        mainText.blit();
+    }
 }

@@ -6,7 +6,6 @@
 #include "gameField.hpp"
 
 
-Field GameField::field;
 float GameField::upperLineHeight;
 int GameField::offset;
 
@@ -66,22 +65,22 @@ void GameField::clickMultiplayerOpponent(Uint8 x, Uint8 y) {
     field.clickMultiplayerOpponent(x, y);
 }
 
-void GameField::blit(const Window& _target) const {
+void GameField::blit() const {
     // Rendering cells with their background
     for (int y=0; y < field.width; ++y) {
         for (int x=0; x < field.width; ++x) {
             const SDL_FRect dest = {float(x * (CELL_SIDE + SEPARATOR)), float(y * (CELL_SIDE + SEPARATOR) + upperLineHeight), CELL_SIDE, CELL_SIDE};
             // Rendering background
-            _target.blit(IMG_CELL, dest);
+            window.blit(IMG_CELL, dest);
 
             // Rendering cells
             switch (field.getCell(x, y)) {
             case Cell::Current:
-                _target.blit(IMG_names(IMG_GREEN_CROSS + offset), dest);
+                window.blit(IMG_names(IMG_GREEN_CROSS + offset), dest);
                 break;
 
             case Cell::Opponent:
-                _target.blit(IMG_names(IMG_RED_CIRCLE - offset), dest);
+                window.blit(IMG_names(IMG_RED_CIRCLE - offset), dest);
                 break;
             }
         }

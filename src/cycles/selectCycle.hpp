@@ -19,11 +19,11 @@ class SelectCycle : public BaseCycle {
     GUI::InfoBox bigFieldInfobox;
 
     // New overrided cycle functions
-    bool inputMouseDown(App& app) override;
-    void inputKeys(App& app, SDL_Keycode key) override;
-    void update(App& app) override;
-    void draw(const App& app) const override;
+    bool inputMouseDown() override;
+    void inputKeys(SDL_Keycode key) override;
+    void update() override;
+    void draw() const override;
 
  public:
-    SelectCycle(const App& app);
+    SelectCycle();
 };

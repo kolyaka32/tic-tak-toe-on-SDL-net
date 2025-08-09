@@ -22,7 +22,7 @@ enum MUS_names {
 };
 
 // Shortcut for music data class
-typedef MusicData<MUS_count> Music;
+extern MusicData<MUS_count> music;
 
 // File names of the corresponding music
 extern const char* musicFilesNames[MUS_count];

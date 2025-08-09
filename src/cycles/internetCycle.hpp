@@ -20,8 +20,8 @@ protected:
     GUI::StaticText winText;
     GUI::StaticText looseText;
 
-    bool inputMouseDown(App& app) override;
+    bool inputMouseDown() override;
 
 public:
-    InternetCycle(const App& app);
+    InternetCycle();
 };

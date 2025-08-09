@@ -7,21 +7,21 @@
 #include "baseGUI.hpp"
 
 
-GUI::DynamicText::DynamicText(const Window& _target, float _X, float _Y,
+GUI::DynamicText::DynamicText(float _X, float _Y,
     const LanguagedText _texts, float _height, Color _color, Aligment _aligment)
 : posX(_X),
 aligment(_aligment),
 color(_color),
 texts(_texts),
 height(_height) {
-    rect.y = _target.getHeight() * _Y - height / 2;
+    rect.y = window.getHeight() * _Y - height / 2;
     // Creating surface with text
-    texture = _target.createTexture(FNT_MAIN, height, texts.getString().c_str(), 0, color);
+    texture = window.createTexture(FNT_MAIN, height, texts.getString().c_str(), 0, color);
 
     // Moving draw rect to new place
     rect.w = texture->w;
     rect.h = texture->h;
-    rect.x = _target.getWidth() * posX - (rect.w * (unsigned)aligment / 2);
+    rect.x = window.getWidth() * posX - (rect.w * (unsigned)aligment / 2);
 }
 
 GUI::DynamicText::~DynamicText() {

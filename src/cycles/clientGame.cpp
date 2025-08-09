@@ -7,13 +7,13 @@
 #include "selectCycle.hpp"
 
 
-ClientGameCycle::ClientGameCycle(App& _app, Connection& _client)
-: InternetCycle(_app),
+ClientGameCycle::ClientGameCycle(Connection& _client)
+: InternetCycle(),
 connection(_client),
-waitText(_app.window, 0.5, 0.05, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}, 24) {}
+waitText(0.5, 0.05, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}, 24) {}
 
-bool ClientGameCycle::inputMouseDown(App& _app) {
-    if (InternetCycle::inputMouseDown(_app)) {
+bool ClientGameCycle::inputMouseDown() {
+    if (InternetCycle::inputMouseDown()) {
         return true;
     }
     // Checking, if game start
@@ -28,12 +28,12 @@ bool ClientGameCycle::inputMouseDown(App& _app) {
         // Normal turn
         if (field.tryClickMultiplayerCurrent(mouse)) {
             // Making sound
-            _app.sounds.play(SND_TURN);
+            sounds.play(SND_TURN);
             // Sending to opponent
             connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn, field.getXPos(mouse), field.getYPos(mouse));
             // Changing music theme
             if (firstTurn) {
-                _app.music.startFromCurrent(MUS_MAIN_COMBAT);
+                music.startFromCurrent(MUS_MAIN_COMBAT);
                 firstTurn = false;
             }
         }
@@ -41,15 +41,15 @@ bool ClientGameCycle::inputMouseDown(App& _app) {
     return false;
 }
 
-void ClientGameCycle::inputKeys(App& _app, const SDL_Keycode _key) {
+void ClientGameCycle::inputKeys(const SDL_Keycode _key) {
     // If not restart - act like normal key input
     if (_key != SDLK_R) {
-        GameCycle::inputKeys(_app, _key);
+        GameCycle::inputKeys(_key);
     }
 }
 
-void ClientGameCycle::update(App& _app) {
-    BaseCycle::update(_app);
+void ClientGameCycle::update() {
+    BaseCycle::update();
 
     // Getting internet messages
     switch (connection.updateMessages()) {
@@ -60,10 +60,10 @@ void ClientGameCycle::update(App& _app) {
             #endif
             field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
             // Making sound
-            _app.sounds.play(SND_TURN);
+            sounds.play(SND_TURN);
             // Changing music theme
             if (firstTurn) {
-                _app.music.startFromCurrent(MUS_MAIN_COMBAT);
+                music.startFromCurrent(MUS_MAIN_COMBAT);
                 firstTurn = false;
             }
         }
@@ -76,11 +76,11 @@ void ClientGameCycle::update(App& _app) {
         // Resetting game
         field.reset();
         if (!firstTurn) {
-            _app.music.startFromCurrent(MUS_MAIN_CALM);
+            music.startFromCurrent(MUS_MAIN_CALM);
         }
         firstTurn = true;
         // Making sound
-        _app.sounds.play(SND_RESET);
+        sounds.play(SND_RESET);
         return;
 
     case ConnectionCode::GameStart:
@@ -105,61 +105,61 @@ void ClientGameCycle::update(App& _app) {
     }
 }
 
-void ClientGameCycle::draw(const App& _app) const {
+void ClientGameCycle::draw() const {
     // Bliting background
-    _app.window.setDrawColor(BLACK);
-    _app.window.clear();
+    window.setDrawColor(BLACK);
+    window.clear();
 
     // Blitting field
-    field.blit(_app.window);
+    field.blit();
 
     // Drawing buttons
-    exitButton.blit(_app.window);
+    exitButton.blit();
 
     // Drawing setting menu
-    settings.blit(_app.window);
+    settings.blit();
 
     // Bliting game state, if need
     if (field.getState() >= GameState::CurrentWin) {
         // Bliting end background
-        menuBackplate.blit(_app.window);
+        menuBackplate.blit();
 
         // Blitting buttons
-        menuExitButton.blit(_app.window);
+        menuExitButton.blit();
     }
 
     // Draw game state
     switch (field.getState()) {
     case GameState::None:
-        waitText.blit(_app.window);
+        waitText.blit();
         break;
 
     case GameState::CurrentPlay:
-        playersTurnsTexts[0].blit(_app.window);
+        playersTurnsTexts[0].blit();
         break;
 
     case GameState::OpponentPlay:
-        playersTurnsTexts[1].blit(_app.window);
+        playersTurnsTexts[1].blit();
         break;
 
     case GameState::CurrentWin:
-        firstWinText.blit(_app.window);
+        firstWinText.blit();
         break;
 
     case GameState::OpponentWin:
-        secondWinText.blit(_app.window);
+        secondWinText.blit();
         break;
 
     case GameState::NobodyWin:
-        nobodyWinText.blit(_app.window);
+        nobodyWinText.blit();
         break;
     }
     // Messages
-    disconnectedBox.blit(_app.window);
-    termianatedBox.blit(_app.window);
+    disconnectedBox.blit();
+    termianatedBox.blit();
 
-    screamer.blit(_app.window);
+    screamer.blit();
 
     // Bliting all to screen
-    _app.window.render();
+    window.render();
 }

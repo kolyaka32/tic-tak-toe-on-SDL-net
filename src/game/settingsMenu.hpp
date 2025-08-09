@@ -33,11 +33,11 @@ class SettingsMenu : public GUI::GUItemplate {
 	GUI::TextButton exitButton;
 
  public:
-	SettingsMenu(const App& app);
-	void blit(const Window& target) const override;
-	bool click(const Mouse mouse, const App& app);
+	SettingsMenu();
+	void blit() const override;
+	bool click(const Mouse mouse);
 	void unClick();
-	void scroll(App& app, const Mouse mouse, float wheelY);
-	void update(App& app);
+	void scroll(const Mouse mouse, float wheelY);
+	void update();
 	void activate();
 };

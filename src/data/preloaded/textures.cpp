@@ -7,7 +7,7 @@
 
 
 template <unsigned count>
-TexturesData<count>::TexturesData(const DataLoader& _loader, SDL_Renderer* _renderer, const char* _filesNames[count]) {
+TexturesData<count>::TexturesData(SDL_Renderer* _renderer, const char* _filesNames[count]) {
     // Resetting texture masiive
     #if CHECK_CORRECTION
     for (unsigned i=0; i < count; ++i) {
@@ -17,7 +17,7 @@ TexturesData<count>::TexturesData(const DataLoader& _loader, SDL_Renderer* _rend
 
     // Loading all needed textures
     for (unsigned i=0; i < count; ++i) {
-        loadTexture(_loader, _renderer, i, _filesNames[i]);
+        loadTexture(_renderer, i, _filesNames[i]);
     }
 
     // Checking massive on loading correction
@@ -39,9 +39,9 @@ TexturesData<count>::~TexturesData() {
 }
 
 template <unsigned count>
-void TexturesData<count>::loadTexture(const DataLoader& _loader, SDL_Renderer* _renderer, unsigned _index, const char* _name) {
+void TexturesData<count>::loadTexture(SDL_Renderer* _renderer, unsigned _index, const char* _name) {
     // Load data of current texture
-    SDL_IOStream* iodata = _loader.load(_name);
+    SDL_IOStream* iodata = dataLoader.load(_name);
 
     // Creating surface
     SDL_Surface* surface = IMG_Load_IO(iodata, true);
