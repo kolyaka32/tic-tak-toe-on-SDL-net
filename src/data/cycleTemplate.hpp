@@ -61,6 +61,7 @@ void CycleTemplate::runCycle(const Args& ...args) {
     } while (App::isRunning() && (restarting | additionalRestart));
 
     // Restarting external running cycle for correct language change
+    restarting = false;
     additionalRestart = true;
     running = false;
 }

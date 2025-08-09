@@ -18,8 +18,8 @@ enterIPText(0.5, 0.2, {"Enter IP:", "Введите IP:", "-", "Увядзіце
 enterIPField(0.5, 0.32, 20, baseIP),
 enterPortText(0.5, 0.5, {"Enter port:", "Введите порт:", "Port eingeben:", "Увядзіце порт:"}, 30, WHITE),
 enterPortField(0.5, 0.62, 20, basePort),
-connectButton(0.5, 0.78, {"Connect", "Присоединится", "Beitritt", "Далучыцца"}, 22, WHITE),
-pasteButton(0.5, 0.9, {"Paste the address", "Вставить адрес", "Kopierte Adresse", "Уставіць адрас"}, 22, WHITE) {
+pasteButton(0.5, 0.75, {"Paste the address", "Вставить адрес", "Kopierte Adresse", "Уставіць адрас"}, 24, WHITE),
+connectButton(0.5, 0.9, {"Connect", "Присоединится", "Beitritt", "Далучыцца"}, 24, WHITE) {
     if (isAdditionalRestarted()) {
         stop();
         return;

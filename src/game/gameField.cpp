@@ -95,6 +95,7 @@ void GameField::setWidth(int _width) {
     field.width = _width;
     setMin(field.width, 3);
     setMax(field.width, 9);
+    setMax(field.winWidth, field.width);
 }
 
 int GameField::getWinWidth() {

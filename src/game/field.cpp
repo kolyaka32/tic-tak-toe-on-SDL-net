@@ -181,11 +181,6 @@ void Field::AImove() {
 
 // Return 0, if none win, 1, if win player, 2 if win bot(2 player)
 GameState Field::checkWin(int X, int Y) {
-    // Checking, is field full
-    if (count == width * width) {
-        return GameState::NobodyWin;
-    }
-
     // Finding first starting point for X
     for (int startX = max(0, X - winWidth + 1); startX <= min(X, width - winWidth); ++startX) {
         // Checking all lines
@@ -255,6 +250,10 @@ GameState Field::checkWin(int X, int Y) {
                 return (GameState)(state+2);
             }
         }
+    }
+    // Checking, is field full
+    if (count == width * width) {
+        return GameState::NobodyWin;
     }
     return gameState;
 }

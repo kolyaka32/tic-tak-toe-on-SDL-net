@@ -15,7 +15,7 @@ extern char basePort[6];
 
 // Game cycle (for single player (special animation))
 class ClientLobbyCycle : public BaseCycle {
- private:
+private:
     // Internet parameters
     Client client;
 
@@ -24,8 +24,8 @@ class ClientLobbyCycle : public BaseCycle {
     GUI::TypeField<12> enterIPField;
     GUI::StaticText enterPortText;
     GUI::TypeField<6> enterPortField;
-    GUI::TextButton connectButton;
     GUI::TextButton pasteButton;
+    GUI::TextButton connectButton;
 
     void pasteFromClipboard();
 
@@ -37,6 +37,6 @@ class ClientLobbyCycle : public BaseCycle {
     void update() override;
     void draw() const override;
 
- public:
+public:
     ClientLobbyCycle();
 };

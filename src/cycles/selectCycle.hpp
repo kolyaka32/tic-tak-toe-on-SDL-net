@@ -10,13 +10,14 @@
 
 // Cycle for select variants to start
 class SelectCycle : public BaseCycle {
- private:
+private:
     GUI::HighlightedStaticText titleText;
     GUI::TextButton singleplayerButton;
+    GUI::InfoBox bigFieldInfobox;
     GUI::TextButton twoPlayerButton;
     GUI::TextButton serverButton;
     GUI::TextButton connectButton;
-    GUI::InfoBox bigFieldInfobox;
+    GUI::TextButton fieldParametersButton;
 
     // New overrided cycle functions
     bool inputMouseDown() override;
@@ -24,6 +25,6 @@ class SelectCycle : public BaseCycle {
     void update() override;
     void draw() const override;
 
- public:
+public:
     SelectCycle();
 };
