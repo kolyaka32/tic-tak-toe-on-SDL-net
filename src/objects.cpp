@@ -17,8 +17,8 @@ const StraightLoader dataLoader{};
 #endif
 
 // Loaded objects
-SoundsData sounds;
-MusicData music;
+SoundsData sounds{};
+MusicData music{};
 Field GameField::field{};
 InitFile initFile{};
 Window window{GameField::getWindowWidth(), GameField::getWindowHeight(),

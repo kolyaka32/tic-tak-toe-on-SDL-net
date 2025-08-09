@@ -6,6 +6,10 @@
 #include "field.hpp"
 
 
+Field::Field()
+: width(3),
+winWidth(3) {}
+
 void Field::reset() {
     for (Uint8 i=0; i < width * width; ++i) {
         data[i] = Cell::Empty;

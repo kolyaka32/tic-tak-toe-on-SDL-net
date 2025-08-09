@@ -44,6 +44,7 @@ public:
     GameState gameState;
 
     //
+    Field();
     void reset();
     Cell getCell(int x, int y) const;
 
