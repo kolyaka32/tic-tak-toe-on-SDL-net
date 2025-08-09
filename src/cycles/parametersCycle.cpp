@@ -17,7 +17,9 @@ smallFieldButton(0.5, 0.51, {"Small field", "Маленькое поле", "", "
 mediumFieldButton(0.5, 0.64, {"Medium field", "Среднее поле", "", ""}, 24),
 bigFieldButton(0.5, 0.77, {"Big field", "Большое поле", "", ""}, 24),
 hugeFieldButton(0.5, 0.9, {"Huge field", "Огромное поле", "", ""}, 24) {
-    isRestarted();
+    #if CHECK_ALL
+    SDL_Log("Start parameters selection cycle");
+    #endif
 }
 
 bool ParametersCycle::inputMouseDown() {
@@ -130,4 +132,7 @@ void ParametersCycle::setParameter(int _width, int _winWidth) {
     window.setHeight(GameField::getWindowHeight());
     // Restarting cycle
     restart();
+    #if CHECK_ALL
+    SDL_Log("Setting game field width to %u, win width to %u", _width, _winWidth);
+    #endif
 }

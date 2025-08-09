@@ -11,7 +11,5 @@
 // Class of simplier implimintation of loading file, straight from file
 class StraightLoader : public DataLoader {
 public:
-    StraightLoader();
-    ~StraightLoader() override;
     SDL_IOStream* load(const char* name) const override;
 };

@@ -20,6 +20,9 @@ winText(0.5, 0.35, {"Win", "Победа", "Sieg", "Перамога"}, 30, WHIT
     if (!isRestarted()) {
         disconnectedBox.reset();
         termianatedBox.reset();
+        #if CHECK_ALL
+        SDL_Log("Start internet cycle game");
+        #endif
     }
 }
 

@@ -26,10 +26,18 @@ bool ServerGameCycle::inputMouseDown() {
         connection.sendConfirmed(ConnectionCode::GameClear);
         // Making sound
         sounds.play(Sounds::Reset);
+
         // Clearing field
+        #if CHECK_ALL
+        SDL_Log("Restart game by upper button");
+        #endif
         field.reset();
+        // Start play calm music from current moment
         if (!firstTurn) {
             music.startFromCurrent(Music::MainCalm);
+            #if CHECK_ALL
+            SDL_Log("Stop combat music");
+            #endif
         }
         firstTurn = true;
         return true;
@@ -42,6 +50,9 @@ bool ServerGameCycle::inputMouseDown() {
             field.setState(GameState::CurrentPlay);
             connection.sendConfirmed<Uint8>(ConnectionCode::GameStart, (Uint8)GameState::OpponentPlay);
             field.setTextureOffset(0);
+            #if CHECK_ALL
+            SDL_Log("Start game as cross (first)");
+            #endif
             return true;
         }
         if (startSecond.in(mouse)) {
@@ -49,6 +60,9 @@ bool ServerGameCycle::inputMouseDown() {
             field.setState(GameState::OpponentPlay);
             connection.sendConfirmed<Uint8>(ConnectionCode::GameStart, (Uint8)GameState::CurrentPlay);
             field.setTextureOffset(1);
+            #if CHECK_ALL
+            SDL_Log("Start game as circle (second)");
+            #endif
             return true;
         }
         if (menuExitButton.in(mouse)) {
@@ -67,6 +81,9 @@ bool ServerGameCycle::inputMouseDown() {
             if (firstTurn) {
                 music.startFromCurrent(Music::MainCombat);
                 firstTurn = false;
+                #if CHECK_ALL
+                SDL_Log("Start combat music");
+                #endif
             }
         }
     }
@@ -75,16 +92,22 @@ bool ServerGameCycle::inputMouseDown() {
 
 void ServerGameCycle::inputKeys(SDL_Keycode _key) {
     if (_key == SDLK_R) {
+        // Sending message of game clear
+        connection.sendConfirmed(ConnectionCode::GameClear);
         // Making sound
         sounds.play(Sounds::Reset);
         // Clearing field
+        #if CHECK_ALL
+        SDL_Log("Restart game by key");
+        #endif
         field.reset();
         if (!firstTurn) {
             music.startFromCurrent(Music::MainCalm);
+            #if CHECK_ALL
+            SDL_Log("Stop combat music");
+            #endif
         }
         firstTurn = true;
-        // Sending message of game clear
-        connection.sendConfirmed(ConnectionCode::GameClear);
         return;
     } else {
         GameCycle::inputKeys(_key);
@@ -109,6 +132,9 @@ void ServerGameCycle::update() {
             if (!firstTurn) {
                 music.startFromCurrent(Music::MainCombat);
                 firstTurn = false;
+                #if CHECK_ALL
+                SDL_Log("Start combat music");
+                #endif
             }
         }
         return;

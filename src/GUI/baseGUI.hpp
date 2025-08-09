@@ -132,14 +132,14 @@ namespace GUI {
         TTF_Font* font;                    // Font for type text
 
         // Variables
-        char buffer[bufferSize];           // String, that was typed
+        char buffer[bufferSize+1];         // String, that was typed
         size_t length = 0;                 // Length of all text
         size_t caret = 0;                  // Position of place, where user type
         int selectLength = 0;              // Length of selected box
         bool showCaret = false;            // Flag, if need to show caret
         timer needSwapCaret = 0;           // Time, when next need to change caret
         SDL_FRect caretRect;               // Place, where caret should be at screen
-        char clipboardText[bufferSize];    // Copying string for clipboard use
+        char clipboardText[bufferSize+1];  // Copying string for clipboard use
         bool pressed = false;              //
         bool selected = false;             //
         SDL_Texture* textTexture;          // Texture of text

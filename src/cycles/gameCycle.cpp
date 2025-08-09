@@ -45,14 +45,17 @@ void GameCycle::inputKeys(SDL_Keycode key) {
         return;
 
     case SDLK_R:
+        // Making sound
+        sounds.play(Sounds::Reset);
         // Restarting game
         field.reset();
         if (!firstTurn) {
             music.startFromCurrent(Music::MainCalm);
         }
         firstTurn = true;
-        // Making sound
-        sounds.play(Sounds::Reset);
+        #if CHECK_ALL
+        SDL_Log("Restarting game by key");
+        #endif
         return;
 
     case SDLK_Q:

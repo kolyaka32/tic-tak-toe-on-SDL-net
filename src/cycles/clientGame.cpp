@@ -35,6 +35,9 @@ bool ClientGameCycle::inputMouseDown() {
             if (firstTurn) {
                 music.startFromCurrent(Music::MainCombat);
                 firstTurn = false;
+                #if CHECK_ALL
+                SDL_Log("Start combat music");
+                #endif
             }
         }
     }
@@ -65,18 +68,24 @@ void ClientGameCycle::update() {
             if (firstTurn) {
                 music.startFromCurrent(Music::MainCombat);
                 firstTurn = false;
+                #if CHECK_ALL
+                SDL_Log("Start combat music");
+                #endif
             }
         }
         return;
 
     case ConnectionCode::GameClear:
-        #if CHECK_CORRECTION
-        SDL_Log("Resetting game");
-        #endif
         // Resetting game
+        #if CHECK_CORRECTION
+        SDL_Log("Resetting game by connection");
+        #endif
         field.reset();
         if (!firstTurn) {
             music.startFromCurrent(Music::MainCalm);
+            #if CHECK_ALL
+            SDL_Log("Stop combat music");
+            #endif
         }
         firstTurn = true;
         // Making sound

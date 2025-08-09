@@ -12,6 +12,9 @@ SinglePlayerGameCycle::SinglePlayerGameCycle()
         // Starting game
         field.setState(GameState::CurrentPlay);
         field.setTextureOffset(0);
+        #if CHECK_ALL
+        SDL_Log("Start singleplayer game");
+        #endif
     }
 }
 
@@ -24,9 +27,15 @@ bool SinglePlayerGameCycle::inputMouseDown() {
         sounds.play(Sounds::Reset);
 
         // Restarting current game
+        #if CHECK_ALL
+        SDL_Log("Resetting game by upper button");
+        #endif
         field.reset();
         if (!firstTurn) {
             music.startFromCurrent(Music::MainCalm);
+            #if CHECK_ALL
+            SDL_Log("Stop combat music");
+            #endif
         }
         firstTurn = true;
         field.setState(GameState::CurrentPlay);
@@ -46,6 +55,9 @@ bool SinglePlayerGameCycle::inputMouseDown() {
                 music.startFromCurrent(Music::MainCalm);
             }
             firstTurn = true;
+            #if CHECK_ALL
+            SDL_Log("Restarting game by menu button");
+            #endif
             return true;
         }
         if (menuExitButton.in(mouse)) {
@@ -61,6 +73,9 @@ bool SinglePlayerGameCycle::inputMouseDown() {
             if (firstTurn) {
                 music.startFromCurrent(Music::MainCombat);
                 firstTurn = false;
+                #if CHECK_ALL
+                SDL_Log("Start combat music");
+                #endif
             }
         }
     }

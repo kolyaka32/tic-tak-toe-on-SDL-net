@@ -31,6 +31,9 @@ void Screamer::update() {
             active = true;
             // Playing 'scary' sound
             sounds.play(Sounds::Screamer);
+            #if CHECK_ALL
+            SDL_Log("Show screamer");
+            #endif
         }
     }
 }

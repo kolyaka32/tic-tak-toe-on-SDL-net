@@ -4,6 +4,12 @@
  */
 
 #include "data/app.hpp"
+// Load needed loader, depend on teting
+#if ARCHIEVE_LOADING
+#include "data/preloaded/loader/archieveLoader.hpp"
+#else
+#include "data/preloaded/loader/straightLoader.hpp"
+#endif
 #include "game/gameField.hpp"
 
 

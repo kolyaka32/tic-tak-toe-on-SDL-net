@@ -21,9 +21,15 @@ enterPortField(0.5, 0.62, 20, basePort),
 pasteButton(0.5, 0.75, {"Paste the address", "Вставить адрес", "Kopierte Adresse", "Уставіць адрас"}, 24, WHITE),
 connectButton(0.5, 0.9, {"Connect", "Присоединится", "Beitritt", "Далучыцца"}, 24, WHITE) {
     if (isAdditionalRestarted()) {
+        // Stopping cycle from launching after end of client game
         stop();
         return;
     }
+    #if CHECK_ALL
+    if (!isRestarted()) {
+        SDL_Log("Start client lobby");
+    }
+    #endif
 }
 
 bool ClientLobbyCycle::inputMouseDown() {

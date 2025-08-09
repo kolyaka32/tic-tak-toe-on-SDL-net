@@ -5,17 +5,14 @@
 
 #pragma once
 
+#include "../../../testing.hpp"
+
+
 // Load needed loader, depend on teting
 #if ARCHIEVE_LOADING
 #include "archieveLoader.hpp"
-#else
-#include "straightLoader.hpp"
-#endif
-
-
-// Selecting loader for data, depend on testing
-#if ARCHIEVE_LOADING
 extern const ArchieveLoader dataLoader;
 #else
+#include "straightLoader.hpp"
 extern const StraightLoader dataLoader;
 #endif

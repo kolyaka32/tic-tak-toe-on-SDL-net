@@ -20,6 +20,9 @@ hideAddressText(0.5, 0.45, {"Hide address", "Скрыть адресс", "Adress
     // Resetting flag of showing address
     if (!isRestarted()) {
         showAddress = false;
+        #if CHECK_ALL
+        SDL_Log("Start server lobby");
+        #endif
     }
     if (isAdditionalRestarted()) {
         stop();

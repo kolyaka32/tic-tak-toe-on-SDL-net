@@ -12,6 +12,9 @@ TwoPlayerGameCycle::TwoPlayerGameCycle()
     if (!isRestarted()) {
         // Starting game
         field.setState(GameState::CurrentPlay);
+        #if CHECK_ALL
+        SDL_Log("Start two player game");
+        #endif
     }
 }
 
@@ -24,9 +27,15 @@ bool TwoPlayerGameCycle::inputMouseDown() {
         sounds.play(Sounds::Reset);
 
         // Restarting current game
+        #if CHECK_ALL
+        SDL_Log("Restart game from upper button");
+        #endif
         field.reset();
         if (!firstTurn) {
             music.startFromCurrent(Music::MainCalm);
+            #if CHECK_ALL
+            SDL_Log("Stop combat music");
+            #endif
         }
         firstTurn = true;
         field.setTextureOffset(0);
@@ -41,8 +50,14 @@ bool TwoPlayerGameCycle::inputMouseDown() {
             sounds.play(Sounds::Reset);
             // Restarting current game
             field.reset();
+            #if CHECK_ALL
+            SDL_Log("Restart game from menu");
+            #endif
             if (!firstTurn) {
                 music.startFromCurrent(Music::MainCalm);
+                #if CHECK_ALL
+                SDL_Log("Stop combat music");
+                #endif
             }
             firstTurn = true;
             field.setTextureOffset(0);
@@ -63,6 +78,9 @@ bool TwoPlayerGameCycle::inputMouseDown() {
             if (firstTurn) {
                 music.startFromCurrent(Music::MainCombat);
                 firstTurn = false;
+                #if CHECK_ALL
+                SDL_Log("Start combat music");
+                #endif
             }
         }
     }
