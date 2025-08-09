@@ -30,7 +30,7 @@ void Screamer::update() {
         if (!active) {
             active = true;
             // Playing 'scary' sound
-            sounds.play(SND_SCREAMER);
+            sounds.play(Sounds::Screamer);
         }
     }
 }

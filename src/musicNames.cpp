@@ -7,7 +7,7 @@
 
 
 // File names of the corresponding music
-const char* musicFilesNames[MUS_count] = {
+const char* musicFilesNames[unsigned(Music::Count)] = {
     // Menu part
     "mus/menu.mp3",
 

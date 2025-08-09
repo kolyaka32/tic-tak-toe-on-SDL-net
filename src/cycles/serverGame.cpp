@@ -23,11 +23,11 @@ bool ServerGameCycle::inputMouseDown() {
     }
     if (gameRestartButton.in(mouse)) {
         // Making sound
-        sounds.play(SND_RESET);
+        sounds.play(Sounds::Reset);
         // Clearing field
         field.reset();
         if (!firstTurn) {
-            music.startFromCurrent(MUS_MAIN_CALM);
+            music.startFromCurrent(Music::MainCalm);
         }
         firstTurn = true;
         // Sending message of game clear
@@ -58,12 +58,12 @@ bool ServerGameCycle::inputMouseDown() {
         // Normal turn
         if (field.tryClickMultiplayerCurrent(mouse)) {
             // Making sound
-            sounds.play(SND_TURN);
+            sounds.play(Sounds::Turn);
             // Sending to opponent
             connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn, field.getXPos(mouse), field.getYPos(mouse));
             // Changing music theme
             if (firstTurn) {
-                music.startFromCurrent(MUS_MAIN_COMBAT);
+                music.startFromCurrent(Music::MainCombat);
                 firstTurn = false;
             }
         }
@@ -74,11 +74,11 @@ bool ServerGameCycle::inputMouseDown() {
 void ServerGameCycle::inputKeys(SDL_Keycode _key) {
     if (_key == SDLK_R) {
         // Making sound
-        sounds.play(SND_RESET);
+        sounds.play(Sounds::Reset);
         // Clearing field
         field.reset();
         if (!firstTurn) {
-            music.startFromCurrent(MUS_MAIN_CALM);
+            music.startFromCurrent(Music::MainCalm);
         }
         firstTurn = true;
         // Sending message of game clear
@@ -100,12 +100,12 @@ void ServerGameCycle::update() {
             SDL_Log("Turn of opponent player: from %u to %u", connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
             #endif
             // Making sound
-            sounds.play(SND_TURN);
+            sounds.play(Sounds::Turn);
             // Making turn
             field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
             // Changing music theme
             if (!firstTurn) {
-                music.startFromCurrent(MUS_MAIN_COMBAT);
+                music.startFromCurrent(Music::MainCombat);
                 firstTurn = false;
             }
         }

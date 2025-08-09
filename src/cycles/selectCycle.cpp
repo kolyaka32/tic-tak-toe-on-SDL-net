@@ -21,7 +21,7 @@ connectButton(0.5, 0.9, {"Connect", "Присоединиться", "Beitreten",
 bigFieldInfobox(0.5, 0.4, {"Too big field", "Слишком большое поле", "", ""}, 24) {
     // Starting menu song (if wasn't started)
     if(!isRestarted()) {
-        music.start(MUS_MENU);
+        music.start(Music::Menu);
     }
 }
 

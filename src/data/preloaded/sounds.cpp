@@ -6,43 +6,40 @@
 #include "sounds.hpp"
 
 
-template <unsigned count>
-SoundsData<count>::SoundsData(const char* _names[count]) {
+SoundsData::SoundsData() {
     // Resetting all sounds
     #if CHECK_CORRECTION
-    for (unsigned i=0; i < count; ++i) {
+    for (unsigned i=0; i < unsigned(Sounds::Count); ++i) {
         sounds[i] = nullptr;
     }
     #endif
 
     // Loading all needed sounds
-    for (unsigned i=0; i < count; ++i) {
-        loadSound(i, _names[i]);
+    for (unsigned i=0; i < unsigned(Sounds::Count); ++i) {
+        loadSound(i, soundsFilesNames[i]);
     }
 
     // Checking massive on loading correction
     #if CHECK_CORRECTION
-    for (unsigned i=0; i < count; ++i) {
+    for (unsigned i=0; i < unsigned(Sounds::Count); ++i) {
         if (sounds[i] == NULL) {
-            throw DataLoadException("Not loaded: " + std::string(_names[i]));
+            throw DataLoadException("Not loaded: " + std::string(soundsFilesNames[i]));
         }
     }
     #endif
-    
+
     // Resetting sounds volume
     setVolume(MIX_MAX_VOLUME/2);
 }
 
-template <unsigned count>
-SoundsData<count>::~SoundsData() {
+SoundsData::~SoundsData() {
     // Closing all sounds
-    for (unsigned i=0; i < count; ++i) {
+    for (unsigned i=0; i < unsigned(Sounds::Count); ++i) {
         Mix_FreeChunk(sounds[i]);
     }
 }
 
-template <unsigned count>
-void SoundsData<count>::loadSound(unsigned _index, const char* _name) {
+void SoundsData::loadSound(unsigned _index, const char* _name) {
     // Load data of current sound
     SDL_IOStream* iodata = dataLoader.load(_name);
 
@@ -57,13 +54,11 @@ void SoundsData<count>::loadSound(unsigned _index, const char* _name) {
     #endif
 }
 
-template <unsigned count>
-void SoundsData<count>::play(unsigned _index) const {
-    Mix_PlayChannel(_index, sounds[_index], 0);
+void SoundsData::play(Sounds _index) const {
+    Mix_PlayChannel(int(_index), sounds[unsigned(_index)], 0);
 }
 
-template <unsigned count>
-void SoundsData<count>::setVolume(unsigned _volume) {
+void SoundsData::setVolume(unsigned _volume) {
     // Checking correction given volume
     #if CHECK_CORRECTION
     if (_volume/2 > MIX_MAX_VOLUME) {
@@ -71,12 +66,11 @@ void SoundsData<count>::setVolume(unsigned _volume) {
     }
     #endif
     volume = _volume/2;
-    for (int i=0; i < count; ++i) {
+    for (int i=0; i < unsigned(); ++i) {
         Mix_VolumeChunk(sounds[i], volume);
     }
 }
 
-template <unsigned count>
-unsigned SoundsData<count>::getVolume() const {
+unsigned SoundsData::getVolume() const {
     return volume*2;
 }

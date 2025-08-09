@@ -103,7 +103,7 @@ void SettingsMenu::update() {
 
             // Playing sound effect for understanding loud
             if (getTime() > nextSound) {
-                sounds.play(SND_TURN);
+                sounds.play(Sounds::Turn);
                 nextSound = getTime() + 400;
             }
             break;

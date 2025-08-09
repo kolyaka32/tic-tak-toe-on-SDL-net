@@ -26,7 +26,7 @@ nobodyWinText(0.5, 0.35, {"Nobody win", "Ничья", "Unentschieden", "Чые"}
         field.reset();
         firstTurn = true;
         // Starting main song (if wasn't started)
-        music.startFading(MUS_MAIN_CALM);
+        music.startFading(Music::MainCalm);
     }
 }
 
@@ -48,11 +48,11 @@ void GameCycle::inputKeys(SDL_Keycode key) {
         // Restarting game
         field.reset();
         if (!firstTurn) {
-            music.startFromCurrent(MUS_MAIN_CALM);
+            music.startFromCurrent(Music::MainCalm);
         }
         firstTurn = true;
         // Making sound
-        sounds.play(SND_RESET);
+        sounds.play(Sounds::Reset);
         return;
 
     case SDLK_Q:

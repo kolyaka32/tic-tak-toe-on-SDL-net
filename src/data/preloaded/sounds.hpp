@@ -7,20 +7,23 @@
 
 #include <SDL3_mixer/SDL_mixer.h>
 #include "loader/loader.hpp"
+#include "../../soundsNames.hpp"
 
 
 // Class for playing sound with need name
-template <unsigned count>
 class SoundsData {
- private:
-    Mix_Chunk* sounds[count];
+private:
+    Mix_Chunk* sounds[unsigned(Sounds::Count)];
     Uint8 volume = 0;
     void loadSound(unsigned index, const char* name);
 
- public:
-    SoundsData(const char* names[count]);
+public:
+    SoundsData();
     ~SoundsData();
-    void play(unsigned name) const;
+    void play(Sounds name) const;
     void setVolume(unsigned _volume);
     unsigned getVolume() const;
 };
+
+// Global system for launch music tracks
+extern SoundsData sounds;

@@ -21,12 +21,12 @@ bool SinglePlayerGameCycle::inputMouseDown() {
     }
     if (gameRestartButton.in(mouse)) {
         // Making sound
-        sounds.play(SND_RESET);
+        sounds.play(Sounds::Reset);
 
         // Restarting current game
         field.reset();
         if (!firstTurn) {
-            music.startFromCurrent(MUS_MAIN_CALM);
+            music.startFromCurrent(Music::MainCalm);
         }
         firstTurn = true;
         field.setState(GameState::CurrentPlay);
@@ -37,13 +37,13 @@ bool SinglePlayerGameCycle::inputMouseDown() {
         // Check for game start
         if (menuRestartButton.in(mouse)) {
             // Making sound
-            sounds.play(SND_RESET);
+            sounds.play(Sounds::Reset);
 
             // Restarting current game
             field.reset();
             field.setState(GameState::CurrentPlay);
             if (!firstTurn) {
-                music.startFromCurrent(MUS_MAIN_CALM);
+                music.startFromCurrent(Music::MainCalm);
             }
             firstTurn = true;
             return true;
@@ -56,10 +56,10 @@ bool SinglePlayerGameCycle::inputMouseDown() {
     } else {
         // Normal turn
         if (field.tryClickSingle(mouse)) {
-            sounds.play(SND_TURN);
+            sounds.play(Sounds::Turn);
             // Changing music theme
             if (firstTurn) {
-                music.startFromCurrent(MUS_MAIN_COMBAT);
+                music.startFromCurrent(Music::MainCombat);
                 firstTurn = false;
             }
         }

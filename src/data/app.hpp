@@ -7,8 +7,8 @@
 
 #include "libraries.hpp"
 #include "initFile.hpp"
-#include "../soundsNames.hpp"
-#include "../musicNames.hpp"
+#include "preloaded/sounds.hpp"
+#include "preloaded/music.hpp"
 #include "window.hpp"
 
 

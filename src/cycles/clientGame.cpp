@@ -28,12 +28,12 @@ bool ClientGameCycle::inputMouseDown() {
         // Normal turn
         if (field.tryClickMultiplayerCurrent(mouse)) {
             // Making sound
-            sounds.play(SND_TURN);
+            sounds.play(Sounds::Turn);
             // Sending to opponent
             connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn, field.getXPos(mouse), field.getYPos(mouse));
             // Changing music theme
             if (firstTurn) {
-                music.startFromCurrent(MUS_MAIN_COMBAT);
+                music.startFromCurrent(Music::MainCombat);
                 firstTurn = false;
             }
         }
@@ -60,10 +60,10 @@ void ClientGameCycle::update() {
             #endif
             field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
             // Making sound
-            sounds.play(SND_TURN);
+            sounds.play(Sounds::Turn);
             // Changing music theme
             if (firstTurn) {
-                music.startFromCurrent(MUS_MAIN_COMBAT);
+                music.startFromCurrent(Music::MainCombat);
                 firstTurn = false;
             }
         }
@@ -76,11 +76,11 @@ void ClientGameCycle::update() {
         // Resetting game
         field.reset();
         if (!firstTurn) {
-            music.startFromCurrent(MUS_MAIN_CALM);
+            music.startFromCurrent(Music::MainCalm);
         }
         firstTurn = true;
         // Making sound
-        sounds.play(SND_RESET);
+        sounds.play(Sounds::Reset);
         return;
 
     case ConnectionCode::GameStart:
