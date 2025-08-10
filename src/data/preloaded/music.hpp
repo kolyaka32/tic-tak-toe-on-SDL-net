@@ -12,13 +12,13 @@
 
 // Class for play music
 class MusicData {
-private:
+ private:
     Mix_Music* music[unsigned(Music::Count)];
     Uint8 volume = 0;
     Mix_Music* currentPlay = nullptr;
     void loadMusic(Music index, const char* name);
 
-public:
+ public:
     MusicData();
     ~MusicData();
     void start(Music name);

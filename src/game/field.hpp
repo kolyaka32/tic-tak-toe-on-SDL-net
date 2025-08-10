@@ -27,17 +27,17 @@ enum class GameState : Uint8 {
 
 // Class with game field
 class Field {
-private:
+ private:
     Cell data[81];        // Grid of cells, representing game field
     int count;            // Counter of filled cells
 
-protected:
+ protected:
     void checkSound();  // Function of playing sound after game end
     void AImove();      // Move of computer
     int recursivelySolve(Uint8 round);  // Function for solve game in singleplayer recursively
     GameState checkWin(int X, int Y);  // Check, if anyone win after his turn, return who win
 
-public:
+ public:
     // Sizes of field
     int width;     // Size of field
     int winWidth;  // Length of line to win

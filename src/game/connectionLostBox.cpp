@@ -10,9 +10,9 @@
 bool ConnectionLostBox::active = false;
 
 ConnectionLostBox::ConnectionLostBox()
-: mainText(0.5, 0.4, {"Connection lost", "Соединение потярено", "Verbindung verloren", "Злучэнне страчана"}, 2, 32, WHITE),
-reconnectButton(0.5, 0.5, {"Reconnect", "Переприсоединится", "Wiederverbinden", "Паўторна падлучыцца"}, 24, WHITE),
-closeButton(0.5, 0.6, {"Close", "Закрыть", "Schließen", "Зачыніць"}, 24, WHITE),
+: mainText(0.5, 0.4, {"Connection lost", "Соединение потярено", "Verbindung verloren", "Злучэнне страчана"}, 2, 32),
+reconnectButton(0.5, 0.5, {"Reconnect", "Переприсоединится", "Wiederverbinden", "Паўторна падлучыцца"}, 24),
+closeButton(0.5, 0.6, {"Close", "Закрыть", "Schließen", "Зачыніць"}, 24),
 background(0.5, 0.5, 0.82, 0.3, 20, 4) {}
 
 int ConnectionLostBox::click(const Mouse _mouse) {

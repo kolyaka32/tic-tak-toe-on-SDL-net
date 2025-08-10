@@ -26,7 +26,7 @@ Client::~Client() {
     // Clearing rest data
     NET_DestroyDatagramSocket(gettingSocket);
     if (sendAddress) {
-       NET_UnrefAddress(sendAddress); 
+       NET_UnrefAddress(sendAddress);
     }
 
     // Closing new library

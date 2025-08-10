@@ -14,10 +14,10 @@
 // Template for any cycles
 class CycleTemplate {
  private:
-    static bool running;           // Flag of current running state
-    static bool restarting;        // Flag, if game was restarted
-    static bool additionalRestart; // Flag of additional game restart
-    IdleTimer idleTimer{1000/60};  // Timer to idle in main cycle
+    static bool running;            // Flag of current running state
+    static bool restarting;         // Flag, if game was restarted
+    static bool additionalRestart;  // Flag of additional game restart
+    IdleTimer idleTimer{1000/60};   // Timer to idle in main cycle
 
  protected:
     Mouse mouse;  // Position of mouse on screen

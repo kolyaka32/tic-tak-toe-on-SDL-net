@@ -11,7 +11,7 @@
 
 // Game cycle with game part of server
 class ServerGameCycle : public InternetCycle {
-protected:
+ protected:
     GameConnection connection;
 
     // Starting options
@@ -24,6 +24,6 @@ protected:
     void update() override;
     void draw() const override;
 
-public:
-    ServerGameCycle(Connection& server);
+ public:
+    explicit ServerGameCycle(const Connection& server);
 };

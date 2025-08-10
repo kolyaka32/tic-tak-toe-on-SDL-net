@@ -7,7 +7,7 @@
 #include "selectCycle.hpp"
 
 
-ClientGameCycle::ClientGameCycle(Connection& _client)
+ClientGameCycle::ClientGameCycle(const Connection& _client)
 : InternetCycle(),
 connection(_client),
 waitText(0.5, 0.05, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}, 24) {}
@@ -32,7 +32,8 @@ bool ClientGameCycle::inputMouseDown() {
             music.startFromCurrent(Music::MainCombat);
 
             // Sending to opponent
-            connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn, field.getXPos(mouse), field.getYPos(mouse));
+            connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn,
+                field.getXPos(mouse), field.getYPos(mouse));
         }
     }
     return false;
@@ -53,9 +54,11 @@ void ClientGameCycle::update() {
     case ConnectionCode::GameTurn:
         if (connection.lastPacket->isBytesAvaliable(4)) {
             #if CHECK_CORRECTION
-            SDL_Log("Turn of opponent player: from %u to %u", connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
+            SDL_Log("Turn of opponent player: from %u to %u",
+                connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
             #endif
-            field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
+            field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2),
+                connection.lastPacket->getData<Uint8>(3));
             // Making sound
             sounds.play(Sounds::Turn);
             // Changing music theme

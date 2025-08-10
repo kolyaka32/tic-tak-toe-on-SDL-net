@@ -33,11 +33,7 @@ bool InternetCycle::inputMouseDown() {
     if (termianatedBox.click(mouse)) {
         return true;
     }
-    if (int code = disconnectedBox.click(mouse)) {
-        // Check, if try to reconnect
-        if (code == 2) {
-            //connection;
-        }
+    if (disconnectedBox.click(mouse)) {
         return true;
     }
     return false;

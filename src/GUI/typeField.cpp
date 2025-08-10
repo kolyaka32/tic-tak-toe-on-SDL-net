@@ -15,7 +15,8 @@ GUI::TypeField<bufferSize>::TypeField(float _X, float _Y, float _height, const c
 aligment(_aligment),
 textColor(_color),
 font(window.createFontCopy(FNT_MAIN, _height)),
-backRect({_X*window.getWidth()-(6.5f*bufferSize+2), _Y*window.getHeight()-_height*0.9f, 13.0f*bufferSize+4, _height*1.8f}) {
+backRect({_X*window.getWidth() - (6.5f*bufferSize+2), _Y*window.getHeight()-_height * 0.9f,
+    13.0f * bufferSize+4, _height * 1.8f}) {
     // Setting rects
     textRect = {0, window.getHeight()*_Y-_height/2-1, 0, 0};
     caretRect = {0, window.getHeight()*_Y-_height/2-1, 2, _height*1.3f};
@@ -99,7 +100,7 @@ void GUI::TypeField<bufferSize>::updateTexture() {
         textRect.w = textTexture->w;
         textRect.h = textTexture->h;
         textRect.x = SDL_floorf(posX - textRect.w * (unsigned)aligment / 2);
-        
+
         // Update caret place
         if (caret) {
             int caretX = 0;

@@ -12,12 +12,12 @@
 
 // Cycle with game template
 class GameCycle : public BaseCycle {
-protected:
+ protected:
     // Active game part
     GameField field;
     Screamer screamer;
 
-    const GUI::ImageButton gameRestartButton;  // Button for restart game
+    const GUI::ImageButton gameRestartButton;
     GUI::StaticText playersTurnsTexts[2];
 
     // Menu after game end
@@ -35,6 +35,6 @@ protected:
     void update() override;
     void draw() const override;
 
-public:
+ public:
     GameCycle();
 };

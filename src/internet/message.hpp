@@ -11,24 +11,24 @@
 
 // Message, waiting for applying of getting
 class Message {
-private:
+ private:
     timer nextResend;    // Time, when need to resend message
     static Uint8 globalMessageIndex;
     Uint8 messageIndex;  // Index to check applying and getting messages
     SendPacket packet;
 
-protected:
-    void resend(Connection& connection);
+ protected:
+    void resend(const Connection& connection);
 
-public:
+ public:
     template <typename ...Args>
-    Message(Connection& connection, ConnectionCode code, Args&& ...args);
-    void checkNeedResend(Connection& connection);
+    Message(const Connection& connection, ConnectionCode code, Args&& ...args);
+    void checkNeedResend(const Connection& connection);
     bool applyMessage(Uint8 index);  // Check, if that message arrived and need to clearing
 };
 
 template <typename ...Args>
-Message::Message(Connection& _connection, ConnectionCode _code, Args&& ...args)
+Message::Message(const Connection& _connection, ConnectionCode _code, Args&& ...args)
 : messageIndex(globalMessageIndex),
 packet(Uint8(_code), messageIndex, args...) {
     #if CHECK_CORRECTION

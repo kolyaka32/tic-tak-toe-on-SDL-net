@@ -12,11 +12,11 @@
 
 // Class for load/save settings to/from game
 class InitFile {
-private:
+ private:
     const std::string getText(const std::string line) const;
     const unsigned getValue(const std::string line) const;
 
-public:
+ public:
     InitFile();
     ~InitFile();
     void loadSettings();

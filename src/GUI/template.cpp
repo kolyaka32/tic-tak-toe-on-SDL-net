@@ -7,16 +7,16 @@
 
 
 // Tempate function for resetting texture
-GUI::GUItemplate::GUItemplate() {
+GUI::Template::Template() {
     texture = nullptr;
 }
 
 // Template function for draw
-void GUI::GUItemplate::blit() const {
+void GUI::Template::blit() const {
     window.blit(texture, rect);
 }
 
 // Template function for check, if mouse press in object
-bool GUI::GUItemplate::in(const Mouse mouse) const {
+bool GUI::Template::in(const Mouse mouse) const {
     return mouse.in(rect);
 }

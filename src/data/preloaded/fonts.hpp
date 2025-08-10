@@ -12,11 +12,11 @@
 // Class for draw any font with need height
 template <unsigned count>
 class FontsData {
-private:
+ private:
     TTF_Font* fonts[count];
     void loadFont(unsigned index, const char* name);
 
-public:
+ public:
     FontsData(const char* filesNames[]);
     ~FontsData();
     TTF_Font* operator[](unsigned index) const;

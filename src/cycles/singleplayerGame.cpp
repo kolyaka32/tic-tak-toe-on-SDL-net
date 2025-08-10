@@ -8,7 +8,7 @@
 
 SinglePlayerGameCycle::SinglePlayerGameCycle()
 : GameCycle() {
-    if(!isRestarted()) {
+    if (!isRestarted()) {
         // Starting game
         field.setState(GameState::CurrentPlay);
         field.setTextureOffset(0);

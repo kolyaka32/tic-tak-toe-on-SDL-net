@@ -11,11 +11,11 @@
 
 // Class, storing one text variant in different locations
 class LanguagedText {
-private:
+ private:
     static Language currentLanguage;
     const std::string textVariants[(unsigned)Language::Count];
 
-public:
+ public:
     LanguagedText(const std::string englishVariant, const std::string russianVariant,
         const std::string germanVariant, const std::string bellarussianVariant);
     const std::string& getString() const;

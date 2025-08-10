@@ -69,7 +69,8 @@ void GameField::blit() const {
     // Rendering cells with their background
     for (int y=0; y < field.width; ++y) {
         for (int x=0; x < field.width; ++x) {
-            const SDL_FRect dest = {float(x * (CELL_SIDE + SEPARATOR)), float(y * (CELL_SIDE + SEPARATOR) + upperLineHeight), CELL_SIDE, CELL_SIDE};
+            const SDL_FRect dest = {float(x * (CELL_SIDE + SEPARATOR)),
+                float(y * (CELL_SIDE + SEPARATOR) + upperLineHeight), CELL_SIDE, CELL_SIDE};
             // Rendering background
             window.blit(IMG_CELL, dest);
 

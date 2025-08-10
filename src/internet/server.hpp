@@ -8,11 +8,12 @@
 #include "connection.hpp"
 
 
+// Class for create server and wait to connect from another side
 class Server : public Connection {
-private:
+ private:
     Uint16 currentPort;
 
-public:
+ public:
     Server();
     ~Server();
     Uint16 getPort();

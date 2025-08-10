@@ -58,11 +58,11 @@ SendPacket::~SendPacket() {
     delete[] data;
 }
 
-Uint8* SendPacket::getData() {
+Uint8* SendPacket::getData() const {
     return data;
 }
 
-int SendPacket::getLength() {
+int SendPacket::getLength() const {
     return length;
 }
 

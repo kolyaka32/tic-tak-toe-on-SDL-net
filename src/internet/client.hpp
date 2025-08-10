@@ -9,7 +9,7 @@
 
 
 class Client : public Connection {
-public:
+ public:
     Client();
     ~Client();
     void tryConnect(const char* address, Uint16 port);

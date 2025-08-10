@@ -6,6 +6,7 @@
 #include "app.hpp"
 #include "../cycles/selectCycle.hpp"
 
+
 // Main function
 int main(int argv, char **args) {
     // Running menu

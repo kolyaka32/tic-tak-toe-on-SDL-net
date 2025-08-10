@@ -6,7 +6,7 @@
 #include "music.hpp"
 
 
-MusicData::MusicData(){
+MusicData::MusicData() {
     // Resetting all tracks
     #if CHECK_CORRECTION
     for (unsigned i=0; i < unsigned(Music::Count); ++i) {
@@ -32,7 +32,7 @@ MusicData::MusicData(){
     setVolume(MIX_MAX_VOLUME/2);
 }
 
-MusicData::~MusicData(){
+MusicData::~MusicData() {
     // Closing all tracks
     for (unsigned i=0; i < unsigned(Music::Count); ++i) {
         Mix_FreeMusic(music[i]);

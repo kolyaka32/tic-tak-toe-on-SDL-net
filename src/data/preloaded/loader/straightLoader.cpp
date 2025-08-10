@@ -8,9 +8,9 @@
 
 SDL_IOStream* StraightLoader::load(const char* _fileName) const {
     // Creating modified name
-    char* fileName = new char[strlen(_fileName) + strlen("../") + 1];
-    strcpy(fileName, "../");
-    strcat(fileName, _fileName);
+    size_t size = strlen(_fileName) + strlen("../") + 1;
+    char* fileName = new char[size];
+    snprintf(fileName, size, "../%s", _fileName);
 
     // Openning file straight from system
     SDL_IOStream* data = SDL_IOFromFile(fileName, "r");

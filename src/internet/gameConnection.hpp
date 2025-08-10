@@ -11,22 +11,22 @@
 
 
 class GameConnection : public Connection {
-private:
+ private:
     timer needResendApplyConnection;  // Time, after which need resend apply connection message
     timer needDisconect;              // Time, after which connection will be recognized as disconected
     std::vector<Message*> unconfirmedMessages;
     IndexesArray<10> getIndexes;
     bool disconnected = false;
 
-protected:
+ protected:
     void checkReconnecting();
     void checkConnectionStatus();
     void checkNeedApplyConnection();
     void checkNeedResending();
     ConnectionCode checkNewMessage();
 
-public:
-    GameConnection(const Connection& connection);
+ public:
+    explicit GameConnection(const Connection& connection);
     ~GameConnection();
     ConnectionCode updateMessages();
     template <typename ...Args>

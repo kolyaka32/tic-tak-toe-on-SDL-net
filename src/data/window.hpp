@@ -23,6 +23,9 @@ class Window {
     const TexturesData<IMG_count> textures;
     const Fonts fonts;
 
+    // Set new title
+    void updateTitle(const char* name) const;
+
  public:
     Window(int width, int height, const LanguagedText title);
     ~Window() noexcept;
@@ -56,16 +59,19 @@ class Window {
     // Work with loaded textures
     void blit(IMG_names index, const SDL_FRect& dest) const;
     void blit(IMG_names index, const SDL_FRect* dest = nullptr, const SDL_FRect* src = nullptr) const;
-    void blit(IMG_names index, float angle, const SDL_FRect& rect, const SDL_FRect* src = nullptr, SDL_FPoint center = {0, 0}) const;
+    void blit(IMG_names index, float angle, const SDL_FRect& rect, const SDL_FRect* src = nullptr,
+        SDL_FPoint center = {0, 0}) const;
     void setBlendMode(IMG_names index, SDL_BlendMode blendMode = SDL_BLENDMODE_NONE) const;
     void setColorMode(IMG_names index, Color color = EMPTY) const;
 
     // Work with own textures
-    SDL_Texture* createTexture(int width, int height, SDL_TextureAccess access = SDL_TEXTUREACCESS_TARGET, SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA32) const;
+    SDL_Texture* createTexture(int width, int height, SDL_TextureAccess access = SDL_TEXTUREACCESS_TARGET,
+        SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA32) const;
     SDL_Texture* createTexture(SDL_Surface* surface) const;
     SDL_Texture* createTextureAndFree(SDL_Surface* surface) const;
     void blit(SDL_Texture* texture, const SDL_FRect& dest, const SDL_FRect* src = nullptr) const;
-    void blit(SDL_Texture* texture, float angle, const SDL_FRect& rect, const SDL_FRect* src = nullptr, SDL_FPoint center = {0, 0}) const;
+    void blit(SDL_Texture* texture, float angle, const SDL_FRect& rect, const SDL_FRect* src = nullptr,
+        SDL_FPoint center = {0, 0}) const;
     void setRenderTarget(SDL_Texture* target) const;
     void resetRenderTarget() const;
     void setBlendMode(SDL_Texture* texture, SDL_BlendMode blendMode = SDL_BLENDMODE_NONE) const;
@@ -81,8 +87,8 @@ class Window {
     // Work with window
     void startTextInput() const;
     void stopTextInput() const;
-    void updateTitle(const char* name) const;  // Set new title
-    void updateTitle() const;                  // Update title from basic
+    void updateTitle() const;
 };
 
+// Global main window, with all graphics
 extern Window window;

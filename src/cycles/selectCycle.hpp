@@ -10,7 +10,7 @@
 
 // Cycle for select variants to start
 class SelectCycle : public BaseCycle {
-private:
+ private:
     GUI::HighlightedStaticText titleText;
     GUI::TextButton singleplayerButton;
     GUI::InfoBox bigFieldInfobox;
@@ -25,6 +25,6 @@ private:
     void update() override;
     void draw() const override;
 
-public:
+ public:
     SelectCycle();
 };

@@ -11,7 +11,7 @@
 
 // Cycle with waiting for client connect
 class ServerLobbyCycle : public BaseCycle {
-private:
+ private:
     // Internet connection part
     Server server;
 
@@ -31,6 +31,6 @@ private:
     void update() override;
     void draw() const override;
 
-public:
+ public:
     ServerLobbyCycle();
 };

@@ -14,10 +14,10 @@ Server::Server()
     currentPort = BASE_PORT;
 
     // Finding avalialble port
-    srand(time(0));
+    SDL_srand(0);
     while ((gettingSocket = NET_CreateDatagramSocket(nullptr, currentPort)) == nullptr) {
         // Creating another random port
-        currentPort = rand() % 10000;
+        currentPort = SDL_rand(10000);
     }
 
     #if CHECK_CORRECTION
@@ -35,7 +35,7 @@ Server::~Server() {
     // Clearing rest data
     NET_DestroyDatagramSocket(gettingSocket);
     if (sendAddress) {
-       NET_UnrefAddress(sendAddress); 
+       NET_UnrefAddress(sendAddress);
     }
 
     // Closing new library
