@@ -7,17 +7,17 @@
 
 #include <SDL3_ttf/SDL_ttf.h>
 #include "loader/loader.hpp"
+#include "../../fontsNames.hpp"
 
 
-// Class for draw any font with need height
-template <unsigned count>
+// Class for get font with need height
 class FontsData {
  private:
-    TTF_Font* fonts[count];
-    void loadFont(unsigned index, const char* name);
+    TTF_Font* fonts[unsigned(Fonts::Count)];
+    void loadFont(Fonts index, const char* fileName);
 
  public:
-    FontsData(const char* filesNames[]);
+    FontsData();
     ~FontsData();
-    TTF_Font* operator[](unsigned index) const;
+    TTF_Font* operator[](Fonts index) const;
 };

@@ -69,7 +69,7 @@ namespace GUI {
             std::snprintf(buffer, sizeof(buffer), texts.getString().c_str(), args...);
 
             // Creating surface with text
-            texture = window.createTexture(FNT_MAIN, height, buffer, 0, color);
+            texture = window.createTexture(Fonts::Main, height, buffer, 0, color);
 
             // Moving draw rect to new place
             rect.w = texture->w;
@@ -88,8 +88,8 @@ namespace GUI {
 
      public:
         // Create slide with need line and button images
-        Slider(float X, float Y, float width, unsigned startValue, IMG_names lineImage = IMG_GUI_SLIDER_LINE,
-            IMG_names buttonImage = IMG_GUI_SLIDER_BUTTON, unsigned max = 255);
+        Slider(float X, float Y, float width, unsigned startValue, Textures lineImage = Textures::SliderLine,
+            Textures buttonImage = Textures::SliderButton, unsigned max = 255);
         unsigned setValue(float mouseX);  // Setting new state from mouse position
         unsigned scroll(float wheelY);    // Checking mouse wheel action
         void blit() const override;       // Drawing slider with need button position
@@ -99,7 +99,7 @@ namespace GUI {
     // Class of buttons with image on it
     class ImageButton : public Template {
      public:
-        ImageButton(float X, float Y, float width, IMG_names textureIndex);
+        ImageButton(float X, float Y, float width, Textures name);
     };
 
 

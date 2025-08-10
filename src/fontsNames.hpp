@@ -5,19 +5,14 @@
 
 #pragma once
 
-#include "data/preloaded/fonts.cpp"
-
 
 // Names of fonts
-enum FNT_names{
-    FNT_MAIN,    // Main using font (now only one)
+enum class Fonts {
+    Main,  // Main using font (now only one)
 
     // Global counter of all loaded fonts
-    FNT_count,
+    Count,
 };
 
-// Shortcut for font data class
-typedef FontsData<FNT_count> Fonts;
-
 // File names of the corresponding fonts
-extern const char* fontsFilesNames[FNT_count];
+extern const char* fontsFilesNames[unsigned(Fonts::Count)];

@@ -14,7 +14,7 @@ GUI::TypeField<bufferSize>::TypeField(float _X, float _Y, float _height, const c
 : posX(window.getWidth()*_X),
 aligment(_aligment),
 textColor(_color),
-font(window.createFontCopy(FNT_MAIN, _height)),
+font(window.createFontCopy(Fonts::Main, _height)),
 backRect({_X*window.getWidth() - (6.5f*bufferSize+2), _Y*window.getHeight()-_height * 0.9f,
     13.0f * bufferSize+4, _height * 1.8f}) {
     // Setting rects

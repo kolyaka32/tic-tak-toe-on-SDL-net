@@ -6,42 +6,39 @@
 #include "textures.hpp"
 
 
-template <unsigned count>
-TexturesData<count>::TexturesData(SDL_Renderer* _renderer, const char* _filesNames[count]) {
+TexturesData::TexturesData(SDL_Renderer* _renderer) {
     // Resetting texture masiive
     #if CHECK_CORRECTION
-    for (unsigned i=0; i < count; ++i) {
+    for (unsigned i=0; i < unsigned(Textures::Count); ++i) {
         textures[i] = nullptr;
     }
     #endif
 
     // Loading all needed textures
-    for (unsigned i=0; i < count; ++i) {
-        loadTexture(_renderer, i, _filesNames[i]);
+    for (unsigned i=0; i < unsigned(Textures::Count); ++i) {
+        loadTexture(_renderer, Textures(i), texturesFilesNames[i]);
     }
 
     // Checking massive on loading correction
     #if CHECK_CORRECTION
-    for (unsigned i=0; i < count; ++i) {
+    for (unsigned i=0; i < unsigned(Textures::Count); ++i) {
         if (textures[i] == NULL) {
-            throw DataLoadException("Texture at index: " + std::to_string(i));
+            throw DataLoadException(texturesFilesNames[i]);
         }
     }
     #endif
 }
 
-template <unsigned count>
-TexturesData<count>::~TexturesData() {
+TexturesData::~TexturesData() {
     // Closing all used textures
-    for (unsigned i=0; i < count; ++i) {
+    for (unsigned i=0; i < unsigned(Textures::Count); ++i) {
         SDL_DestroyTexture(textures[i]);
     }
 }
 
-template <unsigned count>
-void TexturesData<count>::loadTexture(SDL_Renderer* _renderer, unsigned _index, const char* _name) {
+void TexturesData::loadTexture(SDL_Renderer* _renderer, Textures _index, const char* _fileName) {
     // Load data of current texture
-    SDL_IOStream* iodata = dataLoader.load(_name);
+    SDL_IOStream* iodata = dataLoader.load(_fileName);
 
     // Creating surface
     SDL_Surface* surface = IMG_Load_IO(iodata, true);
@@ -49,24 +46,23 @@ void TexturesData<count>::loadTexture(SDL_Renderer* _renderer, unsigned _index, 
     // Checking correction of created surface
     #if CHECK_CORRECTION
     if (surface == nullptr) {
-        throw DataLoadException(_name);
+        throw DataLoadException(_fileName);
     }
     #endif
 
     // Creating texture
-    textures[_index] = SDL_CreateTextureFromSurface(_renderer, surface);
+    textures[unsigned(_index)] = SDL_CreateTextureFromSurface(_renderer, surface);
 
     // Checking correction of loaded texture
     #if CHECK_CORRECTION
-    if (textures[_index] == nullptr) {
-        throw DataLoadException(_name);
+    if (textures[unsigned(_index)] == nullptr) {
+        throw DataLoadException(_fileName);
     }
     #endif
 
     SDL_DestroySurface(surface);
 }
 
-template <unsigned count>
-SDL_Texture* TexturesData<count>::operator[] (unsigned index) const {
-    return textures[index];
+SDL_Texture* TexturesData::operator[] (Textures _index) const {
+    return textures[unsigned(_index)];
 }

@@ -8,7 +8,7 @@
 
 // Slider class
 GUI::Slider::Slider(float _X, float _Y, float _width, unsigned _startValue,
-    IMG_names _lineImage, IMG_names _buttonImage, unsigned _max)
+    Textures _lineImage, Textures _buttonImage, unsigned _max)
 : maxValue(_max) {
     // Getting need texture
     texture = window.getTexture(_lineImage);

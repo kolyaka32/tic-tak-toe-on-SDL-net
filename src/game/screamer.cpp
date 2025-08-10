@@ -41,7 +41,7 @@ void Screamer::update() {
 void Screamer::blit() const {
     if (active) {
         // Draw image itself
-        window.blit(IMG_SCREAMER);
+        window.blit(Textures::Screamer);
 
         // Draw exit button
         acceptButton.blit();

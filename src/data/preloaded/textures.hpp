@@ -7,17 +7,17 @@
 
 #include <SDL3_image/SDL_image.h>
 #include "loader/loader.hpp"
+#include "../../texturesNames.hpp"
 
 
 // Class for load, draw and clear textures
-template <unsigned count>
 class TexturesData {
  private:
-    SDL_Texture* textures[count];
-    void loadTexture(SDL_Renderer* renderer, unsigned index, const char* name);
+    SDL_Texture* textures[unsigned(Textures::Count)];
+    void loadTexture(SDL_Renderer* renderer, Textures name, const char* fileName);
 
  public:
-    TexturesData(SDL_Renderer* renderer, const char* names[count]);
+    explicit TexturesData(SDL_Renderer* renderer);
     ~TexturesData();
-    SDL_Texture* operator[] (unsigned index) const;
+    SDL_Texture* operator[] (Textures name) const;
 };

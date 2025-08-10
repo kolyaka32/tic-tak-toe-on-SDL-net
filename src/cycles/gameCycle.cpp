@@ -12,7 +12,7 @@ GameCycle::GameCycle()
 screamer(),
 menuRestartButton(0.5, 0.5, {"Restart", "Перезапустить", "Starten", "Перазапуск"}, 24),
 menuExitButton(0.5, 0.65, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}, 24),
-gameRestartButton(0.12, 0.05, 0.08, IMG_GUI_RESTART_BUTTON),
+gameRestartButton(0.12, 0.05, 0.08, Textures::RestartButton),
 playersTurnsTexts {
     {0.5, 0.05, {"First player turn", "Ход первого игрока", "Der Zug des ersten Spielers", "Ход першага гульца"}, 24},
     {0.5, 0.05, {"Second player turn", "Ход второго игрока", "Zug des zweiten Spielers", "Ход другога гульца"}, 24}

@@ -5,7 +5,8 @@
 
 #include "fontsNames.hpp"
 
+
 // File names of the corresponding fonts
-const char* fontsFilesNames[FNT_count] = {
+const char* fontsFilesNames[unsigned(Fonts::Count)] = {
     "fnt/PTSans-Regular.ttf",
 };

@@ -7,7 +7,7 @@
 
 
 // File names of the corresponding textures
-const char* texturesFilesNames[IMG_count] = {
+const char* texturesFilesNames[unsigned(Textures::Count)] = {
     // Graphic interface sprites
     "img/GUI/esc_button.png",
     "img/GUI/slider_button.png",
@@ -31,3 +31,11 @@ const char* texturesFilesNames[IMG_count] = {
 
     "img/game/screamer.png",
 };
+
+Textures operator+(const Textures _color, int _offset) {
+    return Textures(unsigned(_color) + _offset);
+}
+
+Textures operator-(const Textures _color, int _offset) {
+    return Textures(unsigned(_color) - _offset);
+}
