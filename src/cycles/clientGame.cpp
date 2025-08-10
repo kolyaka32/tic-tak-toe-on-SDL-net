@@ -32,13 +32,7 @@ bool ClientGameCycle::inputMouseDown() {
             // Sending to opponent
             connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn, field.getXPos(mouse), field.getYPos(mouse));
             // Changing music theme
-            if (firstTurn) {
-                music.startFromCurrent(Music::MainCombat);
-                firstTurn = false;
-                #if CHECK_ALL
-                SDL_Log("Start combat music");
-                #endif
-            }
+            music.startFromCurrent(Music::MainCombat);
         }
     }
     return false;
@@ -65,13 +59,7 @@ void ClientGameCycle::update() {
             // Making sound
             sounds.play(Sounds::Turn);
             // Changing music theme
-            if (firstTurn) {
-                music.startFromCurrent(Music::MainCombat);
-                firstTurn = false;
-                #if CHECK_ALL
-                SDL_Log("Start combat music");
-                #endif
-            }
+            music.startFromCurrent(Music::MainCombat);
         }
         return;
 
@@ -81,13 +69,7 @@ void ClientGameCycle::update() {
         SDL_Log("Resetting game by connection");
         #endif
         field.reset();
-        if (!firstTurn) {
-            music.startFromCurrent(Music::MainCalm);
-            #if CHECK_ALL
-            SDL_Log("Stop combat music");
-            #endif
-        }
-        firstTurn = true;
+        music.startFromCurrent(Music::MainCalm);
         // Making sound
         sounds.play(Sounds::Reset);
         return;

@@ -15,14 +15,15 @@ class MusicData {
 private:
     Mix_Music* music[unsigned(Music::Count)];
     Uint8 volume = 0;
+    Mix_Music* currentPlay = nullptr;
     void loadMusic(Music index, const char* name);
 
 public:
     MusicData();
     ~MusicData();
-    void start(Music name) const;
-    void startFading(Music name) const;
-    void startFromCurrent(Music name) const;
+    void start(Music name);
+    void startFading(Music name);
+    void startFromCurrent(Music name);
     void setVolume(unsigned volume);
     unsigned getVolume() const;
 };

@@ -24,10 +24,9 @@ nobodyWinText(0.5, 0.35, {"Nobody win", "Ничья", "Unentschieden", "Чые"}
     if (!isRestarted()) {
         // Resetting field
         field.reset();
-        firstTurn = true;
-        // Starting main song (if wasn't started)
-        music.startFading(Music::MainCalm);
     }
+    // Starting main song (if wasn't started)
+    music.startFading(Music::MainCalm);
 }
 
 bool GameCycle::inputMouseDown() {
@@ -47,12 +46,10 @@ void GameCycle::inputKeys(SDL_Keycode key) {
     case SDLK_R:
         // Making sound
         sounds.play(Sounds::Reset);
+        music.startFromCurrent(Music::MainCalm);
+
         // Restarting game
         field.reset();
-        if (!firstTurn) {
-            music.startFromCurrent(Music::MainCalm);
-        }
-        firstTurn = true;
         #if CHECK_ALL
         SDL_Log("Restarting game by key");
         #endif

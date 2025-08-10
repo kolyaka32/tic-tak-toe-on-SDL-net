@@ -22,9 +22,7 @@ serverButton(0.5, 0.6, {"Create server", "Создать сервер", "Server 
 connectButton(0.5, 0.75, {"Connect", "Присоединиться", "Beitreten", "Далучыцца"}, 24, WHITE),
 fieldParametersButton(0.5, 0.9, {"Field parameters", "Параметры поля", "Feld-Parameter", "Параметры поля"}, 24, WHITE) {
     // Starting menu song (if wasn't started)
-    if(!isRestarted()) {
-        music.start(Music::Menu);
-    }
+    music.start(Music::Menu);
 }
 
 // Getting selected button

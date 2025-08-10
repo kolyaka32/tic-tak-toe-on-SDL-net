@@ -22,7 +22,7 @@ GUI::Slider::Slider(float _X, float _Y, float _width, unsigned _startValue,
     rect.x = window.getWidth() * _X - rect.w / 2;
     rect.y = window.getHeight() * _Y - rect.h / 2;
     buttonRect.y = window.getHeight() * _Y - buttonRect.h / 2;
-    buttonRect.x = rect.x + _startValue - buttonRect.w / 2;
+    buttonRect.x = rect.x + rect.w * _startValue / maxValue - buttonRect.w / 2;
 }
 
 void GUI::Slider::blit() const {

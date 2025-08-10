@@ -54,20 +54,36 @@ void MusicData::loadMusic(Music _index, const char* _name) {
     #endif
 }
 
-void MusicData::start(Music _index) const {
-    // Infinite playing selected music
-    Mix_PlayMusic(music[unsigned(_index)], -1);
+void MusicData::start(Music _index) {
+    // Check, if already playing it
+    if (currentPlay != music[unsigned(_index)]) {
+        // Infinite playing selected music
+        Mix_PlayMusic(music[unsigned(_index)], -1);
+        // Set new playing track
+        currentPlay = music[unsigned(_index)];
+    }
 }
 
-void MusicData::startFading(Music _index) const {
-    // Infinite playing selected music
-    Mix_FadeInMusic(music[unsigned(_index)], -1, 1000);
+void MusicData::startFading(Music _index) {
+    // Check, if already playing it
+    if (currentPlay != music[unsigned(_index)]) {
+        // Infinite playing selected music
+        Mix_FadeInMusic(music[unsigned(_index)], -1, 1000);
+        // Set new playing track
+        currentPlay = music[unsigned(_index)];
+    }
 }
 
-void MusicData::startFromCurrent(Music _index) const {
-    // Infinite playing selected music
-    double currentPos = Mix_GetMusicPosition(nullptr);
-    Mix_FadeInMusicPos(music[unsigned(_index)], -1, 1000, currentPos);
+void MusicData::startFromCurrent(Music _index) {
+    // Check, if already playing it
+    if (currentPlay != music[unsigned(_index)]) {
+        // Getting position of current song
+        double currentPos = Mix_GetMusicPosition(nullptr);
+        // Infinite playing selected music from get position
+        Mix_FadeInMusicPos(music[unsigned(_index)], -1, 1000, currentPos);
+        // Set new playing track
+        currentPlay = music[unsigned(_index)];
+    }
 }
 
 void MusicData::setVolume(unsigned _volume) {

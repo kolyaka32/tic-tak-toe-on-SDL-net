@@ -25,21 +25,15 @@ bool TwoPlayerGameCycle::inputMouseDown() {
     if (gameRestartButton.in(mouse)) {
         // Making sound
         sounds.play(Sounds::Reset);
+        music.startFromCurrent(Music::MainCalm);
 
         // Restarting current game
+        field.reset();
+        field.setTextureOffset(0);
+        field.setState(GameState::CurrentPlay);
         #if CHECK_ALL
         SDL_Log("Restart game from upper button");
         #endif
-        field.reset();
-        if (!firstTurn) {
-            music.startFromCurrent(Music::MainCalm);
-            #if CHECK_ALL
-            SDL_Log("Stop combat music");
-            #endif
-        }
-        firstTurn = true;
-        field.setTextureOffset(0);
-        field.setState(GameState::CurrentPlay);
         return true;
     }
     // Checking, if game start
@@ -48,20 +42,15 @@ bool TwoPlayerGameCycle::inputMouseDown() {
         if (menuRestartButton.in(mouse)) {
             // Making sound
             sounds.play(Sounds::Reset);
+            music.startFromCurrent(Music::MainCalm);
+
             // Restarting current game
             field.reset();
+            field.setTextureOffset(0);
+            field.setState(GameState::CurrentPlay);
             #if CHECK_ALL
             SDL_Log("Restart game from menu");
             #endif
-            if (!firstTurn) {
-                music.startFromCurrent(Music::MainCalm);
-                #if CHECK_ALL
-                SDL_Log("Stop combat music");
-                #endif
-            }
-            firstTurn = true;
-            field.setTextureOffset(0);
-            field.setState(GameState::CurrentPlay);
             return true;
         }
         if (menuExitButton.in(mouse)) {
@@ -74,14 +63,7 @@ bool TwoPlayerGameCycle::inputMouseDown() {
         if (field.tryClickTwo(mouse)) {
             // Making sound
             sounds.play(Sounds::Turn);
-            // Changing music theme
-            if (firstTurn) {
-                music.startFromCurrent(Music::MainCombat);
-                firstTurn = false;
-                #if CHECK_ALL
-                SDL_Log("Start combat music");
-                #endif
-            }
+            music.startFromCurrent(Music::MainCombat);
         }
     }
     return false;

@@ -15,7 +15,6 @@ class GameCycle : public BaseCycle {
 protected:
     // Active game part
     GameField field;
-    bool firstTurn;
     Screamer screamer;
 
     const GUI::ImageButton gameRestartButton;  // Button for restart game
