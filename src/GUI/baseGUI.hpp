@@ -188,7 +188,7 @@ namespace GUI {
     };
 
     // Class of appearing for time and hidden by time text
-    class InfoBox : public StaticText {
+    class InfoBox : public HighlightedStaticText {
      private:
         unsigned counter = 0;
         static const unsigned maxCounter = 100;

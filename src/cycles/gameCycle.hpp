@@ -26,9 +26,9 @@ protected:
     GUI::TextButton menuRestartButton;
     GUI::TextButton menuExitButton;
     // Ending options
-    GUI::StaticText firstWinText;
-    GUI::StaticText secondWinText;
-    GUI::StaticText nobodyWinText;
+    GUI::HighlightedStaticText firstWinText;
+    GUI::HighlightedStaticText secondWinText;
+    GUI::HighlightedStaticText nobodyWinText;
 
     // New overrided cycle functions
     bool inputMouseDown() override;

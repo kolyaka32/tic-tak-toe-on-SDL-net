@@ -13,7 +13,7 @@
 class ClientGameCycle : public InternetCycle {
 private:
     GameConnection connection;
-    
+
     // Additional text
     GUI::StaticText waitText;
 

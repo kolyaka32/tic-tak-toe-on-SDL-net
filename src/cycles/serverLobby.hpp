@@ -11,12 +11,12 @@
 
 // Cycle with waiting for client connect
 class ServerLobbyCycle : public BaseCycle {
- private:
+private:
     // Internet connection part
     Server server;
 
     // Title
-    GUI::StaticText titleText;
+    GUI::HighlightedStaticText titleText;
 
     // Text with current connection address
     char currentAddress[24];          // String with current app address for connection
@@ -31,6 +31,6 @@ class ServerLobbyCycle : public BaseCycle {
     void update() override;
     void draw() const override;
 
- public:
+public:
     ServerLobbyCycle();
 };

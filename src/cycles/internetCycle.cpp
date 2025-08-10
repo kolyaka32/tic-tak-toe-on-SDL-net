@@ -14,8 +14,8 @@ playersTurnsTexts {
 },
 disconnectedBox(),
 termianatedBox(),
-looseText(0.5, 0.35, {"You loose", "Вы проиграли", "Sie haben verloren", "Вы прайгралі"}, 30, WHITE),
-winText(0.5, 0.35, {"Win", "Победа", "Sieg", "Перамога"}, 30, WHITE) {
+looseText(0.5, 0.35, {"You loose", "Вы проиграли", "Sie haben verloren", "Вы прайгралі"}, 1, 32, WHITE),
+winText(0.5, 0.35, {"Win", "Победа", "Sieg", "Перамога"}, 1, 32, WHITE) {
     // Resetting flag
     if (!isRestarted()) {
         disconnectedBox.reset();

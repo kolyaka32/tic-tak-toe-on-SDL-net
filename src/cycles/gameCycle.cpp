@@ -18,9 +18,9 @@ playersTurnsTexts {
     {0.5, 0.05, {"Second player turn", "Ход второго игрока", "Zug des zweiten Spielers", "Ход другога гульца"}, 24, WHITE}
 },
 menuBackplate(0.5, 0.5, 1, 0.46, 40, 5),
-firstWinText(0.5, 0.35, {"Fist player win", "Первый игрок выйграл", "Der erste Spieler hat gewonnen", "Першы гулец выйграў"}, 30, WHITE),
-secondWinText(0.5, 0.35, {"Second player win", "Второй игрок выйграл", "Der zweite Spieler hat gewonnen", "Другі гулец выйграў"}, 30, WHITE),
-nobodyWinText(0.5, 0.35, {"Nobody win", "Ничья", "Unentschieden", "Чые"}, 30, WHITE) {
+firstWinText(0.5, 0.35, {"Fist player win", "Первый игрок выйграл", "Der erste Spieler hat gewonnen", "Першы гулец выйграў"}, 1, 30, WHITE),
+secondWinText(0.5, 0.35, {"Second player win", "Второй игрок выйграл", "Der zweite Spieler hat gewonnen", "Другі гулец выйграў"}, 1, 30, WHITE),
+nobodyWinText(0.5, 0.35, {"Nobody win", "Ничья", "Unentschieden", "Чые"}, 1, 30, WHITE) {
     if (!isRestarted()) {
         // Resetting field
         field.reset();

@@ -171,11 +171,11 @@ void ServerGameCycle::draw() const {
         break;
 
     case GameState::CurrentWin:
-        firstWinText.blit();
+        winText.blit();
         break;
 
     case GameState::OpponentWin:
-        secondWinText.blit();
+        looseText.blit();
         break;
 
     case GameState::NobodyWin:

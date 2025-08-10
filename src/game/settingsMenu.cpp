@@ -11,7 +11,7 @@ bool SettingsMenu::active = false;
 SettingsMenu::SettingsMenu()
 : settingButton{0.96, 0.05, 0.08, IMG_GUI_PAUSE_BUTTON},
 background{0.5, 0.5, 0.65, 0.85, 20, 5},
-titleText{0.5, 0.13, {"Pause", "Пауза", "Pause", "Паўза"}, 2, 30, WHITE},
+titleText{0.5, 0.13, {"Pause", "Пауза", "Pause", "Паўза"}, 2, 32, WHITE},
 flags {
     {0.35, 0.27, 0.25, IMG_GUI_FLAG_USA},
     {0.65, 0.27, 0.25, IMG_GUI_FLAG_RUS},
