@@ -23,7 +23,7 @@ Server::Server()
     #if CHECK_CORRECTION
     // Adding some packet loss for better testing
     NET_SimulateDatagramPacketLoss(gettingSocket, CONNECTION_LOST_PERCENT);
-    SDL_Log("Server created: %u, address: %s, port: %u", gettingSocket, getLocalIP(), currentPort);
+    SDL_Log("Server created, address: %s, port: %u", getLocalIP(), currentPort);
     #endif
 }
 

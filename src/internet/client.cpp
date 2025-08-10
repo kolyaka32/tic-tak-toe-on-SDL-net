@@ -14,7 +14,7 @@ Client::Client()
     #if CHECK_CORRECTION
     // Adding some packet loss for better testing
     NET_SimulateDatagramPacketLoss(gettingSocket, CONNECTION_LOST_PERCENT);
-    SDL_Log("Client created: %u, address: %s", gettingSocket, getLocalIP());
+    SDL_Log("Client created, address: %s", getLocalIP());
     #endif
 }
 

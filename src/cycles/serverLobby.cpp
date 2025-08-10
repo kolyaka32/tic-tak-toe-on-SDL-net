@@ -46,7 +46,7 @@ bool ServerLobbyCycle::inputMouseDown() {
     // Check on copying address
     if (addressText.in(mouse)) {
         // Copying address to buffer
-        static char clipboardText[20];
+        static char clipboardText[24];
         snprintf(clipboardText, sizeof(clipboardText), "%s", currentAddress);
         SDL_SetClipboardText(clipboardText);
         copiedInfoBox.reset();
