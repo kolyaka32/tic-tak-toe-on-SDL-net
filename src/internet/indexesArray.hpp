@@ -11,11 +11,11 @@
 // Class for work with indexes of last get message
 template <unsigned length>
 class IndexesArray {
-private:
+ private:
     Uint8 array[length];  // Array with last getted messages for check repeats
     int lastPosition;     // Position in array with last get message (for correct updation)
 
-public:
+ public:
     IndexesArray();
     ~IndexesArray();
     bool isUnique(Uint8 index);

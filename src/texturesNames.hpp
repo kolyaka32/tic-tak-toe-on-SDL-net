@@ -5,44 +5,43 @@
 
 #pragma once
 
-#include "data/preloaded/textures.cpp"
-
 
 // Names of all images with related numbers
-enum IMG_names : unsigned {
+enum class Textures : unsigned {
     // Base part
     // Graphic interface sprites
-    IMG_GUI_PAUSE_BUTTON,
-    IMG_GUI_SLIDER_BUTTON,
-    IMG_GUI_SLIDER_LINE,
-    IMG_GUI_TYPE_BOX,
-    IMG_GUI_QUIT_BUTTON,
-    IMG_GUI_RESTART_BUTTON,
-
+    PauseButton,
+    SliderButton,
+    SliderLine,
+    TypeBox,
+    QuitButton,
+    RestartButton,
     // Base flags in settings
-    IMG_GUI_FLAG_USA,
-    IMG_GUI_FLAG_RUS,
-    IMG_GUI_FLAG_GER,
-    IMG_GUI_FLAG_BEL,
+    FlagUSA,
+    FlagRUS,
+    FlagGER,
+    FlagBEL,
 
     // Main game part
     // Green (current player) figures
-    IMG_GREEN_CROSS,
-    IMG_RED_CROSS,
-
+    GreenCross,
+    RedCross,
     // Red (opponent player) figures
-    IMG_GREEN_CIRCLE,
-    IMG_RED_CIRCLE,
-
+    GreenCircle,
+    RedCircle,
     // Empty cell
-    IMG_CELL,
+    Cell,
 
     // Additional part
-    IMG_SCREAMER,
+    Screamer,
 
     // Global counter of all textures
-    IMG_count,
+    Count,
 };
 
+// Operators for change textures depend on offset
+Textures operator+(const Textures index, int offset);
+Textures operator-(const Textures index, int offset);
+
 // File names of the corresponding textures
-extern const char* texturesFilesNames[IMG_count];
+extern const char* texturesFilesNames[unsigned(Textures::Count)];

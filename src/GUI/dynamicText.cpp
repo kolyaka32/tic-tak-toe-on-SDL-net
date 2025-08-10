@@ -16,7 +16,7 @@ texts(_texts),
 height(_height) {
     rect.y = window.getHeight() * _Y - height / 2;
     // Creating surface with text
-    texture = window.createTexture(FNT_MAIN, height, texts.getString().c_str(), 0, color);
+    texture = window.createTexture(Fonts::Main, height, texts.getString().c_str(), 0, color);
 
     // Moving draw rect to new place
     rect.w = texture->w;

@@ -74,7 +74,7 @@ bool ClientLobbyCycle::inputMouseDown() {
 void ClientLobbyCycle::inputMouseUp() {
     settings.unClick();
     enterIPField.unclick();
-    enterPortField.unclick(); 
+    enterPortField.unclick();
 }
 
 void ClientLobbyCycle::inputKeys(SDL_Keycode _key) {
@@ -150,7 +150,7 @@ void ClientLobbyCycle::pasteFromClipboard() {
         return;
     }
     // Find IP text (first part)
-    int i=0;
+    int i = 0;
     for (; clipboard[i]; ++i) {
         // Finding : as port separator
         if (clipboard[i] == ':') {

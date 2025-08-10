@@ -10,24 +10,23 @@
 GameCycle::GameCycle()
 : BaseCycle(),
 screamer(),
-menuRestartButton(0.5, 0.5, {"Restart", "Перезапустить", "Starten", "Перазапуск"}, 24, WHITE),
-menuExitButton(0.5, 0.65, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}, 24, WHITE),
-gameRestartButton(0.12, 0.05, 0.08, IMG_GUI_RESTART_BUTTON),
+menuRestartButton(0.5, 0.5, {"Restart", "Перезапустить", "Starten", "Перазапуск"}, 24),
+menuExitButton(0.5, 0.65, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}, 24),
+gameRestartButton(0.12, 0.05, 0.08, Textures::RestartButton),
 playersTurnsTexts {
-    {0.5, 0.05, {"First player turn", "Ход первого игрока", "Der Zug des ersten Spielers", "Ход першага гульца"}, 24, WHITE},
-    {0.5, 0.05, {"Second player turn", "Ход второго игрока", "Zug des zweiten Spielers", "Ход другога гульца"}, 24, WHITE}
+    {0.5, 0.05, {"First player turn", "Ход первого игрока", "Der Zug des ersten Spielers", "Ход першага гульца"}, 24},
+    {0.5, 0.05, {"Second player turn", "Ход второго игрока", "Zug des zweiten Spielers", "Ход другога гульца"}, 24}
 },
 menuBackplate(0.5, 0.5, 1, 0.46, 40, 5),
-firstWinText(0.5, 0.35, {"Fist player win", "Первый игрок выйграл", "Der erste Spieler hat gewonnen", "Першы гулец выйграў"}, 1, 30, WHITE),
-secondWinText(0.5, 0.35, {"Second player win", "Второй игрок выйграл", "Der zweite Spieler hat gewonnen", "Другі гулец выйграў"}, 1, 30, WHITE),
-nobodyWinText(0.5, 0.35, {"Nobody win", "Ничья", "Unentschieden", "Чые"}, 1, 30, WHITE) {
+firstWinText(0.5, 0.35, {"Fist player win", "Первый игрок выйграл", "Der erste Spieler hat gewonnen", "Першы гулец выйграў"}, 1, 30),
+secondWinText(0.5, 0.35, {"Second player win", "Второй игрок выйграл", "Der zweite Spieler hat gewonnen", "Другі гулец выйграў"}, 1, 30),
+nobodyWinText(0.5, 0.35, {"Nobody win", "Ничья", "Unentschieden", "Чые"}, 1, 30) {
     if (!isRestarted()) {
         // Resetting field
         field.reset();
-        firstTurn = true;
-        // Starting main song (if wasn't started)
-        music.startFading(Music::MainCalm);
     }
+    // Starting main song (if wasn't started)
+    music.startFading(Music::MainCalm);
 }
 
 bool GameCycle::inputMouseDown() {
@@ -47,12 +46,10 @@ void GameCycle::inputKeys(SDL_Keycode key) {
     case SDLK_R:
         // Making sound
         sounds.play(Sounds::Reset);
+        music.startFromCurrent(Music::MainCalm);
+
         // Restarting game
         field.reset();
-        if (!firstTurn) {
-            music.startFromCurrent(Music::MainCalm);
-        }
-        firstTurn = true;
         #if CHECK_ALL
         SDL_Log("Restarting game by key");
         #endif

@@ -5,7 +5,6 @@
 
 #include "app.hpp"
 #include "cycleTemplate.hpp"
-#include "../cycles/gameCycle.hpp"
 
 
 bool App::running = true;

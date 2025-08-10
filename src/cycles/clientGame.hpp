@@ -11,7 +11,7 @@
 
 // Game cycle (for single player (special animation))
 class ClientGameCycle : public InternetCycle {
-private:
+ private:
     GameConnection connection;
 
     // Additional text
@@ -23,6 +23,6 @@ private:
     void update() override;
     void draw() const override;
 
-public:
-    ClientGameCycle(Connection& client);
+ public:
+    explicit ClientGameCycle(const Connection& client);
 };

@@ -9,10 +9,10 @@
 
 // Class for load and close needed libraries
 class Libraries {
-private:
+ private:
     SDL_AudioDeviceID audioDeviceID = 0;
 
-public:
+ public:
     Libraries();
     ~Libraries() noexcept;
 };

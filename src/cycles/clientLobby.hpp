@@ -15,7 +15,7 @@ extern char basePort[6];
 
 // Game cycle (for single player (special animation))
 class ClientLobbyCycle : public BaseCycle {
-private:
+ private:
     // Internet parameters
     Client client;
 
@@ -37,6 +37,6 @@ private:
     void update() override;
     void draw() const override;
 
-public:
+ public:
     ClientLobbyCycle();
 };

@@ -10,7 +10,7 @@
 
 // Cycle for select variants to start
 class ParametersCycle : public BaseCycle {
-private:
+ private:
     GUI::HighlightedStaticText titleText;
     GUI::HighlightedStaticText widthText;
     GUI::TypeField<1> widthTypeField;
@@ -32,6 +32,6 @@ private:
     // Shortcut functions
     void setParameter(int width, int winWidth);
 
-public:
+ public:
     ParametersCycle();
 };

@@ -12,48 +12,48 @@
 
 // Class with any ordered data
 class Data {
-protected:
+ protected:
     // Data, contained in this array
-    Uint8* data;
+    Uint8* data = nullptr;
 
     // Function for correct bits order to prevent wrong understanding
     template <typename T>
     T swapLE(T object);
 
-public:
-    Data() {};
+ public:
+    Data() {}
 };
 
 
 // Class with data for sending somewhere
 class SendPacket : public Data {
-private:
+ private:
     int length;
 
-protected:
+ protected:
     // Functions for converting data to raw array
     template <typename T>
     void write(int offset, T object);
     template <typename T, typename ...Args>
     void write(int offset, T object, Args&& ...args);
 
-public:
+ public:
     template <typename ...Args>
-    SendPacket(Args ...args);
+    SendPacket(const Args ...args);
     ~SendPacket();
-    Uint8* getData();
-    int getLength();
+    Uint8* getData() const;
+    int getLength() const;
 };
 
 
 // Class with getted data from somewhere
 class GetPacket : public Data {
-private:
+ private:
     int offset = 0;
     int size;  // Size of packet for check on correction
 
-public:
-    GetPacket(NET_Datagram* datagramm);
+ public:
+    explicit GetPacket(NET_Datagram* datagramm);
     bool isBytesAvaliable(int bytes);
     // Functions for get data from message by order
     template <typename T>
@@ -65,7 +65,7 @@ public:
 
 
 template <typename ...Args>
-SendPacket::SendPacket(Args ...args) {
+SendPacket::SendPacket(const Args ...args) {
     // Getting length as sum of all sizes of arguments
     length = sizeof...(args);
 

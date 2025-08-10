@@ -9,7 +9,7 @@
 GUI::HighlightedStaticText::HighlightedStaticText(float _X, float _Y,
     const LanguagedText _texts, int frame, float _height, Color _color, Aligment _aligment) {
     // Creating texture of text
-    TTF_Font* font = window.getFont(FNT_MAIN);
+    TTF_Font* font = window.getFont(Fonts::Main);
     TTF_SetFontSize(font, _height);
     TTF_SetFontOutline(font, frame);
 

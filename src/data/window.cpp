@@ -7,11 +7,6 @@
 #include "../define.hpp"
 #include "exceptions.hpp"
 
-// Names of loading files
-#include "../texturesNames.hpp"
-#include "../fontsNames.hpp"
-#include "languages.hpp"
-
 
 Window::Window(int _width, int _height, const LanguagedText _title)
 : width(_width),
@@ -19,8 +14,8 @@ height(_height),
 titleText(_title),
 window(SDL_CreateWindow(titleText.getString().c_str(), width, height, 0)),
 renderer(SDL_CreateRenderer(window, NULL)),
-textures{renderer, texturesFilesNames},
-fonts{fontsFilesNames} {
+textures{renderer},
+fonts{} {
     // Checking on correction of created objects
     #if CHECK_CORRECTION
     if (window == NULL) {
@@ -80,7 +75,7 @@ void Window::render() const {
 
 
 // Work with loaded data
-SDL_Texture* Window::getTexture(IMG_names _name) const {
+SDL_Texture* Window::getTexture(Textures _name) const {
     return textures[_name];
 }
 
@@ -116,23 +111,24 @@ void Window::destroy(SDL_Surface* _surface) const {
 
 
 // Work with loaded textures
-void Window::blit(IMG_names _index, const SDL_FRect& _dest) const {
+void Window::blit(Textures _index, const SDL_FRect& _dest) const {
     SDL_RenderTexture(renderer, textures[_index], nullptr, &_dest);
 }
 
-void Window::blit(IMG_names _index, const SDL_FRect* _dest, const SDL_FRect* _src) const {
+void Window::blit(Textures _index, const SDL_FRect* _dest, const SDL_FRect* _src) const {
     SDL_RenderTexture(renderer, textures[_index], _src, _dest);
 }
 
-void Window::blit(IMG_names _index, float _angle, const SDL_FRect& _dest, const SDL_FRect* _src, SDL_FPoint _center) const {
+void Window::blit(Textures _index, float _angle, const SDL_FRect& _dest,
+    const SDL_FRect* _src, SDL_FPoint _center) const {
     SDL_RenderTextureRotated(renderer, textures[_index], _src, &_dest, _angle, &_center, SDL_FLIP_NONE);
 }
 
-void Window::setBlendMode(IMG_names _index, SDL_BlendMode _blendMode) const {
+void Window::setBlendMode(Textures _index, SDL_BlendMode _blendMode) const {
     SDL_SetTextureBlendMode(textures[_index], _blendMode);
 }
 
-void Window::setColorMode(IMG_names _index, Color _color) const {
+void Window::setColorMode(Textures _index, Color _color) const {
     SDL_SetTextureColorMod(textures[_index], _color.r, _color.g, _color.b);
 }
 
@@ -157,7 +153,8 @@ void Window::blit(SDL_Texture* _texture, const SDL_FRect& _dest, const SDL_FRect
     SDL_RenderTexture(renderer, _texture, _src, &_dest);
 }
 
-void Window::blit(SDL_Texture* _texture, float _angle, const SDL_FRect& _dest, const SDL_FRect* _src, SDL_FPoint _center) const {
+void Window::blit(SDL_Texture* _texture, float _angle, const SDL_FRect& _dest,
+    const SDL_FRect* _src, SDL_FPoint _center) const {
     SDL_RenderTextureRotated(renderer, _texture, _src, &_dest, _angle, &_center, SDL_FLIP_NONE);
 }
 
@@ -188,17 +185,18 @@ void Window::destroy(SDL_Texture* _texture) const {
 
 
 // Work with fonts
-TTF_Font* Window::getFont(FNT_names _name) const {
+TTF_Font* Window::getFont(Fonts _name) const {
     return fonts[_name];
 }
 
-TTF_Font* Window::createFontCopy(FNT_names _name, float _height) const {
+TTF_Font* Window::createFontCopy(Fonts _name, float _height) const {
     TTF_Font* font = TTF_CopyFont(fonts[_name]);
     TTF_SetFontSize(font, _height);
     return font;
 }
 
-SDL_Texture* Window::createTexture(FNT_names _font, float _height, const char* _text, unsigned _length, Color _color) const {
+SDL_Texture* Window::createTexture(Fonts _font, float _height, const char* _text,
+    unsigned _length, Color _color) const {
     // Setting text draw height
     TTF_SetFontSize(getFont(_font), _height);
 

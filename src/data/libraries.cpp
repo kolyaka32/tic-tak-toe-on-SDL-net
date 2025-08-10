@@ -30,7 +30,7 @@ Libraries::Libraries() {
         throw LibararyLoadException("Couldn't get audio device ID: " + std::string(SDL_GetError()));
     }
     // Openning audio chanel
-    if(!Mix_OpenAudio(audioDeviceID, NULL)){
+    if (!Mix_OpenAudio(audioDeviceID, NULL)) {
         throw LibararyLoadException("Couldn't initialase audio chanel: " + std::string(SDL_GetError()));
     }
     #else

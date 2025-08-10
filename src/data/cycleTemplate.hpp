@@ -14,10 +14,10 @@
 // Template for any cycles
 class CycleTemplate {
  private:
-    static bool running;           // Flag of current running state
-    static bool restarting;        // Flag, if game was restarted
-    static bool additionalRestart; // Flag of additional game restart
-    IdleTimer idleTimer{1000/60};  // Timer to idle in main cycle
+    static bool running;            // Flag of current running state
+    static bool restarting;         // Flag, if game was restarted
+    static bool additionalRestart;  // Flag of additional game restart
+    IdleTimer idleTimer{1000/60};   // Timer to idle in main cycle
 
  protected:
     Mouse mouse;  // Position of mouse on screen
@@ -43,12 +43,12 @@ class CycleTemplate {
     static bool isRestarted();
     static bool isAdditionalRestarted();
     // Function for starting new cycle with posible arguments
-    template <class T, typename ...Args>
+    template <class NewCycle, typename ...Args>
     static void runCycle(const Args& ...args);
 };
 
 
-template <class T, typename ...Args>
+template <class NewCycle, typename ...Args>
 void CycleTemplate::runCycle(const Args& ...args) {
     restarting = false;
     additionalRestart = false;
@@ -56,7 +56,7 @@ void CycleTemplate::runCycle(const Args& ...args) {
     // Running current cycle, while restarting
     do {
         // Launching new cycle
-        T cycle(args...);
+        NewCycle cycle(args...);
         cycle.run();
     } while (App::isRunning() && (restarting | additionalRestart));
 

@@ -14,11 +14,11 @@
 
 // Class of whole current application
 class App : Libraries {
-private:
+ private:
     // Flags of work
     static bool running;
 
-public:
+ public:
     App();
     // Commands to operate with global running
     static void stop();

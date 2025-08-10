@@ -14,10 +14,10 @@
 
 // Implimentation of loader for arcives
 class ArchieveLoader : public DataLoader {
-private:
+ private:
     zip_t* archive;  // Archive, where data is located
 
-public:
+ public:
     ArchieveLoader();
     ~ArchieveLoader();
     SDL_IOStream* load(const char* name) const override;

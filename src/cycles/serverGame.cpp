@@ -6,12 +6,12 @@
 #include "serverGame.hpp"
 
 
-ServerGameCycle::ServerGameCycle(Connection& _server)
+ServerGameCycle::ServerGameCycle(const Connection& _server)
 : InternetCycle(),
 connection(_server),
-startFirst(0.5, 0.45, {"Start as cross", "Начать за крестик", "Am Kreuz anfangen", "Пачаць за крыжык"}, 24, WHITE),
-startSecond(0.5, 0.55, {"Start as circle", "Начать за кружок", "Für einen Kreis beginnen", "Пачаць за гурток"}, 24, WHITE) {
-    if(!isRestarted()) {
+startFirst(0.5, 0.45, {"Start as cross", "Начать за крестик", "Am Kreuz anfangen", "Пачаць за крыжык"}, 24),
+startSecond(0.5, 0.55, {"Start as circle", "Начать за кружок", "Für einen Kreis beginnen", "Пачаць за гурток"}, 24) {
+    if (!isRestarted()) {
         // Sending applying initialsiation message
         connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::Init, field.getWidth(), field.getWinWidth());
     }
@@ -26,20 +26,13 @@ bool ServerGameCycle::inputMouseDown() {
         connection.sendConfirmed(ConnectionCode::GameClear);
         // Making sound
         sounds.play(Sounds::Reset);
+        music.startFromCurrent(Music::MainCalm);
 
         // Clearing field
+        field.reset();
         #if CHECK_ALL
         SDL_Log("Restart game by upper button");
         #endif
-        field.reset();
-        // Start play calm music from current moment
-        if (!firstTurn) {
-            music.startFromCurrent(Music::MainCalm);
-            #if CHECK_ALL
-            SDL_Log("Stop combat music");
-            #endif
-        }
-        firstTurn = true;
         return true;
     }
     // Checking, if game start
@@ -75,16 +68,11 @@ bool ServerGameCycle::inputMouseDown() {
         if (field.tryClickMultiplayerCurrent(mouse)) {
             // Making sound
             sounds.play(Sounds::Turn);
+            music.startFromCurrent(Music::MainCombat);
+
             // Sending to opponent
-            connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn, field.getXPos(mouse), field.getYPos(mouse));
-            // Changing music theme
-            if (firstTurn) {
-                music.startFromCurrent(Music::MainCombat);
-                firstTurn = false;
-                #if CHECK_ALL
-                SDL_Log("Start combat music");
-                #endif
-            }
+            connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn,
+                field.getXPos(mouse), field.getYPos(mouse));
         }
     }
     return false;
@@ -96,18 +84,13 @@ void ServerGameCycle::inputKeys(SDL_Keycode _key) {
         connection.sendConfirmed(ConnectionCode::GameClear);
         // Making sound
         sounds.play(Sounds::Reset);
+        music.startFromCurrent(Music::MainCalm);
+
         // Clearing field
+        field.reset();
         #if CHECK_ALL
         SDL_Log("Restart game by key");
         #endif
-        field.reset();
-        if (!firstTurn) {
-            music.startFromCurrent(Music::MainCalm);
-            #if CHECK_ALL
-            SDL_Log("Stop combat music");
-            #endif
-        }
-        firstTurn = true;
         return;
     } else {
         GameCycle::inputKeys(_key);
@@ -122,20 +105,16 @@ void ServerGameCycle::update() {
     case ConnectionCode::GameTurn:
         if (connection.lastPacket->isBytesAvaliable(4)) {
             #if CHECK_CORRECTION
-            SDL_Log("Turn of opponent player: from %u to %u", connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
+            SDL_Log("Turn of opponent player: from %u to %u",
+                connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
             #endif
             // Making sound
             sounds.play(Sounds::Turn);
+            music.startFromCurrent(Music::MainCombat);
+
             // Making turn
-            field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
-            // Changing music theme
-            if (!firstTurn) {
-                music.startFromCurrent(Music::MainCombat);
-                firstTurn = false;
-                #if CHECK_ALL
-                SDL_Log("Start combat music");
-                #endif
-            }
+            field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2),
+                connection.lastPacket->getData<Uint8>(3));
         }
         return;
     }

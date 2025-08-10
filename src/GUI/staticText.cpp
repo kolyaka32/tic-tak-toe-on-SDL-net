@@ -10,7 +10,7 @@
 GUI::StaticText::StaticText(float _X, float _Y, const LanguagedText _texts,
     float _height, Color _color, Aligment _aligment) {
     // Creating texture of text
-    texture = window.createTexture(FNT_MAIN, _height, _texts.getString().c_str(), 0, _color);
+    texture = window.createTexture(Fonts::Main, _height, _texts.getString().c_str(), 0, _color);
 
     // Updating rect height for correct button
     SDL_GetTextureSize(texture, &rect.w, &rect.h);

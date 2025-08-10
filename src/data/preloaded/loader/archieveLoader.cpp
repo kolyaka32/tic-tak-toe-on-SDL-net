@@ -6,6 +6,7 @@
 #include "archieveLoader.hpp"
 #include "../../../define.hpp"
 
+
 ArchieveLoader::ArchieveLoader() {
     // Open archive with need name
     archive = zip_open(DATA_FILE, ZIP_RDONLY, NULL);

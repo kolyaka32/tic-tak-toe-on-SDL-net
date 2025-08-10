@@ -23,7 +23,7 @@ SoundsData::SoundsData() {
     #if CHECK_CORRECTION
     for (unsigned i=0; i < unsigned(Sounds::Count); ++i) {
         if (sounds[i] == NULL) {
-            throw DataLoadException("Not loaded: " + std::string(soundsFilesNames[i]));
+            throw DataLoadException(soundsFilesNames[i]);
         }
     }
     #endif

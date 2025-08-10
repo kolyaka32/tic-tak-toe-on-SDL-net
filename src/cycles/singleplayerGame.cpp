@@ -8,7 +8,7 @@
 
 SinglePlayerGameCycle::SinglePlayerGameCycle()
 : GameCycle() {
-    if(!isRestarted()) {
+    if (!isRestarted()) {
         // Starting game
         field.setState(GameState::CurrentPlay);
         field.setTextureOffset(0);
@@ -25,20 +25,14 @@ bool SinglePlayerGameCycle::inputMouseDown() {
     if (gameRestartButton.in(mouse)) {
         // Making sound
         sounds.play(Sounds::Reset);
+        music.startFromCurrent(Music::MainCalm);
 
         // Restarting current game
+        field.reset();
+        field.setState(GameState::CurrentPlay);
         #if CHECK_ALL
         SDL_Log("Resetting game by upper button");
         #endif
-        field.reset();
-        if (!firstTurn) {
-            music.startFromCurrent(Music::MainCalm);
-            #if CHECK_ALL
-            SDL_Log("Stop combat music");
-            #endif
-        }
-        firstTurn = true;
-        field.setState(GameState::CurrentPlay);
         return true;
     }
     // Checking, if game start
@@ -51,10 +45,7 @@ bool SinglePlayerGameCycle::inputMouseDown() {
             // Restarting current game
             field.reset();
             field.setState(GameState::CurrentPlay);
-            if (!firstTurn) {
-                music.startFromCurrent(Music::MainCalm);
-            }
-            firstTurn = true;
+            music.startFromCurrent(Music::MainCalm);
             #if CHECK_ALL
             SDL_Log("Restarting game by menu button");
             #endif
@@ -69,14 +60,7 @@ bool SinglePlayerGameCycle::inputMouseDown() {
         // Normal turn
         if (field.tryClickSingle(mouse)) {
             sounds.play(Sounds::Turn);
-            // Changing music theme
-            if (firstTurn) {
-                music.startFromCurrent(Music::MainCombat);
-                firstTurn = false;
-                #if CHECK_ALL
-                SDL_Log("Start combat music");
-                #endif
-            }
+            music.startFromCurrent(Music::MainCombat);
         }
     }
     return false;

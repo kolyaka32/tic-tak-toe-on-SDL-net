@@ -14,16 +14,16 @@ Server::Server()
     currentPort = BASE_PORT;
 
     // Finding avalialble port
-    srand(time(0));
+    SDL_srand(0);
     while ((gettingSocket = NET_CreateDatagramSocket(nullptr, currentPort)) == nullptr) {
         // Creating another random port
-        currentPort = rand() % 10000;
+        currentPort = SDL_rand(10000);
     }
 
     #if CHECK_CORRECTION
     // Adding some packet loss for better testing
     NET_SimulateDatagramPacketLoss(gettingSocket, CONNECTION_LOST_PERCENT);
-    SDL_Log("Server created: %u, address: %s, port: %u", gettingSocket, getLocalIP(), currentPort);
+    SDL_Log("Server created, address: %s, port: %u", getLocalIP(), currentPort);
     #endif
 }
 
@@ -35,7 +35,7 @@ Server::~Server() {
     // Clearing rest data
     NET_DestroyDatagramSocket(gettingSocket);
     if (sendAddress) {
-       NET_UnrefAddress(sendAddress); 
+       NET_UnrefAddress(sendAddress);
     }
 
     // Closing new library

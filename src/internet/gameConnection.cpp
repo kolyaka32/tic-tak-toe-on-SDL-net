@@ -53,7 +53,7 @@ void GameConnection::checkReconnecting() {
     switch (getCode()) {
     case ConnectionCode::Null:
         return;
-    
+
     default:
         disconnected = false;
         ConnectionLostBox::reset();
@@ -105,7 +105,9 @@ ConnectionCode GameConnection::checkNewMessage() {
 
     // Writing getted data for debug
     #if CHECK_ALL
-    SDL_Log("Get packet with %u bytes, from %s, port: %u, code: %u, index: %u", recievedDatagram->buflen, NET_GetAddressString(recievedDatagram->addr), recievedDatagram->port, (Uint8)code, lastPacket->getData<Uint8>(1));
+    SDL_Log("Get packet with %u bytes, from %s, port: %u, code: %u, index: %u",
+        recievedDatagram->buflen, NET_GetAddressString(recievedDatagram->addr),
+        recievedDatagram->port, (Uint8)code, lastPacket->getData<Uint8>(1));
     #endif
 
     // Getting index of message

@@ -8,7 +8,7 @@
 
 // Base cycle class
 BaseCycle::BaseCycle()
-: exitButton(0.04, 0.05, 0.08, IMG_GUI_QUIT_BUTTON),
+: exitButton(0.04, 0.05, 0.08, Textures::QuitButton),
 settings() {}
 
 bool BaseCycle::inputMouseDown() {

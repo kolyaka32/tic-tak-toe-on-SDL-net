@@ -6,53 +6,49 @@
 #include "fonts.hpp"
 
 
-template <unsigned count>
-FontsData<count>::FontsData(const char* _filesNames[count]) {
+FontsData::FontsData() {
     // Resetting fonts array
     #if CHECK_CORRECTION
-    for (unsigned i=0; i < count; ++i) {
+    for (unsigned i=0; i < unsigned(Fonts::Count); ++i) {
         fonts[i] = nullptr;
     }
     #endif
 
     // Loading all needed fonts
-    for (unsigned i=0; i < count; ++i) {
-        loadFont(i, _filesNames[i]);
+    for (unsigned i=0; i < unsigned(Fonts::Count); ++i) {
+        loadFont(Fonts(i), fontsFilesNames[i]);
     }
 
     // Checking massive on loading correction
     #if CHECK_CORRECTION
-    for (unsigned i=0; i < count; ++i) {
+    for (unsigned i=0; i < unsigned(Fonts::Count); ++i) {
         if (fonts[i] == NULL) {
-            throw DataLoadException("Fonts at index: " + std::to_string(i));
+            throw DataLoadException(fontsFilesNames[i]);
         }
     }
     #endif
 }
 
-template <unsigned count>
-FontsData<count>::~FontsData() {
+FontsData::~FontsData() {
     // Closing all used fonts
-    for (unsigned i=0; i < count; ++i) {
+    for (unsigned i=0; i < unsigned(Fonts::Count); ++i) {
         TTF_CloseFont(fonts[i]);
     }
 }
 
-template <unsigned count>
-void FontsData<count>::loadFont(unsigned _index, const char* _name) {
-    SDL_IOStream* iodata = dataLoader.load(_name);
+void FontsData::loadFont(Fonts _index, const char* _fileName) {
+    SDL_IOStream* iodata = dataLoader.load(_fileName);
 
-    fonts[_index] = TTF_OpenFontIO(iodata, true, 20.);
+    fonts[unsigned(_index)] = TTF_OpenFontIO(iodata, true, 20.);
 
     // Checking correction of loaded font
     #if CHECK_CORRECTION
-    if (fonts[_index] == nullptr) {
-        throw DataLoadException(_name);
+    if (fonts[unsigned(_index)] == nullptr) {
+        throw DataLoadException(_fileName);
     }
     #endif
 }
 
-template <unsigned count>
-TTF_Font* FontsData<count>::operator[](unsigned _index) const {
-    return fonts[_index];
+TTF_Font* FontsData::operator[](Fonts _index) const {
+    return fonts[unsigned(_index)];
 }

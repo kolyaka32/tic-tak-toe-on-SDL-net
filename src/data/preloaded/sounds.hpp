@@ -12,12 +12,12 @@
 
 // Class for playing sound with need name
 class SoundsData {
-private:
+ private:
     Mix_Chunk* sounds[unsigned(Sounds::Count)];
     Uint8 volume = 0;
     void loadSound(unsigned index, const char* name);
 
-public:
+ public:
     SoundsData();
     ~SoundsData();
     void play(Sounds name) const;

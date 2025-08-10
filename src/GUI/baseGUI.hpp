@@ -19,19 +19,20 @@ namespace GUI {
 
 
     // Graphic user interface template for other objects
-    class GUItemplate {
+    class Template {
      protected:
         SDL_Texture* texture;
         SDL_FRect rect;
+
      public:
-        GUItemplate();
+        Template();
         virtual void blit() const;
         bool in(const Mouse mouse) const;
     };
 
 
     // Static text on screen
-    class StaticText : public GUItemplate {
+    class StaticText : public Template {
      public:
         StaticText(float X, float Y, const LanguagedText texts,
             float size, Color color = WHITE, Aligment aligment = Aligment::Midle);
@@ -40,22 +41,22 @@ namespace GUI {
 
 
     // Static text on screen
-    class HighlightedStaticText : public GUItemplate {
+    class HighlightedStaticText : public Template {
      public:
-        HighlightedStaticText(float X, float Y, const LanguagedText texts, 
+        HighlightedStaticText(float X, float Y, const LanguagedText texts,
             int frameThickness, float size, Color color = WHITE, Aligment aligment = Aligment::Midle);
         ~HighlightedStaticText();
     };
 
 
     // Dynamicly updated text on screen
-    class DynamicText : public GUItemplate {
+    class DynamicText : public Template {
      private:
-        const LanguagedText texts;             // Text to create from
-        const float posX;                      // Relative positions on screen
-        const Aligment aligment;               // Aligment type to improve displasment
-        const Color color;                     // Base draw color
-        const float height;                    // Height of text to draw
+        const LanguagedText texts;  // Text to create from
+        const float posX;           // Relative positions on screen
+        const Aligment aligment;    // Aligment type to improve displasment
+        const Color color;          // Base draw color
+        const float height;         // Height of text to draw
 
      public:
         DynamicText(float X, float Y, const LanguagedText texts,
@@ -65,10 +66,10 @@ namespace GUI {
         void setValues(Args&& ...args) {
             // Checking for all chars
             char buffer[100];
-            std::sprintf(buffer, texts.getString().c_str(), std::forward<Args>(args)...);
+            std::snprintf(buffer, sizeof(buffer), texts.getString().c_str(), args...);
 
             // Creating surface with text
-            texture = window.createTexture(FNT_MAIN, height, buffer, 0, color);
+            texture = window.createTexture(Fonts::Main, height, buffer, 0, color);
 
             // Moving draw rect to new place
             rect.w = texture->w;
@@ -79,7 +80,7 @@ namespace GUI {
 
 
     // Class of slider bar with point on it to control need parameter
-    class Slider : public GUItemplate {
+    class Slider : public Template {
      private:
         SDL_Texture *textureButton;  // Texture of line (upper part of slider)
         SDL_FRect buttonRect;        // Place for rendering upper part
@@ -87,8 +88,8 @@ namespace GUI {
 
      public:
         // Create slide with need line and button images
-        Slider(float X, float Y, float width, unsigned startValue, IMG_names lineImage = IMG_GUI_SLIDER_LINE,
-            IMG_names buttonImage = IMG_GUI_SLIDER_BUTTON, unsigned max = 255);
+        Slider(float X, float Y, float width, unsigned startValue, Textures lineImage = Textures::SliderLine,
+            Textures buttonImage = Textures::SliderButton, unsigned max = 255);
         unsigned setValue(float mouseX);  // Setting new state from mouse position
         unsigned scroll(float wheelY);    // Checking mouse wheel action
         void blit() const override;       // Drawing slider with need button position
@@ -96,18 +97,17 @@ namespace GUI {
 
 
     // Class of buttons with image on it
-    class ImageButton : public GUItemplate {
-    public:
-        ImageButton(float X, float Y, float width, IMG_names textureIndex);
+    class ImageButton : public Template {
+     public:
+        ImageButton(float X, float Y, float width, Textures name);
     };
 
 
     // GIF-animations
     #if ANI_count
-    class GIFAnimation : public GUItemplate {
+    class GIFAnimation : public Template {
      private:
         const Uint8 type;
-        SDL_Texture* texture = nullptr;
         Uint64 prevTick;
         const SDL_FRect dest;
 
@@ -167,7 +167,7 @@ namespace GUI {
     };
 
     // Class of backplate for
-    class Backplate : public GUItemplate {
+    class Backplate : public Template {
      public:
         Backplate(float centerX, float centerY, float width, float height, float radius, float border,
             Color frontColor = GREY, Color backColor = BLACK);
@@ -175,6 +175,7 @@ namespace GUI {
             Color backColor = BLACK);
         ~Backplate();
     };
+
 
     // Class of buttons with text on it
     class TextButton : public HighlightedStaticText {
@@ -186,6 +187,7 @@ namespace GUI {
             Color color = WHITE, Aligment aligment = Aligment::Midle);
         void blit() const override;
     };
+
 
     // Class of appearing for time and hidden by time text
     class InfoBox : public HighlightedStaticText {

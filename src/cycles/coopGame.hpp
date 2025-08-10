@@ -10,9 +10,9 @@
 
 // Creating two player mode (standart game)
 class TwoPlayerGameCycle : public GameCycle {
-private:
+ private:
     bool inputMouseDown() override;
 
-public:
+ public:
     TwoPlayerGameCycle();
 };

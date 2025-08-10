@@ -10,7 +10,7 @@
 
 // Class with message box, showing information at center of screen
 class TerminatedBox {
-private:
+ private:
     static bool active;
 
     // Main text
@@ -20,7 +20,7 @@ private:
     // Background plate for better visability
     const GUI::Backplate background;
 
-public:
+ public:
     TerminatedBox();
     bool click(const Mouse mouse);
     void blit() const;

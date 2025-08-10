@@ -9,10 +9,10 @@
 
 // Class of position of mouse on screen
 class Mouse {
-private:
+ private:
     SDL_FPoint position;
 
-public:
+ public:
     Mouse();
     void updatePos();
     bool in(SDL_FRect rect) const;

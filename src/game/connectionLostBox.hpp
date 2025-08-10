@@ -10,7 +10,7 @@
 
 // Class with message box, showing information at center of screen
 class ConnectionLostBox {
-private:
+ private:
     // Flag of activity
     static bool active;
 
@@ -23,7 +23,7 @@ private:
     // Background plate for better visability
     const GUI::Backplate background;
 
-public:
+ public:
     ConnectionLostBox();
     int click(const Mouse mouse);  // Return non zero, if active, 2 if try to reconnect
     void blit() const;

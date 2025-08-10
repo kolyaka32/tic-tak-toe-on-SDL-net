@@ -10,7 +10,7 @@
 
 // Basic class for internet connection
 class Connection {
-protected:
+ protected:
     // Getting part
     NET_DatagramSocket* gettingSocket;
     NET_Datagram* recievedDatagram;
@@ -19,14 +19,14 @@ protected:
     NET_Address* sendAddress;
     Uint16 sendPort;
 
-public:
+ public:
     Connection();
     Connection(const Connection& connection);
     ~Connection();
     // Templated function for send any order of data
     template <typename ...Args>
     void send(ConnectionCode code, Uint8 index, Args ...args);
-    void send(SendPacket& _packet);
+    void send(const SendPacket& _packet) const;
     // Function for recieve new packets and update packets
     ConnectionCode getCode();
     // Packet with last getted data

@@ -9,14 +9,14 @@
 bool SettingsMenu::active = false;
 
 SettingsMenu::SettingsMenu()
-: settingButton{0.96, 0.05, 0.08, IMG_GUI_PAUSE_BUTTON},
+: settingButton{0.96, 0.05, 0.08, Textures::PauseButton},
 background{0.5, 0.5, 0.65, 0.85, 20, 5},
 titleText{0.5, 0.13, {"Pause", "Пауза", "Pause", "Паўза"}, 2, 32, WHITE},
 flags {
-    {0.35, 0.27, 0.25, IMG_GUI_FLAG_USA},
-    {0.65, 0.27, 0.25, IMG_GUI_FLAG_RUS},
-    {0.35, 0.45, 0.25, IMG_GUI_FLAG_GER},
-    {0.65, 0.45, 0.25, IMG_GUI_FLAG_BEL},
+    {0.35, 0.27, 0.25, Textures::FlagUSA},
+    {0.65, 0.27, 0.25, Textures::FlagRUS},
+    {0.35, 0.45, 0.25, Textures::FlagGER},
+    {0.65, 0.45, 0.25, Textures::FlagBEL},
 },
 musicText{0.5, 0.58, {"Music", "Музыка", "Die Musik", "Музыка"}, 1, 24, WHITE},
 musicSlider{0.5, 0.64, 0.5, music.getVolume()},

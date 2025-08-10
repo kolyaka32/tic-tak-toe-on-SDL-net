@@ -14,7 +14,7 @@ Client::Client()
     #if CHECK_CORRECTION
     // Adding some packet loss for better testing
     NET_SimulateDatagramPacketLoss(gettingSocket, CONNECTION_LOST_PERCENT);
-    SDL_Log("Client created: %u, address: %s", gettingSocket, getLocalIP());
+    SDL_Log("Client created, address: %s", getLocalIP());
     #endif
 }
 
@@ -26,7 +26,7 @@ Client::~Client() {
     // Clearing rest data
     NET_DestroyDatagramSocket(gettingSocket);
     if (sendAddress) {
-       NET_UnrefAddress(sendAddress); 
+       NET_UnrefAddress(sendAddress);
     }
 
     // Closing new library

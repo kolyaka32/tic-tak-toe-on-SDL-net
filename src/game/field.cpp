@@ -8,7 +8,9 @@
 
 Field::Field()
 : width(3),
-winWidth(3) {}
+winWidth(3),
+count(0),
+gameState(GameState::None) {}
 
 void Field::reset() {
     for (Uint8 i=0; i < width * width; ++i) {
@@ -50,7 +52,7 @@ bool Field::clickTwo(int x, int y) {
             data[x + y * width] = Cell::Current;
             gameState = GameState::OpponentPlay;
             break;
-        
+
         case GameState::OpponentPlay:
             data[x + y * width] = Cell::Opponent;
             gameState = GameState::CurrentPlay;
@@ -126,15 +128,15 @@ int Field::recursivelySolve(Uint8 round) {
                 case GameState::CurrentWin:
                     if (round % 2) {
                         result--;
-                    } else{
+                    } else {
                         result++;
                     }
                     break;
-                
+
                 case GameState::OpponentWin:
                     if (round % 2) {
                         result++;
-                    } else{
+                    } else {
                         result--;
                     }
                     break;
@@ -144,7 +146,7 @@ int Field::recursivelySolve(Uint8 round) {
 
                 default:
                     result -= recursivelySolve(round+1);
-                };
+                }
                 data[y * width + x] = Cell::Empty;
                 count--;
             }
@@ -266,7 +268,7 @@ void Field::checkSound() {
         SDL_Log("Current win");
         #endif
         break;
-    
+
     case GameState::OpponentWin:
         sounds.play(Sounds::Loose);
         #if CHECK_ALL
@@ -274,7 +276,7 @@ void Field::checkSound() {
         #endif
         break;
 
-    case GameState::NobodyWin:  
+    case GameState::NobodyWin:
         sounds.play(Sounds::Loose);
         #if CHECK_ALL
         SDL_Log("Nobody win");

@@ -8,7 +8,7 @@
 
 Uint8 Message::globalMessageIndex = 1;
 
-void Message::resend(Connection& connection) {
+void Message::resend(const Connection& connection) {
     // Sending message itself
     connection.send(packet);
 
@@ -16,7 +16,7 @@ void Message::resend(Connection& connection) {
     nextResend = getTime() + MESSAGE_RESEND_TIMEOUT;
 }
 
-void Message::checkNeedResend(Connection& _connection) {
+void Message::checkNeedResend(const Connection& _connection) {
     // Check, if get over timer
     if (getTime() > nextResend) {
         #if CHECK_ALL

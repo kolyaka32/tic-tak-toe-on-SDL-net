@@ -7,7 +7,7 @@
 #include "selectCycle.hpp"
 
 
-ClientGameCycle::ClientGameCycle(Connection& _client)
+ClientGameCycle::ClientGameCycle(const Connection& _client)
 : InternetCycle(),
 connection(_client),
 waitText(0.5, 0.05, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}, 24) {}
@@ -29,16 +29,11 @@ bool ClientGameCycle::inputMouseDown() {
         if (field.tryClickMultiplayerCurrent(mouse)) {
             // Making sound
             sounds.play(Sounds::Turn);
+            music.startFromCurrent(Music::MainCombat);
+
             // Sending to opponent
-            connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn, field.getXPos(mouse), field.getYPos(mouse));
-            // Changing music theme
-            if (firstTurn) {
-                music.startFromCurrent(Music::MainCombat);
-                firstTurn = false;
-                #if CHECK_ALL
-                SDL_Log("Start combat music");
-                #endif
-            }
+            connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn,
+                field.getXPos(mouse), field.getYPos(mouse));
         }
     }
     return false;
@@ -59,37 +54,28 @@ void ClientGameCycle::update() {
     case ConnectionCode::GameTurn:
         if (connection.lastPacket->isBytesAvaliable(4)) {
             #if CHECK_CORRECTION
-            SDL_Log("Turn of opponent player: from %u to %u", connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
+            SDL_Log("Turn of opponent player: from %u to %u",
+                connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
             #endif
-            field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
+            field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2),
+                connection.lastPacket->getData<Uint8>(3));
             // Making sound
             sounds.play(Sounds::Turn);
             // Changing music theme
-            if (firstTurn) {
-                music.startFromCurrent(Music::MainCombat);
-                firstTurn = false;
-                #if CHECK_ALL
-                SDL_Log("Start combat music");
-                #endif
-            }
+            music.startFromCurrent(Music::MainCombat);
         }
         return;
 
     case ConnectionCode::GameClear:
+        // Making sound
+        sounds.play(Sounds::Reset);
+        music.startFromCurrent(Music::MainCalm);
+
         // Resetting game
+        field.reset();
         #if CHECK_CORRECTION
         SDL_Log("Resetting game by connection");
         #endif
-        field.reset();
-        if (!firstTurn) {
-            music.startFromCurrent(Music::MainCalm);
-            #if CHECK_ALL
-            SDL_Log("Stop combat music");
-            #endif
-        }
-        firstTurn = true;
-        // Making sound
-        sounds.play(Sounds::Reset);
         return;
 
     case ConnectionCode::GameStart:

@@ -8,8 +8,8 @@
 #include "colors.hpp"
 #include "mouse.hpp"
 #include "time.hpp"
-#include "../texturesNames.hpp"
-#include "../fontsNames.hpp"
+#include "preloaded/textures.hpp"
+#include "preloaded/fonts.hpp"
 #include "languages.hpp"
 
 
@@ -20,8 +20,11 @@ class Window {
     const LanguagedText titleText;
     SDL_Window* window;
     SDL_Renderer* renderer;
-    const TexturesData<IMG_count> textures;
-    const Fonts fonts;
+    const TexturesData textures;
+    const FontsData fonts;
+
+    // Set new title
+    void updateTitle(const char* name) const;
 
  public:
     Window(int width, int height, const LanguagedText title);
@@ -46,7 +49,7 @@ class Window {
     void drawLine(float x1, float y1, float x2, float y2) const;
 
     // Work with loaded data
-    SDL_Texture* getTexture(IMG_names name) const;
+    SDL_Texture* getTexture(Textures name) const;
 
     // Work with own surfaces
     SDL_Surface* createSurface(int width, int height, SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA32) const;
@@ -54,18 +57,21 @@ class Window {
     void destroy(SDL_Surface* surface) const;
 
     // Work with loaded textures
-    void blit(IMG_names index, const SDL_FRect& dest) const;
-    void blit(IMG_names index, const SDL_FRect* dest = nullptr, const SDL_FRect* src = nullptr) const;
-    void blit(IMG_names index, float angle, const SDL_FRect& rect, const SDL_FRect* src = nullptr, SDL_FPoint center = {0, 0}) const;
-    void setBlendMode(IMG_names index, SDL_BlendMode blendMode = SDL_BLENDMODE_NONE) const;
-    void setColorMode(IMG_names index, Color color = EMPTY) const;
+    void blit(Textures index, const SDL_FRect& dest) const;
+    void blit(Textures index, const SDL_FRect* dest = nullptr, const SDL_FRect* src = nullptr) const;
+    void blit(Textures index, float angle, const SDL_FRect& rect, const SDL_FRect* src = nullptr,
+        SDL_FPoint center = {0, 0}) const;
+    void setBlendMode(Textures index, SDL_BlendMode blendMode = SDL_BLENDMODE_NONE) const;
+    void setColorMode(Textures index, Color color = EMPTY) const;
 
     // Work with own textures
-    SDL_Texture* createTexture(int width, int height, SDL_TextureAccess access = SDL_TEXTUREACCESS_TARGET, SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA32) const;
+    SDL_Texture* createTexture(int width, int height, SDL_TextureAccess access = SDL_TEXTUREACCESS_TARGET,
+        SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA32) const;
     SDL_Texture* createTexture(SDL_Surface* surface) const;
     SDL_Texture* createTextureAndFree(SDL_Surface* surface) const;
     void blit(SDL_Texture* texture, const SDL_FRect& dest, const SDL_FRect* src = nullptr) const;
-    void blit(SDL_Texture* texture, float angle, const SDL_FRect& rect, const SDL_FRect* src = nullptr, SDL_FPoint center = {0, 0}) const;
+    void blit(SDL_Texture* texture, float angle, const SDL_FRect& rect, const SDL_FRect* src = nullptr,
+        SDL_FPoint center = {0, 0}) const;
     void setRenderTarget(SDL_Texture* target) const;
     void resetRenderTarget() const;
     void setBlendMode(SDL_Texture* texture, SDL_BlendMode blendMode = SDL_BLENDMODE_NONE) const;
@@ -74,15 +80,15 @@ class Window {
     void destroy(SDL_Texture* texture) const;
 
     // Work with fonts and text
-    TTF_Font* getFont(FNT_names name) const;
-    TTF_Font* createFontCopy(FNT_names name, float height) const;
-    SDL_Texture* createTexture(FNT_names font, float height, const char* text, unsigned length, Color color) const;
+    TTF_Font* getFont(Fonts name) const;
+    TTF_Font* createFontCopy(Fonts name, float height) const;
+    SDL_Texture* createTexture(Fonts font, float height, const char* text, unsigned length, Color color) const;
 
     // Work with window
     void startTextInput() const;
     void stopTextInput() const;
-    void updateTitle(const char* name) const;  // Set new title
-    void updateTitle() const;                  // Update title from basic
+    void updateTitle() const;
 };
 
+// Global main window, with all graphics
 extern Window window;

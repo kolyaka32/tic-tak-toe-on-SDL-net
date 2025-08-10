@@ -10,11 +10,11 @@
 
 // Scary image, that show with small chanse at screen
 class Screamer {
-private:
+ private:
     GUI::TextButton acceptButton;
     bool active = false;
 
-public:
+ public:
     Screamer();
     bool click(const Mouse mouse);
     void update();
