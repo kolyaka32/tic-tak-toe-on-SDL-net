@@ -29,10 +29,10 @@ bool ClientGameCycle::inputMouseDown() {
         if (field.tryClickMultiplayerCurrent(mouse)) {
             // Making sound
             sounds.play(Sounds::Turn);
+            music.startFromCurrent(Music::MainCombat);
+
             // Sending to opponent
             connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn, field.getXPos(mouse), field.getYPos(mouse));
-            // Changing music theme
-            music.startFromCurrent(Music::MainCombat);
         }
     }
     return false;
@@ -64,14 +64,15 @@ void ClientGameCycle::update() {
         return;
 
     case ConnectionCode::GameClear:
+        // Making sound
+        sounds.play(Sounds::Reset);
+        music.startFromCurrent(Music::MainCalm);
+
         // Resetting game
+        field.reset();
         #if CHECK_CORRECTION
         SDL_Log("Resetting game by connection");
         #endif
-        field.reset();
-        music.startFromCurrent(Music::MainCalm);
-        // Making sound
-        sounds.play(Sounds::Reset);
         return;
 
     case ConnectionCode::GameStart:
