@@ -6,6 +6,10 @@
 #include "field.hpp"
 
 
+Field::Field()
+: width(3),
+winWidth(3) {}
+
 void Field::reset() {
     for (Uint8 i=0; i < width * width; ++i) {
         data[i] = Cell::Empty;
@@ -31,6 +35,7 @@ bool Field::clickSingle(int x, int y) {
         if (gameState < GameState::CurrentWin) {
             AImove();
         }
+        checkSound();
         return true;
     }
     return false;
@@ -55,6 +60,7 @@ bool Field::clickTwo(int x, int y) {
 
         // Checking for win
         gameState = checkWin(x, y);
+        checkSound();
         return true;
     }
     return false;
@@ -78,6 +84,7 @@ bool Field::clickMultiplayerCurrent(int x, int y) {
 
         // Checking for win
         gameState = checkWin(x, y);
+        checkSound();
         return true;
     }
     return false;
@@ -100,6 +107,8 @@ void Field::clickMultiplayerOpponent(int x, int y) {
 
         // Checking for win
         gameState = checkWin(x, y);
+        checkSound();
+        return;
     }
 }
 
@@ -172,11 +181,6 @@ void Field::AImove() {
 
 // Return 0, if none win, 1, if win player, 2 if win bot(2 player)
 GameState Field::checkWin(int X, int Y) {
-    // Checking, is field full
-    if (count == width * width) {
-        return GameState::NobodyWin;
-    }
-
     // Finding first starting point for X
     for (int startX = max(0, X - winWidth + 1); startX <= min(X, width - winWidth); ++startX) {
         // Checking all lines
@@ -247,5 +251,34 @@ GameState Field::checkWin(int X, int Y) {
             }
         }
     }
+    // Checking, is field full
+    if (count == width * width) {
+        return GameState::NobodyWin;
+    }
     return gameState;
+}
+
+void Field::checkSound() {
+    switch (gameState) {
+    case GameState::CurrentWin:
+        sounds.play(Sounds::Win);
+        #if CHECK_ALL
+        SDL_Log("Current win");
+        #endif
+        break;
+    
+    case GameState::OpponentWin:
+        sounds.play(Sounds::Loose);
+        #if CHECK_ALL
+        SDL_Log("Opponent win");
+        #endif
+        break;
+
+    case GameState::NobodyWin:  
+        sounds.play(Sounds::Loose);
+        #if CHECK_ALL
+        SDL_Log("Nobody win");
+        #endif
+        break;
+    }
 }

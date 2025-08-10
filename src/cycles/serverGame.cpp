@@ -6,47 +6,63 @@
 #include "serverGame.hpp"
 
 
-ServerGameCycle::ServerGameCycle(App& _app, Connection& _server)
-: InternetCycle(_app),
+ServerGameCycle::ServerGameCycle(Connection& _server)
+: InternetCycle(),
 connection(_server),
-startFirst(_app.window, 0.5, 0.45, {"Start as cross", "Начать за крестик", "Am Kreuz anfangen", "Пачаць за крыжык"}, 24, WHITE),
-startSecond(_app.window, 0.5, 0.55, {"Start as circle", "Начать за кружок", "Für einen Kreis beginnen", "Пачаць за гурток"}, 24, WHITE) {
+startFirst(0.5, 0.45, {"Start as cross", "Начать за крестик", "Am Kreuz anfangen", "Пачаць за крыжык"}, 24, WHITE),
+startSecond(0.5, 0.55, {"Start as circle", "Начать за кружок", "Für einen Kreis beginnen", "Пачаць за гурток"}, 24, WHITE) {
     if(!isRestarted()) {
         // Sending applying initialsiation message
         connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::Init, field.getWidth(), field.getWinWidth());
     }
 }
 
-bool ServerGameCycle::inputMouseDown(App& _app) {
-    if (InternetCycle::inputMouseDown(_app)) {
+bool ServerGameCycle::inputMouseDown() {
+    if (InternetCycle::inputMouseDown()) {
         return true;
     }
     if (gameRestartButton.in(mouse)) {
-        // Making sound
-        _app.sounds.play(SND_RESET);
-        // Clearing field
-        field.reset();
-        if (!firstTurn) {
-            _app.music.startFromCurrent(MUS_MAIN_CALM);
-        }
-        firstTurn = true;
         // Sending message of game clear
         connection.sendConfirmed(ConnectionCode::GameClear);
+        // Making sound
+        sounds.play(Sounds::Reset);
+
+        // Clearing field
+        #if CHECK_ALL
+        SDL_Log("Restart game by upper button");
+        #endif
+        field.reset();
+        // Start play calm music from current moment
+        if (!firstTurn) {
+            music.startFromCurrent(Music::MainCalm);
+            #if CHECK_ALL
+            SDL_Log("Stop combat music");
+            #endif
+        }
+        firstTurn = true;
         return true;
     }
     // Checking, if game start
     if (field.getState() >= GameState::CurrentWin || field.getState() == GameState::None) {
         // Check for game start
         if (startFirst.in(mouse)) {
+            field.reset();
             field.setState(GameState::CurrentPlay);
             connection.sendConfirmed<Uint8>(ConnectionCode::GameStart, (Uint8)GameState::OpponentPlay);
             field.setTextureOffset(0);
+            #if CHECK_ALL
+            SDL_Log("Start game as cross (first)");
+            #endif
             return true;
         }
         if (startSecond.in(mouse)) {
+            field.reset();
             field.setState(GameState::OpponentPlay);
             connection.sendConfirmed<Uint8>(ConnectionCode::GameStart, (Uint8)GameState::CurrentPlay);
             field.setTextureOffset(1);
+            #if CHECK_ALL
+            SDL_Log("Start game as circle (second)");
+            #endif
             return true;
         }
         if (menuExitButton.in(mouse)) {
@@ -58,39 +74,48 @@ bool ServerGameCycle::inputMouseDown(App& _app) {
         // Normal turn
         if (field.tryClickMultiplayerCurrent(mouse)) {
             // Making sound
-            _app.sounds.play(SND_TURN);
+            sounds.play(Sounds::Turn);
             // Sending to opponent
             connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn, field.getXPos(mouse), field.getYPos(mouse));
             // Changing music theme
             if (firstTurn) {
-                _app.music.startFromCurrent(MUS_MAIN_COMBAT);
+                music.startFromCurrent(Music::MainCombat);
                 firstTurn = false;
+                #if CHECK_ALL
+                SDL_Log("Start combat music");
+                #endif
             }
         }
     }
     return false;
 }
 
-void ServerGameCycle::inputKeys(App& _app, SDL_Keycode _key) {
+void ServerGameCycle::inputKeys(SDL_Keycode _key) {
     if (_key == SDLK_R) {
-        // Making sound
-        _app.sounds.play(SND_RESET);
-        // Clearing field
-        field.reset();
-        if (!firstTurn) {
-            _app.music.startFromCurrent(MUS_MAIN_CALM);
-        }
-        firstTurn = true;
         // Sending message of game clear
         connection.sendConfirmed(ConnectionCode::GameClear);
+        // Making sound
+        sounds.play(Sounds::Reset);
+        // Clearing field
+        #if CHECK_ALL
+        SDL_Log("Restart game by key");
+        #endif
+        field.reset();
+        if (!firstTurn) {
+            music.startFromCurrent(Music::MainCalm);
+            #if CHECK_ALL
+            SDL_Log("Stop combat music");
+            #endif
+        }
+        firstTurn = true;
         return;
     } else {
-        GameCycle::inputKeys(_app, _key);
+        GameCycle::inputKeys(_key);
     }
 }
 
-void ServerGameCycle::update(App& _app) {
-    BaseCycle::update(_app);
+void ServerGameCycle::update() {
+    BaseCycle::update();
 
     // Getting internet messages
     switch (connection.updateMessages()) {
@@ -100,73 +125,76 @@ void ServerGameCycle::update(App& _app) {
             SDL_Log("Turn of opponent player: from %u to %u", connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
             #endif
             // Making sound
-            _app.sounds.play(SND_TURN);
+            sounds.play(Sounds::Turn);
             // Making turn
             field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
             // Changing music theme
             if (!firstTurn) {
-                _app.music.startFromCurrent(MUS_MAIN_COMBAT);
+                music.startFromCurrent(Music::MainCombat);
                 firstTurn = false;
+                #if CHECK_ALL
+                SDL_Log("Start combat music");
+                #endif
             }
         }
         return;
     }
 }
 
-void ServerGameCycle::draw(const App& _app) const {
+void ServerGameCycle::draw() const {
     // Bliting background
-    _app.window.setDrawColor(BLACK);
-    _app.window.clear();
+    window.setDrawColor(BLACK);
+    window.clear();
 
     // Blitting field
-    field.blit(_app.window);
-
-    // Drawing buttons
-    exitButton.blit(_app.window);
-    gameRestartButton.blit(_app.window);
-
-    // Drawing setting menu
-    settings.blit(_app.window);
+    field.blit();
 
     // Bliting waiting menu, if need
     if (field.getState() >= GameState::CurrentWin || field.getState() == GameState::None) {
         // Bliting end background
-        menuBackplate.blit(_app.window);
+        menuBackplate.blit();
 
         // Blitting buttons
-        startFirst.blit(_app.window);
-        startSecond.blit(_app.window);
-        menuExitButton.blit(_app.window);
+        startFirst.blit();
+        startSecond.blit();
+        menuExitButton.blit();
     }
 
     // Draw game state
     switch (field.getState()) {
     case GameState::CurrentPlay:
-        playersTurnsTexts[0].blit(_app.window);
+        playersTurnsTexts[0].blit();
         break;
 
     case GameState::OpponentPlay:
-        playersTurnsTexts[1].blit(_app.window);
+        playersTurnsTexts[1].blit();
         break;
 
     case GameState::CurrentWin:
-        firstWinText.blit(_app.window);
+        winText.blit();
         break;
 
     case GameState::OpponentWin:
-        secondWinText.blit(_app.window);
+        looseText.blit();
         break;
 
     case GameState::NobodyWin:
-        nobodyWinText.blit(_app.window);
+        nobodyWinText.blit();
         break;
     }
-    // Messages
-    disconnectedBox.blit(_app.window);
-    termianatedBox.blit(_app.window);
+    // Drawing buttons
+    exitButton.blit();
+    gameRestartButton.blit();
 
-    screamer.blit(_app.window);
+    // Drawing setting menu
+    settings.blit();
+
+    // Messages
+    disconnectedBox.blit();
+    termianatedBox.blit();
+
+    screamer.blit();
 
     // Bliting all to screen
-    _app.window.render();
+    window.render();
 }

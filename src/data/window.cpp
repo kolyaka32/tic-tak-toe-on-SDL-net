@@ -13,14 +13,14 @@
 #include "languages.hpp"
 
 
-Window::Window(const DataLoader& _loader, int _width, int _height, const LanguagedText _title)
+Window::Window(int _width, int _height, const LanguagedText _title)
 : width(_width),
 height(_height),
 titleText(_title),
 window(SDL_CreateWindow(titleText.getString().c_str(), width, height, 0)),
 renderer(SDL_CreateRenderer(window, NULL)),
-textures{_loader, renderer, texturesFilesNames},
-fonts{_loader, fontsFilesNames} {
+textures{renderer, texturesFilesNames},
+fonts{fontsFilesNames} {
     // Checking on correction of created objects
     #if CHECK_CORRECTION
     if (window == NULL) {

@@ -6,27 +6,36 @@
 #include "singleplayerGame.hpp"
 
 
-SinglePlayerGameCycle::SinglePlayerGameCycle(App& _app)
-: GameCycle(_app) {
+SinglePlayerGameCycle::SinglePlayerGameCycle()
+: GameCycle() {
     if(!isRestarted()) {
         // Starting game
         field.setState(GameState::CurrentPlay);
         field.setTextureOffset(0);
+        #if CHECK_ALL
+        SDL_Log("Start singleplayer game");
+        #endif
     }
 }
 
-bool SinglePlayerGameCycle::inputMouseDown(App& _app) {
-    if (GameCycle::inputMouseDown(_app)) {
+bool SinglePlayerGameCycle::inputMouseDown() {
+    if (GameCycle::inputMouseDown()) {
         return true;
     }
     if (gameRestartButton.in(mouse)) {
         // Making sound
-        _app.sounds.play(SND_RESET);
+        sounds.play(Sounds::Reset);
 
         // Restarting current game
+        #if CHECK_ALL
+        SDL_Log("Resetting game by upper button");
+        #endif
         field.reset();
         if (!firstTurn) {
-            _app.music.startFromCurrent(MUS_MAIN_CALM);
+            music.startFromCurrent(Music::MainCalm);
+            #if CHECK_ALL
+            SDL_Log("Stop combat music");
+            #endif
         }
         firstTurn = true;
         field.setState(GameState::CurrentPlay);
@@ -37,15 +46,18 @@ bool SinglePlayerGameCycle::inputMouseDown(App& _app) {
         // Check for game start
         if (menuRestartButton.in(mouse)) {
             // Making sound
-            _app.sounds.play(SND_RESET);
+            sounds.play(Sounds::Reset);
 
             // Restarting current game
             field.reset();
             field.setState(GameState::CurrentPlay);
             if (!firstTurn) {
-                _app.music.startFromCurrent(MUS_MAIN_CALM);
+                music.startFromCurrent(Music::MainCalm);
             }
             firstTurn = true;
+            #if CHECK_ALL
+            SDL_Log("Restarting game by menu button");
+            #endif
             return true;
         }
         if (menuExitButton.in(mouse)) {
@@ -56,11 +68,14 @@ bool SinglePlayerGameCycle::inputMouseDown(App& _app) {
     } else {
         // Normal turn
         if (field.tryClickSingle(mouse)) {
-            _app.sounds.play(SND_TURN);
+            sounds.play(Sounds::Turn);
             // Changing music theme
             if (firstTurn) {
-                _app.music.startFromCurrent(MUS_MAIN_COMBAT);
+                music.startFromCurrent(Music::MainCombat);
                 firstTurn = false;
+                #if CHECK_ALL
+                SDL_Log("Start combat music");
+                #endif
             }
         }
     }

@@ -9,5 +9,5 @@
 // Debuging modifiers
 #define DEBUG false
 #define CHECK_CORRECTION DEBUG
-#define CHECK_ALL false
+#define CHECK_ALL DEBUG
 #define ARCHIEVE_LOADING !DEBUG

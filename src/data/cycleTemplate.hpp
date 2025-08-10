@@ -20,23 +20,23 @@ class CycleTemplate {
     IdleTimer idleTimer{1000/60};  // Timer to idle in main cycle
 
  protected:
-    Mouse mouse;         // Position of mouse on screen
+    Mouse mouse;  // Position of mouse on screen
 
     // Cycle functions for cycle (should be overriden)
-    void getInput(App& app);                  // Getting all user input
-    virtual void update(App& app);            // Getting special objects update
-    virtual void draw(const App& app) const;  // Draw all need objects
+    void getInput();            // Getting all user input
+    virtual void update();      // Getting special objects update
+    virtual void draw() const;  // Draw all need objects
 
     // Subprograms for get need input
-    virtual bool inputMouseDown(App& app);                  // Actioning for mouse button pressing
-    virtual void inputMouseUp(App& app);                    // Actioning for mouse button unpressing
-    virtual void inputKeys(App& app, SDL_Keycode key);      // Actioning for any keys pressing
-    virtual void inputMouseWheel(App& app, float _wheelY);  // Actioning for scrolling wheel
-    virtual void inputText(App& app, const char* text);     // Actioning for typing text
+    virtual bool inputMouseDown();                // Actioning for mouse button pressing
+    virtual void inputMouseUp();                  // Actioning for mouse button unpressing
+    virtual void inputKeys(SDL_Keycode key);      // Actioning for any keys pressing
+    virtual void inputMouseWheel(float _wheelY);  // Actioning for scrolling wheel
+    virtual void inputText(const char* text);     // Actioning for typing text
 
  public:
     CycleTemplate();
-    void run(App& app);
+    void run();
     // Function for stop current running cycle
     static void stop();
     static void restart();
@@ -44,23 +44,24 @@ class CycleTemplate {
     static bool isAdditionalRestarted();
     // Function for starting new cycle with posible arguments
     template <class T, typename ...Args>
-    static void runCycle(App& app, const Args& ...args);
+    static void runCycle(const Args& ...args);
 };
 
 
 template <class T, typename ...Args>
-void CycleTemplate::runCycle(App& _app, const Args& ...args) {
+void CycleTemplate::runCycle(const Args& ...args) {
     restarting = false;
     additionalRestart = false;
 
     // Running current cycle, while restarting
     do {
         // Launching new cycle
-        T cycle(_app, args...);
-        cycle.run(_app);
-    } while (_app.isRunning() && (restarting | additionalRestart));
+        T cycle(args...);
+        cycle.run();
+    } while (App::isRunning() && (restarting | additionalRestart));
 
     // Restarting external running cycle for correct language change
+    restarting = false;
     additionalRestart = true;
     running = false;
 }

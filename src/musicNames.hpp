@@ -5,24 +5,19 @@
 
 #pragma once
 
-#include "data/preloaded/music.cpp"
-
 
 // Names of music tracks
-enum MUS_names {
+enum class Music {
     // Menu part
-    MUS_MENU,
+    Menu,
 
     // Game part
-    MUS_MAIN_CALM,
-    MUS_MAIN_COMBAT,
+    MainCalm,
+    MainCombat,
 
     // Global counter of all loaded sounds
-    MUS_count,
+    Count,
 };
 
-// Shortcut for music data class
-typedef MusicData<MUS_count> Music;
-
 // File names of the corresponding music
-extern const char* musicFilesNames[MUS_count];
+extern const char* musicFilesNames[unsigned(Music::Count)];

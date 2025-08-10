@@ -32,7 +32,8 @@ private:
     int count;            // Counter of filled cells
 
 protected:
-    void AImove();  // Move of computer
+    void checkSound();  // Function of playing sound after game end
+    void AImove();      // Move of computer
     int recursivelySolve(Uint8 round);  // Function for solve game in singleplayer recursively
     GameState checkWin(int X, int Y);  // Check, if anyone win after his turn, return who win
 
@@ -44,6 +45,7 @@ public:
     GameState gameState;
 
     //
+    Field();
     void reset();
     Cell getCell(int x, int y) const;
 

@@ -6,23 +6,26 @@
 #pragma once
 
 #include <SDL3_mixer/SDL_mixer.h>
-#include "loader/dataLoader.hpp"
+#include "loader/loader.hpp"
+#include "../../musicNames.hpp"
 
 
 // Class for play music
-template <unsigned count>
 class MusicData {
- private:
-    Mix_Music* music[count];
+private:
+    Mix_Music* music[unsigned(Music::Count)];
     Uint8 volume = 0;
-    void loadMusic(const DataLoader& loader, unsigned index, const char* name);
+    void loadMusic(Music index, const char* name);
 
- public:
-    MusicData(const DataLoader& loader, const char* names[count]);
+public:
+    MusicData();
     ~MusicData();
-    void start(unsigned name) const;
-    void startFading(unsigned name) const;
-    void startFromCurrent(unsigned name) const;
+    void start(Music name) const;
+    void startFading(Music name) const;
+    void startFromCurrent(Music name) const;
     void setVolume(unsigned volume);
     unsigned getVolume() const;
 };
+
+// Global system for launch music tracks
+extern MusicData music;

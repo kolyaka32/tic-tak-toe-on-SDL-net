@@ -12,22 +12,28 @@ char baseIP[12] = "127.0.0.1";
 char basePort[6] = "8000";
 
 
-ClientLobbyCycle::ClientLobbyCycle(App& _app)
-: BaseCycle(_app),
-enterIPText(_app.window, 0.5, 0.2, {"Enter IP:", "Введите IP:", "-", "Увядзіце IP:"}, 30, WHITE),
-enterIPField(_app.window, 0.5, 0.32, 20, baseIP),
-enterPortText(_app.window, 0.5, 0.5, {"Enter port:", "Введите порт:", "Port eingeben:", "Увядзіце порт:"}, 30, WHITE),
-enterPortField(_app.window, 0.5, 0.62, 20, basePort),
-connectButton(_app.window, 0.5, 0.78, {"Connect", "Присоединится", "Beitritt", "Далучыцца"}, 22, WHITE),
-pasteButton(_app.window, 0.5, 0.9, {"Paste the address", "Вставить адрес", "Kopierte Adresse", "Уставіць адрас"}, 22, WHITE) {
+ClientLobbyCycle::ClientLobbyCycle()
+: BaseCycle(),
+enterIPText(0.5, 0.2, {"Enter IP:", "Введите IP:", "-", "Увядзіце IP:"}, 30, WHITE),
+enterIPField(0.5, 0.32, 20, baseIP),
+enterPortText(0.5, 0.5, {"Enter port:", "Введите порт:", "Port eingeben:", "Увядзіце порт:"}, 30, WHITE),
+enterPortField(0.5, 0.62, 20, basePort),
+pasteButton(0.5, 0.75, {"Paste the address", "Вставить адрес", "Kopierte Adresse", "Уставіць адрас"}, 24, WHITE),
+connectButton(0.5, 0.9, {"Connect", "Присоединится", "Beitritt", "Далучыцца"}, 24, WHITE) {
     if (isAdditionalRestarted()) {
+        // Stopping cycle from launching after end of client game
         stop();
         return;
     }
+    #if CHECK_ALL
+    if (!isRestarted()) {
+        SDL_Log("Start client lobby");
+    }
+    #endif
 }
 
-bool ClientLobbyCycle::inputMouseDown(App& _app) {
-    if (BaseCycle::inputMouseDown(_app)) {
+bool ClientLobbyCycle::inputMouseDown() {
+    if (BaseCycle::inputMouseDown()) {
         return true;
     }
 
@@ -65,19 +71,19 @@ bool ClientLobbyCycle::inputMouseDown(App& _app) {
     return false;
 }
 
-void ClientLobbyCycle::inputMouseUp(App& app) {
+void ClientLobbyCycle::inputMouseUp() {
     settings.unClick();
     enterIPField.unclick();
     enterPortField.unclick(); 
 }
 
-void ClientLobbyCycle::inputKeys(App& app, SDL_Keycode key) {
-    enterIPField.type(key);
-    enterPortField.type(key);
+void ClientLobbyCycle::inputKeys(SDL_Keycode _key) {
+    enterIPField.type(_key);
+    enterPortField.type(_key);
 }
 
-void ClientLobbyCycle::update(App& _app) {
-    BaseCycle::update(_app);
+void ClientLobbyCycle::update() {
+    BaseCycle::update();
 
     // Updating typeboxes
     mouse.updatePos();
@@ -93,43 +99,43 @@ void ClientLobbyCycle::update(App& _app) {
         GameField::setWidth(client.lastPacket->getData<Uint8>(2));
         GameField::setWinWidth(client.lastPacket->getData<Uint8>(3));
         // Changing window size
-        _app.window.setWidth(GameField::getWindowWidth());
-        _app.window.setHeight(GameField::getWindowHeight());
+        window.setWidth(GameField::getWindowWidth());
+        window.setHeight(GameField::getWindowHeight());
         // Starting game
-        runCycle<ClientGameCycle, Connection&>(_app, client);
+        runCycle<ClientGameCycle, Connection&>(client);
         // Exiting to menu after game
         stop();
         return;
     }
 }
 
-void ClientLobbyCycle::inputText(App& app, const char* text) {
+void ClientLobbyCycle::inputText(const char* text) {
     // Inputing text
     enterIPField.writeString(text);
     enterPortField.writeString(text);
 }
 
-void ClientLobbyCycle::draw(const App& _app) const {
+void ClientLobbyCycle::draw() const {
     // Bliting background
-    _app.window.setDrawColor(BLACK);
-    _app.window.clear();
+    window.setDrawColor(BLACK);
+    window.clear();
 
     // Drawing buttons
-    exitButton.blit(_app.window);
+    exitButton.blit();
 
     // Draw main part
-    enterIPText.blit(_app.window);
-    enterPortText.blit(_app.window);
-    pasteButton.blit(_app.window);
-    connectButton.blit(_app.window);
+    enterIPText.blit();
+    enterPortText.blit();
+    pasteButton.blit();
+    connectButton.blit();
     enterIPField.blit();
     enterPortField.blit();
 
     // Drawing settings
-    settings.blit(_app.window);
+    settings.blit();
 
     // Bliting all to screen
-    _app.window.render();
+    window.render();
 }
 
 void ClientLobbyCycle::pasteFromClipboard() {

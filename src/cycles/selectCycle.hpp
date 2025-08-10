@@ -10,20 +10,21 @@
 
 // Cycle for select variants to start
 class SelectCycle : public BaseCycle {
- private:
+private:
     GUI::HighlightedStaticText titleText;
     GUI::TextButton singleplayerButton;
+    GUI::InfoBox bigFieldInfobox;
     GUI::TextButton twoPlayerButton;
     GUI::TextButton serverButton;
     GUI::TextButton connectButton;
-    GUI::InfoBox bigFieldInfobox;
+    GUI::TextButton fieldParametersButton;
 
     // New overrided cycle functions
-    bool inputMouseDown(App& app) override;
-    void inputKeys(App& app, SDL_Keycode key) override;
-    void update(App& app) override;
-    void draw(const App& app) const override;
+    bool inputMouseDown() override;
+    void inputKeys(SDL_Keycode key) override;
+    void update() override;
+    void draw() const override;
 
- public:
-    SelectCycle(const App& app);
+public:
+    SelectCycle();
 };

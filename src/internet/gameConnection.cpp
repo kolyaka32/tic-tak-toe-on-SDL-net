@@ -75,6 +75,8 @@ void GameConnection::checkConnectionStatus() {
         // Showing disconect message
         ConnectionLostBox::activate();
         disconnected = true;
+        // Playing sounds with disconnect
+        sounds.play(Sounds::Disconnect);
         return;
     }
 }
@@ -119,6 +121,8 @@ ConnectionCode GameConnection::checkNewMessage() {
         // Showing message of terminated connection
         TerminatedBox::activate();
         disconnected = true;
+        // Playing sounds with disconnect
+        sounds.play(Sounds::Disconnect);
         return ConnectionCode::Null;
 
     case ConnectionCode::Confirm:

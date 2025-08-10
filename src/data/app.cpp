@@ -10,11 +10,7 @@
 
 bool App::running = true;
 
-App::App(const LanguagedText _title)
-: music{loader, musicFilesNames},
-sounds{loader, soundsFilesNames},
-initFile(music, sounds),
-window{loader, GameField::getWindowWidth(), GameField::getWindowHeight(), _title} {
+App::App() {
     #if CHECK_CORRECTION
     SDL_Log("All loaded and created corretly");
     #endif

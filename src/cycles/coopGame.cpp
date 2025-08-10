@@ -7,26 +7,35 @@
 
 
 // Two player mode (standart game)
-TwoPlayerGameCycle::TwoPlayerGameCycle(const App& _app)
-: GameCycle(_app) {
+TwoPlayerGameCycle::TwoPlayerGameCycle()
+: GameCycle() {
     if (!isRestarted()) {
         // Starting game
         field.setState(GameState::CurrentPlay);
+        #if CHECK_ALL
+        SDL_Log("Start two player game");
+        #endif
     }
 }
 
-bool TwoPlayerGameCycle::inputMouseDown(App& _app) {
-    if (GameCycle::inputMouseDown(_app)) {
+bool TwoPlayerGameCycle::inputMouseDown() {
+    if (GameCycle::inputMouseDown()) {
         return true;
     }
     if (gameRestartButton.in(mouse)) {
         // Making sound
-        _app.sounds.play(SND_RESET);
+        sounds.play(Sounds::Reset);
 
         // Restarting current game
+        #if CHECK_ALL
+        SDL_Log("Restart game from upper button");
+        #endif
         field.reset();
         if (!firstTurn) {
-            _app.music.startFromCurrent(MUS_MAIN_CALM);
+            music.startFromCurrent(Music::MainCalm);
+            #if CHECK_ALL
+            SDL_Log("Stop combat music");
+            #endif
         }
         firstTurn = true;
         field.setTextureOffset(0);
@@ -38,11 +47,17 @@ bool TwoPlayerGameCycle::inputMouseDown(App& _app) {
         // Check for game start
         if (menuRestartButton.in(mouse)) {
             // Making sound
-            _app.sounds.play(SND_RESET);
+            sounds.play(Sounds::Reset);
             // Restarting current game
             field.reset();
+            #if CHECK_ALL
+            SDL_Log("Restart game from menu");
+            #endif
             if (!firstTurn) {
-                _app.music.startFromCurrent(MUS_MAIN_CALM);
+                music.startFromCurrent(Music::MainCalm);
+                #if CHECK_ALL
+                SDL_Log("Stop combat music");
+                #endif
             }
             firstTurn = true;
             field.setTextureOffset(0);
@@ -58,11 +73,14 @@ bool TwoPlayerGameCycle::inputMouseDown(App& _app) {
         // Normal turn
         if (field.tryClickTwo(mouse)) {
             // Making sound
-            _app.sounds.play(SND_TURN);
+            sounds.play(Sounds::Turn);
             // Changing music theme
             if (firstTurn) {
-                _app.music.startFromCurrent(MUS_MAIN_COMBAT);
+                music.startFromCurrent(Music::MainCombat);
                 firstTurn = false;
+                #if CHECK_ALL
+                SDL_Log("Start combat music");
+                #endif
             }
         }
     }

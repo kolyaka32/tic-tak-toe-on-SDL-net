@@ -19,9 +19,6 @@ void InitFile::loadSettings() {
     std::ifstream inSettings(SETTING_FILE);
     // Input string line
     std::string currentLine;
-    // Resetting values
-    GameField::setWidth(3);
-    GameField::setWinWidth(3);
 
     // Reading file until it end
     while (std::getline(inSettings, currentLine)) {

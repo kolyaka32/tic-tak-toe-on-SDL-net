@@ -7,7 +7,7 @@
 
 
 template <unsigned count>
-FontsData<count>::FontsData(const DataLoader& _loader, const char* _filesNames[count]) {
+FontsData<count>::FontsData(const char* _filesNames[count]) {
     // Resetting fonts array
     #if CHECK_CORRECTION
     for (unsigned i=0; i < count; ++i) {
@@ -17,7 +17,7 @@ FontsData<count>::FontsData(const DataLoader& _loader, const char* _filesNames[c
 
     // Loading all needed fonts
     for (unsigned i=0; i < count; ++i) {
-        loadFont(_loader, i, _filesNames[i]);
+        loadFont(i, _filesNames[i]);
     }
 
     // Checking massive on loading correction
@@ -39,8 +39,8 @@ FontsData<count>::~FontsData() {
 }
 
 template <unsigned count>
-void FontsData<count>::loadFont(const DataLoader& _loader, unsigned _index, const char* _name) {
-    SDL_IOStream* iodata = _loader.load(_name);
+void FontsData<count>::loadFont(unsigned _index, const char* _name) {
+    SDL_IOStream* iodata = dataLoader.load(_name);
 
     fonts[_index] = TTF_OpenFontIO(iodata, true, 20.);
 

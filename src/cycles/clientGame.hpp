@@ -11,18 +11,18 @@
 
 // Game cycle (for single player (special animation))
 class ClientGameCycle : public InternetCycle {
- private:
+private:
     GameConnection connection;
-    
+
     // Additional text
     GUI::StaticText waitText;
 
     // Main run functions
-    bool inputMouseDown(App& app) override;
-    void inputKeys(App& app, const SDL_Keycode key) override;
-    void update(App& app) override;
-    void draw(const App& app) const override;
+    bool inputMouseDown() override;
+    void inputKeys(const SDL_Keycode key) override;
+    void update() override;
+    void draw() const override;
 
- public:
-    ClientGameCycle(App& app, Connection& client);
+public:
+    ClientGameCycle(Connection& client);
 };

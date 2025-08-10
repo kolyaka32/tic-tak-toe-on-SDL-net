@@ -6,9 +6,9 @@
 #include "baseGUI.hpp"
 
 
-GUI::InfoBox::InfoBox(const Window& _target, float _X, float _Y, const LanguagedText texts,
+GUI::InfoBox::InfoBox(float _X, float _Y, const LanguagedText texts,
     float _size, Color _color, Aligment _aligment)
-: StaticText(_target, _X, _Y, texts, _size, _color, _aligment) {
+: HighlightedStaticText(_X, _Y, texts, 2, _size, _color, _aligment) {
     // Resetting transperance
     SDL_SetTextureAlphaMod(texture, 0);
 }

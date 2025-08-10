@@ -11,7 +11,7 @@
 
 // Game cycle with game part of server
 class ServerGameCycle : public InternetCycle {
- protected:
+protected:
     GameConnection connection;
 
     // Starting options
@@ -19,11 +19,11 @@ class ServerGameCycle : public InternetCycle {
     GUI::TextButton startSecond;
 
     // Main run functions
-    bool inputMouseDown(App& app) override;
-    void inputKeys(App& app, SDL_Keycode key);
-    void update(App& app) override;
-    void draw(const App& app) const override;
+    bool inputMouseDown() override;
+    void inputKeys(SDL_Keycode key);
+    void update() override;
+    void draw() const override;
 
- public:
-    ServerGameCycle(App& app, Connection& server);
+public:
+    ServerGameCycle(Connection& server);
 };

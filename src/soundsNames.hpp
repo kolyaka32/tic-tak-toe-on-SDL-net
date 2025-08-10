@@ -5,27 +5,24 @@
 
 #pragma once
 
-#include "data/preloaded/sounds.cpp"
-
 
 // Names of sound effects
-enum SND_names {
+enum class Sounds : unsigned {
     // Game part
-    SND_TURN,
-    SND_RESET,
+    Turn,
+    Reset,
+    Win,
+    Loose,
 
     // Internet connection part
-    SND_DISCONNECT,
+    Disconnect,
 
     // Screamer
-    SND_SCREAMER,
+    Screamer,
 
     // Global counter of all loaded sounds
-    SND_count,
+    Count,
 };
 
-// Shortcut for sounds data class
-typedef SoundsData<SND_count> Sounds;
-
 // File names of the corresponding sounds
-extern const char* soundsFilesNames[SND_count];
+extern const char* soundsFilesNames[unsigned(Sounds::Count)];

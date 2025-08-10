@@ -7,27 +7,27 @@
 
 
 // Slider class
-GUI::Slider::Slider(const Window& _target, float _X, float _Y, float _width, unsigned _startValue,
+GUI::Slider::Slider(float _X, float _Y, float _width, unsigned _startValue,
     IMG_names _lineImage, IMG_names _buttonImage, unsigned _max)
 : maxValue(_max) {
     // Getting need texture
-    texture = _target.getTexture(_lineImage);
-    textureButton = _target.getTexture(_buttonImage);
-    rect.w = _target.getWidth() * _width;
+    texture = window.getTexture(_lineImage);
+    textureButton = window.getTexture(_buttonImage);
+    rect.w = window.getWidth() * _width;
     rect.h = texture->h * rect.w / texture->w;
     buttonRect.w = textureButton->w* rect.w / texture->w;
     buttonRect.h = textureButton->h* rect.w / texture->w;
 
     // Setting it to need place
-    rect.x = _target.getWidth() * _X - rect.w / 2;
-    rect.y = _target.getHeight() * _Y - rect.h / 2;
-    buttonRect.y = _target.getHeight() * _Y - buttonRect.h / 2;
+    rect.x = window.getWidth() * _X - rect.w / 2;
+    rect.y = window.getHeight() * _Y - rect.h / 2;
+    buttonRect.y = window.getHeight() * _Y - buttonRect.h / 2;
     buttonRect.x = rect.x + _startValue - buttonRect.w / 2;
 }
 
-void GUI::Slider::blit(const Window& _target) const {
-    _target.blit(texture, rect);
-    _target.blit(textureButton, buttonRect);
+void GUI::Slider::blit() const {
+    window.blit(texture, rect);
+    window.blit(textureButton, buttonRect);
 }
 
 unsigned GUI::Slider::setValue(float _mouseX) {

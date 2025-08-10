@@ -6,8 +6,7 @@
 #include "initFile.hpp"
 
 
-InitFile::InitFile(Music& _music, Sounds& _sounds)
-: music(_music), sounds(_sounds) {
+InitFile::InitFile() {
     loadSettings();
 }
 
@@ -16,9 +15,9 @@ InitFile::~InitFile() {
 }
 
 const std::string InitFile::getText(const std::string _line) const {
-    return _line.substr(_line.rfind('=')+2);
+    return _line.substr(_line.rfind('=') + 2);
 }
 
 const unsigned InitFile::getValue(const std::string _line) const {
-    return std::stoi(_line.substr(_line.rfind('=')+2));
+    return std::stoi(_line.substr(_line.rfind('=') + 2));
 }

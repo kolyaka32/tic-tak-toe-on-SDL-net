@@ -6,25 +6,24 @@
 #include "music.hpp"
 
 
-template <unsigned count>
-MusicData<count>::MusicData(const DataLoader& _loader, const char* _names[count]){
+MusicData::MusicData(){
     // Resetting all tracks
     #if CHECK_CORRECTION
-    for (unsigned i=0; i < count; ++i) {
+    for (unsigned i=0; i < unsigned(Music::Count); ++i) {
         music[i] = nullptr;
     }
     #endif
 
     // Loading all needed music tracks
-    for (unsigned i=0; i < count; ++i) {
-        loadMusic(_loader, i, _names[i]);
+    for (unsigned i=0; i < unsigned(Music::Count); ++i) {
+        loadMusic(Music(i), musicFilesNames[i]);
     }
 
     // Checking massive on loading correction
     #if CHECK_CORRECTION
-    for (unsigned i=0; i < count; ++i) {
+    for (unsigned i=0; i < unsigned(Music::Count); ++i) {
         if (music[i] == NULL) {
-            throw DataLoadException("Music with name: " + std::string(_names[i]));
+            throw DataLoadException("Music with name: " + std::string(musicFilesNames[i]));
         }
     }
     #endif
@@ -33,51 +32,45 @@ MusicData<count>::MusicData(const DataLoader& _loader, const char* _names[count]
     setVolume(MIX_MAX_VOLUME/2);
 }
 
-template <unsigned count>
-MusicData<count>::~MusicData(){
+MusicData::~MusicData(){
     // Closing all tracks
-    for (unsigned i=0; i < count; ++i) {
+    for (unsigned i=0; i < unsigned(Music::Count); ++i) {
         Mix_FreeMusic(music[i]);
     }
 }
 
-template <unsigned count>
-void MusicData<count>::loadMusic(const DataLoader& _loader, unsigned _index, const char* _name) {
+void MusicData::loadMusic(Music _index, const char* _name) {
     // Load data of current music track
-    SDL_IOStream* iodata = _loader.load(_name);
+    SDL_IOStream* iodata = dataLoader.load(_name);
 
     // Loading track
-    music[_index] = Mix_LoadMUS_IO(iodata, true);
+    music[unsigned(_index)] = Mix_LoadMUS_IO(iodata, true);
 
     // Checking correction of loaded track
     #if CHECK_CORRECTION
-    if (music[_index] == nullptr) {
+    if (music[unsigned(_index)] == nullptr) {
         throw DataLoadException(_name);
     }
     #endif
 }
 
-template <unsigned count>
-void MusicData<count>::start(unsigned _index) const {
+void MusicData::start(Music _index) const {
     // Infinite playing selected music
-    Mix_PlayMusic(music[_index], -1);
+    Mix_PlayMusic(music[unsigned(_index)], -1);
 }
 
-template <unsigned count>
-void MusicData<count>::startFading(unsigned _index) const {
+void MusicData::startFading(Music _index) const {
     // Infinite playing selected music
-    Mix_FadeInMusic(music[_index], -1, 1000);
+    Mix_FadeInMusic(music[unsigned(_index)], -1, 1000);
 }
 
-template <unsigned count>
-void MusicData<count>::startFromCurrent(unsigned _index) const {
+void MusicData::startFromCurrent(Music _index) const {
     // Infinite playing selected music
     double currentPos = Mix_GetMusicPosition(nullptr);
-    Mix_FadeInMusicPos(music[_index], -1, 1000, currentPos);
+    Mix_FadeInMusicPos(music[unsigned(_index)], -1, 1000, currentPos);
 }
 
-template <unsigned count>
-void MusicData<count>::setVolume(unsigned _volume) {
+void MusicData::setVolume(unsigned _volume) {
     // Checking correction given volume
     #if CHECK_CORRECTION
     if (_volume/2 > MIX_MAX_VOLUME) {
@@ -88,7 +81,6 @@ void MusicData<count>::setVolume(unsigned _volume) {
     Mix_VolumeMusic(volume);
 }
 
-template <unsigned count>
-unsigned MusicData<count>::getVolume() const {
-    return volume*2;
+unsigned MusicData::getVolume() const {
+    return volume * 2;
 }

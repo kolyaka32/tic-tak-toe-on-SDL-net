@@ -12,8 +12,8 @@ GUI::GUItemplate::GUItemplate() {
 }
 
 // Template function for draw
-void GUI::GUItemplate::blit(const Window& _target) const {
-    _target.blit(texture, rect);
+void GUI::GUItemplate::blit() const {
+    window.blit(texture, rect);
 }
 
 // Template function for check, if mouse press in object

@@ -16,6 +16,7 @@
 class LoadException : public std::exception {
 protected:
     const char* message;
+
 public:
     LoadException() : message("Unknown error\n") {};
     LoadException(const std::string _message) : message(_message.std::string::c_str()) {};

@@ -17,11 +17,11 @@ protected:
     GUI::StaticText playersTurnsTexts[2];
     ConnectionLostBox disconnectedBox;
     TerminatedBox termianatedBox;
-    GUI::StaticText winText;
-    GUI::StaticText looseText;
+    GUI::HighlightedStaticText winText;
+    GUI::HighlightedStaticText looseText;
 
-    bool inputMouseDown(App& app) override;
+    bool inputMouseDown() override;
 
 public:
-    InternetCycle(const App& app);
+    InternetCycle();
 };

@@ -5,9 +5,6 @@
 
 #include "straightLoader.hpp"
 
-StraightLoader::StraightLoader() {}
-
-StraightLoader::~StraightLoader() {}
 
 SDL_IOStream* StraightLoader::load(const char* _fileName) const {
     // Creating modified name

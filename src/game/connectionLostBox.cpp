@@ -9,11 +9,11 @@
 
 bool ConnectionLostBox::active = false;
 
-ConnectionLostBox::ConnectionLostBox(const Window& _target)
-: mainText(_target, 0.5, 0.4, {"Connection lost", "Соединение потярено", "Verbindung verloren", "Злучэнне страчана"}, 2, 40, WHITE),
-reconnectButton(_target, 0.5, 0.5, {"Reconnect", "Переприсоединится", "Wiederverbinden", "Паўторна падлучыцца"}, 24, WHITE),
-closeButton(_target, 0.5, 0.6, {"Close", "Закрыть", "Schließen", "Зачыніць"}, 24, WHITE),
-background(_target, 0.5, 0.5, 0.82, 0.3, 20, 4) {}
+ConnectionLostBox::ConnectionLostBox()
+: mainText(0.5, 0.4, {"Connection lost", "Соединение потярено", "Verbindung verloren", "Злучэнне страчана"}, 2, 32, WHITE),
+reconnectButton(0.5, 0.5, {"Reconnect", "Переприсоединится", "Wiederverbinden", "Паўторна падлучыцца"}, 24, WHITE),
+closeButton(0.5, 0.6, {"Close", "Закрыть", "Schließen", "Зачыніць"}, 24, WHITE),
+background(0.5, 0.5, 0.82, 0.3, 20, 4) {}
 
 int ConnectionLostBox::click(const Mouse _mouse) {
     if (active) {
@@ -31,12 +31,12 @@ int ConnectionLostBox::click(const Mouse _mouse) {
     return 0;
 }
 
-void ConnectionLostBox::blit(const Window& _target) const {
+void ConnectionLostBox::blit() const {
     if (active) {
-        background.blit(_target);
-        closeButton.blit(_target);
-        reconnectButton.blit(_target);
-        mainText.blit(_target);
+        background.blit();
+        closeButton.blit();
+        reconnectButton.blit();
+        mainText.blit();
     }
 }
 
