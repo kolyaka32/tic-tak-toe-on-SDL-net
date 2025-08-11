@@ -20,8 +20,8 @@ winText(0.5, 0.35, {"Win", "Победа", "Sieg", "Перамога"}, 1, 32, W
     if (!isRestarted()) {
         disconnectedBox.reset();
         termianatedBox.reset();
-        logAdditional("Start internet cycle game");
     }
+    logAdditional("Start internet game cycle");
 }
 
 bool InternetCycle::inputMouseDown() {

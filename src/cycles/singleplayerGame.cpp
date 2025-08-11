@@ -12,8 +12,8 @@ SinglePlayerGameCycle::SinglePlayerGameCycle()
         // Starting game
         field.setState(GameState::CurrentPlay);
         field.setTextureOffset(0);
-        logAdditional("Start singleplayer game");
     }
+    logAdditional("Start singleplayer game cycle");
 }
 
 bool SinglePlayerGameCycle::inputMouseDown() {

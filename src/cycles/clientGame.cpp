@@ -10,7 +10,9 @@
 ClientGameCycle::ClientGameCycle(const Connection& _client)
 : InternetCycle(),
 connection(_client),
-waitText(0.5, 0.05, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}, 24) {}
+waitText(0.5, 0.05, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}, 24) {
+    logAdditional("Start client game cycle");
+}
 
 bool ClientGameCycle::inputMouseDown() {
     if (InternetCycle::inputMouseDown()) {

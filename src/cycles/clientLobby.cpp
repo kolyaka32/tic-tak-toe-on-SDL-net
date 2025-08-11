@@ -25,9 +25,7 @@ connectButton(0.5, 0.9, {"Connect", "Присоединится", "Beitritt", "�
         stop();
         return;
     }
-    if (!isRestarted()) {
-        logAdditional("Start client lobby");
-    }
+    logAdditional("Start client lobby cycle");
 }
 
 bool ClientLobbyCycle::inputMouseDown() {

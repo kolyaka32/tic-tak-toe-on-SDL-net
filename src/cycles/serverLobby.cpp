@@ -19,7 +19,6 @@ hideAddressText(0.5, 0.45, {"Hide address", "Скрыть адресс", "Adress
     // Resetting flag of showing address
     if (!isRestarted()) {
         showAddress = false;
-        logAdditional("Start server lobby");
     }
     if (isAdditionalRestarted()) {
         stop();
@@ -35,6 +34,7 @@ hideAddressText(0.5, 0.45, {"Hide address", "Скрыть адресс", "Adress
     } else {
         addressText.setValues("********");
     }
+    logAdditional("Start server lobby cycle");
 }
 
 bool ServerLobbyCycle::inputMouseDown() {

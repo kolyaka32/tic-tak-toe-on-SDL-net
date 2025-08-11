@@ -12,8 +12,8 @@ TwoPlayerGameCycle::TwoPlayerGameCycle()
     if (!isRestarted()) {
         // Starting game
         field.setState(GameState::CurrentPlay);
-        logAdditional("Start two player game");
     }
+    logAdditional("Start coop game cycle");
 }
 
 bool TwoPlayerGameCycle::inputMouseDown() {

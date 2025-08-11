@@ -15,6 +15,7 @@ startSecond(0.5, 0.55, {"Start as circle", "Начать за кружок", "F�
         // Sending applying initialsiation message
         connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::Init, field.getWidth(), field.getWinWidth());
     }
+    logAdditional("Start server game cycle");
 }
 
 bool ServerGameCycle::inputMouseDown() {
