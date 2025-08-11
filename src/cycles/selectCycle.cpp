@@ -23,6 +23,7 @@ connectButton(0.5, 0.75, {"Connect", "Присоединиться", "Beitreten"
 fieldParametersButton(0.5, 0.9, {"Field parameters", "Параметры поля", "Feld-Parameter", "Параметры поля"}, 24, WHITE) {
     // Starting menu song (if wasn't started)
     music.start(Music::Menu);
+    logAdditional("Start select cycle");
 }
 
 // Getting selected button
@@ -35,9 +36,7 @@ bool SelectCycle::inputMouseDown() {
             runCycle<SinglePlayerGameCycle>();
         } else {
             bigFieldInfobox.reset();
-            #if CHECK_ALL
-            SDL_Log("Can't run singleplayer game (field width = %u)", GameField::getWidth());
-            #endif
+            logAdditional("Can't run singleplayer game (field width = %u)", GameField::getWidth());
         }
         return true;
     }

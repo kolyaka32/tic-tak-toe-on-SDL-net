@@ -14,14 +14,13 @@ Client::Client()
     #if CHECK_CORRECTION
     // Adding some packet loss for better testing
     NET_SimulateDatagramPacketLoss(gettingSocket, CONNECTION_LOST_PERCENT);
-    SDL_Log("Client created, address: %s", getLocalIP());
     #endif
+
+    logAdditional("Client created, address: %s", getLocalIP());
 }
 
 Client::~Client() {
-    #if CHECK_CORRECTION
-    SDL_Log("Destroying client, closing net library");
-    #endif
+    logAdditional("Destroying client, closing net library");
 
     // Clearing rest data
     NET_DestroyDatagramSocket(gettingSocket);
@@ -34,17 +33,14 @@ Client::~Client() {
 }
 
 void Client::tryConnect(const char* _address, Uint16 _port) {
-    #if CHECK_CORRECTION
-    SDL_Log("Trying connect to: address: %s, port: %u", _address, _port);
-    #endif
+    logAdditional("Trying connect to: address: %s, port: %u", _address, _port);
+
     sendAddress = NET_ResolveHostname(_address);
     sendPort = _port;
 
     // Check, if address is incorrect
     if (sendAddress == nullptr) {
-        #if CHECK_ALL
-        SDL_Log("Can't find this address");
-        #endif
+        logAdditional("Can't find this address");
         return;
     }
 
@@ -53,15 +49,11 @@ void Client::tryConnect(const char* _address, Uint16 _port) {
 
     // Check, if get address
     if (NET_GetAddressStatus(sendAddress) != 1) {
-        #if CHECK_ALL
-        SDL_Log("Can't connect to this address");
-        #endif
+        logAdditional("Can't connect to this address");
         return;
     }
 
-    #if CHECK_ALL
-    SDL_Log("Sending initialasing packet");
-    #endif
+    logAdditional("Sending initialasing packet");
     // Sending some initialasing packet (for more chances)
     send(ConnectionCode::Init, 0);
     send(ConnectionCode::Init, 0);

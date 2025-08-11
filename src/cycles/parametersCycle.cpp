@@ -19,9 +19,7 @@ smallFieldButton(0.5, 0.51, {"Small field", "Маленькое поле", "Klei
 mediumFieldButton(0.5, 0.64, {"Medium field", "Среднее поле", "Mittleres Feld", "Сярэдняе поле"}, 24),
 bigFieldButton(0.5, 0.77, {"Big field", "Большое поле", "Großes Feld", "Вялікае поле"}, 24),
 hugeFieldButton(0.5, 0.9, {"Huge field", "Огромное поле", "Riesiges Feld", "Вялікае поле"}, 24) {
-    #if CHECK_ALL
-    SDL_Log("Start parameters selection cycle");
-    #endif
+    logAdditional("Start parameters selection cycle");
 }
 
 bool ParametersCycle::inputMouseDown() {
@@ -39,9 +37,7 @@ bool ParametersCycle::inputMouseDown() {
         window.setHeight(GameField::getWindowHeight());
         // Restarting cycle
         restart();
-        #if CHECK_ALL
-        SDL_Log("Setting game field width to %u", GameField::getWidth());
-        #endif
+        logAdditional("Setting game field width to %u", GameField::getWidth());
         return true;
     }
     if (winWidthTypeField.click(mouse)) {
@@ -51,9 +47,7 @@ bool ParametersCycle::inputMouseDown() {
         GameField::setWinWidth(newWinWidth);
         // Changing text (for correction)
         winWidthTypeField.setString(std::to_string(GameField::getWinWidth()).c_str());
-        #if CHECK_ALL
-        SDL_Log("Setting game field win width to %u", GameField::getWinWidth());
-        #endif
+        logAdditional("Setting game field win width to %u", GameField::getWinWidth());
         return true;
     }
     if (smallFieldButton.in(mouse)) {
@@ -134,7 +128,5 @@ void ParametersCycle::setParameter(int _width, int _winWidth) {
     window.setHeight(GameField::getWindowHeight());
     // Restarting cycle
     restart();
-    #if CHECK_ALL
-    SDL_Log("Setting game field width to %u, win width to %u", _width, _winWidth);
-    #endif
+    logAdditional("Setting game field width to %u, win width to %u", _width, _winWidth);
 }

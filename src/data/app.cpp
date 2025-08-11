@@ -10,9 +10,7 @@
 bool App::running = true;
 
 App::App() {
-    #if CHECK_CORRECTION
-    SDL_Log("All loaded and created corretly");
-    #endif
+    logImportant("All loaded and created corretly");
 }
 
 void App::stop() {

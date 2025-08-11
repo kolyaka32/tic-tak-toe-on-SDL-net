@@ -50,9 +50,7 @@ void GameCycle::inputKeys(SDL_Keycode key) {
 
         // Restarting game
         field.reset();
-        #if CHECK_ALL
-        SDL_Log("Restarting game by key");
-        #endif
+        logAdditional("Restarting game by key");
         return;
 
     case SDLK_Q:

@@ -23,14 +23,12 @@ Server::Server()
     #if CHECK_CORRECTION
     // Adding some packet loss for better testing
     NET_SimulateDatagramPacketLoss(gettingSocket, CONNECTION_LOST_PERCENT);
-    SDL_Log("Server created, address: %s, port: %u", getLocalIP(), currentPort);
     #endif
+    logAdditional("Server created, address: %s, port: %u", getLocalIP(), currentPort);
 }
 
 Server::~Server() {
-    #if CHECK_CORRECTION
-    SDL_Log("Destroying server, closing net library");
-    #endif
+    logAdditional("Destroying server, closing net library");
 
     // Clearing rest data
     NET_DestroyDatagramSocket(gettingSocket);

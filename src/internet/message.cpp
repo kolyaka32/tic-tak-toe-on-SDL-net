@@ -19,9 +19,7 @@ void Message::resend(const Connection& connection) {
 void Message::checkNeedResend(const Connection& _connection) {
     // Check, if get over timer
     if (getTime() > nextResend) {
-        #if CHECK_ALL
-        SDL_Log("Resending packet with code: %u, index: %u", packet.getData()[0], messageIndex);
-        #endif
+        logAdditional("Resending packet with code: %u, index: %u", packet.getData()[0], messageIndex);
         resend(_connection);
     }
 }

@@ -10,7 +10,9 @@
 ClientGameCycle::ClientGameCycle(const Connection& _client)
 : InternetCycle(),
 connection(_client),
-waitText(0.5, 0.05, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}, 24) {}
+waitText(0.5, 0.05, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}, 24) {
+    logAdditional("Start client game cycle");
+}
 
 bool ClientGameCycle::inputMouseDown() {
     if (InternetCycle::inputMouseDown()) {
@@ -53,10 +55,8 @@ void ClientGameCycle::update() {
     switch (connection.updateMessages()) {
     case ConnectionCode::GameTurn:
         if (connection.lastPacket->isBytesAvaliable(4)) {
-            #if CHECK_CORRECTION
-            SDL_Log("Turn of opponent player: from %u to %u",
+            logAdditional("Turn of opponent player: from %u to %u",
                 connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
-            #endif
             field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2),
                 connection.lastPacket->getData<Uint8>(3));
             // Making sound
@@ -73,16 +73,12 @@ void ClientGameCycle::update() {
 
         // Resetting game
         field.reset();
-        #if CHECK_CORRECTION
-        SDL_Log("Resetting game by connection");
-        #endif
+        logAdditional("Resetting game by connection");
         return;
 
     case ConnectionCode::GameStart:
         if (connection.lastPacket->isBytesAvaliable(3)) {
-            #if CHECK_CORRECTION
-            SDL_Log("Starting new round: %u", connection.lastPacket->getData<Uint8>(2));
-            #endif
+            logAdditional("Starting new round: %u", connection.lastPacket->getData<Uint8>(2));
             // Starting game
             switch (connection.lastPacket->getData<Uint8>(2)) {
             case Uint8(GameState::CurrentPlay):

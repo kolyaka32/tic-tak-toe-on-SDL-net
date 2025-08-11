@@ -8,7 +8,7 @@
 #include <SDL3/SDL_log.h>
 #include <stdexcept>
 #include <string>
-#include "../testing.hpp"
+#include "logger.hpp"
 
 
 // Custom exceptions
@@ -23,7 +23,7 @@ class LoadException : public std::exception {
     LoadException(const std::string _message) : message(_message.std::string::c_str()) {}
     ~LoadException() {}
     const char* what() const noexcept override {
-        SDL_Log(message);
+        logImportant(message);
         return message;
     };
 };

@@ -41,7 +41,8 @@ template <typename ...Args>
 void Connection::send(ConnectionCode _code, Uint8 index, Args ...args) {
     #if CHECK_CORRECTION
     if (sendAddress == nullptr || sendPort == 0) {
-        SDL_Log("Can't send packet at unspecified address");
+        logAdditional("Can't send packet at unspecified address");
+        return;
     }
     #endif
     // Creating new send packet

@@ -15,6 +15,7 @@ startSecond(0.5, 0.55, {"Start as circle", "Начать за кружок", "F�
         // Sending applying initialsiation message
         connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::Init, field.getWidth(), field.getWinWidth());
     }
+    logAdditional("Start server game cycle");
 }
 
 bool ServerGameCycle::inputMouseDown() {
@@ -30,9 +31,7 @@ bool ServerGameCycle::inputMouseDown() {
 
         // Clearing field
         field.reset();
-        #if CHECK_ALL
-        SDL_Log("Restart game by upper button");
-        #endif
+        logAdditional("Restart game by upper button");
         return true;
     }
     // Checking, if game start
@@ -43,9 +42,7 @@ bool ServerGameCycle::inputMouseDown() {
             field.setState(GameState::CurrentPlay);
             connection.sendConfirmed<Uint8>(ConnectionCode::GameStart, (Uint8)GameState::OpponentPlay);
             field.setTextureOffset(0);
-            #if CHECK_ALL
-            SDL_Log("Start game as cross (first)");
-            #endif
+            logAdditional("Start game as cross (first)");
             return true;
         }
         if (startSecond.in(mouse)) {
@@ -53,9 +50,7 @@ bool ServerGameCycle::inputMouseDown() {
             field.setState(GameState::OpponentPlay);
             connection.sendConfirmed<Uint8>(ConnectionCode::GameStart, (Uint8)GameState::CurrentPlay);
             field.setTextureOffset(1);
-            #if CHECK_ALL
-            SDL_Log("Start game as circle (second)");
-            #endif
+            logAdditional("Start game as circle (second)");
             return true;
         }
         if (menuExitButton.in(mouse)) {
@@ -88,9 +83,7 @@ void ServerGameCycle::inputKeys(SDL_Keycode _key) {
 
         // Clearing field
         field.reset();
-        #if CHECK_ALL
-        SDL_Log("Restart game by key");
-        #endif
+        logAdditional("Restart game by key");
         return;
     } else {
         GameCycle::inputKeys(_key);
@@ -104,10 +97,6 @@ void ServerGameCycle::update() {
     switch (connection.updateMessages()) {
     case ConnectionCode::GameTurn:
         if (connection.lastPacket->isBytesAvaliable(4)) {
-            #if CHECK_CORRECTION
-            SDL_Log("Turn of opponent player: from %u to %u",
-                connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
-            #endif
             // Making sound
             sounds.play(Sounds::Turn);
             music.startFromCurrent(Music::MainCombat);
@@ -115,6 +104,8 @@ void ServerGameCycle::update() {
             // Making turn
             field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2),
                 connection.lastPacket->getData<Uint8>(3));
+            logAdditional("Turn of opponent player: from %u to %u",
+                connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
         }
         return;
     }

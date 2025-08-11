@@ -31,9 +31,7 @@ template <typename ...Args>
 Message::Message(const Connection& _connection, ConnectionCode _code, Args&& ...args)
 : messageIndex(globalMessageIndex),
 packet(Uint8(_code), messageIndex, args...) {
-    #if CHECK_CORRECTION
-    SDL_Log("Firstly sending message with code: %u, index: %u", (Uint8)_code, messageIndex);
-    #endif
+    logAdditional("Firstly sending message with code: %u, index: %u", (Uint8)_code, messageIndex);
     // Firstly sending message
     resend(_connection);
 

@@ -1,5 +1,5 @@
 # The standard "Tic-tac-toe" game on c++ using SDL3
-[![en](https://img.shields.io/badge/lang-en-green.svg)](https://github.com/kolyaka32/tic-tak-toe-on-SDL-net/blob/main/README.md)  [![ru](https://img.shields.io/badge/lang-ru-green.svg)](https://github.com/kolyaka32/tic-tak-toe-on-SDL-net/blob/main/README-ru.md)
+[![en](https://img.shields.io/badge/lang-en-green.svg)](https://github.com/kolyaka32/tic-tak-toe-on-SDL-net/blob/master/README.md)  [![ru](https://img.shields.io/badge/lang-ru-green.svg)](https://github.com/kolyaka32/tic-tak-toe-on-SDL-net/blob/master/README-ru.md)
 
 This codebase implement standart tic-tac-toe game with cooperative and online mods.
 
