@@ -12,9 +12,7 @@ TwoPlayerGameCycle::TwoPlayerGameCycle()
     if (!isRestarted()) {
         // Starting game
         field.setState(GameState::CurrentPlay);
-        #if CHECK_ALL
-        SDL_Log("Start two player game");
-        #endif
+        logAdditional("Start two player game");
     }
 }
 
@@ -31,9 +29,7 @@ bool TwoPlayerGameCycle::inputMouseDown() {
         field.reset();
         field.setTextureOffset(0);
         field.setState(GameState::CurrentPlay);
-        #if CHECK_ALL
-        SDL_Log("Restart game from upper button");
-        #endif
+        logAdditional("Restart game from upper button");
         return true;
     }
     // Checking, if game start
@@ -48,9 +44,7 @@ bool TwoPlayerGameCycle::inputMouseDown() {
             field.reset();
             field.setTextureOffset(0);
             field.setState(GameState::CurrentPlay);
-            #if CHECK_ALL
-            SDL_Log("Restart game from menu");
-            #endif
+            logAdditional("Restart game from menu");
             return true;
         }
         if (menuExitButton.in(mouse)) {

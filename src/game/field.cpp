@@ -264,23 +264,17 @@ void Field::checkSound() {
     switch (gameState) {
     case GameState::CurrentWin:
         sounds.play(Sounds::Win);
-        #if CHECK_ALL
-        SDL_Log("Current win");
-        #endif
+        logAdditional("Current win");
         break;
 
     case GameState::OpponentWin:
         sounds.play(Sounds::Loose);
-        #if CHECK_ALL
-        SDL_Log("Opponent win");
-        #endif
+        logAdditional("Opponent win");
         break;
 
     case GameState::NobodyWin:
         sounds.play(Sounds::Loose);
-        #if CHECK_ALL
-        SDL_Log("Nobody win");
-        #endif
+        logAdditional("Nobody win");
         break;
     }
 }

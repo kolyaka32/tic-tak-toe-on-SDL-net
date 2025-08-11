@@ -35,9 +35,7 @@ bool SelectCycle::inputMouseDown() {
             runCycle<SinglePlayerGameCycle>();
         } else {
             bigFieldInfobox.reset();
-            #if CHECK_ALL
-            SDL_Log("Can't run singleplayer game (field width = %u)", GameField::getWidth());
-            #endif
+            logAdditional("Can't run singleplayer game (field width = %u)", GameField::getWidth());
         }
         return true;
     }

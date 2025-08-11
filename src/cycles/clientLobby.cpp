@@ -25,11 +25,9 @@ connectButton(0.5, 0.9, {"Connect", "Присоединится", "Beitritt", "�
         stop();
         return;
     }
-    #if CHECK_ALL
     if (!isRestarted()) {
-        SDL_Log("Start client lobby");
+        logAdditional("Start client lobby");
     }
-    #endif
 }
 
 bool ClientLobbyCycle::inputMouseDown() {
@@ -58,9 +56,7 @@ bool ClientLobbyCycle::inputMouseDown() {
         memcpy(portTextCorrected, enterPortField.getString(), 7);
         for (char* c = portTextCorrected; *c; ++c) {
             if (*c < '0' || *c > '9') {
-                #if CHECK_ALL
-                SDL_Log("Couldn't connect - wrong port");
-                #endif
+                logAdditional("Couldn't connect - wrong port");
                 return true;
             }
         }
@@ -144,9 +140,7 @@ void ClientLobbyCycle::pasteFromClipboard() {
 
     // Check text on correction
     if (clipboard == nullptr) {
-        #if CHECK_ALL
-        SDL_Log("Couldn't get clipboard");
-        #endif
+        logAdditional("Couldn't get clipboard");
         return;
     }
     // Find IP text (first part)
@@ -158,9 +152,7 @@ void ClientLobbyCycle::pasteFromClipboard() {
         }
         // Checking coorection of string
         if (clipboard[i] != '.' && (clipboard[i] < '0' || clipboard[i] > '9')) {
-            #if CHECK_ALL
-            SDL_Log("Wrong clipboard: %s", clipboard);
-            #endif
+            logAdditional("Wrong clipboard: %s", clipboard);
             SDL_free(clipboard);
             return;
         }
@@ -174,9 +166,7 @@ void ClientLobbyCycle::pasteFromClipboard() {
             break;
         }
     }
-    #if CHECK_ALL
-    SDL_Log("From clipboard: IP: %s, port: %s", clipboard, clipboard+i);
-    #endif
+    logAdditional("From clipboard: IP: %s, port: %s", clipboard, clipboard+i);
     enterIPField.setString(clipboard);
     enterPortField.setString(clipboard+i);
     SDL_free(clipboard);

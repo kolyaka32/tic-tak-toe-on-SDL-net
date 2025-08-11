@@ -28,12 +28,12 @@ void Screamer::update() {
     if (SDL_rand(60*60) == 0) {
         // Checking, if not already activated
         if (!active) {
-            active = true;
             // Playing 'scary' sound
             sounds.play(Sounds::Screamer);
-            #if CHECK_ALL
-            SDL_Log("Show screamer");
-            #endif
+
+            // Changing state
+            active = true;
+            logAdditional("Show screamer");
         }
     }
 }

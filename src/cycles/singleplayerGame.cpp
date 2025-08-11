@@ -12,9 +12,7 @@ SinglePlayerGameCycle::SinglePlayerGameCycle()
         // Starting game
         field.setState(GameState::CurrentPlay);
         field.setTextureOffset(0);
-        #if CHECK_ALL
-        SDL_Log("Start singleplayer game");
-        #endif
+        logAdditional("Start singleplayer game");
     }
 }
 
@@ -30,9 +28,7 @@ bool SinglePlayerGameCycle::inputMouseDown() {
         // Restarting current game
         field.reset();
         field.setState(GameState::CurrentPlay);
-        #if CHECK_ALL
-        SDL_Log("Resetting game by upper button");
-        #endif
+        logAdditional("Resetting game by upper button");
         return true;
     }
     // Checking, if game start
@@ -46,9 +42,7 @@ bool SinglePlayerGameCycle::inputMouseDown() {
             field.reset();
             field.setState(GameState::CurrentPlay);
             music.startFromCurrent(Music::MainCalm);
-            #if CHECK_ALL
-            SDL_Log("Restarting game by menu button");
-            #endif
+            logAdditional("Restarting game by menu button");
             return true;
         }
         if (menuExitButton.in(mouse)) {

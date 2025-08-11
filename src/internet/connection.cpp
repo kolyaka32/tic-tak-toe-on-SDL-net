@@ -67,7 +67,8 @@ ConnectionCode Connection::getCode() {
 void Connection::send(const SendPacket& _packet) const {
     #if CHECK_CORRECTION
     if (sendAddress == nullptr || sendPort == 0) {
-        SDL_Log("Can't send packet at unspecified address");
+        logAdditional("Can't send packet at unspecified address");
+        return;
     }
     #endif
     // Sending it

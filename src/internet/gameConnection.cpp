@@ -14,17 +14,13 @@ GameConnection::GameConnection(const Connection& _connection)
     // Resetting timers
     needResendApplyConnection = getTime();
     needDisconect = getTime() + MESSAGE_GET_TIMEOUT;
-    #if CHECK_CORRECTION
-    SDL_Log("Created internet game connection, sending to: %s:%u", NET_GetAddressString(sendAddress), sendPort);
-    #endif
+    logImportant("Created internet game connection, sending to: %s:%u", NET_GetAddressString(sendAddress), sendPort);
 }
 
 GameConnection::~GameConnection() {
     // Checking on game restart
     if (!CycleTemplate::isRestarted()) {
-        #if CHECK_CORRECTION
-        SDL_Log("Destroying game connection");
-        #endif
+        logAdditional("Destroying game connection");
         // Sending message with quiting connection
         send(ConnectionCode::Quit, 0);
 
@@ -68,15 +64,13 @@ void GameConnection::checkReconnecting() {
 void GameConnection::checkConnectionStatus() {
     // Check, if getting over timer
     if (getTime() > needDisconect) {
+        // Playing sounds with disconnect
+        sounds.play(Sounds::Disconnect);
         // Disconneting, as lost connection
-        #if CHECK_ALL
-        SDL_Log("Connection lost");
-        #endif
+        logAdditional("Connection lost");
         // Showing disconect message
         ConnectionLostBox::activate();
         disconnected = true;
-        // Playing sounds with disconnect
-        sounds.play(Sounds::Disconnect);
         return;
     }
 }
@@ -104,11 +98,9 @@ ConnectionCode GameConnection::checkNewMessage() {
     needDisconect = getTime() + MESSAGE_GET_TIMEOUT;
 
     // Writing getted data for debug
-    #if CHECK_ALL
-    SDL_Log("Get packet with %u bytes, from %s, port: %u, code: %u, index: %u",
+    logAdditional("Get packet with %u bytes, from %s, port: %u, code: %u, index: %u",
         recievedDatagram->buflen, NET_GetAddressString(recievedDatagram->addr),
         recievedDatagram->port, (Uint8)code, lastPacket->getData<Uint8>(1));
-    #endif
 
     // Getting index of message
     Uint8 index = lastPacket->getData<Uint8>();
@@ -117,14 +109,12 @@ ConnectionCode GameConnection::checkNewMessage() {
     switch (code) {
     case ConnectionCode::Quit:
         // Connection forced terminatted
-        #if CHECK_ALL
-        SDL_Log("Connection terminatted");
-        #endif
+        // Playing sounds with disconnect
+        sounds.play(Sounds::Disconnect);
         // Showing message of terminated connection
         TerminatedBox::activate();
         disconnected = true;
-        // Playing sounds with disconnect
-        sounds.play(Sounds::Disconnect);
+        logAdditional("Connection terminatted");
         return ConnectionCode::Null;
 
     case ConnectionCode::Confirm:
@@ -154,7 +144,7 @@ ConnectionCode GameConnection::checkNewMessage() {
             getIndexes.add(index);
             #if CHECK_CORRECTION
             if (code != ConnectionCode::Null) {
-                SDL_Log("Get data with code: %u, index: %u", (Uint8)code, index);
+                logAdditional("Get data with code: %u, index: %u", (Uint8)code, index);
             }
             #endif
             // In other cases - external updation
