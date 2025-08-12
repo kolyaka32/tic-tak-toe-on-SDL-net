@@ -29,7 +29,7 @@ bool ParametersCycle::inputMouseDown() {
     // Connection part
     if (widthTypeField.click(mouse)) {
         // Checking correction of text
-        int newWidth = *widthTypeField.getString() - '0';
+        int newWidth = (*widthTypeField.getString()) - '0';
         // Changing size
         GameField::setWidth(newWidth);
         // Changing window size
@@ -42,7 +42,7 @@ bool ParametersCycle::inputMouseDown() {
     }
     if (winWidthTypeField.click(mouse)) {
         // Checking correction of text
-        int newWinWidth = *winWidthTypeField.getString() - '0';
+        int newWinWidth = (*winWidthTypeField.getString()) - '0';
         // Changing size
         GameField::setWinWidth(newWinWidth);
         // Changing text (for correction)
@@ -120,13 +120,19 @@ void ParametersCycle::draw() const {
 }
 
 void ParametersCycle::setParameter(int _width, int _winWidth) {
-    // Changing parameters of field
-    GameField::setWidth(_width);
+    // Check, if need to change width
+    if (GameField::getWidth() != _width) {
+        // Changing parameters of field
+        GameField::setWidth(_width);
+
+        // Changing window size
+        window.setWidth(GameField::getWindowWidth());
+        window.setHeight(GameField::getWindowHeight());
+        // Restarting cycle
+        restart();
+        logAdditional("Setting game field width to %u", GameField::getWidth());
+    }
+    // Update win width
     GameField::setWinWidth(_winWidth);
-    // Changing window size
-    window.setWidth(GameField::getWindowWidth());
-    window.setHeight(GameField::getWindowHeight());
-    // Restarting cycle
-    restart();
-    logAdditional("Setting game field width to %u, win width to %u", _width, _winWidth);
+    logAdditional("Setting game field win width to %u", GameField::getWinWidth());
 }

@@ -85,6 +85,9 @@ void ServerLobbyCycle::update() {
         // Exiting to menu after game
         stop();
         return;
+
+    default:
+        break;
     }
 }
 

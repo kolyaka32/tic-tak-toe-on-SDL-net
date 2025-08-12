@@ -80,6 +80,9 @@ void InitFile::saveSettings() {
     case Language::Bellarusian:
         outSettings << "belarusian\n";
         break;
+
+    default:
+        break;
     }
 
     // Writing music and sounds volumes

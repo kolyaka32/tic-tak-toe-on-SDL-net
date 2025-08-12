@@ -108,6 +108,9 @@ void GameCycle::draw() const {
     case GameState::NobodyWin:
         nobodyWinText.blit();
         break;
+
+    default:
+        break;
     }
     // Drawing setting menu
     settings.blit();

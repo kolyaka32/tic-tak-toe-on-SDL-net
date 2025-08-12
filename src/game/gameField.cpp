@@ -83,6 +83,9 @@ void GameField::blit() const {
             case Cell::Opponent:
                 window.blit(Textures::RedCircle - offset, dest);
                 break;
+
+            default:
+                break;
             }
         }
     }
@@ -111,7 +114,7 @@ void GameField::setWinWidth(int _winWidth) {
 
 int GameField::getWindowWidth() {
     int windowWidth = field.width * CELL_SIDE + (field.width - 1) * SEPARATOR;
-    upperLineHeight = windowWidth*0.1;
+    upperLineHeight = windowWidth * 0.1;
     return windowWidth;
 }
 

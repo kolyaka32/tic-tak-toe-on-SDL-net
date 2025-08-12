@@ -87,11 +87,7 @@ void CycleTemplate::update() {}
 
 
 // Getting input
-// Example for getting mouse input
 bool CycleTemplate::inputMouseDown() {
-    /*if (startOptions[0].in(mouse)) {
-        return true;
-    }*/
    return false;
 }
 

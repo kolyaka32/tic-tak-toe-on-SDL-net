@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "../../../testing.hpp"
+#include "../../logger.hpp"
 
 
 // Load needed loader, depend on teting

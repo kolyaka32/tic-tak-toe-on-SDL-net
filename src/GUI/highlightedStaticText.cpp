@@ -30,7 +30,8 @@ GUI::HighlightedStaticText::HighlightedStaticText(float _X, float _Y,
     texture = window.createTextureAndFree(surface);
 
     // Updating rect height for correct button
-    SDL_GetTextureSize(texture, &rect.w, &rect.h);
+    rect.w = texture->w;
+    rect.h = texture->h;
     rect.x = SDL_roundf(window.getWidth() * _X - (rect.w * (unsigned)_aligment / 2));
     rect.y = SDL_roundf(window.getHeight() * _Y - rect.h / 2);
 }

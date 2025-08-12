@@ -15,8 +15,8 @@ GUI::Slider::Slider(float _X, float _Y, float _width, unsigned _startValue,
     textureButton = window.getTexture(_buttonImage);
     rect.w = window.getWidth() * _width;
     rect.h = texture->h * rect.w / texture->w;
-    buttonRect.w = textureButton->w* rect.w / texture->w;
-    buttonRect.h = textureButton->h* rect.w / texture->w;
+    buttonRect.w = textureButton->w * rect.w / texture->w;
+    buttonRect.h = textureButton->h * rect.w / texture->w;
 
     // Setting it to need place
     rect.x = window.getWidth() * _X - rect.w / 2;
@@ -38,7 +38,7 @@ unsigned GUI::Slider::setValue(float _mouseX) {
     setMax(buttonRect.x, rect.x + rect.w);
     setMin(buttonRect.x, rect.x);
 
-    unsigned value = (buttonRect.x - rect.x)/rect.w*maxValue;
+    unsigned value = (buttonRect.x - rect.x)*maxValue/rect.w;
     buttonRect.x -= buttonRect.w / 2;
 
     return value;
@@ -46,9 +46,9 @@ unsigned GUI::Slider::setValue(float _mouseX) {
 
 unsigned GUI::Slider::scroll(float _wheelY) {
     if (_wheelY > 0) {
-        return setValue(buttonRect.x + buttonRect.w/2 + 8);
+        return setValue(buttonRect.x + buttonRect.w/2 + rect.w / 16);
     } else {
-        return setValue(buttonRect.x + buttonRect.w/2 - 8);
+        return setValue(buttonRect.x + buttonRect.w/2 - rect.w / 16);
     }
     return 0;
 }

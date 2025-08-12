@@ -33,10 +33,10 @@ class LibararyLoadException : LoadException {
  public:
     LibararyLoadException(const std::string _library = "")
         : LoadException("Error with loading library: " + _library + '\n') {
-        SDL_LogCritical(SDL_LOG_PRIORITY_CRITICAL, message);
+        SDL_LogCritical(SDL_LOG_PRIORITY_CRITICAL, "%s", message);
     }
     const char* what() const noexcept override {
-        SDL_LogCritical(SDL_LOG_PRIORITY_CRITICAL, message);
+        SDL_LogCritical(SDL_LOG_PRIORITY_CRITICAL, "%s", message);
         return message;
     }
 };
@@ -46,10 +46,10 @@ class DataLoadException : LoadException {
  public:
     DataLoadException(const std::string _dataType = "")
         : LoadException("Error with load file: " + _dataType + '\n') {
-        SDL_LogError(SDL_LOG_PRIORITY_ERROR, message);
+        SDL_LogError(SDL_LOG_PRIORITY_ERROR, "%s", message);
     }
     const char* what() const noexcept override {
-        SDL_LogError(SDL_LOG_PRIORITY_ERROR, message);
+        SDL_LogError(SDL_LOG_PRIORITY_ERROR, "%s", message);
         return message;
     }
 };

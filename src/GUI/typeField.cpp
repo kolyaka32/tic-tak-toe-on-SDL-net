@@ -223,13 +223,6 @@ void GUI::TypeField<bufferSize>::type(SDL_Keycode _code) {
 
     // Switching between extra input options
     switch (_code) {
-    // Function for exit editing
-    case SDLK_ESCAPE:
-        showCaret = false;
-        selected = false;
-        selectLength = 0;
-        break;
-
     // Functions for deleting text
     case SDLK_BACKSPACE:
         // Coping after caret

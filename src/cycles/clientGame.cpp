@@ -95,6 +95,9 @@ void ClientGameCycle::update() {
             }
         }
         return;
+
+    default:
+        return;
     }
 }
 

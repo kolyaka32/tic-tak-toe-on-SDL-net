@@ -6,6 +6,7 @@
 #pragma once
 
 #include <SDL3/SDL_timer.h>
+#include "logger.hpp"
 
 
 // Macros for better getting time

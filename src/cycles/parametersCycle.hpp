@@ -23,10 +23,10 @@ class ParametersCycle : public BaseCycle {
     GUI::TextButton hugeFieldButton;
 
     bool inputMouseDown() override;
-    void inputMouseUp();
-    void inputKeys(SDL_Keycode _key);
-    void update();
-    void inputText(const char* text);
+    void inputMouseUp() override;
+    void inputKeys(SDL_Keycode _key) override;
+    void update() override;
+    void inputText(const char* text) override;
     void draw() const override;
 
     // Shortcut functions

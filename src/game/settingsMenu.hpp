@@ -10,7 +10,7 @@
 
 
 // Class of menu with game settings
-class SettingsMenu : public GUI::Template {
+class SettingsMenu {
  private:
     static bool active;       // Flag of showing current menu
     timer nextSound = 0;      // Time to play next sound
@@ -34,7 +34,7 @@ class SettingsMenu : public GUI::Template {
 
  public:
     SettingsMenu();
-    void blit() const override;
+    void blit() const;
     bool click(const Mouse mouse);
     void unClick();
     void scroll(const Mouse mouse, float wheelY);

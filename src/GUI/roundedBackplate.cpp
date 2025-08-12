@@ -20,7 +20,6 @@ GUI::Backplate::Backplate(const SDL_FRect& _rect, float _rad, float _bor, Color 
 
     // Setting render target to this texture
     window.setRenderTarget(texture);
-    window.setBlendMode(texture, SDL_BLENDMODE_BLEND);
 
     // Drawing back part
     window.setDrawColor(_backColor);

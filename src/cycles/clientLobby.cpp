@@ -14,7 +14,7 @@ char basePort[6] = "8000";
 
 ClientLobbyCycle::ClientLobbyCycle()
 : BaseCycle(),
-enterIPText(0.5, 0.2, {"Enter IP:", "Введите IP:", "-", "Увядзіце IP:"}, 30, WHITE),
+enterIPText(0.5, 0.2, {"Enter IP:", "Введите IP:", "Geben Sie die IP ein:", "Увядзіце IP:"}, 30, WHITE),
 enterIPField(0.5, 0.32, 20, baseIP),
 enterPortText(0.5, 0.5, {"Enter port:", "Введите порт:", "Port eingeben:", "Увядзіце порт:"}, 30, WHITE),
 enterPortField(0.5, 0.62, 20, basePort),
@@ -99,6 +99,9 @@ void ClientLobbyCycle::update() {
         runCycle<ClientGameCycle, Connection&>(client);
         // Exiting to menu after game
         stop();
+        return;
+
+    default:
         return;
     }
 }

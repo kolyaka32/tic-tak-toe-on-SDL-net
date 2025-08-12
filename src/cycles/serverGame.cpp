@@ -108,6 +108,9 @@ void ServerGameCycle::update() {
                 connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
         }
         return;
+
+    default:
+        break;
     }
 }
 
@@ -150,6 +153,9 @@ void ServerGameCycle::draw() const {
 
     case GameState::NobodyWin:
         nobodyWinText.blit();
+        break;
+
+    default:
         break;
     }
     // Drawing buttons
