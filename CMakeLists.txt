@@ -25,8 +25,8 @@ find_package(SDL3_image REQUIRED)
 find_package(SDL3_ttf REQUIRED)
 find_package(SDL3_mixer REQUIRED)
 find_package(SDL3_net REQUIRED)
-find_package(ZLIB)
+find_package(libzip)
 
 # Link to the actual SDL3 library.
 target_link_libraries(${PROJECT_NAME} PRIVATE SDL3_net::SDL3_net SDL3_mixer::SDL3_mixer SDL3_ttf::SDL3_ttf SDL3_image::SDL3_image SDL3::SDL3)
-target_link_libraries(${PROJECT_NAME} PRIVATE ZLIB::ZLIB)
+target_link_libraries(${PROJECT_NAME} PRIVATE libzip::zip)
