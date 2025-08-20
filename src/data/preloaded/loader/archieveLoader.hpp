@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <zip.h>
+#include <zlib.h>
 #include "dataLoader.hpp"
 
 
@@ -15,7 +15,7 @@
 // Implimentation of loader for arcives
 class ArchieveLoader : public DataLoader {
  private:
-    zip_t* archive;  // Archive, where data is located
+    // zip_t* archive;  // Archive, where data is located
 
  public:
     ArchieveLoader();
