@@ -13,9 +13,9 @@ class ParametersCycle : public BaseCycle {
  private:
     GUI::HighlightedStaticText titleText;
     GUI::HighlightedStaticText widthText;
-    GUI::TypeField<1> widthTypeField;
+    GUI::TypeBox<1> widthTypeField;
     GUI::HighlightedStaticText winWidthText;
-    GUI::TypeField<1> winWidthTypeField;
+    GUI::TypeBox<1> winWidthTypeField;
 
     GUI::TextButton smallFieldButton;
     GUI::TextButton mediumFieldButton;

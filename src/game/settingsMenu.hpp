@@ -18,7 +18,7 @@ class SettingsMenu : GUI::Template {
     // Button for enter and quit settings menu
     const GUI::ImageButton settingButton;
     // Background plate
-    const GUI::Backplate background;
+    const GUI::RoundedBackplate background;
     // Title
     GUI::HighlightedStaticText titleText;
     // Flags for select language

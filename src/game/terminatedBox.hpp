@@ -18,7 +18,7 @@ class TerminatedBox {
     // Button for close this box
     const GUI::TextButton closeButton;
     // Background plate for better visability
-    const GUI::Backplate background;
+    const GUI::RoundedBackplate background;
 
  public:
     TerminatedBox(const Window& window);

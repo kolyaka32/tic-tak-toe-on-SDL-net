@@ -38,7 +38,7 @@ namespace GUI {
      public:
         TextureTemplate(const Window& window);
         void blit() const override;
-        bool in(const Mouse mouse) const;
+        virtual bool in(const Mouse mouse) const;
     };
 
 
@@ -114,14 +114,25 @@ namespace GUI {
     };
 
 
-    // Class of backplate for better understability
-    class Backplate : public TextureTemplate {
+    // Class of rounded backplate for better understability
+    class RoundedBackplate : public TextureTemplate {
      public:
-        Backplate(const Window& window, float centerX, float centerY, float width, float height,
+        RoundedBackplate(const Window& window, float centerX, float centerY, float width, float height,
             float radius, float border, Color frontColor = GREY, Color backColor = BLACK);
-        Backplate(const Window& window, const SDL_FRect& rect, float radius, float border,
+        RoundedBackplate(const Window& window, const SDL_FRect& rect, float radius, float border,
             Color frontColor = GREY, Color backColor = BLACK);
-        ~Backplate();
+        ~RoundedBackplate();
+    };
+
+
+    // Class with rectangular backplate for typeBox
+    class RectBackplate : public TextureTemplate {
+     public:
+        RectBackplate(const Window& window, float centerX, float centerY, float width, float height,
+            float border, Color frontColor = GREY, Color backColor = BLACK);
+        RectBackplate(const Window& window, const SDL_FRect& rect,
+            float border, Color frontColor = GREY, Color backColor = BLACK);
+        ~RectBackplate();
     };
 
 
@@ -181,7 +192,6 @@ namespace GUI {
         const char* getString();             // Function of getting typed string
         void setString(const char* string);  // Function for replace text with new string
         void blit() const override;          // Function for draw at screen
-        bool in(const Mouse mouse) const;    // Function of checking pressing
     };
 
 
@@ -189,22 +199,20 @@ namespace GUI {
     template <unsigned bufferSize = 16>
     class TypeBox : public TypeField<bufferSize> {
      private:
-        // Backplate part
-        SDL_Texture* backTexture;  // Texture of backplate
-        const SDL_FRect backRect;  // Rect of backplate
+        RectBackplate backplate;
 
      public:
         TypeBox(const Window& window, float posX, float posY, float height, const char *startText = "",
             Aligment aligment = Aligment::Midle, unsigned frameWidth = 2, Color textColor = BLACK);
-        ~TypeBox();
         void blit() const override;  // Function for draw inputting text with backplate
+        bool in(const Mouse mouse) const override;
     };
 
 
     // Class of buttons with text on it
     class TextButton : public HighlightedStaticText {
      private:
-        const Backplate backplate;
+        const RoundedBackplate backplate;
 
      public:
         TextButton(const Window& window, float X, float Y, const LanguagedText texts, float size,

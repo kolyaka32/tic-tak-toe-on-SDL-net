@@ -419,11 +419,6 @@ void GUI::TypeField<bufferSize>::blit() const {
 }
 
 template <unsigned bufferSize>
-bool GUI::TypeField<bufferSize>::in(const Mouse mouse) const {
-    return mouse.in(rect);
-}
-
-template <unsigned bufferSize>
 const char* GUI::TypeField<bufferSize>::getString() {
     buffer[length] = '\0';
     return buffer;
