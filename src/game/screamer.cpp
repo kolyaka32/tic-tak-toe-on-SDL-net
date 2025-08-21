@@ -7,8 +7,9 @@
 #include "random"
 
 
-Screamer::Screamer()
-: acceptButton(0.5, 0.95, {"Okay...", "Ладно...", "Okay...", "Добра..."}, 24) {
+Screamer::Screamer(const Window& _window)
+: Template(_window),
+acceptButton(window, 0.5, 0.95, {"Okay...", "Ладно...", "Okay...", "Добра..."}, 24) {
     SDL_srand(0);
 }
 

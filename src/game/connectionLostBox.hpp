@@ -24,7 +24,7 @@ class ConnectionLostBox {
     const GUI::Backplate background;
 
  public:
-    ConnectionLostBox();
+    ConnectionLostBox(const Window& window);
     int click(const Mouse mouse);  // Return non zero, if active, 2 if try to reconnect
     void blit() const;
     static void activate();

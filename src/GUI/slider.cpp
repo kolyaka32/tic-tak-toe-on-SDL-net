@@ -6,10 +6,10 @@
 #include "baseGUI.hpp"
 
 
-// Slider class
-GUI::Slider::Slider(float _X, float _Y, float _width, unsigned _startValue,
+GUI::Slider::Slider(const Window& _window, float _X, float _Y, float _width, unsigned _startValue,
     Textures _lineImage, Textures _buttonImage, unsigned _max)
-: maxValue(_max) {
+: TextureTemplate(_window),
+maxValue(_max) {
     // Getting need texture
     texture = window.getTexture(_lineImage);
     textureButton = window.getTexture(_buttonImage);

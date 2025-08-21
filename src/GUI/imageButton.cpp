@@ -6,7 +6,8 @@
 #include "baseGUI.hpp"
 
 
-GUI::ImageButton::ImageButton(float _X, float _Y, float _width, Textures _index) {
+GUI::ImageButton::ImageButton(const Window& _window, float _X, float _Y, float _width, Textures _index)
+: TextureTemplate(_window) {
     // Setting base texture
     texture = window.getTexture(_index);
 

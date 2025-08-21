@@ -12,7 +12,8 @@ bool CycleTemplate::restarting;
 bool CycleTemplate::additionalRestart;
 
 // Reset basic cycle template variables
-CycleTemplate::CycleTemplate() {
+CycleTemplate::CycleTemplate(Window& _window)
+: window(_window) {
     // Resetting input
     SDL_Event event;
     while (SDL_PollEvent(&event) != 0) {}

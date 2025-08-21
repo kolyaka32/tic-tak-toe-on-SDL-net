@@ -6,11 +6,11 @@
 #include "serverGame.hpp"
 
 
-ServerGameCycle::ServerGameCycle(const Connection& _server)
-: InternetCycle(),
+ServerGameCycle::ServerGameCycle(Window& _window, const Connection& _server)
+: InternetCycle(_window),
 connection(_server),
-startFirst(0.5, 0.45, {"Start as cross", "Начать за крестик", "Am Kreuz anfangen", "Пачаць за крыжык"}, 24),
-startSecond(0.5, 0.55, {"Start as circle", "Начать за кружок", "Für einen Kreis beginnen", "Пачаць за гурток"}, 24) {
+startFirst(window, 0.5, 0.45, {"Start as cross", "Начать за крестик", "Am Kreuz anfangen", "Пачаць за крыжык"}, 24),
+startSecond(window, 0.5, 0.55, {"Start as circle", "Начать за кружок", "Für einen Kreis beginnen", "Пачаць за гурток"}, 24) {
     if (!isRestarted()) {
         // Sending applying initialsiation message
         connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::Init, field.getWidth(), field.getWinWidth());

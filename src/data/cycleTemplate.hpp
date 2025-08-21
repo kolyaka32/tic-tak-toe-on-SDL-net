@@ -20,7 +20,8 @@ class CycleTemplate {
     IdleTimer idleTimer{1000/60};   // Timer to idle in main cycle
 
  protected:
-    Mouse mouse;  // Position of mouse on screen
+    Window& window;  // Target, where draw to
+    Mouse mouse;     // Position of mouse on screen
 
     // Cycle functions for cycle (should be overriden)
     void getInput();            // Getting all user input
@@ -35,7 +36,7 @@ class CycleTemplate {
     virtual void inputText(const char* text);     // Actioning for typing text
 
  public:
-    CycleTemplate();
+    CycleTemplate(Window& window);
     void run();
     // Function for stop current running cycle
     static void stop();
@@ -44,19 +45,19 @@ class CycleTemplate {
     static bool isAdditionalRestarted();
     // Function for starting new cycle with posible arguments
     template <class NewCycle, typename ...Args>
-    static void runCycle(const Args& ...args);
+    static void runCycle(Window& window, const Args& ...args);
 };
 
 
 template <class NewCycle, typename ...Args>
-void CycleTemplate::runCycle(const Args& ...args) {
+void CycleTemplate::runCycle(Window& _window, const Args& ...args) {
     restarting = false;
     additionalRestart = false;
 
     // Running current cycle, while restarting
     do {
         // Launching new cycle
-        NewCycle cycle(args...);
+        NewCycle cycle(_window, args...);
         cycle.run();
     } while (App::isRunning() && (restarting | additionalRestart));
 

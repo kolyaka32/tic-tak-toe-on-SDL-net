@@ -9,6 +9,9 @@
 float GameField::upperLineHeight;
 int GameField::offset;
 
+GameField::GameField(const Window& _window)
+: Template(_window) {}
+
 void GameField::reset() {
     field.reset();
 }

@@ -5,17 +5,19 @@
 
 #pragma once
 
+#include "../GUI/interface.hpp"
 #include "field.hpp"
 
 
 // Cycle with field with game objects on it
-class GameField {
+class GameField : public GUI::Template {
  private:
     static Field field;  // Field with whole game
     static float upperLineHeight;  // Height of upper line for settings
     static int offset;   // Texture offset for draw with different colors
 
  public:
+    GameField(const Window& window);
     void reset();
     void setState(GameState state);
     GameState getState() const;

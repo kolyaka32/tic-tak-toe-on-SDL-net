@@ -7,18 +7,19 @@
 #include "../game/gameField.hpp"
 
 
-ParametersCycle::ParametersCycle()
-: titleText(0.5, 0.1, {"Select field", "Выберете поле", "Feld auswählen", "Выберыце поле"}, 3, 40),
-widthText(0.05, 0.25, {"Field width:", "Ширина поля:", "Feldbreite:", "Шырыня поля:"}, 2, 24,
+ParametersCycle::ParametersCycle(Window& _window)
+: BaseCycle(_window),
+titleText(window, 0.5, 0.1, {"Select field", "Выберете поле", "Feld auswählen", "Выберыце поле"}, 3, 40),
+widthText(window, 0.05, 0.25, {"Field width:", "Ширина поля:", "Feldbreite:", "Шырыня поля:"}, 2, 24,
     WHITE, GUI::Aligment::Left),
-widthTypeField(0.8, 0.25, 20, std::to_string(GameField::getWidth()).c_str()),
-winWidthText(0.05, 0.38, {"Win width:", "Победная длинна:", "Gewinnbreite:", "Выйгрышная шырыня:"}, 2, 24,
+widthTypeField(window, 0.8, 0.25, 20, std::to_string(GameField::getWidth()).c_str()),
+winWidthText(window, 0.05, 0.38, {"Win width:", "Победная длинна:", "Gewinnbreite:", "Выйгрышная шырыня:"}, 2, 24,
     WHITE, GUI::Aligment::Left),
-winWidthTypeField(0.8, 0.38, 20, std::to_string(GameField::getWinWidth()).c_str()),
-smallFieldButton(0.5, 0.51, {"Small field", "Маленькое поле", "Kleines Feld", "Невялікае поле"}, 24),
-mediumFieldButton(0.5, 0.64, {"Medium field", "Среднее поле", "Mittleres Feld", "Сярэдняе поле"}, 24),
-bigFieldButton(0.5, 0.77, {"Big field", "Большое поле", "Großes Feld", "Вялікае поле"}, 24),
-hugeFieldButton(0.5, 0.9, {"Huge field", "Огромное поле", "Riesiges Feld", "Вялікае поле"}, 24) {
+winWidthTypeField(window, 0.8, 0.38, 20, std::to_string(GameField::getWinWidth()).c_str()),
+smallFieldButton(window, 0.5, 0.51, {"Small field", "Маленькое поле", "Kleines Feld", "Невялікае поле"}, 24),
+mediumFieldButton(window, 0.5, 0.64, {"Medium field", "Среднее поле", "Mittleres Feld", "Сярэдняе поле"}, 24),
+bigFieldButton(window, 0.5, 0.77, {"Big field", "Большое поле", "Großes Feld", "Вялікае поле"}, 24),
+hugeFieldButton(window, 0.5, 0.9, {"Huge field", "Огромное поле", "Riesiges Feld", "Вялікае поле"}, 24) {
     logAdditional("Start parameters selection cycle");
 }
 

@@ -7,10 +7,10 @@
 
 
 // Button class
-GUI::TextButton::TextButton(float _X, float _Y, const LanguagedText _texts, float _size,
+GUI::TextButton::TextButton(const Window& _window, float _X, float _Y, const LanguagedText _texts, float _size,
     Color _color, Aligment _aligment)
-: HighlightedStaticText(_X, _Y, _texts, 1, _size, _color, _aligment),
-backplate({rect.x-10, rect.y-1, rect.w+20, rect.h+4}, _size * 0.75, 3) {}
+: HighlightedStaticText(_window, _X, _Y, _texts, 1, _size, _color, _aligment),
+backplate(_window, {rect.x-10, rect.y-1, rect.w+20, rect.h+4}, _size * 0.75, 3) {}
 
 void GUI::TextButton::blit() const {
     backplate.blit();

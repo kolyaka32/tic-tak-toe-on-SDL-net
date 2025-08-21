@@ -38,5 +38,5 @@ class ClientLobbyCycle : public BaseCycle {
     void draw() const override;
 
  public:
-    ClientLobbyCycle();
+    explicit ClientLobbyCycle(Window& _window);
 };

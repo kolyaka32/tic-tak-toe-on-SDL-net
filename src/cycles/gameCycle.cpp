@@ -7,20 +7,21 @@
 #include "selectCycle.hpp"
 
 
-GameCycle::GameCycle()
-: BaseCycle(),
-screamer(),
-menuRestartButton(0.5, 0.5, {"Restart", "Перезапустить", "Starten", "Перазапуск"}, 24),
-menuExitButton(0.5, 0.65, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}, 24),
-gameRestartButton(0.12, 0.05, 0.08, Textures::RestartButton),
+GameCycle::GameCycle(Window& _window)
+: BaseCycle(_window),
+field(_window),
+screamer(window),
+menuRestartButton(window, 0.5, 0.5, {"Restart", "Перезапустить", "Starten", "Перазапуск"}, 24),
+menuExitButton(window, 0.5, 0.65, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}, 24),
+gameRestartButton(window, 0.12, 0.05, 0.08, Textures::RestartButton),
 playersTurnsTexts {
-    {0.5, 0.05, {"First player turn", "Ход первого игрока", "Der Zug des ersten Spielers", "Ход першага гульца"}, 24},
-    {0.5, 0.05, {"Second player turn", "Ход второго игрока", "Zug des zweiten Spielers", "Ход другога гульца"}, 24}
+    {window, 0.5, 0.05, {"First player turn", "Ход первого игрока", "Der Zug des ersten Spielers", "Ход першага гульца"}, 24},
+    {window, 0.5, 0.05, {"Second player turn", "Ход второго игрока", "Zug des zweiten Spielers", "Ход другога гульца"}, 24}
 },
-menuBackplate(0.5, 0.5, 1, 0.46, 40, 5),
-firstWinText(0.5, 0.35, {"Fist player win", "Первый игрок выйграл", "Der erste Spieler hat gewonnen", "Першы гулец выйграў"}, 1, 30),
-secondWinText(0.5, 0.35, {"Second player win", "Второй игрок выйграл", "Der zweite Spieler hat gewonnen", "Другі гулец выйграў"}, 1, 30),
-nobodyWinText(0.5, 0.35, {"Nobody win", "Ничья", "Unentschieden", "Чые"}, 1, 30) {
+menuBackplate(window, 0.5, 0.5, 1, 0.46, 40, 5),
+firstWinText(window, 0.5, 0.35, {"Fist player win", "Первый игрок выйграл", "Der erste Spieler hat gewonnen", "Першы гулец выйграў"}, 1, 30),
+secondWinText(window, 0.5, 0.35, {"Second player win", "Второй игрок выйграл", "Der zweite Spieler hat gewonnen", "Другі гулец выйграў"}, 1, 30),
+nobodyWinText(window, 0.5, 0.35, {"Nobody win", "Ничья", "Unentschieden", "Чые"}, 1, 30) {
     if (!isRestarted()) {
         // Resetting field
         field.reset();

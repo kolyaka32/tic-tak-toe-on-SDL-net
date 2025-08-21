@@ -15,5 +15,5 @@ class SinglePlayerGameCycle : public GameCycle {
     bool inputMouseDown() override;
 
  public:
-    SinglePlayerGameCycle();
+    SinglePlayerGameCycle(Window& window);
 };

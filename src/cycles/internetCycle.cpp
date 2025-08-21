@@ -6,16 +6,16 @@
 #include "internetCycle.hpp"
 
 
-InternetCycle::InternetCycle()
-: GameCycle(),
+InternetCycle::InternetCycle(Window& _window)
+: GameCycle(_window),
 playersTurnsTexts {
-    {0.5, 0.05, {"Your turn", "Ваш ход", "Sie spielen aus", "Ваш ход"}, 24, WHITE},
-    {0.5, 0.05, {"Wait", "Ожидайте", "Erwartet", "Чакаць"}, 24, WHITE},
+    {window, 0.5, 0.05, {"Your turn", "Ваш ход", "Sie spielen aus", "Ваш ход"}, 24, WHITE},
+    {window, 0.5, 0.05, {"Wait", "Ожидайте", "Erwartet", "Чакаць"}, 24, WHITE},
 },
-disconnectedBox(),
-termianatedBox(),
-looseText(0.5, 0.35, {"You loose", "Вы проиграли", "Sie haben verloren", "Вы прайгралі"}, 1, 32, WHITE),
-winText(0.5, 0.35, {"Win", "Победа", "Sieg", "Перамога"}, 1, 32, WHITE) {
+disconnectedBox(window),
+termianatedBox(window),
+looseText(window, 0.5, 0.35, {"You loose", "Вы проиграли", "Sie haben verloren", "Вы прайгралі"}, 1, 32, WHITE),
+winText(window, 0.5, 0.35, {"Win", "Победа", "Sieg", "Перамога"}, 1, 32, WHITE) {
     // Resetting flag
     if (!isRestarted()) {
         disconnectedBox.reset();

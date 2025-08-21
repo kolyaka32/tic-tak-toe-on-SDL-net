@@ -33,5 +33,5 @@ class ParametersCycle : public BaseCycle {
     void setParameter(int width, int winWidth);
 
  public:
-    ParametersCycle();
+    ParametersCycle(Window& window);
 };

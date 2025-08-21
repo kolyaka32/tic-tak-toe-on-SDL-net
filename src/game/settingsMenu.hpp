@@ -5,12 +5,11 @@
 
 #pragma once
 
-#include "../data/cycleTemplate.hpp"
 #include "../GUI/interface.hpp"
 
 
 // Class of menu with game settings
-class SettingsMenu {
+class SettingsMenu : GUI::Template {
  private:
     static bool active;       // Flag of showing current menu
     timer nextSound = 0;      // Time to play next sound
@@ -33,7 +32,7 @@ class SettingsMenu {
     GUI::TextButton exitButton;
 
  public:
-    SettingsMenu();
+    SettingsMenu(const Window& window);
     void blit() const;
     bool click(const Mouse mouse);
     void unClick();

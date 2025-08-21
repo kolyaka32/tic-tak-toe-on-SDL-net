@@ -26,6 +26,7 @@ TexturesData::TexturesData(SDL_Renderer* _renderer) {
             throw DataLoadException(texturesFilesNames[i]);
         }
     }
+    logAdditional("Textures loaded corretly");
     #endif
 }
 

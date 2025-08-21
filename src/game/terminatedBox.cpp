@@ -9,11 +9,11 @@
 
 bool TerminatedBox::active = false;
 
-TerminatedBox::TerminatedBox()
-: mainText(0.5, 0.45,
+TerminatedBox::TerminatedBox(const Window& _window)
+: mainText(_window, 0.5, 0.45,
     {"Connection terminated", "Соединение разорвано", "Verbindung unterbrochen", "Злучэнне разарвана"}, 1, 32),
-closeButton(0.5, 0.55, {"Close", "Закрыть", "Schließen", "Зачыніць"}, 24, WHITE),
-background(0.5, 0.5, 0.82, 0.2, 20, 4) {}
+closeButton(_window, 0.5, 0.55, {"Close", "Закрыть", "Schließen", "Зачыніць"}, 24, WHITE),
+background(_window, 0.5, 0.5, 0.82, 0.2, 20, 4) {}
 
 bool TerminatedBox::click(const Mouse _mouse) {
     if (active) {

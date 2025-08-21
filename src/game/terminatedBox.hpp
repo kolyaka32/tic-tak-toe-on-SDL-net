@@ -21,7 +21,7 @@ class TerminatedBox {
     const GUI::Backplate background;
 
  public:
-    TerminatedBox();
+    TerminatedBox(const Window& window);
     bool click(const Mouse mouse);
     void blit() const;
     static void activate();

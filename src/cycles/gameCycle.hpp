@@ -36,5 +36,5 @@ class GameCycle : public BaseCycle {
     void draw() const override;
 
  public:
-    GameCycle();
+    GameCycle(Window& _window);
 };

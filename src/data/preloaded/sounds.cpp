@@ -26,6 +26,7 @@ SoundsData::SoundsData() {
             throw DataLoadException(soundsFilesNames[i]);
         }
     }
+    logAdditional("Sounds loaded corretly");
     #endif
 
     // Resetting sounds volume

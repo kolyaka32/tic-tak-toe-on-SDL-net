@@ -26,6 +26,7 @@ MusicData::MusicData() {
             throw DataLoadException("Music with name: " + std::string(musicFilesNames[i]));
         }
     }
+    logAdditional("Music loaded corretly");
     #endif
 
     // Resetting music volume

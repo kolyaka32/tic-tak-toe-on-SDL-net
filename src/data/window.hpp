@@ -89,6 +89,3 @@ class Window {
     void stopTextInput() const;
     void updateTitle() const;
 };
-
-// Global main window, with all graphics
-extern Window window;

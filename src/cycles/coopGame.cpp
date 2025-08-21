@@ -7,8 +7,8 @@
 
 
 // Two player mode (standart game)
-TwoPlayerGameCycle::TwoPlayerGameCycle()
-: GameCycle() {
+TwoPlayerGameCycle::TwoPlayerGameCycle(Window& _window)
+: GameCycle(_window) {
     if (!isRestarted()) {
         // Starting game
         field.setState(GameState::CurrentPlay);

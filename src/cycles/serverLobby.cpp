@@ -9,13 +9,13 @@
 
 bool ServerLobbyCycle::showAddress = false;
 
-ServerLobbyCycle::ServerLobbyCycle()
-: BaseCycle(),
-titleText(0.5, 0.15, {"Wait for connection", "Ожидайте подключения", "Verbindungen erwarten", "Чакайце падлучэнняў"}, 2, 28),
-addressText(0.5, 0.3, {"Your address: %s", "Ваш адресс: %s", "Ihre Adresse: %s", "Ваш адрас: %s"}, 24),
-copiedInfoBox(0.5, 0.37, {"Address copied", "Адрес скопирован", "Adresse kopiert", "Скапіяваны адрас"}, 24),
-showAddressText(0.5, 0.45, {"Show address", "Показать адресс", "Adresse anzeigen", "Паказаць адрас"}, 24),
-hideAddressText(0.5, 0.45, {"Hide address", "Скрыть адресс", "Adresse verbergen", "Схаваць адрас"}, 24) {
+ServerLobbyCycle::ServerLobbyCycle(Window& _window)
+: BaseCycle(_window),
+titleText(window, 0.5, 0.15, {"Wait for connection", "Ожидайте подключения", "Verbindungen erwarten", "Чакайце падлучэнняў"}, 2, 28),
+addressText(window, 0.5, 0.3, {"Your address: %s", "Ваш адресс: %s", "Ihre Adresse: %s", "Ваш адрас: %s"}, 24),
+copiedInfoBox(window, 0.5, 0.37, {"Address copied", "Адрес скопирован", "Adresse kopiert", "Скапіяваны адрас"}, 24),
+showAddressText(window, 0.5, 0.45, {"Show address", "Показать адресс", "Adresse anzeigen", "Паказаць адрас"}, 24),
+hideAddressText(window, 0.5, 0.45, {"Hide address", "Скрыть адресс", "Adresse verbergen", "Схаваць адрас"}, 24) {
     // Resetting flag of showing address
     if (!isRestarted()) {
         showAddress = false;
@@ -81,7 +81,7 @@ void ServerLobbyCycle::update() {
         server.connectToLastMessage();
 
         // Starting game (as server)
-        runCycle<ServerGameCycle, Connection&>(server);
+        runCycle<ServerGameCycle, Connection&>(window, server);
         // Exiting to menu after game
         stop();
         return;

@@ -32,5 +32,5 @@ class ServerLobbyCycle : public BaseCycle {
     void draw() const override;
 
  public:
-    ServerLobbyCycle();
+    ServerLobbyCycle(Window& window);
 };

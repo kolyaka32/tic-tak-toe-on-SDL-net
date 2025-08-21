@@ -9,14 +9,14 @@
 
 
 // Scary image, that show with small chanse at screen
-class Screamer {
+class Screamer : GUI::Template {
  private:
     GUI::TextButton acceptButton;
     bool active = false;
 
  public:
-    Screamer();
+    Screamer(const Window& window);
     bool click(const Mouse mouse);
     void update();
-    void blit() const;
+    void blit() const override;
 };
