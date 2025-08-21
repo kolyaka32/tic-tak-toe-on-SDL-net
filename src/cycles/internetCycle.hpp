@@ -23,5 +23,5 @@ protected:
     bool inputMouseDown() override;
 
 public:
-    InternetCycle();
+    InternetCycle(Window& window);
 };

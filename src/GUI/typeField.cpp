@@ -10,30 +10,20 @@
 
 // Type field class
 template <unsigned bufferSize>
-GUI::TypeField<bufferSize>::TypeField(float _X, float _Y, float _height, const char* _text, Aligment _aligment, Color _color)
-: posX(window.getWidth()*_X),
+GUI::TypeField<bufferSize>::TypeField(const Window& _window, float _X, float _Y, const char* _text, float _height, Aligment _aligment, Color _color)
+: TextureTemplate(_window),
+posX(window.getWidth()*_X),
 aligment(_aligment),
 textColor(_color),
-font(window.createFontCopy(Fonts::Main, _height)),
-backRect({_X*window.getWidth() - (6.5f*bufferSize+2), _Y*window.getHeight()-_height * 0.9f,
-    13.0f * bufferSize+4, _height * 1.8f}) {
+font(window.createFontCopy(Fonts::Main, _height)) {
     // Setting rects
-    textRect = {0, window.getHeight()*_Y-_height/2-1, 0, 0};
+    rect = {0, window.getHeight()*_Y-_height/2-1, 0, 0};
     caretRect = {0, window.getHeight()*_Y-_height/2-1, 2, _height*1.3f};
 
     // Copying text to caret
     length = strlen(_text);
     setMax(length, (size_t)bufferSize);
     memcpy(buffer, _text, length);
-
-    // Creating backplate
-    backTexture = window.createTexture(backRect.w, backRect.h);
-    window.setRenderTarget(backTexture);
-    window.setDrawColor(GREY);
-    window.clear();
-    window.setDrawColor(WHITE);
-    window.drawRect({2, 2, backRect.w-4, backRect.h});
-    window.resetRenderTarget();
 
     // Creating first texture, if there was any text
     if (length) {
@@ -44,8 +34,7 @@ backRect({_X*window.getWidth() - (6.5f*bufferSize+2), _Y*window.getHeight()-_hei
 template <unsigned bufferSize>
 GUI::TypeField<bufferSize>::~TypeField() {
     // Clearing rest texture
-    SDL_DestroyTexture(textTexture);
-    SDL_DestroyTexture(backTexture);
+    SDL_DestroyTexture(texture);
 
     // Clearing font
     TTF_CloseFont(font);
@@ -55,8 +44,8 @@ GUI::TypeField<bufferSize>::~TypeField() {
 template <unsigned bufferSize>
 void GUI::TypeField<bufferSize>::updateTexture() {
     // Clearing previous
-    if (textTexture) {
-        SDL_DestroyTexture(textTexture);
+    if (texture) {
+        SDL_DestroyTexture(texture);
     }
 
     // Checking, if string exsist
@@ -93,21 +82,21 @@ void GUI::TypeField<bufferSize>::updateTexture() {
             SDL_DestroySurface(inverseSurface);
         }
         // Updating texture
-        textTexture = window.createTextureAndFree(mainSurface);
+        texture = window.createTextureAndFree(mainSurface);
         SDL_DestroySurface(mainSurface);
 
         // Resetting place of text with saving aligment
-        textRect.w = textTexture->w;
-        textRect.h = textTexture->h;
-        textRect.x = SDL_floorf(posX - textRect.w * (unsigned)aligment / 2);
+        rect.w = texture->w;
+        rect.h = texture->h;
+        rect.x = SDL_floorf(posX - rect.w * (unsigned)aligment / 2);
 
         // Update caret place
         if (caret) {
             int caretX = 0;
             TTF_GetStringSize(font, buffer, caret, &caretX, nullptr);
-            caretRect.x = textRect.x + caretX - 1;
+            caretRect.x = rect.x + caretX - 1;
         } else {
-            caretRect.x = textRect.x - 1;
+            caretRect.x = rect.x - 1;
         }
     } else {
         caretRect.x = posX - 1;
@@ -124,7 +113,7 @@ void GUI::TypeField<bufferSize>::select(float _mouseX) {
 
     // Getting current mouse position at text
     if (length) {
-        TTF_MeasureString(font, buffer, length, _mouseX-textRect.x, NULL, &caret);
+        TTF_MeasureString(font, buffer, length, _mouseX-rect.x, NULL, &caret);
     } else {
         caret = 0;
     }
@@ -223,13 +212,6 @@ void GUI::TypeField<bufferSize>::type(SDL_Keycode _code) {
 
     // Switching between extra input options
     switch (_code) {
-    // Function for exit editing
-    case SDLK_ESCAPE:
-        showCaret = false;
-        selected = false;
-        selectLength = 0;
-        break;
-
     // Functions for deleting text
     case SDLK_BACKSPACE:
         // Coping after caret
@@ -407,7 +389,7 @@ void GUI::TypeField<bufferSize>::update(float _mouseX) {
     if (pressed) {
         size_t measure;
         if (length) {
-            TTF_MeasureString(font, buffer, length, _mouseX-textRect.x, NULL, &measure);
+            TTF_MeasureString(font, buffer, length, _mouseX-rect.x, NULL, &measure);
         } else {
             measure = 0;
         }
@@ -426,22 +408,14 @@ void GUI::TypeField<bufferSize>::update(float _mouseX) {
 
 template <unsigned bufferSize>
 void GUI::TypeField<bufferSize>::blit() const {
-    // Rendering background picture for better typing
-    window.blit(backTexture, backRect);
-
     // Rendering text
-    window.blit(textTexture, textRect);
+    window.blit(texture, rect);
 
     // Rendering caret
     if (showCaret) {
         window.setDrawColor({50, 50, 50, 50});
         window.drawRect(caretRect);
     }
-}
-
-template <unsigned bufferSize>
-bool GUI::TypeField<bufferSize>::in(const Mouse mouse) const {
-    return mouse.in(backRect);
 }
 
 template <unsigned bufferSize>

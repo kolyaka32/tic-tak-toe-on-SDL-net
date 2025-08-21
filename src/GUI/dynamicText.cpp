@@ -7,9 +7,10 @@
 #include "baseGUI.hpp"
 
 
-GUI::DynamicText::DynamicText(float _X, float _Y,
+GUI::DynamicText::DynamicText(const Window& _window, float _X, float _Y,
     const LanguagedText _texts, float _height, Color _color, Aligment _aligment)
-: posX(_X),
+: TextureTemplate(_window),
+posX(_X),
 aligment(_aligment),
 color(_color),
 texts(_texts),

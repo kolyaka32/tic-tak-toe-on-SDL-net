@@ -21,7 +21,7 @@ class GameCycle : public BaseCycle {
     GUI::StaticText playersTurnsTexts[2];
 
     // Menu after game end
-    GUI::Backplate menuBackplate;
+    GUI::RoundedBackplate menuBackplate;
     GUI::TextButton menuRestartButton;
     GUI::TextButton menuExitButton;
     // Ending options
@@ -36,5 +36,5 @@ class GameCycle : public BaseCycle {
     void draw() const override;
 
  public:
-    GameCycle();
+    GameCycle(Window& _window);
 };

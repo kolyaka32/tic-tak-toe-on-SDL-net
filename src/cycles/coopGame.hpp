@@ -14,5 +14,5 @@ class TwoPlayerGameCycle : public GameCycle {
     bool inputMouseDown() override;
 
  public:
-    TwoPlayerGameCycle();
+    TwoPlayerGameCycle(Window& _window);
 };

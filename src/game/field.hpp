@@ -28,8 +28,8 @@ enum class GameState : Uint8 {
 // Class with game field
 class Field {
  private:
-    Cell data[81];        // Grid of cells, representing game field
-    int count;            // Counter of filled cells
+    Cell data[81];      // Grid of cells, representing game field
+    int count;          // Counter of filled cells
 
  protected:
     void checkSound();  // Function of playing sound after game end

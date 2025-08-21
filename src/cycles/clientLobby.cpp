@@ -12,14 +12,14 @@ char baseIP[12] = "127.0.0.1";
 char basePort[6] = "8000";
 
 
-ClientLobbyCycle::ClientLobbyCycle()
-: BaseCycle(),
-enterIPText(0.5, 0.2, {"Enter IP:", "Введите IP:", "-", "Увядзіце IP:"}, 30, WHITE),
-enterIPField(0.5, 0.32, 20, baseIP),
-enterPortText(0.5, 0.5, {"Enter port:", "Введите порт:", "Port eingeben:", "Увядзіце порт:"}, 30, WHITE),
-enterPortField(0.5, 0.62, 20, basePort),
-pasteButton(0.5, 0.75, {"Paste the address", "Вставить адрес", "Kopierte Adresse", "Уставіць адрас"}, 24, WHITE),
-connectButton(0.5, 0.9, {"Connect", "Присоединится", "Beitritt", "Далучыцца"}, 24, WHITE) {
+ClientLobbyCycle::ClientLobbyCycle(Window& _window)
+: BaseCycle(_window),
+enterIPText(window, 0.5, 0.2, {"Enter IP:", "Введите IP:", "Geben Sie die IP ein:", "Увядзіце IP:"}, Height::SubTitle),
+enterIPField(window, 0.5, 0.32, baseIP),
+enterPortText(window, 0.5, 0.45, {"Enter port:", "Введите порт:", "Port eingeben:", "Увядзіце порт:"}, Height::SubTitle),
+enterPortField(window, 0.5, 0.57, basePort),
+pasteButton(window, 0.5, 0.75, {"Paste the address", "Вставить адрес", "Kopierte Adresse", "Уставіць адрас"}),
+connectButton(window, 0.5, 0.9, {"Connect", "Присоединится", "Beitritt", "Далучыцца"}) {
     if (isAdditionalRestarted()) {
         // Stopping cycle from launching after end of client game
         stop();
@@ -96,9 +96,12 @@ void ClientLobbyCycle::update() {
         window.setWidth(GameField::getWindowWidth());
         window.setHeight(GameField::getWindowHeight());
         // Starting game
-        runCycle<ClientGameCycle, Connection&>(client);
+        runCycle<ClientGameCycle, Connection&>(window, client);
         // Exiting to menu after game
         stop();
+        return;
+
+    default:
         return;
     }
 }

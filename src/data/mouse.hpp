@@ -5,7 +5,9 @@
 
 #pragma once
 
-#include "SDL3/SDL_rect.h"
+#include <SDL3/SDL_rect.h>
+#include "logger.hpp"
+
 
 // Class of position of mouse on screen
 class Mouse {

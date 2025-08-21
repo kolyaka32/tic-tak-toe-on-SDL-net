@@ -13,6 +13,8 @@
 #include "cycles/clientLobby.hpp"
 
 
+InitFile initFile{};
+
 // Data, load from setting file
 void InitFile::loadSettings() {
     // Reading file
@@ -79,6 +81,9 @@ void InitFile::saveSettings() {
 
     case Language::Bellarusian:
         outSettings << "belarusian\n";
+        break;
+
+    default:
         break;
     }
 

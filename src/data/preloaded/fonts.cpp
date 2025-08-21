@@ -26,6 +26,7 @@ FontsData::FontsData() {
             throw DataLoadException(fontsFilesNames[i]);
         }
     }
+    logAdditional("Fonts loaded corretly");
     #endif
 }
 

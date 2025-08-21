@@ -57,6 +57,9 @@ bool Field::clickTwo(int x, int y) {
             data[x + y * width] = Cell::Opponent;
             gameState = GameState::CurrentPlay;
             break;
+
+        default:
+            break;
         }
         count++;
 
@@ -81,6 +84,9 @@ bool Field::clickMultiplayerCurrent(int x, int y) {
             data[x + y * width] = Cell::Opponent;
             gameState = GameState::CurrentPlay;
             break;
+
+        default:
+            break;
         }
         count++;
 
@@ -103,6 +109,9 @@ void Field::clickMultiplayerOpponent(int x, int y) {
         case GameState::OpponentPlay:
             data[x + y * width] = Cell::Opponent;
             gameState = GameState::CurrentPlay;
+            break;
+
+        default:
             break;
         }
         count++;
@@ -275,6 +284,9 @@ void Field::checkSound() {
     case GameState::NobodyWin:
         sounds.play(Sounds::Loose);
         logAdditional("Nobody win");
+        break;
+
+    default:
         break;
     }
 }

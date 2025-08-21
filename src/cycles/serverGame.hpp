@@ -20,10 +20,10 @@ class ServerGameCycle : public InternetCycle {
 
     // Main run functions
     bool inputMouseDown() override;
-    void inputKeys(SDL_Keycode key);
+    void inputKeys(SDL_Keycode key) override;
     void update() override;
     void draw() const override;
 
  public:
-    explicit ServerGameCycle(const Connection& server);
+    explicit ServerGameCycle(Window& window, const Connection& server);
 };

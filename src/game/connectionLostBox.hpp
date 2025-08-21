@@ -21,10 +21,10 @@ class ConnectionLostBox {
     // Button for return to menu
     const GUI::TextButton closeButton;
     // Background plate for better visability
-    const GUI::Backplate background;
+    const GUI::RoundedBackplate background;
 
  public:
-    ConnectionLostBox();
+    ConnectionLostBox(const Window& window);
     int click(const Mouse mouse);  // Return non zero, if active, 2 if try to reconnect
     void blit() const;
     static void activate();

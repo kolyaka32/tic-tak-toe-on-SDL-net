@@ -21,9 +21,9 @@ class ClientLobbyCycle : public BaseCycle {
 
     // Input fields
     GUI::StaticText enterIPText;
-    GUI::TypeField<12> enterIPField;
+    GUI::TypeBox<12> enterIPField;
     GUI::StaticText enterPortText;
-    GUI::TypeField<6> enterPortField;
+    GUI::TypeBox<6> enterPortField;
     GUI::TextButton pasteButton;
     GUI::TextButton connectButton;
 
@@ -38,5 +38,5 @@ class ClientLobbyCycle : public BaseCycle {
     void draw() const override;
 
  public:
-    ClientLobbyCycle();
+    explicit ClientLobbyCycle(Window& _window);
 };

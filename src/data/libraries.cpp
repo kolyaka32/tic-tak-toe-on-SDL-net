@@ -33,6 +33,7 @@ Libraries::Libraries() {
     if (!Mix_OpenAudio(audioDeviceID, NULL)) {
         throw LibararyLoadException("Couldn't initialase audio chanel: " + std::string(SDL_GetError()));
     }
+    logAdditional("Libraries load correctly");
     #else
     SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO);
     TTF_Init();

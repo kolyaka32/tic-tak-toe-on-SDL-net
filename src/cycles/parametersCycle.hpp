@@ -13,9 +13,9 @@ class ParametersCycle : public BaseCycle {
  private:
     GUI::HighlightedStaticText titleText;
     GUI::HighlightedStaticText widthText;
-    GUI::TypeField<1> widthTypeField;
+    GUI::TypeBox<1> widthTypeField;
     GUI::HighlightedStaticText winWidthText;
-    GUI::TypeField<1> winWidthTypeField;
+    GUI::TypeBox<1> winWidthTypeField;
 
     GUI::TextButton smallFieldButton;
     GUI::TextButton mediumFieldButton;
@@ -23,15 +23,15 @@ class ParametersCycle : public BaseCycle {
     GUI::TextButton hugeFieldButton;
 
     bool inputMouseDown() override;
-    void inputMouseUp();
-    void inputKeys(SDL_Keycode _key);
-    void update();
-    void inputText(const char* text);
+    void inputMouseUp() override;
+    void inputKeys(SDL_Keycode _key) override;
+    void update() override;
+    void inputText(const char* text) override;
     void draw() const override;
 
     // Shortcut functions
     void setParameter(int width, int winWidth);
 
  public:
-    ParametersCycle();
+    ParametersCycle(Window& window);
 };

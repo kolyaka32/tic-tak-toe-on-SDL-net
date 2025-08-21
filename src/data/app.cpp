@@ -9,10 +9,6 @@
 
 bool App::running = true;
 
-App::App() {
-    logImportant("All loaded and created corretly");
-}
-
 void App::stop() {
     running = false;
     CycleTemplate::stop();

@@ -6,21 +6,20 @@
 #include "baseGUI.hpp"
 
 
-// Class of backplates (smoothed rects)
-GUI::Backplate::Backplate(float _centerX, float _centerY, float _width, float _height,
+GUI::RoundedBackplate::RoundedBackplate(const Window& _window, float _centerX, float _centerY, float _width, float _height,
     float _rad, float _bor, Color _frontColor, Color _backColor)
-: Backplate({window.getWidth() * (_centerX - _width/2), window.getHeight() * (_centerY - _height/2),
-    window.getWidth() * _width, window.getHeight() * _height}, _rad, _bor, _frontColor, _backColor) {}
+: RoundedBackplate(_window, {_window.getWidth() * (_centerX - _width/2), _window.getHeight() * (_centerY - _height/2),
+    _window.getWidth() * _width, _window.getHeight() * _height}, _rad, _bor, _frontColor, _backColor) {}
 
 
-GUI::Backplate::Backplate(const SDL_FRect& _rect, float _rad, float _bor, Color _frontColor, Color _backColor) {
+GUI::RoundedBackplate::RoundedBackplate(const Window& _window, const SDL_FRect& _rect, float _rad, float _bor, Color _frontColor, Color _backColor)
+: TextureTemplate(_window) {
     // Creating new texture for drawing
     texture = window.createTexture(_rect.w, _rect.h);
     rect = _rect;
 
     // Setting render target to this texture
     window.setRenderTarget(texture);
-    window.setBlendMode(texture, SDL_BLENDMODE_BLEND);
 
     // Drawing back part
     window.setDrawColor(_backColor);
@@ -63,6 +62,6 @@ GUI::Backplate::Backplate(const SDL_FRect& _rect, float _rad, float _bor, Color 
     window.resetRenderTarget();
 }
 
-GUI::Backplate::~Backplate() {
+GUI::RoundedBackplate::~RoundedBackplate() {
     SDL_DestroyTexture(texture);
 }

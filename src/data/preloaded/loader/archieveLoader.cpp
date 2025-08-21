@@ -17,7 +17,7 @@ ArchieveLoader::ArchieveLoader() {
 
     // Checking openning correction
     #if CHECK_CORRECTION
-    if (!archive) {
+    if (archive == nullptr) {
         throw DataLoadException("load archieve: " + std::string(DATA_FILE));
     }
     #endif
@@ -70,4 +70,5 @@ SDL_IOStream* ArchieveLoader::load(const char* _file) const {
 
     // Returning created data structure
     return tempIO;
+    return nullptr;
 }

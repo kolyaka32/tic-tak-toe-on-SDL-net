@@ -7,18 +7,19 @@
 #include "../game/gameField.hpp"
 
 
-ParametersCycle::ParametersCycle()
-: titleText(0.5, 0.1, {"Select field", "Выберете поле", "Feld auswählen", "Выберыце поле"}, 3, 40),
-widthText(0.05, 0.25, {"Field width:", "Ширина поля:", "Feldbreite:", "Шырыня поля:"}, 2, 24,
-    WHITE, GUI::Aligment::Left),
-widthTypeField(0.8, 0.25, 20, std::to_string(GameField::getWidth()).c_str()),
-winWidthText(0.05, 0.38, {"Win width:", "Победная длинна:", "Gewinnbreite:", "Выйгрышная шырыня:"}, 2, 24,
-    WHITE, GUI::Aligment::Left),
-winWidthTypeField(0.8, 0.38, 20, std::to_string(GameField::getWinWidth()).c_str()),
-smallFieldButton(0.5, 0.51, {"Small field", "Маленькое поле", "Kleines Feld", "Невялікае поле"}, 24),
-mediumFieldButton(0.5, 0.64, {"Medium field", "Среднее поле", "Mittleres Feld", "Сярэдняе поле"}, 24),
-bigFieldButton(0.5, 0.77, {"Big field", "Большое поле", "Großes Feld", "Вялікае поле"}, 24),
-hugeFieldButton(0.5, 0.9, {"Huge field", "Огромное поле", "Riesiges Feld", "Вялікае поле"}, 24) {
+ParametersCycle::ParametersCycle(Window& _window)
+: BaseCycle(_window),
+titleText(window, 0.5, 0.1, {"Select field", "Выберете поле", "Feld auswählen", "Выберыце поле"}, 3, Height::Info),
+widthText(window, 0.05, 0.25, {"Field width:", "Ширина поля:", "Feldbreite:", "Шырыня поля:"},
+    2, Height::Main, WHITE, GUI::Aligment::Left),
+widthTypeField(window, 0.8, 0.25, std::to_string(GameField::getWidth()).c_str()),
+winWidthText(window, 0.05, 0.38, {"Win width:", "Победная длинна:", "Gewinnbreite:", "Выйгрышная шырыня:"},
+    2, Height::Main, WHITE, GUI::Aligment::Left),
+winWidthTypeField(window, 0.8, 0.38, std::to_string(GameField::getWinWidth()).c_str()),
+smallFieldButton(window, 0.5, 0.51, {"Small field", "Маленькое поле", "Kleines Feld", "Невялікае поле"}),
+mediumFieldButton(window, 0.5, 0.64, {"Medium field", "Среднее поле", "Mittleres Feld", "Сярэдняе поле"}),
+bigFieldButton(window, 0.5, 0.77, {"Big field", "Большое поле", "Großes Feld", "Вялікае поле"}),
+hugeFieldButton(window, 0.5, 0.9, {"Huge field", "Огромное поле", "Riesiges Feld", "Вялікае поле"}) {
     logAdditional("Start parameters selection cycle");
 }
 
@@ -29,7 +30,7 @@ bool ParametersCycle::inputMouseDown() {
     // Connection part
     if (widthTypeField.click(mouse)) {
         // Checking correction of text
-        int newWidth = *widthTypeField.getString() - '0';
+        int newWidth = (*widthTypeField.getString()) - '0';
         // Changing size
         GameField::setWidth(newWidth);
         // Changing window size
@@ -42,7 +43,7 @@ bool ParametersCycle::inputMouseDown() {
     }
     if (winWidthTypeField.click(mouse)) {
         // Checking correction of text
-        int newWinWidth = *winWidthTypeField.getString() - '0';
+        int newWinWidth = (*winWidthTypeField.getString()) - '0';
         // Changing size
         GameField::setWinWidth(newWinWidth);
         // Changing text (for correction)
@@ -120,13 +121,19 @@ void ParametersCycle::draw() const {
 }
 
 void ParametersCycle::setParameter(int _width, int _winWidth) {
-    // Changing parameters of field
-    GameField::setWidth(_width);
+    // Check, if need to change width
+    if (GameField::getWidth() != _width) {
+        // Changing parameters of field
+        GameField::setWidth(_width);
+
+        // Changing window size
+        window.setWidth(GameField::getWindowWidth());
+        window.setHeight(GameField::getWindowHeight());
+        // Restarting cycle
+        restart();
+        logAdditional("Setting game field width to %u", GameField::getWidth());
+    }
+    // Update win width
     GameField::setWinWidth(_winWidth);
-    // Changing window size
-    window.setWidth(GameField::getWindowWidth());
-    window.setHeight(GameField::getWindowHeight());
-    // Restarting cycle
-    restart();
-    logAdditional("Setting game field width to %u, win width to %u", _width, _winWidth);
+    logAdditional("Setting game field win width to %u", GameField::getWinWidth());
 }

@@ -6,8 +6,8 @@
 #include "singleplayerGame.hpp"
 
 
-SinglePlayerGameCycle::SinglePlayerGameCycle()
-: GameCycle() {
+SinglePlayerGameCycle::SinglePlayerGameCycle(Window& _window)
+: GameCycle(_window) {
     if (!isRestarted()) {
         // Starting game
         field.setState(GameState::CurrentPlay);

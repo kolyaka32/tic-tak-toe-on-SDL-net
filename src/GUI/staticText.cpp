@@ -7,8 +7,9 @@
 
 
 // Class of static text
-GUI::StaticText::StaticText(float _X, float _Y, const LanguagedText _texts,
-    float _height, Color _color, Aligment _aligment) {
+GUI::StaticText::StaticText(const Window& _window, float _X, float _Y,
+const LanguagedText _texts, float _height, Color _color, Aligment _aligment)
+: TextureTemplate(_window) {
     // Creating texture of text
     texture = window.createTexture(Fonts::Main, _height, _texts.getString().c_str(), 0, _color);
 

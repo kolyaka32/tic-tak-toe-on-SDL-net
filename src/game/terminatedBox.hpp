@@ -18,10 +18,10 @@ class TerminatedBox {
     // Button for close this box
     const GUI::TextButton closeButton;
     // Background plate for better visability
-    const GUI::Backplate background;
+    const GUI::RoundedBackplate background;
 
  public:
-    TerminatedBox();
+    TerminatedBox(const Window& window);
     bool click(const Mouse mouse);
     void blit() const;
     static void activate();

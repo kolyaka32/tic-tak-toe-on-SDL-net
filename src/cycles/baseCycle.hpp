@@ -18,7 +18,7 @@ class BaseCycle : public CycleTemplate {
     const GUI::ImageButton exitButton;  // Button for exit from mode
 
  public:
-    BaseCycle();
+    BaseCycle(Window& _window);
     bool inputMouseDown() override;
     void update() override;
     void inputMouseUp() override;

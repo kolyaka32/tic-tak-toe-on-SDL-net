@@ -13,16 +13,13 @@
 
 
 // Class of whole current application
-class App : Libraries {
+class App {
  private:
     // Flags of work
     static bool running;
 
  public:
-    App();
     // Commands to operate with global running
     static void stop();
     static bool isRunning();
 };
-
-extern App app;

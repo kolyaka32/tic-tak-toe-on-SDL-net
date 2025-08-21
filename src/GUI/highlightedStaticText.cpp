@@ -6,8 +6,9 @@
 #include "baseGUI.hpp"
 
 
-GUI::HighlightedStaticText::HighlightedStaticText(float _X, float _Y,
-    const LanguagedText _texts, int frame, float _height, Color _color, Aligment _aligment) {
+GUI::HighlightedStaticText::HighlightedStaticText(const Window& _window, float _X, float _Y,
+    const LanguagedText _texts, int frame, float _height, Color _color, Aligment _aligment)
+: TextureTemplate(_window) {
     // Creating texture of text
     TTF_Font* font = window.getFont(Fonts::Main);
     TTF_SetFontSize(font, _height);
@@ -30,7 +31,8 @@ GUI::HighlightedStaticText::HighlightedStaticText(float _X, float _Y,
     texture = window.createTextureAndFree(surface);
 
     // Updating rect height for correct button
-    SDL_GetTextureSize(texture, &rect.w, &rect.h);
+    rect.w = texture->w;
+    rect.h = texture->h;
     rect.x = SDL_roundf(window.getWidth() * _X - (rect.w * (unsigned)_aligment / 2));
     rect.y = SDL_roundf(window.getHeight() * _Y - rect.h / 2);
 }

@@ -18,39 +18,50 @@ namespace GUI {
     };
 
 
-    // Graphic user interface template for other objects
+    // Object, that will be drawn at screen
     class Template {
+     protected:
+        const Window& window;
+
+     public:
+        Template(const Window& window);
+        virtual void blit() const;
+    };
+
+
+    // Object with texture, that will be drawn
+    class TextureTemplate : public Template {
      protected:
         SDL_Texture* texture;
         SDL_FRect rect;
 
      public:
-        Template();
-        virtual void blit() const;
-        bool in(const Mouse mouse) const;
+        TextureTemplate(const Window& window);
+        void blit() const override;
+        virtual bool in(const Mouse mouse) const;
     };
 
 
     // Static text on screen
-    class StaticText : public Template {
+    class StaticText : public TextureTemplate {
      public:
-        StaticText(float X, float Y, const LanguagedText texts,
-            float size, Color color = WHITE, Aligment aligment = Aligment::Midle);
+        StaticText(const Window& window, float X, float Y, const LanguagedText texts,
+            float height = Height::Main, Color color = WHITE, Aligment aligment = Aligment::Midle);
         ~StaticText();
     };
 
 
     // Static text on screen
-    class HighlightedStaticText : public Template {
+    class HighlightedStaticText : public TextureTemplate {
      public:
-        HighlightedStaticText(float X, float Y, const LanguagedText texts,
-            int frameThickness, float size, Color color = WHITE, Aligment aligment = Aligment::Midle);
+        HighlightedStaticText(const Window& window, float X, float Y, const LanguagedText texts, int frameThickness,
+            float height = Height::Main, Color color = WHITE, Aligment aligment = Aligment::Midle);
         ~HighlightedStaticText();
     };
 
 
     // Dynamicly updated text on screen
-    class DynamicText : public Template {
+    class DynamicText : public TextureTemplate {
      private:
         const LanguagedText texts;  // Text to create from
         const float posX;           // Relative positions on screen
@@ -59,8 +70,8 @@ namespace GUI {
         const float height;         // Height of text to draw
 
      public:
-        DynamicText(float X, float Y, const LanguagedText texts,
-            float size = 20, Color color = WHITE, Aligment aligment = Aligment::Midle);
+        DynamicText(const Window& window, float X, float Y, const LanguagedText texts,
+            float height = Height::Main, Color color = WHITE, Aligment aligment = Aligment::Midle);
         ~DynamicText();
         template <typename ...Args>
         void setValues(Args&& ...args) {
@@ -80,7 +91,7 @@ namespace GUI {
 
 
     // Class of slider bar with point on it to control need parameter
-    class Slider : public Template {
+    class Slider : public TextureTemplate {
      private:
         SDL_Texture *textureButton;  // Texture of line (upper part of slider)
         SDL_FRect buttonRect;        // Place for rendering upper part
@@ -88,8 +99,8 @@ namespace GUI {
 
      public:
         // Create slide with need line and button images
-        Slider(float X, float Y, float width, unsigned startValue, Textures lineImage = Textures::SliderLine,
-            Textures buttonImage = Textures::SliderButton, unsigned max = 255);
+        Slider(const Window& window, float X, float Y, float width, unsigned startValue,
+            Textures lineImage = Textures::SliderLine, Textures buttonImage = Textures::SliderButton, unsigned max = 255);
         unsigned setValue(float mouseX);  // Setting new state from mouse position
         unsigned scroll(float wheelY);    // Checking mouse wheel action
         void blit() const override;       // Drawing slider with need button position
@@ -97,22 +108,44 @@ namespace GUI {
 
 
     // Class of buttons with image on it
-    class ImageButton : public Template {
+    class ImageButton : public TextureTemplate {
      public:
-        ImageButton(float X, float Y, float width, Textures name);
+        ImageButton(const Window& window, float X, float Y, float width, Textures name);
+    };
+
+
+    // Class of rounded backplate for better understability
+    class RoundedBackplate : public TextureTemplate {
+     public:
+        RoundedBackplate(const Window& window, float centerX, float centerY, float width, float height,
+            float radius, float border, Color frontColor = GREY, Color backColor = BLACK);
+        RoundedBackplate(const Window& window, const SDL_FRect& rect, float radius, float border,
+            Color frontColor = GREY, Color backColor = BLACK);
+        ~RoundedBackplate();
+    };
+
+
+    // Class with rectangular backplate for typeBox
+    class RectBackplate : public TextureTemplate {
+     public:
+        RectBackplate(const Window& window, float centerX, float centerY, float width, float height,
+            float border, Color frontColor = GREY, Color backColor = BLACK);
+        RectBackplate(const Window& window, const SDL_FRect& rect,
+            float border, Color frontColor = GREY, Color backColor = BLACK);
+        ~RectBackplate();
     };
 
 
     // GIF-animations
     #if ANI_count
-    class GIFAnimation : public Template {
+    class GIFAnimation : public TextureTemplate {
      private:
         const Uint8 type;
         Uint64 prevTick;
         const SDL_FRect dest;
 
      public:
-        GIFAnimation(SDL_Rect destination, ANI_names type);
+        GIFAnimation(const Window& window, SDL_Rect destination, ANI_names type);
         ~GIFAnimation();
         void blit() const;
     };
@@ -121,14 +154,12 @@ namespace GUI {
 
     // Class of field, where user can type text
     template <unsigned bufferSize = 16>
-    class TypeField {
+    class TypeField : public TextureTemplate {
      protected:
         // Class constants
         const int posX;                    // Relevant x position on screen
         const Aligment aligment;           // Aligment type for correct placed position
         const Color textColor;             // Color of typing text
-        SDL_Texture* backTexture;          // Texture of backplate
-        const SDL_FRect backRect;          // Rect of backplate
         TTF_Font* font;                    // Font for type text
 
         // Variables
@@ -142,8 +173,6 @@ namespace GUI {
         char clipboardText[bufferSize+1];  // Copying string for clipboard use
         bool pressed = false;              //
         bool selected = false;             //
-        SDL_Texture* textTexture;          // Texture of text
-        SDL_FRect textRect;                // Rect of text
 
         void select(float _mouseX);        // Select last letter to create writing symbol
         void updateTexture();              // Creat new texture and update it position
@@ -152,8 +181,8 @@ namespace GUI {
         void copyToClipboard();            // Writing selected text to clipboard
 
      public:
-        TypeField(float posX, float posY, float height, const char *startText = "",
-            Aligment aligment = Aligment::Midle, Color textColor = BLACK);
+        TypeField(const Window& window, float posX, float posY, const char *startText = "",
+            float height = Height::TypeBox, Aligment aligment = Aligment::Midle, Color textColor = BLACK);
         ~TypeField();                        // Clearing font and texture
         void writeString(const char* str);   // Function of writing any string to buffer at caret position
         void type(SDL_Keycode code);         // Function of processing special keycodes
@@ -162,28 +191,31 @@ namespace GUI {
         void unclick();                      // Function of resetting pressing
         const char* getString();             // Function of getting typed string
         void setString(const char* string);  // Function for replace text with new string
-        void blit() const;                   // Function for draw at screen
-        bool in(const Mouse mouse) const;    // Function of checking pressing
+        void blit() const override;          // Function for draw at screen
     };
 
-    // Class of backplate for
-    class Backplate : public Template {
+
+    // Object for typying in text with backplate for visability
+    template <unsigned bufferSize = 16>
+    class TypeBox : public TypeField<bufferSize> {
+     private:
+        RectBackplate backplate;
+
      public:
-        Backplate(float centerX, float centerY, float width, float height, float radius, float border,
-            Color frontColor = GREY, Color backColor = BLACK);
-        Backplate(const SDL_FRect& rect, float radius, float border, Color frontColor = GREY,
-            Color backColor = BLACK);
-        ~Backplate();
+        TypeBox(const Window& window, float posX, float posY, const char *startText = "", float height = Height::TypeBox,
+            Aligment aligment = Aligment::Midle, unsigned frameWidth = 2, Color textColor = BLACK);
+        void blit() const override;  // Function for draw inputting text with backplate
+        bool in(const Mouse mouse) const override;
     };
 
 
     // Class of buttons with text on it
     class TextButton : public HighlightedStaticText {
      private:
-        const Backplate backplate;
+        const RoundedBackplate backplate;
 
      public:
-        TextButton(float X, float Y, const LanguagedText texts, float size,
+        TextButton(const Window& window, float X, float Y, const LanguagedText texts, float size = Height::Main,
             Color color = WHITE, Aligment aligment = Aligment::Midle);
         void blit() const override;
     };
@@ -196,8 +228,8 @@ namespace GUI {
         static const unsigned maxCounter = 100;
 
      public:
-        InfoBox(float X, float Y, const LanguagedText texts,
-            float size, Color color = WHITE, Aligment aligment = Aligment::Midle);
+        InfoBox(const Window& window, float X, float Y, const LanguagedText texts,
+            float height = Height::Main, Color color = WHITE, Aligment aligment = Aligment::Midle);
         void update();
         void reset();
     };

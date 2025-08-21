@@ -6,11 +6,11 @@
 #include "serverGame.hpp"
 
 
-ServerGameCycle::ServerGameCycle(const Connection& _server)
-: InternetCycle(),
+ServerGameCycle::ServerGameCycle(Window& _window, const Connection& _server)
+: InternetCycle(_window),
 connection(_server),
-startFirst(0.5, 0.45, {"Start as cross", "Начать за крестик", "Am Kreuz anfangen", "Пачаць за крыжык"}, 24),
-startSecond(0.5, 0.55, {"Start as circle", "Начать за кружок", "Für einen Kreis beginnen", "Пачаць за гурток"}, 24) {
+startFirst(window, 0.5, 0.45, {"Start as cross", "Начать за крестик", "Am Kreuz anfangen", "Пачаць за крыжык"}),
+startSecond(window, 0.5, 0.55, {"Start as circle", "Начать за кружок", "Für einen Kreis beginnen", "Пачаць за гурток"}) {
     if (!isRestarted()) {
         // Sending applying initialsiation message
         connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::Init, field.getWidth(), field.getWinWidth());
@@ -108,6 +108,9 @@ void ServerGameCycle::update() {
                 connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
         }
         return;
+
+    default:
+        break;
     }
 }
 
@@ -150,6 +153,9 @@ void ServerGameCycle::draw() const {
 
     case GameState::NobodyWin:
         nobodyWinText.blit();
+        break;
+
+    default:
         break;
     }
     // Drawing buttons

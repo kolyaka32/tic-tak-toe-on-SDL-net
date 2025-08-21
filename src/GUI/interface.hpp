@@ -9,8 +9,4 @@
 #include <string>
 #include "baseGUI.hpp"
 #include "typeField.cpp"
-
-// Making sure, that important files included
-#include "../define.hpp"
-#include "../testing.hpp"
-#include "../data/macroses.hpp"
+#include "typeBox.cpp"

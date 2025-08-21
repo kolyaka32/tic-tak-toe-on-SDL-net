@@ -26,5 +26,5 @@ class SelectCycle : public BaseCycle {
     void draw() const override;
 
  public:
-    SelectCycle();
+    SelectCycle(Window& window);
 };
