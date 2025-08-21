@@ -11,11 +11,11 @@ bool ServerLobbyCycle::showAddress = false;
 
 ServerLobbyCycle::ServerLobbyCycle(Window& _window)
 : BaseCycle(_window),
-titleText(window, 0.5, 0.15, {"Wait for connection", "Ожидайте подключения", "Verbindungen erwarten", "Чакайце падлучэнняў"}, 2, 28),
-addressText(window, 0.5, 0.3, {"Your address: %s", "Ваш адресс: %s", "Ihre Adresse: %s", "Ваш адрас: %s"}, 24),
-copiedInfoBox(window, 0.5, 0.37, {"Address copied", "Адрес скопирован", "Adresse kopiert", "Скапіяваны адрас"}, 24),
-showAddressText(window, 0.5, 0.45, {"Show address", "Показать адресс", "Adresse anzeigen", "Паказаць адрас"}, 24),
-hideAddressText(window, 0.5, 0.45, {"Hide address", "Скрыть адресс", "Adresse verbergen", "Схаваць адрас"}, 24) {
+titleText(window, 0.5, 0.15, {"Wait for connection", "Ожидайте подключения", "Verbindungen erwarten", "Чакайце падлучэнняў"}, 2, Height::SubTitle),
+addressText(window, 0.5, 0.3, {"Your address: %s", "Ваш адресс: %s", "Ihre Adresse: %s", "Ваш адрас: %s"}),
+copiedInfoBox(window, 0.5, 0.4, {"Address copied", "Адрес скопирован", "Adresse kopiert", "Скапіяваны адрас"}),
+showAddressText(window, 0.5, 0.5, {"Show address", "Показать адресс", "Adresse anzeigen", "Паказаць адрас"}),
+hideAddressText(window, 0.5, 0.5, {"Hide address", "Скрыть адресс", "Adresse verbergen", "Схаваць адрас"}) {
     // Resetting flag of showing address
     if (!isRestarted()) {
         showAddress = false;

@@ -46,7 +46,7 @@ namespace GUI {
     class StaticText : public TextureTemplate {
      public:
         StaticText(const Window& window, float X, float Y, const LanguagedText texts,
-            float size, Color color = WHITE, Aligment aligment = Aligment::Midle);
+            float height = Height::Main, Color color = WHITE, Aligment aligment = Aligment::Midle);
         ~StaticText();
     };
 
@@ -54,8 +54,8 @@ namespace GUI {
     // Static text on screen
     class HighlightedStaticText : public TextureTemplate {
      public:
-        HighlightedStaticText(const Window& window, float X, float Y, const LanguagedText texts,
-            int frameThickness, float size, Color color = WHITE, Aligment aligment = Aligment::Midle);
+        HighlightedStaticText(const Window& window, float X, float Y, const LanguagedText texts, int frameThickness,
+            float height = Height::Main, Color color = WHITE, Aligment aligment = Aligment::Midle);
         ~HighlightedStaticText();
     };
 
@@ -71,7 +71,7 @@ namespace GUI {
 
      public:
         DynamicText(const Window& window, float X, float Y, const LanguagedText texts,
-            float size = 20, Color color = WHITE, Aligment aligment = Aligment::Midle);
+            float height = Height::Main, Color color = WHITE, Aligment aligment = Aligment::Midle);
         ~DynamicText();
         template <typename ...Args>
         void setValues(Args&& ...args) {
@@ -181,8 +181,8 @@ namespace GUI {
         void copyToClipboard();            // Writing selected text to clipboard
 
      public:
-        TypeField(const Window& window, float posX, float posY, float height,
-            const char *startText = "", Aligment aligment = Aligment::Midle, Color textColor = BLACK);
+        TypeField(const Window& window, float posX, float posY, const char *startText = "",
+            float height = Height::TypeBox, Aligment aligment = Aligment::Midle, Color textColor = BLACK);
         ~TypeField();                        // Clearing font and texture
         void writeString(const char* str);   // Function of writing any string to buffer at caret position
         void type(SDL_Keycode code);         // Function of processing special keycodes
@@ -202,7 +202,7 @@ namespace GUI {
         RectBackplate backplate;
 
      public:
-        TypeBox(const Window& window, float posX, float posY, float height, const char *startText = "",
+        TypeBox(const Window& window, float posX, float posY, const char *startText = "", float height = Height::TypeBox,
             Aligment aligment = Aligment::Midle, unsigned frameWidth = 2, Color textColor = BLACK);
         void blit() const override;  // Function for draw inputting text with backplate
         bool in(const Mouse mouse) const override;
@@ -215,7 +215,7 @@ namespace GUI {
         const RoundedBackplate backplate;
 
      public:
-        TextButton(const Window& window, float X, float Y, const LanguagedText texts, float size,
+        TextButton(const Window& window, float X, float Y, const LanguagedText texts, float size = Height::Main,
             Color color = WHITE, Aligment aligment = Aligment::Midle);
         void blit() const override;
     };
@@ -229,7 +229,7 @@ namespace GUI {
 
      public:
         InfoBox(const Window& window, float X, float Y, const LanguagedText texts,
-            float size, Color color = WHITE, Aligment aligment = Aligment::Midle);
+            float height = Height::Main, Color color = WHITE, Aligment aligment = Aligment::Midle);
         void update();
         void reset();
     };

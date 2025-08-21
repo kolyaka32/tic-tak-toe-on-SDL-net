@@ -14,13 +14,13 @@
 // Starting basic template with main theme
 SelectCycle::SelectCycle(Window& _window)
 : BaseCycle(_window),
-titleText(window, 0.5, 0.15, {"Tic-tac-toe", "Крестики нолики", "Tic-tac-toe", "Крыжыкі нулікі"}, 3, 40, WHITE),
-singleplayerButton(window, 0.5, 0.3, {"Singleplayer", "Одиночная игра", "Einzelspiel", "Адзіночная гульня"}, 24, WHITE),
-bigFieldInfobox(window, 0.5, 0.375, {"Too big field", "Слишком большое поле", "Zu großes Feld", "Занадта вялікае поле"}, 24),
-twoPlayerButton(window, 0.5, 0.45, {"Two players", "Два игрока", "Zwei Spieler", "Два гульца"}, 24, WHITE),
-serverButton(window, 0.5, 0.6, {"Create server", "Создать сервер", "Server erstellen", "Стварыць сервер"}, 24, WHITE),
-connectButton(window, 0.5, 0.75, {"Connect", "Присоединиться", "Beitreten", "Далучыцца"}, 24, WHITE),
-fieldParametersButton(window, 0.5, 0.9, {"Field parameters", "Параметры поля", "Feld-Parameter", "Параметры поля"}, 24, WHITE) {
+titleText(window, 0.5, 0.15, {"Tic-tac-toe", "Крестики нолики", "Tic-tac-toe", "Крыжыкі нулікі"}, 3, Height::Title),
+singleplayerButton(window, 0.5, 0.3, {"Singleplayer", "Одиночная игра", "Einzelspiel", "Адзіночная гульня"}),
+bigFieldInfobox(window, 0.5, 0.375, {"Too big field", "Слишком большое поле", "Zu großes Feld", "Занадта вялікае поле"}),
+twoPlayerButton(window, 0.5, 0.45, {"Two players", "Два игрока", "Zwei Spieler", "Два гульца"}),
+serverButton(window, 0.5, 0.6, {"Create server", "Создать сервер", "Server erstellen", "Стварыць сервер"}),
+connectButton(window, 0.5, 0.75, {"Connect", "Присоединиться", "Beitreten", "Далучыцца"}),
+fieldParametersButton(window, 0.5, 0.9, {"Field parameters", "Параметры поля", "Feld-Parameter", "Параметры поля"}) {
     // Starting menu song (if wasn't started)
     music.start(Music::Menu);
     logAdditional("Start select cycle");

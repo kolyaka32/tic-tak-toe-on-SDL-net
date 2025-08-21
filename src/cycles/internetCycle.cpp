@@ -9,13 +9,13 @@
 InternetCycle::InternetCycle(Window& _window)
 : GameCycle(_window),
 playersTurnsTexts {
-    {window, 0.5, 0.05, {"Your turn", "Ваш ход", "Sie spielen aus", "Ваш ход"}, 24, WHITE},
-    {window, 0.5, 0.05, {"Wait", "Ожидайте", "Erwartet", "Чакаць"}, 24, WHITE},
+    {window, 0.5, 0.05, {"Your turn", "Ваш ход", "Sie spielen aus", "Ваш ход"}},
+    {window, 0.5, 0.05, {"Wait", "Ожидайте", "Erwartet", "Чакаць"}},
 },
 disconnectedBox(window),
 termianatedBox(window),
-looseText(window, 0.5, 0.35, {"You loose", "Вы проиграли", "Sie haben verloren", "Вы прайгралі"}, 1, 32, WHITE),
-winText(window, 0.5, 0.35, {"Win", "Победа", "Sieg", "Перамога"}, 1, 32, WHITE) {
+looseText(window, 0.5, 0.35, {"You loose", "Вы проиграли", "Sie haben verloren", "Вы прайгралі"}, 1, Height::Info),
+winText(window, 0.5, 0.35, {"Win", "Победа", "Sieg", "Перамога"}, 1, Height::Info) {
     // Resetting flag
     if (!isRestarted()) {
         disconnectedBox.reset();

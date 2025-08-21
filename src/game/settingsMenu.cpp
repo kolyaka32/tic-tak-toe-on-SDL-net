@@ -13,18 +13,18 @@ SettingsMenu::SettingsMenu(const Window& _window)
 : Template(_window),
 settingButton{window, 0.96, 0.05, 0.08, Textures::PauseButton},
 background{window, 0.5, 0.5, 0.65, 0.85, 20, 5},
-titleText{window, 0.5, 0.13, {"Pause", "Пауза", "Pause", "Паўза"}, 2, 32, WHITE},
+titleText{window, 0.5, 0.13, {"Pause", "Пауза", "Pause", "Паўза"}, 2, Height::Info},
 flags {
     {window, 0.35, 0.27, 0.25, Textures::FlagUSA},
     {window, 0.65, 0.27, 0.25, Textures::FlagRUS},
     {window, 0.35, 0.45, 0.25, Textures::FlagGER},
     {window, 0.65, 0.45, 0.25, Textures::FlagBEL},
 },
-musicText{window, 0.5, 0.58, {"Music", "Музыка", "Die Musik", "Музыка"}, 1, 24, WHITE},
+musicText{window, 0.5, 0.58, {"Music", "Музыка", "Die Musik", "Музыка"}, 1},
 musicSlider{window, 0.5, 0.64, 0.5, music.getVolume()},
-soundText{window, 0.5, 0.7, {"Sounds", "Звуки", "Geräusche", "Гук"}, 1, 24, WHITE},
+soundText{window, 0.5, 0.7, {"Sounds", "Звуки", "Geräusche", "Гук"}, 1},
 soundSlider{window, 0.5, 0.76, 0.5, sounds.getVolume()},
-exitButton{window, 0.5, 0.85, {"Exit", "Выход", "Ausfahrt", "Выхад"}, 24, WHITE} {}
+exitButton{window, 0.5, 0.85, {"Exit", "Выход", "Ausfahrt", "Выхад"}} {}
 
 bool SettingsMenu::click(const Mouse _mouse) {
     // Check, if click on setting butoon

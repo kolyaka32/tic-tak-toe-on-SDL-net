@@ -10,7 +10,7 @@
 
 // Type field class
 template <unsigned bufferSize>
-GUI::TypeField<bufferSize>::TypeField(const Window& _window, float _X, float _Y, float _height, const char* _text, Aligment _aligment, Color _color)
+GUI::TypeField<bufferSize>::TypeField(const Window& _window, float _X, float _Y, const char* _text, float _height, Aligment _aligment, Color _color)
 : TextureTemplate(_window),
 posX(window.getWidth()*_X),
 aligment(_aligment),

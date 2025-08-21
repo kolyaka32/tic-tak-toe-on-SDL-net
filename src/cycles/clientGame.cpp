@@ -10,7 +10,7 @@
 ClientGameCycle::ClientGameCycle(Window& _window, const Connection& _client)
 : InternetCycle(_window),
 connection(_client),
-waitText(window, 0.5, 0.05, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}, 24) {
+waitText(window, 0.5, 0.05, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}) {
     logAdditional("Start client game cycle");
 }
 
