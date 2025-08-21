@@ -3,7 +3,7 @@
  * <nik.kazankov.05@mail.ru>
  */
 
-#include "data/app.hpp"
+#include "data/libraries.hpp"
 // Load needed loader, depend on teting
 #if ARCHIEVE_LOADING
 #include "data/preloaded/loader/archieveLoader.hpp"
@@ -16,12 +16,16 @@
 #include "cycles/selectCycle.hpp"
 
 
+// Selecting loader for data, depend on testing
+Libraries libraries;
+#if ARCHIEVE_LOADING
+const ArchieveLoader dataLoader{};
+#else
+const StraightLoader dataLoader{};
+#endif
 // Static game objects
 SoundsData sounds{};
 MusicData music{};
-Field GameField::field{};
-InitFile initFile{};
-
 
 // Main function
 int main(int argv, char **args) {

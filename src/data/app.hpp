@@ -13,7 +13,7 @@
 
 
 // Class of whole current application
-class App : Libraries {
+class App {
  private:
     // Flags of work
     static bool running;

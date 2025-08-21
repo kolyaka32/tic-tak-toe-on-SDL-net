@@ -13,6 +13,8 @@
 #include "cycles/clientLobby.hpp"
 
 
+InitFile initFile{};
+
 // Data, load from setting file
 void InitFile::loadSettings() {
     // Reading file
