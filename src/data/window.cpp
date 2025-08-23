@@ -149,8 +149,12 @@ SDL_Texture* Window::createTextureAndFree(SDL_Surface* _surface) const {
     return texture;
 }
 
-void Window::blit(SDL_Texture* _texture, const SDL_FRect& _dest, const SDL_FRect* _src) const {
-    SDL_RenderTexture(renderer, _texture, _src, &_dest);
+void Window::blit(SDL_Texture* _texture, const SDL_FRect& _dest) const {
+    SDL_RenderTexture(renderer, _texture, nullptr, &_dest);
+}
+
+void Window::blit(SDL_Texture* _texture, const SDL_FRect* _dest, const SDL_FRect* _src) const {
+    SDL_RenderTexture(renderer, _texture, _src, _dest);
 }
 
 void Window::blit(SDL_Texture* _texture, float _angle, const SDL_FRect& _dest,
@@ -202,6 +206,17 @@ SDL_Texture* Window::createTexture(Fonts _font, float _height, const char* _text
 
     // Creating surface
     SDL_Surface* surface = TTF_RenderText_Solid(getFont(_font), _text, _length, _color);
+
+    // Creating texture from created surface
+    SDL_Texture* texture = createTexture(surface);
+
+    SDL_DestroySurface(surface);
+    return texture;
+}
+
+SDL_Texture* Window::createTexture(TTF_Font* _font, const char* _text, Color _color) const {
+    // Creating surface
+    SDL_Surface* surface = TTF_RenderText_Solid(_font, _text, 0, _color);
 
     // Creating texture from created surface
     SDL_Texture* texture = createTexture(surface);
