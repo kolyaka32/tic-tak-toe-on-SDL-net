@@ -166,16 +166,20 @@ namespace GUI {
         char buffer[bufferSize+1];         // String, that was typed
         size_t length = 0;                 // Length of all text
         size_t caret = 0;                  // Position of place, where user type
-        int selectLength = 0;              // Length of selected box
-        bool showCaret = false;            // Flag, if need to show caret
         timer needSwapCaret = 0;           // Time, when next need to change caret
+        int selectLength = 0;              // Length of selected box
+
+        bool showCaret = false;            // Flag, if need to show caret
         SDL_FRect caretRect;               // Place, where caret should be at screen
+        SDL_FRect inversedRectDest;        // Rect of inversed selected text, where should be drawn
+        SDL_FRect inversedRectSrc;         // Part of text, that should be reversed (relative)
+        SDL_Texture* inverseTexture;       // Texture of inversed selected box
         char clipboardText[bufferSize+1];  // Copying string for clipboard use
         bool pressed = false;              //
         bool selected = false;             //
 
-        void select(float _mouseX);        // Select last letter to create writing symbol
-        void updateTexture();              // Creat new texture and update it position
+        void updateTexture();              // Creat new texture of updated text
+        void updateSelected();             // Update reversed rect position (selected part)
         void deleteSelected();             // Clearing selected part
         void writeClipboard();             // Write clipboard content after caret
         void copyToClipboard();            // Writing selected text to clipboard

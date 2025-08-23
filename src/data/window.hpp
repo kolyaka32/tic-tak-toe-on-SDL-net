@@ -69,7 +69,8 @@ class Window {
         SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA32) const;
     SDL_Texture* createTexture(SDL_Surface* surface) const;
     SDL_Texture* createTextureAndFree(SDL_Surface* surface) const;
-    void blit(SDL_Texture* texture, const SDL_FRect& dest, const SDL_FRect* src = nullptr) const;
+    void blit(SDL_Texture* texture, const SDL_FRect& dest) const;
+    void blit(SDL_Texture* texture, const SDL_FRect* dest, const SDL_FRect* src) const;
     void blit(SDL_Texture* texture, float angle, const SDL_FRect& rect, const SDL_FRect* src = nullptr,
         SDL_FPoint center = {0, 0}) const;
     void setRenderTarget(SDL_Texture* target) const;
@@ -83,6 +84,7 @@ class Window {
     TTF_Font* getFont(Fonts name) const;
     TTF_Font* createFontCopy(Fonts name, float height) const;
     SDL_Texture* createTexture(Fonts font, float height, const char* text, unsigned length, Color color) const;
+    SDL_Texture* createTexture(TTF_Font* font, const char* text, Color color) const;
 
     // Work with window
     void startTextInput() const;
