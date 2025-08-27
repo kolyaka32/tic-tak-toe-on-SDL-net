@@ -14,8 +14,6 @@
 
 // Names of all images with related numbers
 enum class Animations : unsigned {
-    // Base part
-    Menu,
 
     // Count of all animations
     Count,

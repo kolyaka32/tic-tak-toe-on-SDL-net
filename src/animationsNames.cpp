@@ -12,7 +12,7 @@
 
 // File names of the corresponding textures
 const char* animationsFilesNames[unsigned(Animations::Count)] = {
-    "ani/menu.gif",
+
 };
 
 #endif  // (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
