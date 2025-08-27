@@ -8,11 +8,12 @@
 #include "colors.hpp"
 #include "time.hpp"
 #include "preloaded/textures.hpp"
+#include "preloaded/animations.hpp"
 #include "preloaded/fonts.hpp"
 #include "languages.hpp"
 
 
-// Class of window, where all happen
+// Class of window, drawn functions, work with it
 class Window {
  private:
     int width, height;
@@ -22,6 +23,10 @@ class Window {
     #if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
     // Preloaded textures
     const TexturesData textures;
+    #endif
+    #if (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
+    // Preloaded animations
+    const AnimationsData animations;
     #endif
     #if (USE_SDL_FONT) && (PRELOAD_FONTS)
     // Preloaded fonts
@@ -77,6 +82,11 @@ class Window {
     // Work with preloaded textures
     #if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
     SDL_Texture* getTexture(Textures name) const;
+    #endif
+
+    // Work with preloaded animations
+    #if (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
+    IMG_Animation* getAnimation(Animations name) const;
     #endif
 
     // Work with preloaded fonts and text

@@ -25,7 +25,7 @@ SDL_IOStream* StraightLoader::load(const char* _fileName) const {
     delete[] fileName;
 
     // Checking correction of loaded font
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (data == nullptr) {
         throw DataLoadException(_fileName);
     }

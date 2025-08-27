@@ -19,16 +19,19 @@ textures{renderer},
 #if (USE_SDL_FONT) && (PRELOAD_FONTS)
 fonts{},
 #endif
+#if (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
+animations{},
+#endif
 titleText(_title) {
     // Checking on correction of created objects
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (window == NULL) {
         throw LibararyLoadException("window creation");
     }
     #endif
 
     // Creating renderer from window
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (renderer == NULL) {
         throw LibararyLoadException("renderer creation");
     }
@@ -164,6 +167,14 @@ SDL_Texture* Window::getTexture(Textures _name) const {
     return textures[_name];
 }
 #endif  // (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
+
+
+// Work with preloaded animations
+#if (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
+IMG_Animation* Window::getAnimation(Animations _name) const {
+    return animations[_name];
+}
+#endif  // (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
 
 
 // Work with fonts

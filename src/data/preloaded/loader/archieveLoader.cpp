@@ -21,7 +21,7 @@ ArchieveLoader::ArchieveLoader() {
     #endif
 
     // Checking openning correction
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (archive == nullptr) {
         throw DataLoadException("load archieve: " + std::string(DATA_FILE));
     }
@@ -37,7 +37,7 @@ SDL_IOStream* ArchieveLoader::load(const char* _file) const {
     zip_file_t *file = zip_fopen_encrypted(archive, _file, 0, ARCHIEVE_PASSWORD);
 
     // Checking correction of openned file
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (file == nullptr) {
         throw DataLoadException("load file from archieve: " + std::string(_file));
     }
@@ -48,7 +48,7 @@ SDL_IOStream* ArchieveLoader::load(const char* _file) const {
     zip_stat(archive, _file, 0, &st);
 
     // Checking correction of openned file
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (st.size == 0) {
         throw DataLoadException("load file from archieve: " + std::string(_file));
     }
@@ -67,7 +67,7 @@ SDL_IOStream* ArchieveLoader::load(const char* _file) const {
     SDL_IOStream *tempIO = SDL_IOFromConstMem(buffer, st.size);
 
     // Checking correction of loaded object
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (!tempIO) {
         throw DataLoadException("load file from archieve: " + std::string(_file));
     }

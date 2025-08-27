@@ -5,7 +5,6 @@
 
 #include "fonts.hpp"
 
-// Check, if use fonts and preload it
 #if (USE_SDL_FONT) && (PRELOAD_FONTS)
 
 #include "loader/loader.hpp"
@@ -14,7 +13,7 @@
 
 FontsData::FontsData() {
     // Resetting fonts array
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     for (unsigned i=0; i < unsigned(Fonts::Count); ++i) {
         fonts[i] = nullptr;
     }
@@ -26,7 +25,7 @@ FontsData::FontsData() {
     }
 
     // Checking massive on loading correction
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     for (unsigned i=0; i < unsigned(Fonts::Count); ++i) {
         if (fonts[i] == NULL) {
             throw DataLoadException(fontsFilesNames[i]);
@@ -49,7 +48,7 @@ void FontsData::loadFont(Fonts _index, const char* _fileName) {
     fonts[unsigned(_index)] = TTF_OpenFontIO(iodata, true, 20.);
 
     // Checking correction of loaded font
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (fonts[unsigned(_index)] == nullptr) {
         throw DataLoadException(_fileName);
     }

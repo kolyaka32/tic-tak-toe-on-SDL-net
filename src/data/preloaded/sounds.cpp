@@ -5,7 +5,6 @@
 
 #include "sounds.hpp"
 
-// Check, if use mixer and preload sounds
 #if (USE_SDL_MIXER) && (PRELOAD_SOUNDS)
 
 #include "loader/loader.hpp"
@@ -14,7 +13,7 @@
 
 SoundsData::SoundsData() {
     // Resetting all sounds
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     for (unsigned i=0; i < unsigned(Sounds::Count); ++i) {
         sounds[i] = nullptr;
     }
@@ -26,7 +25,7 @@ SoundsData::SoundsData() {
     }
 
     // Checking massive on loading correction
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     for (unsigned i=0; i < unsigned(Sounds::Count); ++i) {
         if (sounds[i] == NULL) {
             throw DataLoadException(soundsFilesNames[i]);
@@ -54,7 +53,7 @@ void SoundsData::loadSound(unsigned _index, const char* _name) {
     sounds[_index] = Mix_LoadWAV_IO(iodata, true);
 
     // Checking correction of loaded sound
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (sounds[_index] == nullptr) {
         throw DataLoadException(_name);
     }
@@ -67,7 +66,7 @@ void SoundsData::play(Sounds _index) const {
 
 void SoundsData::setVolume(unsigned _volume) {
     // Checking correction given volume
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (_volume/2 > MIX_MAX_VOLUME) {
         throw "Wrong volume";
     }

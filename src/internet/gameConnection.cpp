@@ -145,7 +145,7 @@ ConnectionCode GameConnection::checkNewMessage() {
         if (getIndexes.isUnique(index)) {
             // Adding to list for next checks
             getIndexes.add(index);
-            #if CHECK_CORRECTION
+            #if (CHECK_CORRECTION)
             if (code != ConnectionCode::Null) {
                 logAdditional("Get data with code: %u, index: %u", (Uint8)code, index);
             }

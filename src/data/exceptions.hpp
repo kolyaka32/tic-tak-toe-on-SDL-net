@@ -5,14 +5,15 @@
 
 #pragma once
 
-#include <SDL3/SDL_log.h>
-#include <stdexcept>
-#include <string>
 #include "logger.hpp"
 
-
 // Custom exceptions
-#if CHECK_CORRECTION
+#if (CHECK_CORRECTION)
+
+#include <stdexcept>
+#include <string>
+
+
 // Any error of loading
 class LoadException : public std::exception {
  protected:
@@ -47,4 +48,5 @@ class DataLoadException : LoadException {
         return message;
     }
 };
-#endif
+
+#endif  // (CHECK_CORRECTION)

@@ -13,7 +13,7 @@ Client::Client()
     // Creating random recieving socket
     gettingSocket = NET_CreateDatagramSocket(nullptr, 0);
 
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     // Adding some packet loss for better testing
     NET_SimulateDatagramPacketLoss(gettingSocket, CONNECTION_LOST_PERCENT);
     #endif

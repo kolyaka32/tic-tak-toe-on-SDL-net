@@ -12,7 +12,7 @@
 Connection::Connection() {
     // Intialasing internet library
     NET_Init();
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     // Extra clearing
     gettingSocket = nullptr;
     sendPort = 0;
@@ -67,7 +67,7 @@ ConnectionCode Connection::getCode() {
 }
 
 void Connection::send(const SendPacket& _packet) const {
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (sendAddress == nullptr || sendPort == 0) {
         logAdditional("Can't send packet at unspecified address");
         return;

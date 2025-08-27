@@ -8,19 +8,29 @@
 #if (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
 
 
-GUI::Animation::Animation(SDL_Rect _rect, ANI_names _type)
-: dest(_dest), type(_type), frame(0), prevTick(0) {}
+GUI::Animation::Animation(const Window& _window, float _X, float _Y, float _W, float _H, Animations _type)
+: Animation(_window, {_X*window.getWidth(), _Y*window.getHeight(), _W*window.getWidth(), _H*window.getHeight()}, _type) {}
+
+GUI::Animation::Animation(const Window& _window, const SDL_FRect& _dest, Animations _type)
+: TextureTemplate(_window),
+type(_type),
+prevTick(0),
+animation(window.getAnimation(_type)) {
+    rect = _dest;
+    texture = window.createTexture(animation->frames[0]);
+    prevTick = getTime() + animation->delays[0];
+}
 
 GUI::Animation::~Animation() {
     SDL_DestroyTexture(texture);
 }
 
-void GUI::Animation::blit() {
+void GUI::Animation::update() {
     if (SDL_GetTicks() > prevTick) {
-        static unsigned frame = (frame + 1) % Animations[type]->count;
-        window.destroy(texture);
-        texture = window.createTexture(Animations[type]->frames[frame], false);
-        prevTick = SDL_GetTicks() + Animations[type]->delays[frame] / 2;
+        frame = (frame + 1) % animation->count;
+        SDL_DestroyTexture(texture);
+        texture = window.createTexture(animation->frames[frame]);
+        prevTick = getTime() + animation->delays[frame];
     }
 }
 

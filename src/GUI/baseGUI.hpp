@@ -95,14 +95,16 @@ namespace GUI {
     #if (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
     class Animation : public TextureTemplate {
      private:
-        const Uint8 type;
-        Uint64 prevTick;
-        const SDL_FRect dest;
+        const Animations type;
+        const IMG_Animation* animation;
+        unsigned frame = 0;
+        timer prevTick;
 
      public:
-        Animation(const Window& window, SDL_FRect destination, ANI_names type);
+        Animation(const Window& window, float X, float Y, float width, float height, Animations type);
+        Animation(const Window& window, const SDL_FRect& destination, Animations type);
         ~Animation();
-        void blit() const;
+        void update();
     };
     #endif
 

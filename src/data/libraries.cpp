@@ -12,7 +12,7 @@
 
 Libraries::Libraries() {
     // Load depend on testing
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     // Initialasing main library
     if (!SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO)) {
         throw LibararyLoadException("Main library: " + std::string(SDL_GetError()));
@@ -39,7 +39,7 @@ Libraries::Libraries() {
     }
     #endif
     logAdditional("Libraries load correctly");
-    #else  // CHECK_CORRECTION
+    #else  // (CHECK_CORRECTION)
     SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO);
     #if USE_SDL_FONT
     TTF_Init();
@@ -49,7 +49,7 @@ Libraries::Libraries() {
     audioDeviceID = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
     Mix_OpenAudio(audioDeviceID, NULL);
     #endif
-    #endif  // CHECK_CORRECTION
+    #endif  // (CHECK_CORRECTION)
 }
 
 Libraries::~Libraries() noexcept {

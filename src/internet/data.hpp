@@ -92,7 +92,7 @@ void SendPacket::write(int _offset, T _object, Args&& ...args) {
 
 template <typename T>
 T GetPacket::getData() {
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (offset + sizeof(T) > size) {
         throw "Can't read data - not enogh length";
     }
@@ -105,7 +105,7 @@ T GetPacket::getData() {
 
 template <typename T>
 T GetPacket::getData(int _offset) {
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (_offset + sizeof(T) > size) {
         throw "Can't read data - not enogh length";
     }

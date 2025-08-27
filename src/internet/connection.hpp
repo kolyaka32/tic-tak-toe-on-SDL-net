@@ -52,7 +52,7 @@ class Connection {
 
 template <typename ...Args>
 void Connection::send(ConnectionCode _code, Uint8 index, Args ...args) {
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (sendAddress == nullptr || sendPort == 0) {
         logAdditional("Can't send packet at unspecified address");
         return;

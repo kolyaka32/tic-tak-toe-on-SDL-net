@@ -21,7 +21,7 @@ Server::Server()
         currentPort = SDL_rand(10000);
     }
 
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     // Adding some packet loss for better testing
     NET_SimulateDatagramPacketLoss(gettingSocket, CONNECTION_LOST_PERCENT);
     #endif

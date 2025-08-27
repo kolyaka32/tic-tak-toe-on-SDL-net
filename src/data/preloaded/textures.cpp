@@ -5,8 +5,6 @@
 
 #include "textures.hpp"
 
-
-// Check, if can load images and preload it
 #if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
 
 #include <SDL3_image/SDL_image.h>
@@ -16,7 +14,7 @@
 
 TexturesData::TexturesData(SDL_Renderer* _renderer) {
     // Resetting texture masiive
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     for (unsigned i=0; i < unsigned(Textures::Count); ++i) {
         textures[i] = nullptr;
     }
@@ -28,7 +26,7 @@ TexturesData::TexturesData(SDL_Renderer* _renderer) {
     }
 
     // Checking massive on loading correction
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     for (unsigned i=0; i < unsigned(Textures::Count); ++i) {
         if (textures[i] == NULL) {
             throw DataLoadException(texturesFilesNames[i]);
@@ -53,7 +51,7 @@ void TexturesData::loadTexture(SDL_Renderer* _renderer, Textures _index, const c
     SDL_Surface* surface = IMG_Load_IO(iodata, true);
 
     // Checking correction of created surface
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (surface == nullptr) {
         throw DataLoadException(_fileName);
     }
@@ -63,7 +61,7 @@ void TexturesData::loadTexture(SDL_Renderer* _renderer, Textures _index, const c
     textures[unsigned(_index)] = SDL_CreateTextureFromSurface(_renderer, surface);
 
     // Checking correction of loaded texture
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (textures[unsigned(_index)] == nullptr) {
         throw DataLoadException(_fileName);
     }
