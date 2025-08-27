@@ -5,6 +5,12 @@
 
 #include "music.hpp"
 
+// Check, if use mixer and preload music
+#if USE_SDL_MIXER && PRELOAD_MUSIC
+
+#include "loader/loader.hpp"
+#include "../exceptions.hpp"
+
 
 MusicData::MusicData() {
     // Resetting all tracks
@@ -101,3 +107,5 @@ void MusicData::setVolume(unsigned _volume) {
 unsigned MusicData::getVolume() const {
     return volume * 2;
 }
+
+#endif  // USE_SDL_MIXER && PRELOAD_MUSIC

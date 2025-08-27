@@ -8,11 +8,16 @@
 #include "../../logger.hpp"
 
 
-// Load needed loader, depend on teting
-#if ARCHIEVE_LOADING
+// Check, if need to preload data
+#if (PRELOAD_DATA)
+// Load needed loader, depend on testing
+#if (ARCHIEVE_LOADING)
 #include "archieveLoader.hpp"
-extern const ArchieveLoader dataLoader;
+#define DataLoader ArchieveLoader
 #else
 #include "straightLoader.hpp"
-extern const StraightLoader dataLoader;
-#endif
+#define DataLoader StraightLoader
+#endif  // ARCHIEVE_LOADING
+// Setting global dataloader
+extern const DataLoader dataLoader;
+#endif  // PRELOAD_DATA

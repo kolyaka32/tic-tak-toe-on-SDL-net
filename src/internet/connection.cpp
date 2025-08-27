@@ -6,6 +6,8 @@
 #include <string>
 #include "connection.hpp"
 
+#if (USE_SDL_NET)
+
 
 Connection::Connection() {
     // Intialasing internet library
@@ -99,3 +101,5 @@ const char* Connection::getLocalIP() {
     }
     return nullptr;
 }
+
+#endif  // (USE_SDL_NET)

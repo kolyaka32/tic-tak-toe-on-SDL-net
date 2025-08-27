@@ -19,11 +19,11 @@ class LoadException : public std::exception {
     const char* message;
 
  public:
-    LoadException() : message("Unknown error\n") {}
-    LoadException(const std::string _message) : message(_message.std::string::c_str()) {}
-    ~LoadException() {}
-    const char* what() const noexcept override {
+    LoadException() : LoadException("Unknown error\n") {}
+    LoadException(const std::string _message) : message(_message.std::string::c_str()) {
         logImportant(message);
+    }
+    const char* what() const noexcept override {
         return message;
     };
 };
@@ -32,11 +32,8 @@ class LoadException : public std::exception {
 class LibararyLoadException : LoadException {
  public:
     LibararyLoadException(const std::string _library = "")
-        : LoadException("Error with loading library: " + _library + '\n') {
-        SDL_LogCritical(SDL_LOG_PRIORITY_CRITICAL, "%s", message);
-    }
+        : LoadException("Error with loading library: " + _library + '\n') {}
     const char* what() const noexcept override {
-        SDL_LogCritical(SDL_LOG_PRIORITY_CRITICAL, "%s", message);
         return message;
     }
 };
@@ -45,11 +42,8 @@ class LibararyLoadException : LoadException {
 class DataLoadException : LoadException {
  public:
     DataLoadException(const std::string _dataType = "")
-        : LoadException("Error with load file: " + _dataType + '\n') {
-        SDL_LogError(SDL_LOG_PRIORITY_ERROR, "%s", message);
-    }
+        : LoadException("Error with load file: " + _dataType + '\n') {}
     const char* what() const noexcept override {
-        SDL_LogError(SDL_LOG_PRIORITY_ERROR, "%s", message);
         return message;
     }
 };

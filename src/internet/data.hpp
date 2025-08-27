@@ -5,9 +5,12 @@
 
 #pragma once
 
-#include <utility>
 #include "codes.hpp"
-#include "../data/app.hpp"
+
+// Check, if need internet library
+#if (USE_SDL_NET)
+
+#include <SDL3_net/SDL_net.h>
 
 
 // Class with any ordered data
@@ -109,3 +112,5 @@ T GetPacket::getData(int _offset) {
     #endif
     return swapLE<T>((T)(*(data + _offset)));
 }
+
+#endif  // (USE_SDL_NET)

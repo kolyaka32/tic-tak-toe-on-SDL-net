@@ -6,6 +6,14 @@
 #include "textures.hpp"
 
 
+// Check, if can load images and preload it
+#if USE_SDL_IMAGE && PRELOAD_TEXTURES
+
+#include <SDL3_image/SDL_image.h>
+#include "loader/loader.hpp"
+#include "../exceptions.hpp"
+
+
 TexturesData::TexturesData(SDL_Renderer* _renderer) {
     // Resetting texture masiive
     #if CHECK_CORRECTION
@@ -67,3 +75,5 @@ void TexturesData::loadTexture(SDL_Renderer* _renderer, Textures _index, const c
 SDL_Texture* TexturesData::operator[] (Textures _index) const {
     return textures[unsigned(_index)];
 }
+
+#endif  // USE_SDL_IMAGE && PRELOAD_TEXTURES

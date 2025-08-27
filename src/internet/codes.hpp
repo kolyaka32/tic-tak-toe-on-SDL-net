@@ -5,7 +5,8 @@
 
 #pragma once
 
-#include <SDL3_net/SDL_net.h>
+#include <SDL3/SDL_stdinc.h>
+#include "../define.hpp"
 
 
 // Codes for send/recieve in internet messages

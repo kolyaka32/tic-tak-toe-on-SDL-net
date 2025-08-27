@@ -5,9 +5,12 @@
 
 #pragma once
 
-#include <SDL3_image/SDL_image.h>
-#include "loader/loader.hpp"
 #include "../../texturesNames.hpp"
+
+// Check, if can load images and preload it
+#if USE_SDL_IMAGE && PRELOAD_TEXTURES
+
+#include <SDL3/SDL_render.h>
 
 
 // Class for load, draw and clear textures
@@ -21,3 +24,5 @@ class TexturesData {
     ~TexturesData();
     SDL_Texture* operator[] (Textures name) const;
 };
+
+#endif  // USE_SDL_IMAGE && PRELOAD_TEXTURES

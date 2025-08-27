@@ -5,6 +5,8 @@
 
 #include "data.hpp"
 
+#if (USE_SDL_NET)
+
 
 // Swap little endian function realisations
 template <>
@@ -67,7 +69,6 @@ int SendPacket::getLength() const {
 }
 
 
-
 // Get packet class
 GetPacket::GetPacket(NET_Datagram* datagramm) {
     data = datagramm->buf;
@@ -77,3 +78,5 @@ GetPacket::GetPacket(NET_Datagram* datagramm) {
 bool GetPacket::isBytesAvaliable(int bytes) {
     return size >= bytes;
 }
+
+#endif  // (USE_SDL_NET)

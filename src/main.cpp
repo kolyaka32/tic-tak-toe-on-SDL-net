@@ -3,29 +3,26 @@
  * <nik.kazankov.05@mail.ru>
  */
 
-#include "data/libraries.hpp"
-// Load needed loader, depend on teting
-#if ARCHIEVE_LOADING
-#include "data/preloaded/loader/archieveLoader.hpp"
-#else
-#include "data/preloaded/loader/straightLoader.hpp"
+#include "data/preloaded/loader/loader.hpp"
+#include "data/libraries.hpp"      // Global initialised libraries
+#include "game/gameField.hpp"      // Get window width and height
+#include "cycles/selectCycle.hpp"  // Start game cycle
+
+
+// Initialasing global objects in correct order
+Libraries libraries{};
+
+#if (PRELOAD_DATA)
+const DataLoader dataLoader{};
 #endif
-#include "game/gameField.hpp"
 
-// Start game cycle
-#include "cycles/selectCycle.hpp"
-
-
-// Selecting loader for data, depend on testing
-Libraries libraries;
-#if ARCHIEVE_LOADING
-const ArchieveLoader dataLoader{};
-#else
-const StraightLoader dataLoader{};
-#endif
-// Static game objects
+#if USE_SDL_MIXER && PRELOAD_MUSIC
 SoundsData sounds{};
+#endif
+
+#if USE_SDL_MIXER && PRELOAD_SOUNDS
 MusicData music{};
+#endif
 
 // Main function
 int main(int argv, char **args) {

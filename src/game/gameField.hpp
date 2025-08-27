@@ -12,9 +12,11 @@
 // Cycle with field with game objects on it
 class GameField : public GUI::Template {
  private:
-    static Field field;  // Field with whole game
+    static const float cellSide;   // Width and height of mine in pixels
+    static const float separator;  // Width of separator between cells in pixels
+    static Field field;            // Field with whole game
     static float upperLineHeight;  // Height of upper line for settings
-    static int offset;   // Texture offset for draw with different colors
+    static int offset;             // Texture offset for draw with different colors
 
  public:
     GameField(const Window& window);

@@ -6,6 +6,10 @@
 #pragma once
 
 #include "connection.hpp"
+
+// Check, if need internet library
+#if (USE_SDL_NET)
+
 #include "../data/time.hpp"
 
 
@@ -42,3 +46,5 @@ packet(Uint8(_code), messageIndex, args...) {
         globalMessageIndex++;
     }
 }
+
+#endif  // (USE_SDL_NET)

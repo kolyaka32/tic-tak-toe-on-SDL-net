@@ -7,11 +7,15 @@
 
 #include "connection.hpp"
 
+// Check, if need internet library
+#if (USE_SDL_NET)
+
 
 // Class for create server and wait to connect from another side
 class Server : public Connection {
  private:
     Uint16 currentPort;
+    static const Uint16 basePort = 8000;
 
  public:
     Server();
@@ -19,3 +23,5 @@ class Server : public Connection {
     Uint16 getPort();
     void connectToLastMessage();
 };
+
+#endif  // (USE_SDL_NET)

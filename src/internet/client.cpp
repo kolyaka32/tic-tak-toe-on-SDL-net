@@ -5,6 +5,8 @@
 
 #include "client.hpp"
 
+#if (USE_SDL_NET)
+
 
 Client::Client()
 : Connection() {
@@ -69,3 +71,5 @@ void Client::connectToLastMessage() {
     sendAddress = NET_RefAddress(recievedDatagram->addr);
     sendPort = recievedDatagram->port;
 }
+
+#endif  // (USE_SDL_NET)

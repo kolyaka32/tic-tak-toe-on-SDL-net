@@ -6,7 +6,7 @@
 #pragma once
 
 #include <SDL3/SDL_log.h>
-#include "../testing.hpp"
+#include "../define.hpp"
 
 
 // Function for log important information

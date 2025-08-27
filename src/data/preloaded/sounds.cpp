@@ -5,6 +5,12 @@
 
 #include "sounds.hpp"
 
+// Check, if use mixer and preload sounds
+#if USE_SDL_MIXER && PRELOAD_SOUNDS
+
+#include "loader/loader.hpp"
+#include "../exceptions.hpp"
+
 
 SoundsData::SoundsData() {
     // Resetting all sounds
@@ -75,3 +81,5 @@ void SoundsData::setVolume(unsigned _volume) {
 unsigned SoundsData::getVolume() const {
     return volume*2;
 }
+
+#endif  // USE_SDL_MIXER && PRELOAD_SOUNDS

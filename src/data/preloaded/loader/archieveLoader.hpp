@@ -5,20 +5,28 @@
 
 #pragma once
 
+#include "../../../define.hpp"
+
+
+// Check, if need to load data from archieve
+#if (PRELOAD_DATA) && (ARCHIEVE_LOADING)
+
 #include <zip.h>
-#include "dataLoader.hpp"
+#include <SDL3/SDL_iostream.h>
 
 
 // Setting password for archive
 #define ARCHIEVE_PASSWORD NULL
 
 // Implimentation of loader for arcives
-class ArchieveLoader : public DataLoader {
+class ArchieveLoader {
  private:
     zip_t* archive;  // Archive, where data is located
 
  public:
     ArchieveLoader();
     ~ArchieveLoader();
-    SDL_IOStream* load(const char* name) const override;
+    SDL_IOStream* load(const char* name) const;
 };
+
+#endif  // (PRELOAD_DATA) && (ARCHIEVE_LOADING)

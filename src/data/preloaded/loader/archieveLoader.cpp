@@ -4,7 +4,12 @@
  */
 
 #include "archieveLoader.hpp"
-#include "../../../define.hpp"
+
+
+// Check, if need to load data from archieve
+#if (PRELOAD_DATA) && (ARCHIEVE_LOADING)
+
+#include "../../exceptions.hpp"
 
 
 ArchieveLoader::ArchieveLoader() {
@@ -72,3 +77,5 @@ SDL_IOStream* ArchieveLoader::load(const char* _file) const {
     return tempIO;
     return nullptr;
 }
+
+#endif  // (PRELOAD_DATA) && (ARCHIEVE_LOADING)

@@ -5,9 +5,12 @@
 
 #pragma once
 
-#include <SDL3_mixer/SDL_mixer.h>
-#include "loader/loader.hpp"
 #include "../../soundsNames.hpp"
+
+// Check, if use mixer and preload sounds
+#if USE_SDL_MIXER && PRELOAD_SOUNDS
+
+#include <SDL3_mixer/SDL_mixer.h>
 
 
 // Class for playing sound with need name
@@ -27,3 +30,5 @@ class SoundsData {
 
 // Global system for launch music tracks
 extern SoundsData sounds;
+
+#endif  // USE_SDL_MIXER && PRELOAD_SOUNDS

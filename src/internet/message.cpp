@@ -5,6 +5,8 @@
 
 #include "message.hpp"
 
+#if (USE_SDL_NET)
+
 
 Uint8 Message::globalMessageIndex = 1;
 
@@ -27,3 +29,5 @@ void Message::checkNeedResend(const Connection& _connection) {
 bool Message::applyMessage(Uint8 _index) {
     return messageIndex == _index;
 }
+
+#endif  // (USE_SDL_NET)

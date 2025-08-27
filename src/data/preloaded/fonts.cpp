@@ -5,6 +5,12 @@
 
 #include "fonts.hpp"
 
+// Check, if use fonts and preload it
+#if USE_SDL_FONT && PRELOAD_FONTS
+
+#include "loader/loader.hpp"
+#include "../exceptions.hpp"
+
 
 FontsData::FontsData() {
     // Resetting fonts array
@@ -53,3 +59,5 @@ void FontsData::loadFont(Fonts _index, const char* _fileName) {
 TTF_Font* FontsData::operator[](Fonts _index) const {
     return fonts[unsigned(_index)];
 }
+
+#endif  // USE_SDL_FONT && PRELOAD_FONTS

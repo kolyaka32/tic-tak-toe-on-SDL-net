@@ -6,6 +6,12 @@
 #include "straightLoader.hpp"
 
 
+// Check, if need to load data straight from files
+#if (PRELOAD_DATA) && !(ARCHIEVE_LOADING)
+
+#include "../../exceptions.hpp"
+
+
 SDL_IOStream* StraightLoader::load(const char* _fileName) const {
     // Creating modified name
     size_t size = strlen(_fileName) + strlen("../") + 1;
@@ -27,3 +33,5 @@ SDL_IOStream* StraightLoader::load(const char* _fileName) const {
 
     return data;
 }
+
+#endif  // (PRELOAD_DATA) && !(ARCHIEVE_LOADING)

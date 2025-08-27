@@ -6,7 +6,6 @@
 #pragma once
 
 #include <SDL3/SDL_audio.h>
-#include "exceptions.hpp"
 
 
 // Class for load and close needed libraries

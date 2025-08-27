@@ -6,6 +6,10 @@
 #include "soundsNames.hpp"
 
 
+// Check, if use mixer and preload sounds
+#if (USE_SDL_MIXER) && (PRELOAD_SOUNDS)
+
+
 // File names of the corresponding sounds
 const char* soundsFilesNames[unsigned(Sounds::Count)] = {
     // Game part
@@ -20,3 +24,5 @@ const char* soundsFilesNames[unsigned(Sounds::Count)] = {
     // Screamer
     "snd/laugh.wav",
 };
+
+#endif  // (USE_SDL_MIXER) && (PRELOAD_SOUNDS)

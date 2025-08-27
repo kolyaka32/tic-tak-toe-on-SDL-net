@@ -5,9 +5,12 @@
 
 #pragma once
 
-#include <SDL3_ttf/SDL_ttf.h>
-#include "loader/loader.hpp"
 #include "../../fontsNames.hpp"
+
+// Check, if use fonts and preload it
+#if USE_SDL_FONT && PRELOAD_FONTS
+
+#include <SDL3_ttf/SDL_ttf.h>
 
 
 // Class for get font with need height
@@ -21,3 +24,5 @@ class FontsData {
     ~FontsData();
     TTF_Font* operator[](Fonts index) const;
 };
+
+#endif  // USE_SDL_FONT && PRELOAD_FONTS

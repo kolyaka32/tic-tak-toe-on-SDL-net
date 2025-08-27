@@ -5,11 +5,16 @@
 
 #pragma once
 
-#include <vector>
 #include "message.hpp"
+
+// Check, if need internet library
+#if (USE_SDL_NET)
+
+#include <vector>
 #include "indexesArray.cpp"
 
 
+// Class for deal with own internet connection (UDP-based)
 class GameConnection : public Connection {
  private:
     timer needResendApplyConnection;  // Time, after which need resend apply connection message
@@ -42,3 +47,5 @@ void GameConnection::sendConfirmed(ConnectionCode _code, Args&& ...args) {
     // Updating timer
     needResendApplyConnection = getTime() + MESSAGE_APPLY_TIMEOUT;
 }
+
+#endif  // (USE_SDL_NET)
