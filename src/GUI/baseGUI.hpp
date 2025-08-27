@@ -42,6 +42,73 @@ namespace GUI {
     };
 
 
+    // Class of slider bar with point on it to control need parameter
+    class Slider : public TextureTemplate {
+     private:
+        SDL_Texture *textureButton;  // Texture of line (upper part of slider)
+        SDL_FRect buttonRect;        // Place for rendering upper part
+        const unsigned maxValue;     // Maximal value of state
+
+     public:
+        // Create slide with need line and button images
+        Slider(const Window& window, float X, float Y, float width, unsigned startValue,
+            Textures lineImage = Textures::SliderLine, Textures buttonImage = Textures::SliderButton, unsigned max = 255);
+        unsigned setValue(float mouseX);  // Setting new state from mouse position
+        unsigned scroll(float wheelY);    // Checking mouse wheel action
+        void blit() const override;       // Drawing slider with need button position
+    };
+
+
+    // Class of rounded backplate for better understability
+    class RoundedBackplate : public TextureTemplate {
+     public:
+        RoundedBackplate(const Window& window, float centerX, float centerY, float width, float height,
+            float radius, float border, Color frontColor = GREY, Color backColor = BLACK);
+        RoundedBackplate(const Window& window, const SDL_FRect& rect, float radius, float border,
+            Color frontColor = GREY, Color backColor = BLACK);
+        ~RoundedBackplate();
+    };
+
+
+    // Class with rectangular backplate for typeBox
+    class RectBackplate : public TextureTemplate {
+     public:
+        RectBackplate(const Window& window, float centerX, float centerY, float width, float height,
+            float border, Color frontColor = GREY, Color backColor = BLACK);
+        RectBackplate(const Window& window, const SDL_FRect& rect,
+            float border, Color frontColor = GREY, Color backColor = BLACK);
+        ~RectBackplate();
+    };
+
+
+    // Textures
+    #if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
+    // Class of buttons with image on it
+    class ImageButton : public TextureTemplate {
+     public:
+        ImageButton(const Window& window, float X, float Y, float width, Textures name);
+    };
+    #endif
+
+
+    // Animations
+    #if (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
+    class Animation : public TextureTemplate {
+     private:
+        const Uint8 type;
+        Uint64 prevTick;
+        const SDL_FRect dest;
+
+     public:
+        Animation(const Window& window, SDL_FRect destination, ANI_names type);
+        ~Animation();
+        void blit() const;
+    };
+    #endif
+
+
+    // Text part
+    #if (USE_SDL_FONT) && (PRELOAD_FONTS)
     // Static text on screen
     class StaticText : public TextureTemplate {
      public:
@@ -88,68 +155,6 @@ namespace GUI {
             rect.x = window.getWidth() * posX - (rect.w * (unsigned)aligment / 2);
         }
     };
-
-
-    // Class of slider bar with point on it to control need parameter
-    class Slider : public TextureTemplate {
-     private:
-        SDL_Texture *textureButton;  // Texture of line (upper part of slider)
-        SDL_FRect buttonRect;        // Place for rendering upper part
-        const unsigned maxValue;     // Maximal value of state
-
-     public:
-        // Create slide with need line and button images
-        Slider(const Window& window, float X, float Y, float width, unsigned startValue,
-            Textures lineImage = Textures::SliderLine, Textures buttonImage = Textures::SliderButton, unsigned max = 255);
-        unsigned setValue(float mouseX);  // Setting new state from mouse position
-        unsigned scroll(float wheelY);    // Checking mouse wheel action
-        void blit() const override;       // Drawing slider with need button position
-    };
-
-
-    // Class of buttons with image on it
-    class ImageButton : public TextureTemplate {
-     public:
-        ImageButton(const Window& window, float X, float Y, float width, Textures name);
-    };
-
-
-    // Class of rounded backplate for better understability
-    class RoundedBackplate : public TextureTemplate {
-     public:
-        RoundedBackplate(const Window& window, float centerX, float centerY, float width, float height,
-            float radius, float border, Color frontColor = GREY, Color backColor = BLACK);
-        RoundedBackplate(const Window& window, const SDL_FRect& rect, float radius, float border,
-            Color frontColor = GREY, Color backColor = BLACK);
-        ~RoundedBackplate();
-    };
-
-
-    // Class with rectangular backplate for typeBox
-    class RectBackplate : public TextureTemplate {
-     public:
-        RectBackplate(const Window& window, float centerX, float centerY, float width, float height,
-            float border, Color frontColor = GREY, Color backColor = BLACK);
-        RectBackplate(const Window& window, const SDL_FRect& rect,
-            float border, Color frontColor = GREY, Color backColor = BLACK);
-        ~RectBackplate();
-    };
-
-
-    // GIF-animations
-    #if ANI_count
-    class GIFAnimation : public TextureTemplate {
-     private:
-        const Uint8 type;
-        Uint64 prevTick;
-        const SDL_FRect dest;
-
-     public:
-        GIFAnimation(const Window& window, SDL_Rect destination, ANI_names type);
-        ~GIFAnimation();
-        void blit() const;
-    };
-    #endif
 
 
     // Class of field, where user can type text
@@ -237,5 +242,6 @@ namespace GUI {
         void update();
         void reset();
     };
+    #endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)
 
 }  // namespace GUI

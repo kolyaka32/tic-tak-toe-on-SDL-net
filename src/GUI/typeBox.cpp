@@ -5,6 +5,8 @@
 
 #include "baseGUI.hpp"
 
+#if (USE_SDL_FONT) && (PRELOAD_FONTS)
+
 
 template <unsigned bufferSize>
 GUI::TypeBox<bufferSize>::TypeBox(const Window& _window, float _posX, float _posY, const char *_startText,
@@ -26,3 +28,5 @@ template <unsigned bufferSize>
 bool GUI::TypeBox<bufferSize>::in(const Mouse _mouse) const {
     return backplate.in(_mouse);
 }
+
+#endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)

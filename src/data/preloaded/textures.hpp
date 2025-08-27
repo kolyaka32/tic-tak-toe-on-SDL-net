@@ -8,7 +8,7 @@
 #include "../../texturesNames.hpp"
 
 // Check, if can load images and preload it
-#if USE_SDL_IMAGE && PRELOAD_TEXTURES
+#if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
 
 #include <SDL3/SDL_render.h>
 
@@ -25,4 +25,4 @@ class TexturesData {
     SDL_Texture* operator[] (Textures name) const;
 };
 
-#endif  // USE_SDL_IMAGE && PRELOAD_TEXTURES
+#endif  // (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)

@@ -3,8 +3,9 @@
  * <nik.kazankov.05@mail.ru>
  */
 
-#include <sstream>
 #include "baseGUI.hpp"
+
+#if (USE_SDL_FONT) && (PRELOAD_FONTS)
 
 
 GUI::DynamicText::DynamicText(const Window& _window, float _X, float _Y,
@@ -28,3 +29,5 @@ height(_height) {
 GUI::DynamicText::~DynamicText() {
     SDL_DestroyTexture(texture);
 }
+
+#endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)

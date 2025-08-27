@@ -7,7 +7,7 @@
 
 
 // Check, if can load images and preload it
-#if USE_SDL_IMAGE && PRELOAD_TEXTURES
+#if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
 
 #include <SDL3_image/SDL_image.h>
 #include "loader/loader.hpp"
@@ -76,4 +76,4 @@ SDL_Texture* TexturesData::operator[] (Textures _index) const {
     return textures[unsigned(_index)];
 }
 
-#endif  // USE_SDL_IMAGE && PRELOAD_TEXTURES
+#endif  // (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)

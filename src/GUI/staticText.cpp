@@ -5,6 +5,8 @@
 
 #include "baseGUI.hpp"
 
+#if (USE_SDL_FONT) && (PRELOAD_FONTS)
+
 
 // Class of static text
 GUI::StaticText::StaticText(const Window& _window, float _X, float _Y,
@@ -22,3 +24,5 @@ const LanguagedText _texts, float _height, Color _color, Aligment _aligment)
 GUI::StaticText::~StaticText() {
     SDL_DestroyTexture(texture);
 }
+
+#endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)

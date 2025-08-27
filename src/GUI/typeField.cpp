@@ -3,9 +3,12 @@
  * <nik.kazankov.05@mail.ru>
  */
 
+#include "baseGUI.hpp"
+
+#if (USE_SDL_FONT) && (PRELOAD_FONTS)
+
 #include <cstdlib>
 #include <algorithm>
-#include "baseGUI.hpp"
 
 
 // Type field class
@@ -446,3 +449,5 @@ void GUI::TypeField<bufferSize>::setString(const char* _newString) {
 
     updateTexture();
 }
+
+#endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)

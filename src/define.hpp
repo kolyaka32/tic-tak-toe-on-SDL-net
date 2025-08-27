@@ -19,8 +19,8 @@
 #define USE_SETTING_FILE     true
 // Preloaded GFX (could be created runtime)
 #define PRELOAD_TEXTURES     true   // Preload textures
+#define PRELOAD_ANIMATIONS   false  // Preload GIF animaions
 #define PRELOAD_FONTS        true   // Preload fonts
-#define PRELOAD_ANIMATIONS   true   // Preload GIF animaions
 #define PRELOAD_SOUNDS       true   // Preload sounds
 #define PRELOAD_MUSIC        true   // Preload music
 // Use archive for store additional GFX

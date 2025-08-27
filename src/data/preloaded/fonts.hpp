@@ -8,7 +8,7 @@
 #include "../../fontsNames.hpp"
 
 // Check, if use fonts and preload it
-#if USE_SDL_FONT && PRELOAD_FONTS
+#if (USE_SDL_FONT) && (PRELOAD_FONTS)
 
 #include <SDL3_ttf/SDL_ttf.h>
 
@@ -25,4 +25,4 @@ class FontsData {
     TTF_Font* operator[](Fonts index) const;
 };
 
-#endif  // USE_SDL_FONT && PRELOAD_FONTS
+#endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)

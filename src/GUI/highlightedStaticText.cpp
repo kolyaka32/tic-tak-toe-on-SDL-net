@@ -5,6 +5,8 @@
 
 #include "baseGUI.hpp"
 
+#if (USE_SDL_FONT) && (PRELOAD_FONTS)
+
 
 GUI::HighlightedStaticText::HighlightedStaticText(const Window& _window, float _X, float _Y,
     const LanguagedText _texts, int frame, float _height, Color _color, Aligment _aligment)
@@ -40,3 +42,5 @@ GUI::HighlightedStaticText::HighlightedStaticText(const Window& _window, float _
 GUI::HighlightedStaticText::~HighlightedStaticText() {
     SDL_DestroyTexture(texture);
 }
+
+#endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)

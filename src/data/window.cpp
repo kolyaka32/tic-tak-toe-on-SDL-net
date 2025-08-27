@@ -13,10 +13,10 @@ Window::Window(int _width, int _height, const LanguagedText _title)
 height(_height),
 window(SDL_CreateWindow(titleText.getString().c_str(), width, height, 0)),
 renderer(SDL_CreateRenderer(window, NULL)),
-#if USE_SDL_IMAGE && PRELOAD_TEXTURES
+#if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
 textures{renderer},
 #endif
-#if USE_SDL_FONT && PRELOAD_FONTS
+#if (USE_SDL_FONT) && (PRELOAD_FONTS)
 fonts{},
 #endif
 titleText(_title) {
@@ -159,15 +159,15 @@ void Window::destroy(SDL_Texture* _texture) const {
 
 
 // Work with loaded data
-#if USE_SDL_IMAGE && PRELOAD_TEXTURES
+#if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
 SDL_Texture* Window::getTexture(Textures _name) const {
     return textures[_name];
 }
-#endif
+#endif  // (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
 
 
 // Work with fonts
-#if USE_SDL_FONT && PRELOAD_FONTS
+#if (USE_SDL_FONT) && (PRELOAD_FONTS)
 TTF_Font* Window::getFont(Fonts _name) const {
     return fonts[_name];
 }
@@ -203,7 +203,7 @@ SDL_Texture* Window::createTexture(TTF_Font* _font, const char* _text, Color _co
     SDL_DestroySurface(surface);
     return texture;
 }
-#endif  // USE_SDL_FONT && PRELOAD_FONTS
+#endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)
 
 
 // Work with text inputing

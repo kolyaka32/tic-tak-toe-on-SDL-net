@@ -6,7 +6,7 @@
 #include "music.hpp"
 
 // Check, if use mixer and preload music
-#if USE_SDL_MIXER && PRELOAD_MUSIC
+#if (USE_SDL_MIXER) && (PRELOAD_MUSIC)
 
 #include "loader/loader.hpp"
 #include "../exceptions.hpp"
@@ -108,4 +108,4 @@ unsigned MusicData::getVolume() const {
     return volume * 2;
 }
 
-#endif  // USE_SDL_MIXER && PRELOAD_MUSIC
+#endif  // (USE_SDL_MIXER) && (PRELOAD_MUSIC)

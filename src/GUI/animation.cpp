@@ -3,20 +3,19 @@
  * <nik.kazankov.05@mail.ru>
  */
 
-
 #include "baseGUI.hpp"
 
+#if (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
 
-#if ANI_count
-// GIF animation class
-GUI::GIFAnimation::GIFAnimation(SDL_Rect _rect, ANI_names _type)
+
+GUI::Animation::Animation(SDL_Rect _rect, ANI_names _type)
 : dest(_dest), type(_type), frame(0), prevTick(0) {}
 
-GUI::GIFAnimation::~GIFAnimation() {
+GUI::Animation::~Animation() {
     SDL_DestroyTexture(texture);
 }
 
-void GUI::GIFAnimation::blit() {
+void GUI::Animation::blit() {
     if (SDL_GetTicks() > prevTick) {
         static unsigned frame = (frame + 1) % Animations[type]->count;
         window.destroy(texture);
@@ -24,4 +23,5 @@ void GUI::GIFAnimation::blit() {
         prevTick = SDL_GetTicks() + Animations[type]->delays[frame] / 2;
     }
 }
-#endif
+
+#endif  // (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)

@@ -19,11 +19,11 @@ class Window {
     const LanguagedText titleText;
     SDL_Window* window;
     SDL_Renderer* renderer;
-    #if USE_SDL_IMAGE && PRELOAD_TEXTURES
+    #if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
     // Preloaded textures
     const TexturesData textures;
     #endif
-    #if USE_SDL_FONT && PRELOAD_FONTS
+    #if (USE_SDL_FONT) && (PRELOAD_FONTS)
     // Preloaded fonts
     const FontsData fonts;
     #endif
@@ -75,12 +75,12 @@ class Window {
     void destroy(SDL_Texture* texture) const;
 
     // Work with preloaded textures
-    #if USE_SDL_IMAGE & PRELOAD_TEXTURES
+    #if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
     SDL_Texture* getTexture(Textures name) const;
     #endif
 
     // Work with preloaded fonts and text
-    #if USE_SDL_FONT & PRELOAD_FONTS
+    #if (USE_SDL_FONT) && (PRELOAD_FONTS)
     TTF_Font* getFont(Fonts name) const;
     TTF_Font* createFontCopy(Fonts name, float height) const;
     SDL_Texture* createTexture(Fonts font, float height, const char* text, unsigned length, Color color) const;
