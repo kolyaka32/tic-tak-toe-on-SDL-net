@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "connection.hpp"
+#include <SDL3/SDL_stdinc.h>
 
 
 // Class for work with indexes of last get message

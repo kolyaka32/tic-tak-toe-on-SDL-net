@@ -6,6 +6,8 @@
 #include "baseGUI.hpp"
 
 
+#if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
+
 GUI::Slider::Slider(const Window& _window, float _X, float _Y, float _width, unsigned _startValue,
     Textures _lineImage, Textures _buttonImage, unsigned _max)
 : TextureTemplate(_window),
@@ -52,3 +54,5 @@ unsigned GUI::Slider::scroll(float _wheelY) {
     }
     return 0;
 }
+
+#endif  // (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)

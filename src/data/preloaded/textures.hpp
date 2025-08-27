@@ -9,7 +9,6 @@
 
 // Check, if can load images and preload it
 #if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
-
 #include <SDL3/SDL_render.h>
 
 

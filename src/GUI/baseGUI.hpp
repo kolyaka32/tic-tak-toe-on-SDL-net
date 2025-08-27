@@ -42,23 +42,6 @@ namespace GUI {
     };
 
 
-    // Class of slider bar with point on it to control need parameter
-    class Slider : public TextureTemplate {
-     private:
-        SDL_Texture *textureButton;  // Texture of line (upper part of slider)
-        SDL_FRect buttonRect;        // Place for rendering upper part
-        const unsigned maxValue;     // Maximal value of state
-
-     public:
-        // Create slide with need line and button images
-        Slider(const Window& window, float X, float Y, float width, unsigned startValue,
-            Textures lineImage = Textures::SliderLine, Textures buttonImage = Textures::SliderButton, unsigned max = 255);
-        unsigned setValue(float mouseX);  // Setting new state from mouse position
-        unsigned scroll(float wheelY);    // Checking mouse wheel action
-        void blit() const override;       // Drawing slider with need button position
-    };
-
-
     // Class of rounded backplate for better understability
     class RoundedBackplate : public TextureTemplate {
      public:
@@ -83,6 +66,23 @@ namespace GUI {
 
     // Textures
     #if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
+    // Class of slider bar with point on it to control need parameter
+    class Slider : public TextureTemplate {
+     private:
+        SDL_Texture *textureButton;  // Texture of line (upper part of slider)
+        SDL_FRect buttonRect;        // Place for rendering upper part
+        const unsigned maxValue;     // Maximal value of state
+
+     public:
+        // Create slide with need line and button images
+        Slider(const Window& window, float X, float Y, float width, unsigned startValue,
+            Textures lineImage = Textures::SliderLine, Textures buttonImage = Textures::SliderButton, unsigned max = 255);
+        unsigned setValue(float mouseX);  // Setting new state from mouse position
+        unsigned scroll(float wheelY);    // Checking mouse wheel action
+        void blit() const override;       // Drawing slider with need button position
+    };
+
+
     // Class of buttons with image on it
     class ImageButton : public TextureTemplate {
      public:

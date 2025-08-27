@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <SDL3/SDL_render.h>
 #include "colors.hpp"
 #include "time.hpp"
 #include "preloaded/textures.hpp"
@@ -97,8 +98,19 @@ class Window {
     SDL_Texture* createTexture(TTF_Font* font, const char* text, Color color) const;
     #endif
 
+    // Draw raw text without TTF library
+    template <typename ...Args>
+    void drawDebugText(float X, float Y, const char* text, const Args& ...args) const;
+
     // Work with window
     void startTextInput() const;
     void stopTextInput() const;
     void updateTitle() const;
 };
+
+
+// Temlates realisation
+template <typename ...Args>
+void Window::drawDebugText(float _X, float _Y, const char* _text, const Args& ..._args) const {
+    SDL_RenderDebugTextFormat(renderer, _X, _Y, _text, _args...);
+}
