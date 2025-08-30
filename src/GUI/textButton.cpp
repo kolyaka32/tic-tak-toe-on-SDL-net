@@ -5,8 +5,9 @@
 
 #include "baseGUI.hpp"
 
+#if (USE_SDL_FONT) && (PRELOAD_FONTS)
 
-// Button class
+
 GUI::TextButton::TextButton(const Window& _window, float _X, float _Y, const LanguagedText _texts, float _size,
     Color _color, Aligment _aligment)
 : HighlightedStaticText(_window, _X, _Y, _texts, 1, _size, _color, _aligment),
@@ -16,3 +17,5 @@ void GUI::TextButton::blit() const {
     backplate.blit();
     window.blit(texture, rect);
 }
+
+#endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)

@@ -5,7 +5,20 @@
 
 #pragma once
 
+#include "../define.hpp"
+
+// Check, if need internet library
+#if (USE_SDL_NET)
+
 #include "data.hpp"
+#include "../data/logger.hpp"
+
+
+// Internet constants
+#define MAX_SEND_ID 128                     // Maximal number of send message ID
+#define MESSAGE_GET_TIMEOUT 5000            // Time after which connection is considered lost
+#define MESSAGE_APPLY_TIMEOUT 2000          // Time to send apply message to keep connecion
+#define MESSAGE_RESEND_TIMEOUT 250          // Time after which need to resend message, as it was lost
 
 
 // Basic class for internet connection
@@ -39,7 +52,7 @@ class Connection {
 
 template <typename ...Args>
 void Connection::send(ConnectionCode _code, Uint8 index, Args ...args) {
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (sendAddress == nullptr || sendPort == 0) {
         logAdditional("Can't send packet at unspecified address");
         return;
@@ -51,3 +64,5 @@ void Connection::send(ConnectionCode _code, Uint8 index, Args ...args) {
     NET_SendDatagram(gettingSocket, sendAddress, sendPort, packet.getData(), packet.getLength());
     // Destrying packet
 }
+
+#endif  // (USE_SDL_NET)

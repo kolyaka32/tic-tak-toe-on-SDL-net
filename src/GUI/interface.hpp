@@ -6,7 +6,6 @@
 #pragma once
 
 // File for correct including
-#include <string>
 #include "baseGUI.hpp"
 #include "typeField.cpp"
 #include "typeBox.cpp"

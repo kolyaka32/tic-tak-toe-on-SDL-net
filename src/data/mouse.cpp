@@ -5,7 +5,6 @@
 
 #include <SDL3/SDL_mouse.h>
 #include "mouse.hpp"
-#include "macroses.hpp"
 
 
 Mouse::Mouse() {
@@ -21,7 +20,7 @@ bool Mouse::in(SDL_FRect _rect) const {
 }
 
 bool Mouse::near(float _x, float _y) const {
-    return (sqr(_x-position.x)+sqr(_y-position.y)) < sqr(5);
+    return ((_x-position.x)*(_x-position.x)+(_y-position.y)*(_y-position.y)) < 25;
 }
 
 float Mouse::getX() const {

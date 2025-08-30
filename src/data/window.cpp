@@ -11,20 +11,27 @@
 Window::Window(int _width, int _height, const LanguagedText _title)
 : width(_width),
 height(_height),
-titleText(_title),
 window(SDL_CreateWindow(titleText.getString().c_str(), width, height, 0)),
 renderer(SDL_CreateRenderer(window, NULL)),
+#if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
 textures{renderer},
-fonts{} {
+#endif
+#if (USE_SDL_FONT) && (PRELOAD_FONTS)
+fonts{},
+#endif
+#if (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
+animations{},
+#endif
+titleText(_title) {
     // Checking on correction of created objects
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (window == NULL) {
         throw LibararyLoadException("window creation");
     }
     #endif
 
     // Creating renderer from window
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (renderer == NULL) {
         throw LibararyLoadException("renderer creation");
     }
@@ -73,13 +80,6 @@ void Window::render() const {
 }
 
 
-
-// Work with loaded data
-SDL_Texture* Window::getTexture(Textures _name) const {
-    return textures[_name];
-}
-
-
 // Draw basic geometric shapes
 void Window::drawPoint(float x, float y) const {
     SDL_RenderPoint(renderer, x, y);
@@ -94,7 +94,6 @@ void Window::drawLine(float x1, float y1, float x2, float y2) const {
 }
 
 
-
 // Work with surfaces
 SDL_Surface* Window::createSurface(int _width, int _height, SDL_PixelFormat _format) const {
     return SDL_CreateSurface(_width, _height, _format);
@@ -107,31 +106,6 @@ void Window::setBlendMode(SDL_Surface* _surface, SDL_BlendMode _blendMode) const
 void Window::destroy(SDL_Surface* _surface) const {
     SDL_DestroySurface(_surface);
 }
-
-
-
-// Work with loaded textures
-void Window::blit(Textures _index, const SDL_FRect& _dest) const {
-    SDL_RenderTexture(renderer, textures[_index], nullptr, &_dest);
-}
-
-void Window::blit(Textures _index, const SDL_FRect* _dest, const SDL_FRect* _src) const {
-    SDL_RenderTexture(renderer, textures[_index], _src, _dest);
-}
-
-void Window::blit(Textures _index, float _angle, const SDL_FRect& _dest,
-    const SDL_FRect* _src, SDL_FPoint _center) const {
-    SDL_RenderTextureRotated(renderer, textures[_index], _src, &_dest, _angle, &_center, SDL_FLIP_NONE);
-}
-
-void Window::setBlendMode(Textures _index, SDL_BlendMode _blendMode) const {
-    SDL_SetTextureBlendMode(textures[_index], _blendMode);
-}
-
-void Window::setColorMode(Textures _index, Color _color) const {
-    SDL_SetTextureColorMod(textures[_index], _color.r, _color.g, _color.b);
-}
-
 
 
 // Work with side textures
@@ -187,8 +161,24 @@ void Window::destroy(SDL_Texture* _texture) const {
 }
 
 
+// Work with loaded data
+#if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
+SDL_Texture* Window::getTexture(Textures _name) const {
+    return textures[_name];
+}
+#endif  // (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
+
+
+// Work with preloaded animations
+#if (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
+IMG_Animation* Window::getAnimation(Animations _name) const {
+    return animations[_name];
+}
+#endif  // (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
+
 
 // Work with fonts
+#if (USE_SDL_FONT) && (PRELOAD_FONTS)
 TTF_Font* Window::getFont(Fonts _name) const {
     return fonts[_name];
 }
@@ -224,6 +214,7 @@ SDL_Texture* Window::createTexture(TTF_Font* _font, const char* _text, Color _co
     SDL_DestroySurface(surface);
     return texture;
 }
+#endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)
 
 
 // Work with text inputing

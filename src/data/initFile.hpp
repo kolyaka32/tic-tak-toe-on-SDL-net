@@ -10,6 +10,11 @@
 #include "exceptions.hpp"
 
 
+// Check if has initfile
+#if USE_SETTING_FILE
+#include <string>
+
+
 // Class for load/save settings to/from game
 class InitFile {
  private:
@@ -22,3 +27,5 @@ class InitFile {
     void loadSettings();
     void saveSettings();
 };
+
+#endif  // USE_SETTING_FILE

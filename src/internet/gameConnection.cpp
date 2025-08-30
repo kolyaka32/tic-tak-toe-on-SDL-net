@@ -4,6 +4,9 @@
  */
 
 #include "gameConnection.hpp"
+
+#if (USE_SDL_NET)
+
 #include "../data/cycleTemplate.hpp"
 #include "../game/connectionLostBox.hpp"
 #include "../game/terminatedBox.hpp"
@@ -142,7 +145,7 @@ ConnectionCode GameConnection::checkNewMessage() {
         if (getIndexes.isUnique(index)) {
             // Adding to list for next checks
             getIndexes.add(index);
-            #if CHECK_CORRECTION
+            #if (CHECK_CORRECTION)
             if (code != ConnectionCode::Null) {
                 logAdditional("Get data with code: %u, index: %u", (Uint8)code, index);
             }
@@ -159,3 +162,5 @@ void GameConnection::tryReconnect() {
     send(ConnectionCode::Init, 0);
     send(ConnectionCode::Init, 0);
 }
+
+#endif  // (USE_SDL_NET)

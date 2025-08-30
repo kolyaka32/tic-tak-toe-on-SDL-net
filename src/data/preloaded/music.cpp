@@ -5,10 +5,15 @@
 
 #include "music.hpp"
 
+#if (USE_SDL_MIXER) && (PRELOAD_MUSIC)
+
+#include "loader/loader.hpp"
+#include "../exceptions.hpp"
+
 
 MusicData::MusicData() {
     // Resetting all tracks
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     for (unsigned i=0; i < unsigned(Music::Count); ++i) {
         music[i] = nullptr;
     }
@@ -20,7 +25,7 @@ MusicData::MusicData() {
     }
 
     // Checking massive on loading correction
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     for (unsigned i=0; i < unsigned(Music::Count); ++i) {
         if (music[i] == NULL) {
             throw DataLoadException("Music with name: " + std::string(musicFilesNames[i]));
@@ -48,7 +53,7 @@ void MusicData::loadMusic(Music _index, const char* _name) {
     music[unsigned(_index)] = Mix_LoadMUS_IO(iodata, true);
 
     // Checking correction of loaded track
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (music[unsigned(_index)] == nullptr) {
         throw DataLoadException(_name);
     }
@@ -89,7 +94,7 @@ void MusicData::startFromCurrent(Music _index) {
 
 void MusicData::setVolume(unsigned _volume) {
     // Checking correction given volume
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (_volume/2 > MIX_MAX_VOLUME) {
         throw "Wrong volume";
     }
@@ -101,3 +106,5 @@ void MusicData::setVolume(unsigned _volume) {
 unsigned MusicData::getVolume() const {
     return volume * 2;
 }
+
+#endif  // (USE_SDL_MIXER) && (PRELOAD_MUSIC)

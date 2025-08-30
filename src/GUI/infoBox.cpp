@@ -5,6 +5,8 @@
 
 #include "baseGUI.hpp"
 
+#if (USE_SDL_FONT) && (PRELOAD_FONTS)
+
 
 GUI::InfoBox::InfoBox(const Window& _window, float _X, float _Y, const LanguagedText texts,
     float _size, Color _color, Aligment _aligment)
@@ -24,3 +26,5 @@ void GUI::InfoBox::update() {
 void GUI::InfoBox::reset() {
     counter = maxCounter;
 }
+
+#endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)

@@ -5,9 +5,12 @@
 
 #pragma once
 
-#include <utility>
 #include "codes.hpp"
-#include "../data/app.hpp"
+
+// Check, if need internet library
+#if (USE_SDL_NET)
+
+#include <SDL3_net/SDL_net.h>
 
 
 // Class with any ordered data
@@ -89,7 +92,7 @@ void SendPacket::write(int _offset, T _object, Args&& ...args) {
 
 template <typename T>
 T GetPacket::getData() {
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (offset + sizeof(T) > size) {
         throw "Can't read data - not enogh length";
     }
@@ -102,10 +105,12 @@ T GetPacket::getData() {
 
 template <typename T>
 T GetPacket::getData(int _offset) {
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     if (_offset + sizeof(T) > size) {
         throw "Can't read data - not enogh length";
     }
     #endif
     return swapLE<T>((T)(*(data + _offset)));
 }
+
+#endif  // (USE_SDL_NET)

@@ -7,6 +7,10 @@
 #include <string>
 #include "data/initFile.hpp"
 
+// Check if has initfile
+#if (USE_SETTING_FILE)
+
+
 // Files to setup
 #include "data/languages.hpp"
 #include "game/gameField.hpp"
@@ -101,3 +105,5 @@ void InitFile::saveSettings() {
     outSettings << "IP = " << baseIP << "\n";
     outSettings << "port = " << basePort << "\n";
 }
+
+#endif  // (USE_SETTING_FILE)

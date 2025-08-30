@@ -3,15 +3,16 @@
  * <nik.kazankov.05@mail.ru>
  */
 
-#include <string>
-#include <ctime>
 #include "server.hpp"
+
+// Check, if need internet library
+#if (USE_SDL_NET)
 
 
 Server::Server()
 : Connection() {
     // Resetting basic connecting port
-    currentPort = BASE_PORT;
+    currentPort = basePort;
 
     // Finding avalialble port
     SDL_srand(0);
@@ -20,7 +21,7 @@ Server::Server()
         currentPort = SDL_rand(10000);
     }
 
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     // Adding some packet loss for better testing
     NET_SimulateDatagramPacketLoss(gettingSocket, CONNECTION_LOST_PERCENT);
     #endif
@@ -50,3 +51,5 @@ void Server::connectToLastMessage() {
     sendAddress = NET_RefAddress(recievedDatagram->addr);
     sendPort = recievedDatagram->port;
 }
+
+#endif  // (USE_SDL_NET)

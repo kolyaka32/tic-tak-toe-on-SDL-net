@@ -6,9 +6,13 @@
 #include "gameField.hpp"
 
 
+// Static class members
 float GameField::upperLineHeight;
 int GameField::offset;
 Field GameField::field{};
+const float GameField::cellSide = 100;
+const float GameField::separator = 5;
+
 
 GameField::GameField(const Window& _window)
 : Template(_window) {}
@@ -30,11 +34,11 @@ void GameField::setTextureOffset(int _state) {
 }
 
 int GameField::getXPos(const Mouse _mouse) {
-    return _mouse.getX() / (CELL_SIDE + SEPARATOR);
+    return _mouse.getX() / (cellSide + separator);
 }
 
 int GameField::getYPos(const Mouse _mouse) {
-    return (_mouse.getY() - upperLineHeight) / (CELL_SIDE + SEPARATOR);
+    return (_mouse.getY() - upperLineHeight) / (cellSide + separator);
 }
 
 bool GameField::tryClickSingle(const Mouse _mouse) {
@@ -73,19 +77,19 @@ void GameField::blit() const {
     // Rendering cells with their background
     for (int y=0; y < field.width; ++y) {
         for (int x=0; x < field.width; ++x) {
-            const SDL_FRect dest = {float(x * (CELL_SIDE + SEPARATOR)),
-                float(y * (CELL_SIDE + SEPARATOR) + upperLineHeight), CELL_SIDE, CELL_SIDE};
+            const SDL_FRect dest = {float(x * (cellSide + separator)),
+                float(y * (cellSide + separator) + upperLineHeight), cellSide, cellSide};
             // Rendering background
-            window.blit(Textures::Cell, dest);
+            window.blit(window.getTexture(Textures::Cell), dest);
 
             // Rendering cells
             switch (field.getCell(x, y)) {
             case Cell::Current:
-                window.blit(Textures::GreenCross + offset, dest);
+                window.blit(window.getTexture(Textures::GreenCross + offset), dest);
                 break;
 
             case Cell::Opponent:
-                window.blit(Textures::RedCircle - offset, dest);
+                window.blit(window.getTexture(Textures::RedCircle - offset), dest);
                 break;
 
             default:
@@ -117,7 +121,7 @@ void GameField::setWinWidth(int _winWidth) {
 }
 
 int GameField::getWindowWidth() {
-    int windowWidth = field.width * CELL_SIDE + (field.width - 1) * SEPARATOR;
+    int windowWidth = field.width * cellSide + (field.width - 1) * separator;
     upperLineHeight = windowWidth * 0.1;
     return windowWidth;
 }

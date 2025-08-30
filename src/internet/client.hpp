@@ -7,7 +7,11 @@
 
 #include "connection.hpp"
 
+// Check, if need internet library
+#if (USE_SDL_NET)
 
+
+// Class with starting part of internet connection, that trying to connect to address
 class Client : public Connection {
  public:
     Client();
@@ -15,3 +19,5 @@ class Client : public Connection {
     void tryConnect(const char* address, Uint16 port);
     void connectToLastMessage();
 };
+
+#endif  // (USE_SDL_NET)

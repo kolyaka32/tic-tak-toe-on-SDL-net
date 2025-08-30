@@ -6,13 +6,13 @@
 #pragma once
 
 #include <SDL3/SDL_log.h>
-#include "../testing.hpp"
+#include "../define.hpp"
 
 
 // Function for log important information
 template <typename ...Args>
 void logImportant(const char* text, const Args& ...args) {
-    #if CHECK_CORRECTION
+    #if (CHECK_CORRECTION)
     // Writing to stdout
     SDL_Log(text, args...);
     #endif
