@@ -21,7 +21,7 @@ void logImportant(const char* text, const Args& ...args) {
 // Function for log additional information
 template <typename ...Args>
 void logAdditional(const char* text, const Args& ...args) {
-    #if CHECK_ALL
+    #if (CHECK_ALL)
     // Writing to stdout
     SDL_Log(text, args...);
     #endif

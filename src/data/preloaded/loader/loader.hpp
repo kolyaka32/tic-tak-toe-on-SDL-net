@@ -17,7 +17,7 @@
 #else
 #include "straightLoader.hpp"
 #define DataLoader StraightLoader
-#endif  // ARCHIEVE_LOADING
+#endif  // (ARCHIEVE_LOADING)
 // Setting global dataloader
 extern const DataLoader dataLoader;
-#endif  // PRELOAD_DATA
+#endif  // (PRELOAD_DATA)

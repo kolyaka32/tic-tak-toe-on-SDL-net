@@ -16,11 +16,11 @@ Libraries libraries{};
 const DataLoader dataLoader{};
 #endif
 
-#if USE_SDL_MIXER && PRELOAD_MUSIC
+#if (USE_SDL_MIXER) && (PRELOAD_MUSIC)
 SoundsData sounds{};
 #endif
 
-#if USE_SDL_MIXER && PRELOAD_SOUNDS
+#if (USE_SDL_MIXER) && (PRELOAD_SOUNDS)
 MusicData music{};
 #endif
 
