@@ -8,18 +8,37 @@
 
 std::vector<Field> GameSaves::startOptions{};
 
-GameSaves::GameSaves() {
+GameSaves::GameSaves(const Window& _window)
+: window(_window) {
+    images.reserve(startOptions.size());
 
+    // Creating images
+    for (int i=0; i < startOptions.size(); ++i) {
+        ;
+        images[i] = window.createTexture(startOptions[i]*);
+    }
 }
 
 GameSaves::~GameSaves() {
+    for (int i=0; i < images.size(); ++i) {
+        SDL_DestroyTexture(images[i]);
+    }
+}
+
+void GameSaves::click(const Mouse mouse) {
 
 }
 
-void GameSaves::addNewField() {
+void GameSaves::blit() const {
 
 }
 
-void GameSaves::save() {
+
+// Static objects
+void GameSaves::addField() {
+
+}
+
+void GameSaves::saveAll() {
 
 }

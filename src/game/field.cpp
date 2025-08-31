@@ -24,6 +24,22 @@ Cell Field::getCell(int x, int y) const {
     return data[x + y * width];
 }
 
+void Field::setState(GameState _state) {
+    gameState = _state;
+}
+
+GameState Field::getState() const {
+    return gameState;
+}
+
+int Field::getOffset() const {
+    return offset;
+}
+
+void Field::setOffset(int _offset) {
+    offset = _offset;
+}
+
 
 bool Field::clickSingle(int x, int y) {
     // Checking, if cell empty
