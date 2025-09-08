@@ -9,28 +9,50 @@
 std::vector<Field> GameSaves::startOptions{};
 
 GameSaves::GameSaves(const Window& _window)
-: window(_window) {
-    images.reserve(startOptions.size());
-
-    // Creating images
-    for (int i=0; i < startOptions.size(); ++i) {
-        ;
-        images[i] = window.createTexture(startOptions[i]*);
+: Template(_window),
+backplate(_window, 0.5, 0.5, 0.8, 0.8, 8, 2),
+exitButton(_window, 0.5, 0.8, {"Close", "Закрыть", "Schließen", "Зачыніць"}) {
+    fieldNumber = min(startOptions.size(), size_t(5));
+    saveInfos.reserve(fieldNumber);
+    // Creating options to start
+    for (int i=0; i < fieldNumber; ++i) {
+        saveInfos.push_back(SaveInfo(window, WindowField(startOptions[i], window), i));
     }
 }
 
 GameSaves::~GameSaves() {
-    for (int i=0; i < images.size(); ++i) {
-        SDL_DestroyTexture(images[i]);
-    }
+    // ! Need to check on correct clearance of saveInfos
+    saveInfos.clear();
 }
 
-void GameSaves::click(const Mouse mouse) {
+void GameSaves::activate() {
+    active = true;
+}
 
+Field* GameSaves::click(const Mouse _mouse) {
+    if (active) {
+        if (exitButton.in(_mouse)) {
+            active = false;
+            return nullptr;
+        }
+        for (int i=0; i < fieldNumber; ++i) {
+            if (saveInfos[i].in(_mouse)) {
+                active = false;
+                return &startOptions[i];
+            }
+        }
+    }
+    return nullptr;
 }
 
 void GameSaves::blit() const {
-
+    if (active) {
+        backplate.blit();
+        for (int i=0; i < fieldNumber; ++i) {
+            saveInfos[i].blit();
+        }
+        exitButton.blit();
+    }
 }
 
 

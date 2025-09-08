@@ -10,20 +10,23 @@
 
 
 // Class for store all game saves and load it, when need
-class GameSaves {
-private:
+class GameSaves : GUI::Template {
+ private:
     static std::vector<Field> startOptions;
 
     // Draw options
-    const Window& window;
-    int selected;
-    std::vector<SDL_Texture*> images;
+    bool active;
+    int fieldNumber;
+    GUI::RoundedBackplate backplate;
+    std::vector<SaveInfo> saveInfos;
+    GUI::TextButton exitButton;
 
-public:
+ public:
     GameSaves(const Window& window);
     ~GameSaves();
-    void click(const Mouse mouse);
-    void blit() const;
+    void activate();
+    Field* click(const Mouse mouse);
+    void blit() const override;
 
     // Work with global saves
     static void addField();

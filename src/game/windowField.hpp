@@ -11,24 +11,24 @@
 
 // 
 class WindowField : public GUI::Template, public Field {
-private:
+ private:
     // Field window sizes
     static const float cellSide;   // Width and height of mine in pixels
     static const float separator;  // Width of separator between cells in pixels
     static const float upperLineHeight;  // Releative height of upper line for settings (add to main)
 
-public:
+ public:
     WindowField(const Window& window);
-    ~WindowField();
+    WindowField(const Field& field, const Window& window);
 
     // Drawing field with his background
     void blit() const;
 
     // Global options to work with field
-    int getWidth();
+    int getWidth() const;
     void setWidth(int width);
-    int getWinWidth();
+    int getWinWidth() const;
     void setWinWidth(int winWidth);
-    int getWindowWidth();
-    int getWindowHeight();
+    int getWindowWidth() const;
+    int getWindowHeight() const;
 };

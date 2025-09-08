@@ -24,6 +24,10 @@ Cell Field::getCell(int x, int y) const {
     return data[x + y * width];
 }
 
+void Field::setCell(int x, int y, Cell _state) {
+    data[x + y * width] = _state;
+}
+
 void Field::setState(GameState _state) {
     gameState = _state;
 }

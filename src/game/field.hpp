@@ -33,10 +33,6 @@ class Field {
     GameState gameState;  // Current state of the game
     int offset;           // Texture offset for draw with different colors
 
-    // Data for save/load
-    timer saveTime;
-    std::string saveName;
-
  protected:
     void checkSound();  // Function of playing sound after game end
     void AImove();      // Move of computer
@@ -47,6 +43,10 @@ class Field {
     // Sizes of field
     int width;     // Size of field
     int winWidth;  // Length of line to win
+
+    // Data for save/load
+    SDL_DateTime saveTime;
+    std::string saveName;
 
     //
     Field();

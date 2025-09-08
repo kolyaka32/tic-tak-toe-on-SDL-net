@@ -9,13 +9,21 @@
 
 
 // 
-class SaveInfo {
-private:
+class SaveInfo : public GUI::Template {
+ private:
+    // Backplate
+    GUI::RoundedBackplate backplate;
+    // Picture of game field
     SDL_Texture* texture;
-    SDL_Rect* dest;
-    GUI::StaticText name;
+    SDL_FRect dest;
+    // Save parameters
+    GUI::StaticText saveNameText;
     GUI::StaticText lastModifiedText;
 
-public:
-    
+ public:
+    SaveInfo(const Window& window, const WindowField& field, int position);
+    ~SaveInfo();
+    // void setPosition(float Y);  // Next to add scrolling
+    void blit() const override;
+    bool in(Mouse mouse);
 };

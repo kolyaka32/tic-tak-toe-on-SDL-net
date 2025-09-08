@@ -13,6 +13,9 @@ LanguagedText::LanguagedText(const std::string englishVariant, const std::string
     const std::string germanVariant, const std::string bellarussianVariant)
 : textVariants{englishVariant, russianVariant, germanVariant, bellarussianVariant} {}
 
+LanguagedText::LanguagedText(const std::string singleVariant)
+: textVariants{singleVariant, singleVariant, singleVariant, singleVariant} {}
+
 const std::string& LanguagedText::getString() const {
     return textVariants[(unsigned)currentLanguage];
 }

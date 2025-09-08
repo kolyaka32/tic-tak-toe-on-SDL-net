@@ -14,13 +14,11 @@ const float WindowField::upperLineHeight = 0.1f;
 
 WindowField::WindowField(const Window& _window)
 : Template(_window),
-Field() {
+Field() {}
 
-}
-
-WindowField::~WindowField() {
-
-}
+WindowField::WindowField(const Field& _field, const Window& _window)
+: Template(_window),
+Field(_field) {}
 
 void WindowField::blit() const {
     // Rendering cells with their background
@@ -34,11 +32,11 @@ void WindowField::blit() const {
             // Rendering cells
             switch (getCell(x, y)) {
             case Cell::Current:
-                window.blit(window.getTexture(Textures::GreenCross + offset), dest);
+                window.blit(window.getTexture(Textures::GreenCross + getOffset()), dest);
                 break;
 
             case Cell::Opponent:
-                window.blit(window.getTexture(Textures::RedCircle - offset), dest);
+                window.blit(window.getTexture(Textures::RedCircle - getOffset()), dest);
                 break;
 
             default:
@@ -48,7 +46,7 @@ void WindowField::blit() const {
     }
 }
 
-int WindowField::getWidth() {
+int WindowField::getWidth() const {
     return width;
 }
 
@@ -59,7 +57,7 @@ void WindowField::setWidth(int _width) {
     setMax(winWidth, width);
 }
 
-int WindowField::getWinWidth() {
+int WindowField::getWinWidth() const {
     return winWidth;
 }
 
@@ -69,10 +67,10 @@ void WindowField::setWinWidth(int _winWidth) {
     setMax(winWidth, width);
 }
 
-int WindowField::getWindowWidth() {
+int WindowField::getWindowWidth() const {
     return width * cellSide + (width - 1) * separator;
 }
 
-int WindowField::getWindowHeight() {
+int WindowField::getWindowHeight() const {
     return getWindowWidth() * (1.0f + upperLineHeight);
 }
