@@ -16,7 +16,7 @@ exitButton(_window, 0.5, 0.8, {"Close", "Закрыть", "Schließen", "Зач�
     saveInfos.reserve(fieldNumber);
     // Creating options to start
     for (int i=0; i < fieldNumber; ++i) {
-        saveInfos.push_back(SaveInfo(window, WindowField(startOptions[i], window), i));
+        saveInfos.push_back(SaveInfo(window, startOptions[i], i));
     }
 }
 

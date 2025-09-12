@@ -6,21 +6,20 @@
 #pragma once
 
 #include "../GUI/interface.hpp"
-#include "windowField.hpp"
+#include "field.hpp"
 
 
 // Cycle with field with game objects on it
-class GameField {
+class GameField : public GUI::Template {
  private:
     // Game field
-    static Field* currentField;
+    static Field currentField;
 
  public:
     GameField(const Window& window);
 
-    // Getting position at grid
-    int getXPos(const Mouse mouse);
-    int getYPos(const Mouse mouse);
+    void setNewField(const Field& field);
+    const Field& saveField();
 
     void blit() const;
 

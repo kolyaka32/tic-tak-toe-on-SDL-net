@@ -6,11 +6,30 @@
 #include "field.hpp"
 
 
-Field::Field()
-: width(3),
-winWidth(3),
-count(0),
-gameState(GameState::None) {}
+Field::Field(int _width, int _winWidth)
+: width(_width),
+winWidth(_winWidth),
+upperLinePixels(upperLine*getWindowWidth()) {
+    reset();
+}
+
+Field::Field(const Field& _field)
+: width(_field.width),
+winWidth(_field.winWidth),
+count(_field.count),
+gameState(_field.gameState),
+upperLinePixels(upperLine*getWindowWidth()) {
+    memcpy(data, _field.data, sizeof(data));
+}
+
+Field& Field::operator=(const Field& _field) {
+    width = _field.width;
+    winWidth = _field.winWidth;
+    count = _field.count;
+    gameState = _field.gameState;
+    upperLinePixels = upperLine*getWindowWidth();
+    memcpy(data, _field.data, sizeof(data));
+}
 
 void Field::reset() {
     for (Uint8 i=0; i < width * width; ++i) {
@@ -20,12 +39,12 @@ void Field::reset() {
     gameState = GameState::None;
 }
 
-Cell Field::getCell(int x, int y) const {
-    return data[x + y * width];
+Cell Field::getCell(SDL_Point p) const {
+    return data[p.x + p.y * width];
 }
 
-void Field::setCell(int x, int y, Cell _state) {
-    data[x + y * width] = _state;
+void Field::setCell(SDL_Point p, Cell _state) {
+    data[p.x + p.y * width] = _state;
 }
 
 void Field::setState(GameState _state) {
@@ -44,15 +63,36 @@ void Field::setOffset(int _offset) {
     offset = _offset;
 }
 
+const std::string Field::getSaveName() const {
+    return saveName;
+}
 
-bool Field::clickSingle(int x, int y) {
+const std::string Field::getSaveTime() const {
+    // Creating string with date-time
+    return std::to_string(saveTime.year) + '.' + std::to_string(saveTime.month)
+        + '.' + std::to_string(saveTime.day) + ' ' + std::to_string(saveTime.hour)
+        + ' ' + std::to_string(saveTime.minute) + ':' + std::to_string(saveTime.second);
+    // ! Next need to add region date system
+    // SDL_GetDateTimeLocalePreferences();
+}
+
+void Field::updateSaveInfo(const std::string _saveName) {
+    saveName = _saveName;
+    // Update current time
+    SDL_Time time;
+    SDL_GetCurrentTime(&time);
+    SDL_TimeToDateTime(time, &saveTime, true);
+}
+
+
+bool Field::clickSingle(SDL_Point p) {
     // Checking, if cell empty
-    if (getCell(x, y) == Cell::Empty) {
-        data[x + y * width] = Cell::Current;
+    if (getCell(p) == Cell::Empty) {
+        setCell(p, Cell::Current);
         count++;
 
         // Checking for win
-        gameState = checkWin(x, y);
+        gameState = checkWin(p);
         // Check, if need computer to play
         if (gameState < GameState::CurrentWin) {
             AImove();
@@ -63,18 +103,18 @@ bool Field::clickSingle(int x, int y) {
     return false;
 }
 
-bool Field::clickTwo(int x, int y) {
+bool Field::clickTwo(SDL_Point p) {
     // Checking, if turn avaliable
-    if (getCell(x, y) == Cell::Empty) {
+    if (getCell(p) == Cell::Empty) {
         // Setting new cell and changing player
         switch (gameState) {
         case GameState::CurrentPlay:
-            data[x + y * width] = Cell::Current;
+            setCell(p, Cell::Current);
             gameState = GameState::OpponentPlay;
             break;
 
         case GameState::OpponentPlay:
-            data[x + y * width] = Cell::Opponent;
+            setCell(p, Cell::Opponent);
             gameState = GameState::CurrentPlay;
             break;
 
@@ -84,24 +124,24 @@ bool Field::clickTwo(int x, int y) {
         count++;
 
         // Checking for win
-        gameState = checkWin(x, y);
+        gameState = checkWin(p);
         checkSound();
         return true;
     }
     return false;
 }
 
-bool Field::clickMultiplayerCurrent(int x, int y) {
+bool Field::clickMultiplayerCurrent(SDL_Point p) {
     // Checking, if turn avaliable
-    if (gameState == GameState::CurrentPlay && getCell(x, y) == Cell::Empty) {
+    if (gameState == GameState::CurrentPlay && getCell(p) == Cell::Empty) {
         switch (gameState) {
         case GameState::CurrentPlay:
-            data[x + y * width] = Cell::Current;
+            setCell(p, Cell::Current);
             gameState = GameState::OpponentPlay;
             break;
 
         case GameState::OpponentPlay:
-            data[x + y * width] = Cell::Opponent;
+            setCell(p, Cell::Opponent);
             gameState = GameState::CurrentPlay;
             break;
 
@@ -111,23 +151,23 @@ bool Field::clickMultiplayerCurrent(int x, int y) {
         count++;
 
         // Checking for win
-        gameState = checkWin(x, y);
+        gameState = checkWin(p);
         checkSound();
         return true;
     }
     return false;
 }
 
-void Field::clickMultiplayerOpponent(int x, int y) {
+void Field::clickMultiplayerOpponent(SDL_Point p) {
     if (gameState == GameState::OpponentPlay) {
         switch (gameState) {
         case GameState::CurrentPlay:
-            data[x + y * width] = Cell::Current;
+            setCell(p, Cell::Current);
             gameState = GameState::OpponentPlay;
             break;
 
         case GameState::OpponentPlay:
-            data[x + y * width] = Cell::Opponent;
+            setCell(p, Cell::Opponent);
             gameState = GameState::CurrentPlay;
             break;
 
@@ -137,7 +177,7 @@ void Field::clickMultiplayerOpponent(int x, int y) {
         count++;
 
         // Checking for win
-        gameState = checkWin(x, y);
+        gameState = checkWin(p);
         checkSound();
         return;
     }
@@ -153,7 +193,7 @@ int Field::recursivelySolve(Uint8 round) {
                 // Trying set cell and think, what happen next
                 data[y * width + x] = (Cell)(round % 2 + 1);  // Set player cell on odd rounds and enemy cell in even
                 count++;
-                switch (checkWin(x, y)) {
+                switch (checkWin({x, y})) {
                 case GameState::CurrentWin:
                     if (round % 2) {
                         result--;
@@ -207,18 +247,18 @@ void Field::AImove() {
     count++;
 
     // Checking for win
-    gameState = checkWin(maxPos % width, maxPos / width);
+    gameState = checkWin({maxPos % width, maxPos / width});
 }
 
 // Return 0, if none win, 1, if win player, 2 if win bot(2 player)
-GameState Field::checkWin(int X, int Y) {
+GameState Field::checkWin(SDL_Point p) {
     // Finding first starting point for X
-    for (int startX = max(0, X - winWidth + 1); startX <= min(X, width - winWidth); ++startX) {
+    for (int startX = max(0, p.x - winWidth + 1); startX <= min(p.x, width - winWidth); ++startX) {
         // Checking all lines
         Uint8 state = (Uint8)Cell::Current | (Uint8)Cell::Opponent;
 
         for (int x = startX; (x < startX + winWidth) && state; ++x) {
-            state &= (Uint8)data[Y * width + x];
+            state &= (Uint8)getCell(p);
         }
 
         if (state) {
@@ -227,12 +267,12 @@ GameState Field::checkWin(int X, int Y) {
     }
 
     // Finding same first starting point for Y
-    for (int startY = max(0, Y - winWidth + 1); startY <= min(Y, width - winWidth); ++startY) {
+    for (int startY = max(0, p.y - winWidth + 1); startY <= min(p.y, width - winWidth); ++startY) {
         // Checking all collumns
         Uint8 state = (Uint8)Cell::Current | (Uint8)Cell::Opponent;
 
         for (int y = startY; (y < startY + winWidth) && state; ++y) {
-            state &= (Uint8)data[y * width + X];
+            state &= (Uint8)getCell(p);
         }
 
         if (state) {
@@ -241,11 +281,11 @@ GameState Field::checkWin(int X, int Y) {
     }
 
     // Checking primal diagonal
-    for (int startT = max(X - Y, 0); startT <= min(width - winWidth, width + X - Y - winWidth); ++startT) {
+    for (int startT = max(p.x - p.y, 0); startT <= min(width - winWidth, width + p.x - p.y - winWidth); ++startT) {
         Uint8 state = (Uint8)Cell::Current | (Uint8)Cell::Opponent;
 
         for (int t = startT; (t < winWidth + startT) && state; ++t) {
-            state &= (Uint8)data[t + (Y + t - X) * width];
+            state &= (Uint8)data[t + (p.y + t - p.x) * width];
         }
         if (state) {
             return (GameState)(state+2);
@@ -253,12 +293,12 @@ GameState Field::checkWin(int X, int Y) {
     }
 
     // Checking second diagonal
-    if ((width - Y) > X) {
+    if ((width - p.y) > p.x) {
         // Upper left part
-        for (int startX = max(X - winWidth + 1, 0); startX <= min(X, Y+X-winWidth+1); ++startX) {
+        for (int startX = max(p.x - winWidth + 1, 0); startX <= min(p.x, p.y+p.x-winWidth+1); ++startX) {
             Uint8 state = (Uint8)Cell::Current | (Uint8)Cell::Opponent;
 
-            int pos = (X+Y)*width - startX * (width-1);
+            int pos = (p.x+p.y)*width - startX * (width-1);
             for (int t = 0; t < winWidth; ++t) {
                 state &= (Uint8)data[pos];
                 pos -= (width-1);
@@ -269,10 +309,10 @@ GameState Field::checkWin(int X, int Y) {
         }
     } else {
         // Bottom right part
-        for (int startX = max(X - winWidth + 1, X + Y - width + 1); startX <= min(X, width - winWidth); ++startX) {
+        for (int startX = max(p.x - winWidth + 1, p.x + p.y - width + 1); startX <= min(p.x, width - winWidth); ++startX) {
             Uint8 state = (Uint8)Cell::Current | (Uint8)Cell::Opponent;
 
-            int pos = (X+Y)*width - startX * (width-1);
+            int pos = (p.x+p.y)*width - startX * (width-1);
             for (int t = 0; t < winWidth; ++t) {
                 state &= (Uint8)data[pos];
                 pos -= (width-1);
@@ -309,4 +349,47 @@ void Field::checkSound() {
     default:
         break;
     }
+}
+
+void Field::blit(const Window& window) const {
+    // Rendering cells with their background
+    for (int y=0; y < width; ++y) {
+        for (int x=0; x < width; ++x) {
+            const SDL_FRect dest = {float(x * (cellSide + separator)),
+                float(y * (cellSide + separator) + upperLinePixels), cellSide, cellSide};
+            // Rendering background
+            window.blit(window.getTexture(Textures::Cell), dest);
+
+            // Rendering cells
+            switch (getCell({x, y})) {
+            case Cell::Current:
+                window.blit(window.getTexture(Textures::GreenCross + getOffset()), dest);
+                break;
+
+            case Cell::Opponent:
+                window.blit(window.getTexture(Textures::RedCircle - getOffset()), dest);
+                break;
+
+            default:
+                break;
+            }
+        }
+    }
+}
+
+int Field::getWindowWidth() const {
+    return width * cellSide + (width - 1) * separator;
+}
+
+int Field::getWindowHeight() const {
+    return getWindowWidth() * (1.0f + upperLine);
+}
+
+bool Field::isValid(const Mouse _mouse) const {
+    return _mouse.getY() > upperLinePixels;
+}
+
+SDL_Point Field::getPosition(const Mouse _mouse) const {
+    return {_mouse.getX() / (cellSide + separator),
+        (_mouse.getY() - upperLinePixels) / (cellSide + separator)};
 }

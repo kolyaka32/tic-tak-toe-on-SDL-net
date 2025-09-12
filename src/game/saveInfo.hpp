@@ -5,7 +5,8 @@
 
 #pragma once
 
-#include "windowField.hpp"
+#include "field.hpp"
+#include "../GUI/interface.hpp"
 
 
 // 
@@ -21,7 +22,7 @@ class SaveInfo : public GUI::Template {
     GUI::StaticText lastModifiedText;
 
  public:
-    SaveInfo(const Window& window, const WindowField& field, int position);
+    SaveInfo(const Window& window, const Field& field, int position);
     ~SaveInfo();
     // void setPosition(float Y);  // Next to add scrolling
     void blit() const override;
