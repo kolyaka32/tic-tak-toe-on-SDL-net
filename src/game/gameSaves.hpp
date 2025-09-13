@@ -25,7 +25,7 @@ class GameSaves : GUI::Template {
     GameSaves(const Window& window);
     ~GameSaves();
     void activate();
-    Field* click(const Mouse mouse);
+    const Field* click(const Mouse mouse);
     void blit() const override;
 
     // Work with global saves

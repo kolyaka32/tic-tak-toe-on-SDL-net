@@ -7,6 +7,8 @@
 
 #include "baseCycle.hpp"
 #include "../game/gameField.hpp"
+#include "../game/startFields.hpp"
+#include "../game/gameSaves.hpp"
 #include "../game/screamer.hpp"
 
 
@@ -15,6 +17,8 @@ class GameCycle : public BaseCycle {
  protected:
     // Active game part
     GameField field;
+    StartFields startFields;
+    GameSaves saves;
     Screamer screamer;
 
     const GUI::ImageButton gameRestartButton;

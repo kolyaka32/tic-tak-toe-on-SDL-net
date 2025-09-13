@@ -10,6 +10,8 @@
 GameCycle::GameCycle(Window& _window)
 : BaseCycle(_window),
 field(_window),
+startFields(_window),
+saves(_window),
 screamer(window),
 menuRestartButton(window, 0.5, 0.5, {"Restart", "Перезапустить", "Starten", "Перазапуск"}),
 menuExitButton(window, 0.5, 0.65, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}),

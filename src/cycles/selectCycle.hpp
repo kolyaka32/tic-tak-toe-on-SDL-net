@@ -17,7 +17,6 @@ class SelectCycle : public BaseCycle {
     GUI::TextButton twoPlayerButton;
     GUI::TextButton serverButton;
     GUI::TextButton connectButton;
-    GUI::TextButton fieldParametersButton;
 
     // New overrided cycle functions
     bool inputMouseDown() override;

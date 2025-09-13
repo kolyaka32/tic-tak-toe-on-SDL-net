@@ -6,6 +6,10 @@
 #include "field.hpp"
 
 
+const float Field::cellSide = 100;
+const float Field::separator = 5;
+const float Field::upperLine = 0.1f;
+
 Field::Field(int _width, int _winWidth)
 : width(_width),
 winWidth(_winWidth),
@@ -22,13 +26,14 @@ upperLinePixels(upperLine*getWindowWidth()) {
     memcpy(data, _field.data, sizeof(data));
 }
 
-Field& Field::operator=(const Field& _field) {
-    width = _field.width;
-    winWidth = _field.winWidth;
-    count = _field.count;
-    gameState = _field.gameState;
+Field& Field::operator=(const Field* _field) {
+    width = _field->width;
+    winWidth = _field->winWidth;
+    count = _field->count;
+    gameState = _field->gameState;
     upperLinePixels = upperLine*getWindowWidth();
-    memcpy(data, _field.data, sizeof(data));
+    memcpy(data, _field->data, sizeof(data));
+    return *this;
 }
 
 void Field::reset() {
@@ -390,6 +395,6 @@ bool Field::isValid(const Mouse _mouse) const {
 }
 
 SDL_Point Field::getPosition(const Mouse _mouse) const {
-    return {_mouse.getX() / (cellSide + separator),
-        (_mouse.getY() - upperLinePixels) / (cellSide + separator)};
+    return {int(_mouse.getX() / (cellSide + separator)),
+        int((_mouse.getY() - upperLinePixels) / (cellSide + separator))};
 }

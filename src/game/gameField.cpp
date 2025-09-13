@@ -13,6 +13,34 @@ Field GameField::currentField(3, 3);
 GameField::GameField(const Window& _window)
 : Template(_window) {}
 
+void GameField::reset() {
+    currentField.reset();
+}
+
+GameState GameField::getState() const {
+    return currentField.getState();
+}
+
+void GameField::setTextureOffset(int _offset) {
+    currentField.setOffset(_offset);
+}
+
+void GameField::setState(GameState _state) {
+    currentField.setState(_state);
+}
+
+int GameField::getWidth() {
+    return currentField.width;
+}
+
+int GameField::getWindowWidth() {
+    return currentField.getWindowWidth();
+}
+
+int GameField::getWindowHeight() {
+    return currentField.getWindowHeight();
+}
+
 void GameField::setNewField(const Field& field) {
     currentField = field;
 }
@@ -49,7 +77,16 @@ bool GameField::tryClickMultiplayerCurrent(const Mouse _mouse) {
     return false;
 }
 
-void GameField::clickMultiplayerOpponent(Uint8 x, Uint8 y) {
+Uint8 GameField::getLastTurn(const Mouse _mouse) {
+    SDL_Point p = currentField.getPosition(_mouse);
+    return p.y*currentField.width+p.x;
+}
+
+void GameField::clickMultiplayerOpponent(Uint8 _p) {
     // No additional checks for correct internet connection
-    currentField.clickMultiplayerOpponent({x, y});
+    currentField.clickMultiplayerOpponent({_p%currentField.width, _p/currentField.width});
+}
+
+void GameField::blit() const {
+    currentField.blit(window);
 }

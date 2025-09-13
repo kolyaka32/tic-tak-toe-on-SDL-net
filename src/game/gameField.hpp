@@ -17,15 +17,23 @@ class GameField : public GUI::Template {
 
  public:
     GameField(const Window& window);
+    void reset();
+    GameState getState() const;
+    void setTextureOffset(int offset);
+    void setState(GameState state);
+    static int getWidth();
+    static int getWindowWidth();
+    static int getWindowHeight();
 
     void setNewField(const Field& field);
     const Field& saveField();
 
-    void blit() const;
+    void blit() const override;
 
     // Game turns
     bool tryClickSingle(const Mouse mouse);  // Clicking in singleplayer mode, return if have turn
     bool tryClickTwo(const Mouse mouse);     // Clicking in two-player mode, return if have turn
-    bool tryClickMultiplayerCurrent(const Mouse mouse);   // Clicking in multiplayer mode, return if have turn
-    void clickMultiplayerOpponent(Uint8 x, Uint8 y);      // Clicking in multiplayer mode by internet connection
+    bool tryClickMultiplayerCurrent(const Mouse mouse);  // Clicking in multiplayer mode, return if have turn
+    Uint8 getLastTurn(const Mouse mouse);                // Return last turn
+    void clickMultiplayerOpponent(Uint8 position);       // Clicking in multiplayer mode by internet connection
 };

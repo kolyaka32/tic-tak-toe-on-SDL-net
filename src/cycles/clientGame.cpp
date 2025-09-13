@@ -29,13 +29,12 @@ bool ClientGameCycle::inputMouseDown() {
     } else {
         // Normal turn
         if (field.tryClickMultiplayerCurrent(mouse)) {
+            // Sending to opponent
+            connection.sendConfirmed<Uint8>(ConnectionCode::GameTurn, field.getLastTurn(mouse));
+            
             // Making sound
             sounds.play(Sounds::Turn);
             music.startFromCurrent(Music::MainCombat);
-
-            // Sending to opponent
-            connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn,
-                field.getXPos(mouse), field.getYPos(mouse));
         }
     }
     return false;
@@ -54,11 +53,9 @@ void ClientGameCycle::update() {
     // Getting internet messages
     switch (connection.updateMessages()) {
     case ConnectionCode::GameTurn:
-        if (connection.lastPacket->isBytesAvaliable(4)) {
-            logAdditional("Turn of opponent player: from %u to %u",
-                connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
-            field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2),
-                connection.lastPacket->getData<Uint8>(3));
+        if (connection.lastPacket->isBytesAvaliable(3)) {
+            field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2));
+            logAdditional("Turn of opponent player to %u", connection.lastPacket->getData<Uint8>(2));
             // Making sound
             sounds.play(Sounds::Turn);
             // Changing music theme
@@ -78,21 +75,11 @@ void ClientGameCycle::update() {
 
     case ConnectionCode::GameStart:
         if (connection.lastPacket->isBytesAvaliable(3)) {
-            logAdditional("Starting new round: %u", connection.lastPacket->getData<Uint8>(2));
-            // Starting game
-            switch (connection.lastPacket->getData<Uint8>(2)) {
-            case Uint8(GameState::CurrentPlay):
-                field.reset();
-                field.setState(GameState::CurrentPlay);
-                field.setTextureOffset(1);
-                break;
+            // Loading new field from connection
+            loadField();
 
-            case Uint8(GameState::OpponentPlay):
-                field.reset();
-                field.setState(GameState::OpponentPlay);
-                field.setTextureOffset(0);
-                break;
-            }
+            // Starting game
+            logAdditional("Starting new round: %u", connection.lastPacket->getData<Uint8>(2));
         }
         return;
 
@@ -158,4 +145,21 @@ void ClientGameCycle::draw() const {
 
     // Bliting all to screen
     window.render();
+}
+
+void ClientGameCycle::loadField() {
+    /*switch (connection.lastPacket->getData<Uint8>(2)) {
+    case Uint8(GameState::CurrentPlay):
+        field.reset();
+        field.setState(GameState::CurrentPlay);
+        field.setTextureOffset(1);
+        break;
+
+    case Uint8(GameState::OpponentPlay):
+        field.reset();
+        field.setState(GameState::OpponentPlay);
+        field.setTextureOffset(0);
+        break;
+    }*/
+    // ! Need to write in correct way
 }

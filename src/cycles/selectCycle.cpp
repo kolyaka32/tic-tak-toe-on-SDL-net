@@ -8,7 +8,6 @@
 #include "coopGame.hpp"
 #include "serverLobby.hpp"
 #include "clientLobby.hpp"
-#include "parametersCycle.hpp"
 
 
 // Starting basic template with main theme
@@ -19,8 +18,7 @@ singleplayerButton(window, 0.5, 0.3, {"Singleplayer", "Одиночная игр
 bigFieldInfobox(window, 0.5, 0.375, {"Too big field", "Слишком большое поле", "Zu großes Feld", "Занадта вялікае поле"}),
 twoPlayerButton(window, 0.5, 0.45, {"Two players", "Два игрока", "Zwei Spieler", "Два гульца"}),
 serverButton(window, 0.5, 0.6, {"Create server", "Создать сервер", "Server erstellen", "Стварыць сервер"}),
-connectButton(window, 0.5, 0.75, {"Connect", "Присоединиться", "Beitreten", "Далучыцца"}),
-fieldParametersButton(window, 0.5, 0.9, {"Field parameters", "Параметры поля", "Feld-Parameter", "Параметры поля"}) {
+connectButton(window, 0.5, 0.75, {"Connect", "Присоединиться", "Beitreten", "Далучыцца"}) {
     // Starting menu song (if wasn't started)
     music.start(Music::Menu);
     logAdditional("Start select cycle");
@@ -52,10 +50,6 @@ bool SelectCycle::inputMouseDown() {
         runCycle<ClientLobbyCycle>(window);
         return true;
     }
-    if (fieldParametersButton.in(mouse)) {
-        runCycle<ParametersCycle>(window);
-        return true;
-    }
     return false;
 }
 
@@ -81,7 +75,6 @@ void SelectCycle::draw() const {
     titleText.blit();
 
     // Blitting start buttons
-    fieldParametersButton.blit();
     singleplayerButton.blit();
     twoPlayerButton.blit();
     serverButton.blit();

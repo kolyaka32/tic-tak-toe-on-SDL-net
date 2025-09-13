@@ -61,7 +61,7 @@ class Field {
     //
     Field(int width, int winWidth);
     Field(const Field& field);
-    Field& operator=(const Field& field);
+    Field& operator=(const Field* field);
     void reset();
 
     // Getters/setters

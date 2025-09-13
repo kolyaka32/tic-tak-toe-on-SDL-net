@@ -29,7 +29,7 @@ void GameSaves::activate() {
     active = true;
 }
 
-Field* GameSaves::click(const Mouse _mouse) {
+const Field* GameSaves::click(const Mouse _mouse) {
     if (active) {
         if (exitButton.in(_mouse)) {
             active = false;

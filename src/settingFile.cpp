@@ -46,10 +46,6 @@ void InitFile::loadSettings() {
             music.setVolume(getValue(currentLine));
         } else if (parameter == "sounds") {
             sounds.setVolume(getValue(currentLine));
-        } else if (parameter == "width") {
-            GameField::setWidth(std::stoi(getText(currentLine).c_str()));
-        } else if (parameter == "winWidth") {
-            GameField::setWinWidth(std::stoi(getText(currentLine).c_str()));
         } else if (parameter == "IP") {
             strncpy(baseIP, getText(currentLine).c_str(), sizeof(baseIP));
         } else if (parameter == "port") {
@@ -94,11 +90,6 @@ void InitFile::saveSettings() {
     // Writing music and sounds volumes
     outSettings << "music = " << music.getVolume() << "\n";
     outSettings << "sounds = " << sounds.getVolume() << "\n";
-
-    // Writing starting config (order of figures)
-    outSettings << "\nGame configuration:\n";
-    outSettings << "width = " << GameField::getWidth() << "\n";
-    outSettings << "winWidth = " << GameField::getWinWidth() << "\n";
 
     // Writing internet connection data
     outSettings << "\n# Internet base parameters:\n";

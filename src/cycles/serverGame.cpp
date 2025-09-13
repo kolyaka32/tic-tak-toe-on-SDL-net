@@ -13,7 +13,7 @@ startFirst(window, 0.5, 0.45, {"Start as cross", "Начать за крести
 startSecond(window, 0.5, 0.55, {"Start as circle", "Начать за кружок", "Für einen Kreis beginnen", "Пачаць за гурток"}) {
     if (!isRestarted()) {
         // Sending applying initialsiation message
-        connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::Init, field.getWidth(), field.getWinWidth());
+        sendField();
     }
     logAdditional("Start server game cycle");
 }
@@ -61,13 +61,12 @@ bool ServerGameCycle::inputMouseDown() {
     } else {
         // Normal turn
         if (field.tryClickMultiplayerCurrent(mouse)) {
+            // Sending to opponent
+            connection.sendConfirmed<Uint8>(ConnectionCode::GameTurn, field.getLastTurn(mouse));
+
             // Making sound
             sounds.play(Sounds::Turn);
             music.startFromCurrent(Music::MainCombat);
-
-            // Sending to opponent
-            connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn,
-                field.getXPos(mouse), field.getYPos(mouse));
         }
     }
     return false;
@@ -96,16 +95,14 @@ void ServerGameCycle::update() {
     // Getting internet messages
     switch (connection.updateMessages()) {
     case ConnectionCode::GameTurn:
-        if (connection.lastPacket->isBytesAvaliable(4)) {
+        if (connection.lastPacket->isBytesAvaliable(3)) {
+            // Making turn
+            field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2));
+            logAdditional("Turn of opponent player to %u", connection.lastPacket->getData<Uint8>(2));
+
             // Making sound
             sounds.play(Sounds::Turn);
             music.startFromCurrent(Music::MainCombat);
-
-            // Making turn
-            field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2),
-                connection.lastPacket->getData<Uint8>(3));
-            logAdditional("Turn of opponent player: from %u to %u",
-                connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
         }
         return;
 
@@ -173,4 +170,9 @@ void ServerGameCycle::draw() const {
 
     // Bliting all to screen
     window.render();
+}
+
+void ServerGameCycle::sendField() {
+    // connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::Init, field.getWidth(), field.getWinWidth());
+    // ! Need to write in correct way
 }
