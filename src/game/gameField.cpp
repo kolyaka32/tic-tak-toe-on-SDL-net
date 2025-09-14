@@ -4,6 +4,7 @@
  */
 
 #include "gameField.hpp"
+#include "../data/cycleTemplate.hpp"
 
 
 // Creating start game field 3 by 3
@@ -13,8 +14,10 @@ Field GameField::currentField(3, 3);
 GameField::GameField(const Window& _window)
 : Template(_window) {}
 
-void GameField::reset() {
+void GameField::restart() {
     currentField.reset();
+    currentField.setOffset(0);
+    currentField.setState(GameState::CurrentPlay);
 }
 
 GameState GameField::getState() const {
@@ -41,8 +44,22 @@ int GameField::getWindowHeight() {
     return currentField.getWindowHeight();
 }
 
-void GameField::setNewField(const Field& field) {
+bool GameField::isGameEnd() {
+    return currentField.getState() >= GameState::CurrentWin;
+}
+
+bool GameField::setNewField(const Field& field, Window& _window) {
+    // Check, if need restart window
+    if (currentField.width != field.width) {
+        currentField = field;
+        // Setting new window width, height
+        _window.setWidth(currentField.getWindowWidth());
+        _window.setHeight(currentField.getWindowWidth());
+        CycleTemplate::restart();
+        return true;
+    }
     currentField = field;
+    return false;
 }
 
 const Field& GameField::saveField() {

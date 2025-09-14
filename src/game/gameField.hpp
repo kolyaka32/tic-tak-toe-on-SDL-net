@@ -17,7 +17,6 @@ class GameField : public GUI::Template {
 
  public:
     GameField(const Window& window);
-    void reset();
     GameState getState() const;
     void setTextureOffset(int offset);
     void setState(GameState state);
@@ -25,7 +24,9 @@ class GameField : public GUI::Template {
     static int getWindowWidth();
     static int getWindowHeight();
 
-    void setNewField(const Field& field);
+    bool isGameEnd();
+    void restart();
+    bool setNewField(const Field& field, Window& window);  // Return true, if need to restart cycle
     const Field& saveField();
 
     void blit() const override;

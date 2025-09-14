@@ -30,7 +30,7 @@ bool ServerGameCycle::inputMouseDown() {
         music.startFromCurrent(Music::MainCalm);
 
         // Clearing field
-        field.reset();
+        field.restart();
         logAdditional("Restart game by upper button");
         return true;
     }
@@ -38,7 +38,7 @@ bool ServerGameCycle::inputMouseDown() {
     if (field.getState() >= GameState::CurrentWin || field.getState() == GameState::None) {
         // Check for game start
         if (startFirst.in(mouse)) {
-            field.reset();
+            field.restart();
             field.setState(GameState::CurrentPlay);
             connection.sendConfirmed<Uint8>(ConnectionCode::GameStart, (Uint8)GameState::OpponentPlay);
             field.setTextureOffset(0);
@@ -46,7 +46,7 @@ bool ServerGameCycle::inputMouseDown() {
             return true;
         }
         if (startSecond.in(mouse)) {
-            field.reset();
+            field.restart();
             field.setState(GameState::OpponentPlay);
             connection.sendConfirmed<Uint8>(ConnectionCode::GameStart, (Uint8)GameState::CurrentPlay);
             field.setTextureOffset(1);
@@ -81,7 +81,7 @@ void ServerGameCycle::inputKeys(SDL_Keycode _key) {
         music.startFromCurrent(Music::MainCalm);
 
         // Clearing field
-        field.reset();
+        field.restart();
         logAdditional("Restart game by key");
         return;
     } else {

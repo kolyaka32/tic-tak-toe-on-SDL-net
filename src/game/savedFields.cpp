@@ -3,14 +3,15 @@
  * <nik.kazankov.05@mail.ru>
  */
 
-#include "gameSaves.hpp"
+#include "savedFields.hpp"
 
 
-std::vector<Field> GameSaves::startOptions{};
+std::vector<Field> SavedFields::startOptions{};
 
-GameSaves::GameSaves(const Window& _window)
+SavedFields::SavedFields(const Window& _window)
 : Template(_window),
-backplate(_window, 0.5, 0.5, 0.8, 0.8, 8, 2),
+backplate(_window, 0.5, 0.5, 0.8, 0.8, 20, 4),
+emptySavesText(_window, 0.5, 0.5, {"No saves", "Нет сохранений", "Keine Speicherung", "Няма захаванняў"}, 1),
 exitButton(_window, 0.5, 0.8, {"Close", "Закрыть", "Schließen", "Зачыніць"}) {
     fieldNumber = min(startOptions.size(), size_t(5));
     saveInfos.reserve(fieldNumber);
@@ -20,16 +21,20 @@ exitButton(_window, 0.5, 0.8, {"Close", "Закрыть", "Schließen", "Зач�
     }
 }
 
-GameSaves::~GameSaves() {
+SavedFields::~SavedFields() {
     // ! Need to check on correct clearance of saveInfos
     saveInfos.clear();
 }
 
-void GameSaves::activate() {
+void SavedFields::activate() {
     active = true;
 }
 
-const Field* GameSaves::click(const Mouse _mouse) {
+bool SavedFields::isActive() {
+    return active;
+}
+
+const Field* SavedFields::click(const Mouse _mouse) {
     if (active) {
         if (exitButton.in(_mouse)) {
             active = false;
@@ -45,11 +50,16 @@ const Field* GameSaves::click(const Mouse _mouse) {
     return nullptr;
 }
 
-void GameSaves::blit() const {
+void SavedFields::blit() const {
     if (active) {
         backplate.blit();
-        for (int i=0; i < fieldNumber; ++i) {
-            saveInfos[i].blit();
+        // Check, if has fields
+        if (fieldNumber) {
+            for (int i=0; i < fieldNumber; ++i) {
+                saveInfos[i].blit();
+            }
+        } else {
+            emptySavesText.blit();
         }
         exitButton.blit();
     }
@@ -57,10 +67,10 @@ void GameSaves::blit() const {
 
 
 // Static objects
-void GameSaves::addField() {
+void SavedFields::addField() {
 
 }
 
-void GameSaves::saveAll() {
+void SavedFields::saveAll() {
 
 }

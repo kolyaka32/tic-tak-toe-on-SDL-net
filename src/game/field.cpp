@@ -263,7 +263,7 @@ GameState Field::checkWin(SDL_Point p) {
         Uint8 state = (Uint8)Cell::Current | (Uint8)Cell::Opponent;
 
         for (int x = startX; (x < startX + winWidth) && state; ++x) {
-            state &= (Uint8)getCell(p);
+            state &= (Uint8)getCell({x, p.y});
         }
 
         if (state) {
@@ -277,7 +277,7 @@ GameState Field::checkWin(SDL_Point p) {
         Uint8 state = (Uint8)Cell::Current | (Uint8)Cell::Opponent;
 
         for (int y = startY; (y < startY + winWidth) && state; ++y) {
-            state &= (Uint8)getCell(p);
+            state &= (Uint8)getCell({p.x, y});
         }
 
         if (state) {

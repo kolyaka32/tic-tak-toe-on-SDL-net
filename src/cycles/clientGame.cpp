@@ -69,7 +69,7 @@ void ClientGameCycle::update() {
         music.startFromCurrent(Music::MainCalm);
 
         // Resetting game
-        field.reset();
+        field.restart();
         logAdditional("Resetting game by connection");
         return;
 

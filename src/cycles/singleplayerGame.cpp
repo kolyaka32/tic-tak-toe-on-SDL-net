@@ -26,7 +26,7 @@ bool SinglePlayerGameCycle::inputMouseDown() {
         music.startFromCurrent(Music::MainCalm);
 
         // Restarting current game
-        field.reset();
+        field.restart();
         field.setState(GameState::CurrentPlay);
         logAdditional("Resetting game by upper button");
         return true;
@@ -39,7 +39,7 @@ bool SinglePlayerGameCycle::inputMouseDown() {
             sounds.play(Sounds::Reset);
 
             // Restarting current game
-            field.reset();
+            field.restart();
             field.setState(GameState::CurrentPlay);
             music.startFromCurrent(Music::MainCalm);
             logAdditional("Restarting game by menu button");

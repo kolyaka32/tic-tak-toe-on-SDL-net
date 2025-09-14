@@ -26,14 +26,35 @@ bool TwoPlayerGameCycle::inputMouseDown() {
         music.startFromCurrent(Music::MainCalm);
 
         // Restarting current game
-        field.reset();
-        field.setTextureOffset(0);
-        field.setState(GameState::CurrentPlay);
+        field.restart();
         logAdditional("Restart game from upper button");
         return true;
     }
     // Checking, if game start
-    if (field.getState() >= GameState::CurrentWin) {
+    if (field.isGameEnd()) {
+        // Check, if selecting new field
+        if (startFields.isActive()) {
+            // Check, if select
+            if (const Field* f = startFields.click(mouse)) {
+                if (field.setNewField(*f, window)) {
+                    stop();
+                }
+                return true;
+            }
+            return false;
+        }
+        // Check, if loading fields
+        if (savedFields.isActive()) {
+            // Check, if select
+            if (const Field* f = savedFields.click(mouse)) {
+                if (field.setNewField(*f, window)) {
+                    stop();
+                }
+                return true;
+            }
+            return false;
+        }
+        // In menu checks
         // Check for game start
         if (menuRestartButton.in(mouse)) {
             // Making sound
@@ -41,11 +62,17 @@ bool TwoPlayerGameCycle::inputMouseDown() {
             music.startFromCurrent(Music::MainCalm);
 
             // Restarting current game
-            field.reset();
-            field.setTextureOffset(0);
-            field.setState(GameState::CurrentPlay);
+            field.restart();
             logAdditional("Restart game from menu");
             return true;
+        }
+        if (menuStartNewButton.in(mouse)) {
+            // Starting selecting new field from avaliable
+            startFields.activate();
+        }
+        if (menuLoadButton.in(mouse)) {
+            // Starting selecting field from previous games
+            savedFields.activate();
         }
         if (menuExitButton.in(mouse)) {
             // Going to menu

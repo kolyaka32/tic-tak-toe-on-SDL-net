@@ -11,22 +11,24 @@ GameCycle::GameCycle(Window& _window)
 : BaseCycle(_window),
 field(_window),
 startFields(_window),
-saves(_window),
+savedFields(_window),
 screamer(window),
-menuRestartButton(window, 0.5, 0.5, {"Restart", "Перезапустить", "Starten", "Перазапуск"}),
-menuExitButton(window, 0.5, 0.65, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}),
 gameRestartButton(window, 0.12, 0.05, 0.08, Textures::RestartButton),
 playersTurnsTexts {
     {window, 0.5, 0.05, {"First player turn", "Ход первого игрока", "Der Zug des ersten Spielers", "Ход першага гульца"}},
     {window, 0.5, 0.05, {"Second player turn", "Ход второго игрока", "Zug des zweiten Spielers", "Ход другога гульца"}}
 },
-menuBackplate(window, 0.5, 0.5, 1, 0.46, 40, 5),
-firstWinText(window, 0.5, 0.35, {"Fist player win", "Первый игрок выйграл", "Der erste Spieler hat gewonnen", "Першы гулец выйграў"}, 1, Height::Info),
-secondWinText(window, 0.5, 0.35, {"Second player win", "Второй игрок выйграл", "Der zweite Spieler hat gewonnen", "Другі гулец выйграў"}, 1, Height::Info),
-nobodyWinText(window, 0.5, 0.35, {"Nobody win", "Ничья", "Unentschieden", "Чые"}, 1, Height::Info) {
+menuBackplate(window, 0.5, 0.5, 0.8, 0.7, 40, 4),
+menuRestartButton(window, 0.5, 0.35, {"Restart", "Перезапустить", "Starten", "Перазапуск"}),
+menuStartNewButton(window, 0.5, 0.48, {"Create new", "Создать", "Schaffen", "Стварыць"}),
+menuLoadButton(window, 0.5, 0.61, {"Load", "Загрузить", "Hochladen", "Загрузіць"}),
+menuExitButton(window, 0.5, 0.75, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}),
+firstWinText(window, 0.5, 0.24, {"First win", "Первый победил", "Der erste hat gewonnen", "Першы перамог"}, 1, Height::Info),
+secondWinText(window, 0.5, 0.24, {"Second win", "Второй победил", "Der zweite hat gewonnen", "Другі перамог"}, 1, Height::Info),
+nobodyWinText(window, 0.5, 0.24, {"Nobody win", "Ничья", "Unentschieden", "Чые"}, 1, Height::Info) {
     if (!isRestarted()) {
         // Resetting field
-        field.reset();
+        field.restart();
     }
     // Starting main song (if wasn't started)
     music.startFading(Music::MainCalm);
@@ -52,7 +54,7 @@ void GameCycle::inputKeys(SDL_Keycode key) {
         music.startFromCurrent(Music::MainCalm);
 
         // Restarting game
-        field.reset();
+        field.restart();
         logAdditional("Restarting game by key");
         return;
 
@@ -87,6 +89,8 @@ void GameCycle::draw() const {
 
         // Blitting buttons
         menuRestartButton.blit();
+        menuStartNewButton.blit();
+        menuLoadButton.blit();
         menuExitButton.blit();
     }
 
@@ -115,6 +119,10 @@ void GameCycle::draw() const {
     default:
         break;
     }
+    // Blitting start variants
+    startFields.blit();
+    savedFields.blit();
+
     // Drawing setting menu
     settings.blit();
 

@@ -8,7 +8,7 @@
 #include "baseCycle.hpp"
 #include "../game/gameField.hpp"
 #include "../game/startFields.hpp"
-#include "../game/gameSaves.hpp"
+#include "../game/savedFields.hpp"
 #include "../game/screamer.hpp"
 
 
@@ -18,7 +18,7 @@ class GameCycle : public BaseCycle {
     // Active game part
     GameField field;
     StartFields startFields;
-    GameSaves saves;
+    SavedFields savedFields;
     Screamer screamer;
 
     const GUI::ImageButton gameRestartButton;
@@ -27,6 +27,8 @@ class GameCycle : public BaseCycle {
     // Menu after game end
     GUI::RoundedBackplate menuBackplate;
     GUI::TextButton menuRestartButton;
+    GUI::TextButton menuStartNewButton;
+    GUI::TextButton menuLoadButton;
     GUI::TextButton menuExitButton;
     // Ending options
     GUI::HighlightedStaticText firstWinText;
