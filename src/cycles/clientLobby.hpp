@@ -21,7 +21,7 @@ class ClientLobbyCycle : public BaseCycle {
 
     // Input fields
     GUI::StaticText enterIPText;
-    GUI::TypeBox<12> enterIPField;
+    GUI::TypeBox<15> enterIPField;
     GUI::StaticText enterPortText;
     GUI::TypeBox<6> enterPortField;
     GUI::TextButton pasteButton;

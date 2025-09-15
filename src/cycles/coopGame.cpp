@@ -21,7 +21,7 @@ bool TwoPlayerGameCycle::inputMouseDown() {
         return true;
     }
     if (gameMenuButton.in(mouse)) {
-        // Starting menu for selecting
+        // Starting menu for selecting new field
         field.setState(GameState::None);
         return true;
     }

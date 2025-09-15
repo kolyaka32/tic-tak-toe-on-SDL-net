@@ -8,12 +8,11 @@
 
 ServerGameCycle::ServerGameCycle(Window& _window, const Connection& _server)
 : InternetCycle(_window),
-connection(_server),
-startFirst(window, 0.5, 0.45, {"Start as cross", "Начать за крестик", "Am Kreuz anfangen", "Пачаць за крыжык"}),
-startSecond(window, 0.5, 0.55, {"Start as circle", "Начать за кружок", "Für einen Kreis beginnen", "Пачаць за гурток"}) {
+connection(_server) {
     if (!isRestarted()) {
         // Sending applying initialsiation message
-        sendField();
+        connection.sendConfirmed(ConnectionCode::Init);
+        field.setState(GameState::None);
     }
     logAdditional("Start server game cycle");
 }
@@ -23,35 +22,72 @@ bool ServerGameCycle::inputMouseDown() {
         return true;
     }
     if (gameMenuButton.in(mouse)) {
-        // Sending message of game clear
-        connection.sendConfirmed(ConnectionCode::GameClear);
-        // Making sound
-        sounds.play(Sounds::Reset);
-        music.startFromCurrent(Music::MainCalm);
-
-        // Clearing field
-        field.restart();
-        logAdditional("Restart game by upper button");
+        // Starting menu for selecting new field
+        field.setState(GameState::None);
         return true;
     }
     // Checking, if game start
-    if (field.getState() >= GameState::CurrentWin || field.getState() == GameState::None) {
+    if (field.isGameEnd() || field.isWaiting()) {
+        // Check, if selecting new field
+        if (startFields.isActive()) {
+            // Check, if select
+            if (const Field* f = startFields.click(mouse)) {
+                if (field.setNewField(f, window)) {
+                    stop();
+                }
+                // Starting game
+                field.setState(GameState::CurrentPlay);
+                // Send that field
+                sendField(f);
+                // Update music
+                sounds.play(Sounds::Reset);
+                music.startFromCurrent(Music::MainCalm);
+                logAdditional("New game from starting fields");
+                return true;
+            }
+            return false;
+        }
+        // Check, if loading fields
+        if (savedFields.isActive()) {
+            // Check, if select
+            if (const Field* f = savedFields.click(mouse)) {
+                if (field.setNewField(f, window)) {
+                    stop();
+                }
+                // Starting game
+                field.setState(GameState::CurrentPlay);
+                // Send that field
+                sendField(f);
+                // Update music
+                sounds.play(Sounds::Reset);
+                music.startFromCurrent(Music::MainCalm);
+                logAdditional("New game from saved fields");
+                return true;
+            }
+            return false;
+        }
+        // In menu checks
         // Check for game start
-        if (startFirst.in(mouse)) {
+        if (menuRestartButton.in(mouse)) {
+            // Restarting current game
             field.restart();
-            field.setState(GameState::CurrentPlay);
-            connection.sendConfirmed<Uint8>(ConnectionCode::GameStart, (Uint8)GameState::OpponentPlay);
-            field.setTextureOffset(0);
-            logAdditional("Start game as cross (first)");
+
+            // Sending message
+            connection.sendConfirmed(ConnectionCode::GameRestart);
+
+            // Making sound
+            sounds.play(Sounds::Reset);
+            music.startFromCurrent(Music::MainCalm);
+            logAdditional("Restart game from menu");
             return true;
         }
-        if (startSecond.in(mouse)) {
-            field.restart();
-            field.setState(GameState::OpponentPlay);
-            connection.sendConfirmed<Uint8>(ConnectionCode::GameStart, (Uint8)GameState::CurrentPlay);
-            field.setTextureOffset(1);
-            logAdditional("Start game as circle (second)");
-            return true;
+        if (menuStartNewButton.in(mouse)) {
+            // Starting selecting new field from avaliable
+            startFields.activate();
+        }
+        if (menuLoadButton.in(mouse)) {
+            // Starting selecting field from previous games
+            savedFields.activate();
         }
         if (menuExitButton.in(mouse)) {
             // Going to menu
@@ -75,7 +111,7 @@ bool ServerGameCycle::inputMouseDown() {
 void ServerGameCycle::inputKeys(SDL_Keycode _key) {
     if (_key == SDLK_R) {
         // Sending message of game clear
-        connection.sendConfirmed(ConnectionCode::GameClear);
+        connection.sendConfirmed(ConnectionCode::GameRestart);
         // Making sound
         sounds.play(Sounds::Reset);
         music.startFromCurrent(Music::MainCalm);
@@ -120,13 +156,14 @@ void ServerGameCycle::draw() const {
     field.blit();
 
     // Bliting waiting menu, if need
-    if (field.getState() >= GameState::CurrentWin || field.getState() == GameState::None) {
+    if (field.isGameEnd() || field.isWaiting()) {
         // Bliting end background
         menuBackplate.blit();
 
         // Blitting buttons
-        startFirst.blit();
-        startSecond.blit();
+        menuRestartButton.blit();
+        menuStartNewButton.blit();
+        menuLoadButton.blit();
         menuExitButton.blit();
     }
 
@@ -155,11 +192,13 @@ void ServerGameCycle::draw() const {
     default:
         break;
     }
+    // Blitting start variants
+    startFields.blit();
+    savedFields.blit();
+
     // Drawing buttons
     exitButton.blit();
     gameMenuButton.blit();
-
-    // Drawing setting menu
     settings.blit();
 
     // Messages
@@ -172,7 +211,14 @@ void ServerGameCycle::draw() const {
     window.render();
 }
 
-void ServerGameCycle::sendField() {
-    // connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::Init, field.getWidth(), field.getWinWidth());
+void ServerGameCycle::sendField(const Field* field) {
+    //connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::Init, field.getWidth(), field.getWinWidth());
     // ! Need to write in correct way
+
+    /*
+    field.setState(GameState::CurrentPlay);
+    connection.sendConfirmed<Uint8>(ConnectionCode::GameNew, (Uint8)GameState::OpponentPlay);
+    field.setTextureOffset(0);
+    logAdditional("Start game as cross (first)");
+    */
 }

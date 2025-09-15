@@ -24,8 +24,8 @@ class GameField : public GUI::Template {
     static int getWindowWidth();
     static int getWindowHeight();
 
-    bool isWaiting();
-    bool isGameEnd();
+    bool isWaiting() const;
+    bool isGameEnd() const;
     void restart();
     bool setNewField(const Field* field, Window& window);  // Return true, if need to restart cycle
     const Field& saveField();

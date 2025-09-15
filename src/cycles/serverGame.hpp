@@ -12,14 +12,10 @@
 // Game cycle with game part of server
 class ServerGameCycle : public InternetCycle {
  private:
-    void sendField();
+    void sendField(const Field* field);
 
  protected:
     GameConnection connection;
-
-    // Starting options
-    GUI::TextButton startFirst;
-    GUI::TextButton startSecond;
 
     // Main run functions
     bool inputMouseDown() override;

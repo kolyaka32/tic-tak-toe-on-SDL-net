@@ -85,7 +85,7 @@ void GameCycle::draw() const {
     gameMenuButton.blit();
 
     // Bliting waiting menu
-    if (field.getState() >= GameState::CurrentWin || field.getState() == GameState::None) {
+    if (field.isGameEnd() || field.isWaiting()) {
         // Bliting end background
         menuBackplate.blit();
 

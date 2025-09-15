@@ -44,11 +44,11 @@ int GameField::getWindowHeight() {
     return currentField.getWindowHeight();
 }
 
-bool GameField::isWaiting() {
+bool GameField::isWaiting() const {
     return currentField.getState() == GameState::None;
 }
 
-bool GameField::isGameEnd() {
+bool GameField::isGameEnd() const {
     return currentField.getState() >= GameState::CurrentWin;
 }
 

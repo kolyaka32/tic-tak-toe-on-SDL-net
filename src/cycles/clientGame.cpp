@@ -11,6 +11,9 @@ ClientGameCycle::ClientGameCycle(Window& _window, const Connection& _client)
 : InternetCycle(_window),
 connection(_client),
 waitText(window, 0.5, 0.05, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}) {
+    if (!isRestarted()) {
+        field.setState(GameState::None);
+    }
     logAdditional("Start client game cycle");
 }
 
@@ -63,24 +66,26 @@ void ClientGameCycle::update() {
         }
         return;
 
-    case ConnectionCode::GameClear:
-        // Making sound
-        sounds.play(Sounds::Reset);
-        music.startFromCurrent(Music::MainCalm);
-
-        // Resetting game
-        field.restart();
-        logAdditional("Resetting game by connection");
-        return;
-
-    case ConnectionCode::GameStart:
+    case ConnectionCode::GameNew:
         if (connection.lastPacket->isBytesAvaliable(3)) {
             // Loading new field from connection
             loadField();
 
-            // Starting game
-            logAdditional("Starting new round: %u", connection.lastPacket->getData<Uint8>(2));
+            // Making sound
+            sounds.play(Sounds::Reset);
+            music.startFromCurrent(Music::MainCalm);
+            logAdditional("Resetting game by connection");
         }
+        return;
+
+    case ConnectionCode::GameRestart:
+        // Resetting game
+        field.restart();
+
+        // Making sound
+        sounds.play(Sounds::Reset);
+        music.startFromCurrent(Music::MainCalm);
+        logAdditional("Starting new round: %u", connection.lastPacket->getData<Uint8>(2));
         return;
 
     default:

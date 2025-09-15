@@ -157,6 +157,14 @@ ConnectionCode GameConnection::checkNewMessage() {
     }
 }
 
+/*void GameConnection::sendConfirmed(ConnectionCode _code, SendPacket _packet) {
+    // Adding new message to confirme array and send it
+    Message* newMessage = new Message{*this, _code, _packet};
+    unconfirmedMessages.push_back(newMessage);
+    // Updating timer
+    needResendApplyConnection = getTime() + MESSAGE_APPLY_TIMEOUT;
+}*/
+
 void GameConnection::tryReconnect() {
     // Sending init message
     send(ConnectionCode::Init, 0);
