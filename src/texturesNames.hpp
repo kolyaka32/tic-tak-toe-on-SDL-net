@@ -20,7 +20,7 @@ enum class Textures : unsigned {
     SliderButton,
     SliderLine,
     QuitButton,
-    RestartButton,
+    MenuButton,
     // Base flags in settings
     FlagUSA,
     FlagRUS,

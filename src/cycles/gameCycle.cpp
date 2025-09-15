@@ -13,7 +13,7 @@ field(_window),
 startFields(_window),
 savedFields(_window),
 screamer(window),
-gameRestartButton(window, 0.12, 0.05, 0.08, Textures::RestartButton),
+gameMenuButton(window, 0.12, 0.05, 0.08, Textures::MenuButton),
 playersTurnsTexts {
     {window, 0.5, 0.05, {"First player turn", "Ход первого игрока", "Der Zug des ersten Spielers", "Ход першага гульца"}},
     {window, 0.5, 0.05, {"Second player turn", "Ход второго игрока", "Zug des zweiten Spielers", "Ход другога гульца"}}
@@ -29,6 +29,8 @@ nobodyWinText(window, 0.5, 0.24, {"Nobody win", "Ничья", "Unentschieden", "
     if (!isRestarted()) {
         // Resetting field
         field.restart();
+        startFields.reset();
+        savedFields.reset();
     }
     // Starting main song (if wasn't started)
     music.startFading(Music::MainCalm);
@@ -80,7 +82,7 @@ void GameCycle::draw() const {
 
     // Drawing buttons
     exitButton.blit();
-    gameRestartButton.blit();
+    gameMenuButton.blit();
 
     // Bliting waiting menu
     if (field.getState() >= GameState::CurrentWin || field.getState() == GameState::None) {

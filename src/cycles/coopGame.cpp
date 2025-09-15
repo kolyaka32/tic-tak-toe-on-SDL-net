@@ -10,8 +10,8 @@
 TwoPlayerGameCycle::TwoPlayerGameCycle(Window& _window)
 : GameCycle(_window) {
     if (!isRestarted()) {
-        // Starting game
-        field.setState(GameState::CurrentPlay);
+        // Starting selecting game
+        field.setState(GameState::None);
     }
     logAdditional("Start coop game cycle");
 }
@@ -20,18 +20,13 @@ bool TwoPlayerGameCycle::inputMouseDown() {
     if (GameCycle::inputMouseDown()) {
         return true;
     }
-    if (gameRestartButton.in(mouse)) {
-        // Making sound
-        sounds.play(Sounds::Reset);
-        music.startFromCurrent(Music::MainCalm);
-
-        // Restarting current game
-        field.restart();
-        logAdditional("Restart game from upper button");
+    if (gameMenuButton.in(mouse)) {
+        // Starting menu for selecting
+        field.setState(GameState::None);
         return true;
     }
     // Checking, if game start
-    if (field.isGameEnd()) {
+    if (field.isGameEnd() || field.isWaiting()) {
         // Check, if selecting new field
         if (startFields.isActive()) {
             // Check, if select
@@ -42,6 +37,7 @@ bool TwoPlayerGameCycle::inputMouseDown() {
                 // Starting game
                 field.setState(GameState::CurrentPlay);
                 // Update music
+                sounds.play(Sounds::Reset);
                 music.startFromCurrent(Music::MainCalm);
                 return true;
             }
@@ -57,6 +53,7 @@ bool TwoPlayerGameCycle::inputMouseDown() {
                 // Starting game
                 field.setState(GameState::CurrentPlay);
                 // Update music
+                sounds.play(Sounds::Reset);
                 music.startFromCurrent(Music::MainCalm);
                 return true;
             }

@@ -21,7 +21,7 @@ class GameCycle : public BaseCycle {
     SavedFields savedFields;
     Screamer screamer;
 
-    const GUI::ImageButton gameRestartButton;
+    const GUI::ImageButton gameMenuButton;
     GUI::StaticText playersTurnsTexts[2];
 
     // Menu after game end

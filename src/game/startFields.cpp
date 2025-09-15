@@ -12,6 +12,7 @@ Field StartFields::startOptions[4] = {
     {7, 5},
     {9, 7},
 };
+bool StartFields::active = false;
 
 StartFields::StartFields(const Window& _window)
 : backplate{_window, 0.5, 0.5, 0.7, 0.7, 20, 4},
@@ -29,6 +30,10 @@ void StartFields::activate() {
 
 bool StartFields::isActive() {
     return active;
+}
+
+void StartFields::reset() {
+    active = false;
 }
 
 const Field* StartFields::click(const Mouse _mouse) {

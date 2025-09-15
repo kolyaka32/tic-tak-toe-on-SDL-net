@@ -7,6 +7,7 @@
 
 
 std::vector<Field> SavedFields::startOptions{};
+bool SavedFields::active = false;
 
 SavedFields::SavedFields(const Window& _window)
 : Template(_window),
@@ -32,6 +33,10 @@ void SavedFields::activate() {
 
 bool SavedFields::isActive() {
     return active;
+}
+
+void SavedFields::reset() {
+    active = false;
 }
 
 const Field* SavedFields::click(const Mouse _mouse) {

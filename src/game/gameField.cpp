@@ -44,6 +44,10 @@ int GameField::getWindowHeight() {
     return currentField.getWindowHeight();
 }
 
+bool GameField::isWaiting() {
+    return currentField.getState() == GameState::None;
+}
+
 bool GameField::isGameEnd() {
     return currentField.getState() >= GameState::CurrentWin;
 }

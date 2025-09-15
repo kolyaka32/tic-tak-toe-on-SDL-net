@@ -15,7 +15,7 @@ class SavedFields : GUI::Template {
     static std::vector<Field> startOptions;
 
     // Draw options
-    bool active = false;
+    static bool active;
     int fieldNumber;
     GUI::RoundedBackplate backplate;
     std::vector<SaveInfo> saveInfos;
@@ -27,6 +27,7 @@ class SavedFields : GUI::Template {
     ~SavedFields();
     void activate();
     bool isActive();
+    void reset();
     const Field* click(const Mouse mouse);
     void blit() const override;
 

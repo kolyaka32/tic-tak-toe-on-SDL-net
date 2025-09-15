@@ -190,6 +190,10 @@ void Field::clickMultiplayerOpponent(SDL_Point p) {
 
 // Recursivly solve, where cell need to be placed
 int Field::recursivelySolve(Uint8 round) {
+    // Check, if has too much rounds
+    if (round > 3) {
+        return 0;
+    }
     // Look for best place to set
     int result = 0;
     for (int y=0; y < width; ++y) {
@@ -231,7 +235,8 @@ int Field::recursivelySolve(Uint8 round) {
 
 void Field::AImove() {
     int maxScore = -127;
-    int maxPos = 0;
+    int posibleCounts = 0;
+    int posibleMoves[81];
 
     // Finding best place for move
     for (int i=0; i < width * width; ++i) {
@@ -239,20 +244,26 @@ void Field::AImove() {
             data[i] = Cell::Opponent;
             count++;
             int cur = recursivelySolve(1);
+            if (cur == maxScore) {
+                posibleMoves[posibleCounts] = i;
+                posibleCounts++;
+            }
             if (cur > maxScore) {
                 maxScore = cur;
-                maxPos = i;
+                posibleCounts = 1;
+                posibleMoves[0] = i;
             }
             count--;
             data[i] = Cell::Empty;
         }
     }
-    //
-    data[maxPos] = Cell::Opponent;
+    // Selecting one of posible cells (randomly)
+    int move = posibleMoves[SDL_rand(posibleCounts)];
+    data[move] = Cell::Opponent;
     count++;
 
     // Checking for win
-    gameState = checkWin({maxPos % width, maxPos / width});
+    gameState = checkWin({move % width, move / width});
 }
 
 // Return 0, if none win, 1, if win player, 2 if win bot(2 player)

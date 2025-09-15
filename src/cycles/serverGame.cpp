@@ -22,7 +22,7 @@ bool ServerGameCycle::inputMouseDown() {
     if (InternetCycle::inputMouseDown()) {
         return true;
     }
-    if (gameRestartButton.in(mouse)) {
+    if (gameMenuButton.in(mouse)) {
         // Sending message of game clear
         connection.sendConfirmed(ConnectionCode::GameClear);
         // Making sound
@@ -157,7 +157,7 @@ void ServerGameCycle::draw() const {
     }
     // Drawing buttons
     exitButton.blit();
-    gameRestartButton.blit();
+    gameMenuButton.blit();
 
     // Drawing setting menu
     settings.blit();

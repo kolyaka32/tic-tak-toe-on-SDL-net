@@ -16,7 +16,7 @@ class StartFields {
     static Field startOptions[4];
 
     // Graphical interface for selecting
-    bool active = false;
+    static bool active;
     GUI::RoundedBackplate backplate;
     GUI::TextButton optionButton[4];
     GUI::TextButton closeButton;
@@ -26,6 +26,7 @@ class StartFields {
 
     void activate();
     bool isActive();
+    void reset();
 
     const Field* click(const Mouse mouse);
 
