@@ -26,7 +26,7 @@ class GameField : public GUI::Template {
 
     bool isGameEnd();
     void restart();
-    bool setNewField(const Field& field, Window& window);  // Return true, if need to restart cycle
+    bool setNewField(const Field* field, Window& window);  // Return true, if need to restart cycle
     const Field& saveField();
 
     void blit() const override;

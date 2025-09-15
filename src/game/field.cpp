@@ -31,7 +31,7 @@ Field& Field::operator=(const Field* _field) {
     winWidth = _field->winWidth;
     count = _field->count;
     gameState = _field->gameState;
-    upperLinePixels = upperLine*getWindowWidth();
+    upperLinePixels = _field->upperLinePixels;
     memcpy(data, _field->data, sizeof(data));
     return *this;
 }
@@ -388,6 +388,11 @@ int Field::getWindowWidth() const {
 
 int Field::getWindowHeight() const {
     return getWindowWidth() * (1.0f + upperLine);
+}
+
+void Field::updateWindow(Window& window) {
+    window.setWidth(getWindowWidth());
+    window.setHeight(getWindowHeight());
 }
 
 bool Field::isValid(const Mouse _mouse) const {

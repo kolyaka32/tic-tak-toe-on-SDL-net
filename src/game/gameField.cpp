@@ -48,13 +48,12 @@ bool GameField::isGameEnd() {
     return currentField.getState() >= GameState::CurrentWin;
 }
 
-bool GameField::setNewField(const Field& field, Window& _window) {
+bool GameField::setNewField(const Field* field, Window& _window) {
     // Check, if need restart window
-    if (currentField.width != field.width) {
+    if (currentField.width != field->width) {
         currentField = field;
         // Setting new window width, height
-        _window.setWidth(currentField.getWindowWidth());
-        _window.setHeight(currentField.getWindowWidth());
+        currentField.updateWindow(_window);
         CycleTemplate::restart();
         return true;
     }

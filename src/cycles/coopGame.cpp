@@ -36,9 +36,13 @@ bool TwoPlayerGameCycle::inputMouseDown() {
         if (startFields.isActive()) {
             // Check, if select
             if (const Field* f = startFields.click(mouse)) {
-                if (field.setNewField(*f, window)) {
+                if (field.setNewField(f, window)) {
                     stop();
                 }
+                // Starting game
+                field.setState(GameState::CurrentPlay);
+                // Update music
+                music.startFromCurrent(Music::MainCalm);
                 return true;
             }
             return false;
@@ -47,9 +51,13 @@ bool TwoPlayerGameCycle::inputMouseDown() {
         if (savedFields.isActive()) {
             // Check, if select
             if (const Field* f = savedFields.click(mouse)) {
-                if (field.setNewField(*f, window)) {
+                if (field.setNewField(f, window)) {
                     stop();
                 }
+                // Starting game
+                field.setState(GameState::CurrentPlay);
+                // Update music
+                music.startFromCurrent(Music::MainCalm);
                 return true;
             }
             return false;

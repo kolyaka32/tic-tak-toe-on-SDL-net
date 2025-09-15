@@ -84,6 +84,7 @@ class Field {
     void blit(const Window& window) const;
     int getWindowWidth() const;
     int getWindowHeight() const;
+    void updateWindow(Window& window);
     bool isValid(const Mouse mouse) const;
     SDL_Point getPosition(const Mouse mouse) const;
 };
