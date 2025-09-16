@@ -13,7 +13,9 @@ field(_window),
 startFields(_window),
 savedFields(_window),
 screamer(window),
+gameSaveButton(window, 0.88, 0.05, 0.08, Textures::SaveButton),
 gameMenuButton(window, 0.12, 0.05, 0.08, Textures::MenuButton),
+savedInfo(window, 0.5, 0.12, {"Game saved", "Игра сохранена", "Spiel gespeichert", "Гульня захавана"}),
 playersTurnsTexts {
     {window, 0.5, 0.05, {"First player turn", "Ход первого игрока", "Der Zug des ersten Spielers", "Ход першага гульца"}},
     {window, 0.5, 0.05, {"Second player turn", "Ход второго игрока", "Zug des zweiten Spielers", "Ход другога гульца"}}
@@ -40,6 +42,11 @@ bool GameCycle::inputMouseDown() {
     if (screamer.click(mouse)) {
         return true;
     }
+    if (gameSaveButton.in(mouse)) {
+        // Save current game field
+        savedFields.addFieldRuntime(field.saveField());
+        savedInfo.reset();
+    }
     return BaseCycle::inputMouseDown();
 }
 
@@ -51,12 +58,12 @@ void GameCycle::inputKeys(SDL_Keycode key) {
         return;
 
     case SDLK_R:
+        // Restarting game
+        field.restart();
+
         // Making sound
         sounds.play(Sounds::Reset);
         music.startFromCurrent(Music::MainCalm);
-
-        // Restarting game
-        field.restart();
         logAdditional("Restarting game by key");
         return;
 
@@ -69,6 +76,7 @@ void GameCycle::inputKeys(SDL_Keycode key) {
 
 void GameCycle::update() {
     screamer.update();
+    savedInfo.update();
     BaseCycle::update();
 }
 
@@ -79,10 +87,6 @@ void GameCycle::draw() const {
 
     // Blitting field
     field.blit();
-
-    // Drawing buttons
-    exitButton.blit();
-    gameMenuButton.blit();
 
     // Bliting waiting menu
     if (field.isGameEnd() || field.isWaiting()) {
@@ -125,7 +129,11 @@ void GameCycle::draw() const {
     startFields.blit();
     savedFields.blit();
 
-    // Drawing setting menu
+    // Drawing upper dashboard
+    exitButton.blit();
+    gameMenuButton.blit();
+    gameSaveButton.blit();
+    savedInfo.blit();
     settings.blit();
 
     screamer.blit();

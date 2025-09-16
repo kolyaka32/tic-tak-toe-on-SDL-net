@@ -10,14 +10,11 @@
 // Check if has initfile
 #if (USE_SETTING_FILE)
 
-
 // Files to setup
 #include "data/languages.hpp"
 #include "game/gameField.hpp"
 #include "cycles/clientLobby.hpp"
 
-
-InitFile initFile{};
 
 // Data, load from setting file
 void InitFile::loadSettings() {

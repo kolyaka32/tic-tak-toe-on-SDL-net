@@ -66,6 +66,8 @@ bool GameField::setNewField(const Field* field, Window& _window) {
 }
 
 const Field& GameField::saveField() {
+    // Update save timer
+    currentField.updateSaveInfo();
     return currentField;
 }
 

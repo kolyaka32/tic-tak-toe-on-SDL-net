@@ -11,8 +11,8 @@ bool SettingsMenu::active = false;
 
 SettingsMenu::SettingsMenu(const Window& _window)
 : Template(_window),
-settingButton{window, 0.96, 0.05, 0.08, Textures::PauseButton},
-background{window, 0.5, 0.5, 0.65, 0.85, 20, 5},
+settingButton{window, 0.96, 0.05, 0.08, Textures::SettingsButton},
+background{window, 0.5, 0.5, 0.65, 0.85, 20, 4},
 titleText{window, 0.5, 0.13, {"Pause", "Пауза", "Pause", "Паўза"}, 2, Height::Info},
 flags {
     {window, 0.35, 0.27, 0.25, Textures::FlagUSA},

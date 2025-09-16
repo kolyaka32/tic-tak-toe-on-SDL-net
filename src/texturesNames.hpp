@@ -16,11 +16,13 @@
 enum class Textures : unsigned {
     // Base part
     // Graphic interface sprites
-    PauseButton,
     SliderButton,
     SliderLine,
     QuitButton,
     MenuButton,
+    SaveButton,
+    SettingsButton,
+
     // Base flags in settings
     FlagUSA,
     FlagRUS,

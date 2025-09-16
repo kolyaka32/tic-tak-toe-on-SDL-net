@@ -36,7 +36,6 @@ class Field {
 
     // Data for save/load
     SDL_DateTime saveTime;
-    std::string saveName;
 
     // Field window sizes
     static const float cellSide;   // Width and height of mine in pixels
@@ -69,9 +68,8 @@ class Field {
     void setState(GameState state);
     int getOffset() const;
     void setOffset(int offset);
-    const std::string getSaveName() const;
-    const std::string getSaveTime() const;
-    void updateSaveInfo(const std::string saveName);
+    const char* getSaveTime() const;
+    void updateSaveInfo();
 
     // Turns of sides
     bool clickSingle(SDL_Point p);  // Clicking in singleplayer mode
@@ -82,6 +80,7 @@ class Field {
     // Work with graphics and sizes
     // Drawing field with his background
     void blit(const Window& window) const;
+    void blitIcon(const Window& window) const;
     int getWindowWidth() const;
     int getWindowHeight() const;
     void updateWindow(Window& window);

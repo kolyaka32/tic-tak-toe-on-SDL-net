@@ -12,6 +12,11 @@ GUI::TextureTemplate::TextureTemplate(const Window& _window)
     texture = nullptr;
 }
 
+void GUI::TextureTemplate::move(float X, float Y) {
+    rect.x += X*window.getWidth();
+    rect.y += Y*window.getHeight();
+}
+
 // Template function for draw
 void GUI::TextureTemplate::blit() const {
     window.blit(texture, rect);

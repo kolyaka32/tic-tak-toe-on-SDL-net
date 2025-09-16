@@ -136,10 +136,9 @@ void ClientGameCycle::draw() const {
         nobodyWinText.blit();
         break;
     }
-    // Drawing buttons
+    // Drawing upper dashboard
     exitButton.blit();
-
-    // Drawing setting menu
+    gameSaveButton.blit();
     settings.blit();
 
     // Messages

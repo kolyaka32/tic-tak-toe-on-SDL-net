@@ -22,6 +22,7 @@ Field::Field(const Field& _field)
 winWidth(_field.winWidth),
 count(_field.count),
 gameState(_field.gameState),
+saveTime(_field.saveTime),
 upperLinePixels(upperLine*getWindowWidth()) {
     memcpy(data, _field.data, sizeof(data));
 }
@@ -32,6 +33,7 @@ Field& Field::operator=(const Field* _field) {
     count = _field->count;
     gameState = _field->gameState;
     upperLinePixels = _field->upperLinePixels;
+    saveTime = _field->saveTime;
     memcpy(data, _field->data, sizeof(data));
     return *this;
 }
@@ -68,21 +70,18 @@ void Field::setOffset(int _offset) {
     offset = _offset;
 }
 
-const std::string Field::getSaveName() const {
-    return saveName;
-}
-
-const std::string Field::getSaveTime() const {
+const char* Field::getSaveTime() const {
     // Creating string with date-time
-    return std::to_string(saveTime.year) + '.' + std::to_string(saveTime.month)
-        + '.' + std::to_string(saveTime.day) + ' ' + std::to_string(saveTime.hour)
-        + ' ' + std::to_string(saveTime.minute) + ':' + std::to_string(saveTime.second);
+    static char buffer[20];
+    snprintf(buffer, sizeof(buffer), "%02d.%02d.%02d %02d:%02d:%02d",
+        saveTime.year, saveTime.month, saveTime.day,
+        saveTime.hour, saveTime.minute, saveTime.second);
     // ! Next need to add region date system
     // SDL_GetDateTimeLocalePreferences();
+    return buffer;
 }
 
-void Field::updateSaveInfo(const std::string _saveName) {
-    saveName = _saveName;
+void Field::updateSaveInfo() {
     // Update current time
     SDL_Time time;
     SDL_GetCurrentTime(&time);
@@ -384,6 +383,35 @@ void Field::blit(const Window& window) const {
 
             case Cell::Opponent:
                 window.blit(window.getTexture(Textures::RedCircle - getOffset()), dest);
+                break;
+
+            default:
+                break;
+            }
+        }
+    }
+}
+
+void Field::blitIcon(const Window& _window) const {
+    // Rendering background
+    _window.setDrawColor(BLACK);
+    _window.clear();
+    // Rendering cells
+    for (int y=0; y < width; ++y) {
+        for (int x=0; x < width; ++x) {
+            const SDL_FRect dest = {float(x * (cellSide + separator)),
+                float(y * (cellSide + separator)), cellSide, cellSide};
+            // Rendering background
+            _window.blit(_window.getTexture(Textures::Cell), dest);
+
+            // Rendering cells
+            switch (getCell({x, y})) {
+            case Cell::Current:
+                _window.blit(_window.getTexture(Textures::GreenCross + getOffset()), dest);
+                break;
+
+            case Cell::Opponent:
+                _window.blit(_window.getTexture(Textures::RedCircle - getOffset()), dest);
                 break;
 
             default:
