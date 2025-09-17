@@ -11,8 +11,9 @@ TwoPlayerGameCycle::TwoPlayerGameCycle(Window& _window)
 : GameCycle(_window),
 menu(_window) {
     if (!isRestarted()) {
+        menu.reset();
         // Starting selecting game
-        //field.restart();
+        field.restart();
     }
     logAdditional("Start coop game cycle");
 }

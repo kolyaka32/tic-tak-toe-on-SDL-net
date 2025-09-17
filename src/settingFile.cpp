@@ -15,6 +15,7 @@
 #include "game/gameField.hpp"
 #include "cycles/clientLobby.hpp"
 #include "internet/client.hpp"
+#include "game/menu/savedFields.hpp"
 
 
 // Data, load from setting file
@@ -48,6 +49,8 @@ void InitFile::loadSettings() {
             strncpy(Client::baseIP, getText(currentLine).c_str(), sizeof(Client::baseIP));
         } else if (parameter == "port") {
             strncpy(Client::basePort, getText(currentLine).c_str(), sizeof(Client::basePort));
+        } else if (parameter == "save") {
+            SavedFields::addField(getText(currentLine));
         }
     }
     // Closing reading file
@@ -93,6 +96,10 @@ void InitFile::saveSettings() {
     outSettings << "\n# Internet base parameters:\n";
     outSettings << "IP = " << Client::baseIP << "\n";
     outSettings << "port = " << Client::basePort << "\n";
+
+    // Saving fields
+    outSettings << "\n# Saves:\n";
+    SavedFields::saveFields(outSettings);
 }
 
 #endif  // (USE_SETTING_FILE)

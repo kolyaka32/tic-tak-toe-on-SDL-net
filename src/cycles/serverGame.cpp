@@ -11,6 +11,7 @@ ServerGameCycle::ServerGameCycle(Window& _window, const Connection& _server)
 connection(_server),
 menu(_window) {
     if (!isRestarted()) {
+        menu.reset();
         // Sending applying initialsiation message
         connection.sendConfirmed(ConnectionCode::Init);
         field.restart();

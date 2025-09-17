@@ -25,12 +25,13 @@ SoundsData sounds{};
 MusicData music{};
 #endif
 
-#if (USE_SETTING_FILE)
-InitFile initFile{};
-#endif
-
 // Main function
 int main(int argv, char **args) {
+    // Loading/unloading all parameters for game
+    #if (USE_SETTING_FILE)
+    InitFile initFile{};
+    #endif
+
     // Creating main window
     Window window{GameField::getWindowWidth(), GameField::getWindowHeight(),
         {"Tic-tac-toe", "Крестики нолики", "Tic-tac-toe", "Крыжыкі нулікі"}};

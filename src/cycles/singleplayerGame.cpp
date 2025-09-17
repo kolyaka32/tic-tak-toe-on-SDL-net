@@ -10,8 +10,9 @@ SinglePlayerGameCycle::SinglePlayerGameCycle(Window& _window)
 : GameCycle(_window),
 menu(_window) {
     if (!isRestarted()) {
+        menu.reset();
         // Starting game
-        // field.setState(GameState::None);
+        field.restart();
     }
     logAdditional("Start singleplayer game cycle");
 }

@@ -4,6 +4,7 @@
  */
 
 #include "field.hpp"
+#include "menu/selectingMenu.hpp"
 
 
 const float Field::cellSide = 100;
@@ -141,7 +142,7 @@ bool Field::clickSingle(SDL_Point p) {
         if (gameState < GameState::CurrentWin) {
             AImove();
         }
-        checkSound();
+        checkEnd();
         return true;
     }
     return false;
@@ -173,7 +174,7 @@ bool Field::clickTwo(SDL_Point p) {
 
         // Checking for win
         gameState = checkWin(p);
-        checkSound();
+        checkEnd();
         return true;
     }
     return false;
@@ -204,7 +205,7 @@ bool Field::clickMultiplayerCurrent(SDL_Point p) {
 
         // Checking for win
         gameState = checkWin(p);
-        checkSound();
+        checkEnd();
         return true;
     }
     return false;
@@ -234,7 +235,7 @@ void Field::clickMultiplayerOpponent(SDL_Point p) {
 
         // Checking for win
         gameState = checkWin(p);
-        checkSound();
+        checkEnd();
         return;
     }
 }
@@ -396,7 +397,7 @@ GameState Field::checkWin(SDL_Point p) {
     return gameState;
 }
 
-void Field::checkSound() {
+void Field::checkEnd() {
     switch (gameState) {
     case GameState::CurrentWin:
         sounds.play(Sounds::Win);
@@ -414,8 +415,10 @@ void Field::checkSound() {
         break;
 
     default:
-        break;
+        return;
     }
+    // Setting start menu for next game
+    SelectingMenu::open();
 }
 
 void Field::blit(const Window& window) const {
@@ -493,4 +496,44 @@ bool Field::isValid(const Mouse _mouse) const {
 SDL_Point Field::getPosition(const Mouse _mouse) const {
     return {int(_mouse.getX() / (cellSide + separator)),
         int((_mouse.getY() - upperLinePixels) / (cellSide + separator))};
+}
+
+// Save system
+Field::Field(const char* _saveText)
+: width(_saveText[1]-'0'),
+winWidth(_saveText[2]-'0'),
+gameState(GameState(_saveText[3]-'0')),
+offset(0) {
+    memcpy(&saveTime, _saveText+4, sizeof(saveTime));
+    memcpy(data, _saveText+4+sizeof(saveTime), width*width);
+}
+
+const char* Field::getSave() const {
+    static char buffer[95];
+    buffer[0] = getCheckSum();
+    buffer[1] = width + '0';
+    buffer[2] = winWidth + '0';
+    buffer[3] = (char)gameState + '0';
+    memcpy(buffer+4, &saveTime, sizeof(saveTime));
+    // Writing data itself
+    // ! should be optimised to fit better (write straight bits)
+    memcpy(buffer+4+sizeof(saveTime), data, width*width);
+    return buffer;
+}
+
+char Field::getCheckSum() const {
+    // Summing all numbers with arbitrary numbers
+    int sum = saveTime + (width+1)*4 + (winWidth+3)*8;
+    for (int i=0; i < width*width; ++i) {
+        sum += (int)data[i];
+    }
+    return sum;
+}
+
+int Field::getSaveSize(int _width) {
+    return 4+sizeof(saveTime)+_width*_width;
+}
+
+int Field::getSaveSize() const {
+    return getSaveSize(width);
 }

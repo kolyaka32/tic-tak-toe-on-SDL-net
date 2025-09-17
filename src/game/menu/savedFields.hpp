@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <fstream>
 #include <vector>
 #include "saveInfo.hpp"
 
@@ -18,7 +19,7 @@ class SavedFields : GUI::Template {
     static bool active;
     static int startField;
     static int endField;
-    const int maxFieldNumber = 3;
+    static const int maxFieldNumber = 3;
     GUI::RoundedBackplate backplate;
     std::vector<SaveInfo*> saveInfos;
     GUI::HighlightedStaticText emptySavesText;
@@ -38,5 +39,6 @@ class SavedFields : GUI::Template {
     // Work with global saves
     void addFieldRuntime(const Field& field);  // Add another field during runtime
     static void addField(const Field& field);
-    static void saveAll();
+    static void addField(const std::string saveText);
+    static void saveFields(std::ofstream& stream);
 };

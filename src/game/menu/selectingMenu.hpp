@@ -12,7 +12,7 @@
 // Options for start new game (new or saved)
 class SelectingMenu {
  private:
-    bool active = false;
+    static bool active;
 
     StartFields startFields;
     SavedFields savedFields;
@@ -27,7 +27,9 @@ class SelectingMenu {
  public:
     explicit SelectingMenu(const Window& window);
     void activate();
-    bool isActive() const;
+    static void reset();
+    static void open();
+    static bool isActive();
     void addField(const Field& field);
     const Field* click(const Mouse mouse);
     void scroll(float wheelY);

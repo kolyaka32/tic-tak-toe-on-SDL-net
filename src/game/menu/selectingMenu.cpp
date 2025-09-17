@@ -7,6 +7,8 @@
 #include "../../data/cycleTemplate.hpp"
 
 
+bool SelectingMenu::active = false;
+
 SelectingMenu::SelectingMenu(const Window& _window)
 : startFields(_window),
 savedFields(_window),
@@ -22,7 +24,15 @@ void SelectingMenu::activate() {
     savedFields.reset();
 }
 
-bool SelectingMenu::isActive() const {
+void SelectingMenu::reset() {
+    active = false;
+}
+
+void SelectingMenu::open() {
+    active = true;
+}
+
+bool SelectingMenu::isActive() {
     return active;
 }
 

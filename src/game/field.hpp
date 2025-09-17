@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <array>
 #include "../data/app.hpp"
 
 
@@ -46,7 +47,7 @@ class Field {
     Cell getCell(SDL_Point p) const;
     void setCell(SDL_Point p, Cell state);
 
-    void checkSound();  // Function of playing sound after game end
+    void checkEnd();    // Function for do actions at game end
     void AImove();      // Move of computer
     int recursivelySolve(Uint8 round);  // Function for solve game in singleplayer recursively
     GameState checkWin(SDL_Point p);    // Check, if anyone win after his turn, return who win
@@ -59,6 +60,7 @@ class Field {
 
     //
     Field(int width, int winWidth);
+    Field(const char* saveText);
     Field(const Field& field);
     Field& operator=(const Field* field);
     void reset();
@@ -70,6 +72,10 @@ class Field {
     void setOffset(int offset);
     const char* getSaveTime() const;
     void updateSaveInfo();
+    const char* getSave() const;
+    char getCheckSum() const;
+    static int getSaveSize(int width);
+    int getSaveSize() const;
 
     // Turns of sides
     bool clickSingle(SDL_Point p);  // Clicking in singleplayer mode
