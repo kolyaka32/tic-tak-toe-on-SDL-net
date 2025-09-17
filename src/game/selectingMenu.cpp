@@ -11,12 +11,10 @@ GameMenu::GameMenu(const Window& _window)
 : startFields(_window),
 savedFields(_window),
 backplate(_window, 0.5, 0.5, 0.8, 0.7, 40, 4),
-continueButton(_window, 0.5, 0.35, {"Continue", "Продолжить", "", ""}),  // !
+continueButton(_window, 0.5, 0.35, {"Continue", "Продолжить", "Fortfahren", "Прадоўжыць"}),
 startNewButton(_window, 0.5, 0.48, {"Create new", "Создать", "Schaffen", "Стварыць"}),
 loadButton(_window, 0.5, 0.61, {"Load", "Загрузить", "Hochladen", "Загрузіць"}),
-exitButton(_window, 0.5, 0.75, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}) {
-
-}
+exitButton(_window, 0.5, 0.75, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}) {}
 
 void GameMenu::activate() {
     active ^= true;

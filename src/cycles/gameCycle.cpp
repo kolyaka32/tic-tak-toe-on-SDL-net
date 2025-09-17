@@ -18,9 +18,9 @@ playersTurnsTexts {
     {window, 0.5, 0.05, {"First player turn", "Ход первого игрока", "Der Zug des ersten Spielers", "Ход першага гульца"}},
     {window, 0.5, 0.05, {"Second player turn", "Ход второго игрока", "Zug des zweiten Spielers", "Ход другога гульца"}}
 },
-firstWinText(window, 0.5, 0.24, {"First win", "Первый победил", "Der erste hat gewonnen", "Першы перамог"}, 1, Height::Info),
-secondWinText(window, 0.5, 0.24, {"Second win", "Второй победил", "Der zweite hat gewonnen", "Другі перамог"}, 1, Height::Info),
-nobodyWinText(window, 0.5, 0.24, {"Nobody win", "Ничья", "Unentschieden", "Чые"}, 1, Height::Info) {
+firstWinText(window, 0.5, 0.05, {"First win", "Первый победил", "Der erste hat gewonnen", "Першы перамог"}, 1),
+secondWinText(window, 0.5, 0.05, {"Second win", "Второй победил", "Der zweite hat gewonnen", "Другі перамог"}, 1),
+nobodyWinText(window, 0.5, 0.05, {"Nobody win", "Ничья", "Unentschieden", "Чые"}, 1) {
     if (!isRestarted()) {
         // Resetting field
         field.restart();

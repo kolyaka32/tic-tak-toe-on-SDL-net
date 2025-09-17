@@ -47,7 +47,6 @@ const Field* SavedFields::click(const Mouse _mouse) {
         return nullptr;
     }
     for (int i=startField; i < endField; ++i) {
-        // ! 
         if (saveInfos[i]->in(_mouse)) {
             // Making sound
             sounds.play(Sounds::Reset);
@@ -87,7 +86,6 @@ void SavedFields::blit() const {
         backplate.blit();
         // Check, if has fields
         if (endField) {
-            // !
             for (int i=startField; i < endField; ++i) {
                 saveInfos[i]->blit();
             }

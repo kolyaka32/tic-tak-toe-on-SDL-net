@@ -22,6 +22,7 @@ enum class GameState : Uint8 {
     CurrentWin,
     OpponentWin,
     NobodyWin,
+    WaitState,
 };
 
 // Class with game field
@@ -34,7 +35,7 @@ class Field {
     int offset;           // Texture offset for draw with different colors
 
     // Data for save/load
-    SDL_DateTime saveTime;
+    SDL_Time saveTime;
 
     // Field window sizes
     static const float cellSide;   // Width and height of mine in pixels

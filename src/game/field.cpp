@@ -13,6 +13,7 @@ const float Field::upperLine = 0.1f;
 Field::Field(int _width, int _winWidth)
 : width(_width),
 winWidth(_winWidth),
+offset(0),
 upperLinePixels(upperLine*getWindowWidth()) {
     reset();
 }
@@ -22,6 +23,7 @@ Field::Field(const Field& _field)
 winWidth(_field.winWidth),
 count(_field.count),
 gameState(_field.gameState),
+offset(_field.offset),
 saveTime(_field.saveTime),
 upperLinePixels(upperLine*getWindowWidth()) {
     memcpy(data, _field.data, sizeof(data));
@@ -71,21 +73,55 @@ void Field::setOffset(int _offset) {
 }
 
 const char* Field::getSaveTime() const {
+    // Get time
+    SDL_DateTime time;
+    SDL_TimeToDateTime(saveTime, &time, true);
+    // Get region specific format
+    SDL_DateFormat dateFormat;
+    SDL_TimeFormat timeFormat;
+    SDL_GetDateTimeLocalePreferences(&dateFormat, &timeFormat);
     // Creating string with date-time
-    static char buffer[20];
-    snprintf(buffer, sizeof(buffer), "%02d.%02d.%02d %02d:%02d:%02d",
-        saveTime.year, saveTime.month, saveTime.day,
-        saveTime.hour, saveTime.minute, saveTime.second);
-    // ! Next need to add region date system
-    // SDL_GetDateTimeLocalePreferences();
+    static char buffer[22];
+    // Writing date
+    switch (dateFormat) {
+    case SDL_DATE_FORMAT_YYYYMMDD:
+        snprintf(buffer, 11, "%04d.%02d.%02d",
+            time.year, time.month, time.day);
+        break;
+
+    case SDL_DATE_FORMAT_DDMMYYYY:
+        snprintf(buffer, 11, "%02d.%02d.%04d",
+            time.day, time.month, time.year);
+        break;
+
+    case SDL_DATE_FORMAT_MMDDYYYY:
+        snprintf(buffer, 11, "%02d.%02d.%04d",
+            time.year, time.month, time.day);
+        break;
+    }
+    // Writing time
+    switch (timeFormat) {
+    case SDL_TIME_FORMAT_24HR:
+        snprintf(buffer+10, sizeof(buffer)-10, " %02d:%02d:%02d",
+            time.hour, time.minute, time.second);
+        break;
+
+    case SDL_TIME_FORMAT_12HR:
+        if (time.hour < 12) {
+            snprintf(buffer+10, sizeof(buffer)-10, " %02dAM:%02d:%02d",
+                time.hour, time.minute, time.second);
+        } else {
+            snprintf(buffer+10, sizeof(buffer)-10, " %02dPM:%02d:%02d",
+                time.hour, time.minute, time.second);
+        }
+        break;
+    }
     return buffer;
 }
 
 void Field::updateSaveInfo() {
     // Update current time
-    SDL_Time time;
-    SDL_GetCurrentTime(&time);
-    SDL_TimeToDateTime(time, &saveTime, true);
+    SDL_GetCurrentTime(&saveTime);
 }
 
 

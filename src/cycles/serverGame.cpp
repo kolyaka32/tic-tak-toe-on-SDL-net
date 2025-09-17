@@ -132,10 +132,12 @@ void ServerGameCycle::draw() const {
 
     // Drawing buttons
     exitButton.blit();
+    gameSaveButton.blit();
     gameMenuButton.blit();
     settings.blit();
 
     // Messages
+    savedInfo.blit();
     disconnectedBox.blit();
     termianatedBox.blit();
 

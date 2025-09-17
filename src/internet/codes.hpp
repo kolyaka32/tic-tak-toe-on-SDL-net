@@ -21,8 +21,7 @@ enum class ConnectionCode : Uint8 {
     // Game codes
     // Global
     GameTurn,     // Code of normal game turn with it options
-    GameNew,      // Code of sending new field
     // Server-side
-    GameRestart,  // Code of restart game with options of new game (field, turn)
-    
+    GameNew,      // Code of sending new field
+    // GameRestart,  // Code of restart game with options of new game (field, turn)
 };
