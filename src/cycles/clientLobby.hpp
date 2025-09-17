@@ -9,10 +9,6 @@
 #include "../internet/client.hpp"
 
 
-// Global base connect link for type in typeboxes
-extern char baseIP[12];
-extern char basePort[6];
-
 // Game cycle (for single player (special animation))
 class ClientLobbyCycle : public BaseCycle {
  private:

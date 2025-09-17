@@ -8,6 +8,10 @@
 #if (USE_SDL_NET)
 
 
+// Static objects for save inputted parameters
+char Client::baseIP[15] = "127.0.0.1";
+char Client::basePort[6] = "8000";
+
 Client::Client()
 : Connection() {
     // Creating random recieving socket

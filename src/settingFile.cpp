@@ -14,6 +14,7 @@
 #include "data/languages.hpp"
 #include "game/gameField.hpp"
 #include "cycles/clientLobby.hpp"
+#include "internet/client.hpp"
 
 
 // Data, load from setting file
@@ -44,9 +45,9 @@ void InitFile::loadSettings() {
         } else if (parameter == "sounds") {
             sounds.setVolume(getValue(currentLine));
         } else if (parameter == "IP") {
-            strncpy(baseIP, getText(currentLine).c_str(), sizeof(baseIP));
+            strncpy(Client::baseIP, getText(currentLine).c_str(), sizeof(Client::baseIP));
         } else if (parameter == "port") {
-            strncpy(basePort, getText(currentLine).c_str(), sizeof(basePort));
+            strncpy(Client::basePort, getText(currentLine).c_str(), sizeof(Client::basePort));
         }
     }
     // Closing reading file
@@ -90,8 +91,8 @@ void InitFile::saveSettings() {
 
     // Writing internet connection data
     outSettings << "\n# Internet base parameters:\n";
-    outSettings << "IP = " << baseIP << "\n";
-    outSettings << "port = " << basePort << "\n";
+    outSettings << "IP = " << Client::baseIP << "\n";
+    outSettings << "port = " << Client::basePort << "\n";
 }
 
 #endif  // (USE_SETTING_FILE)
