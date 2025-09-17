@@ -22,9 +22,8 @@ class SaveInfo : public GUI::Template {
     GUI::HighlightedStaticText lastModifiedText;
 
  public:
-    SaveInfo(const Window& window, const Field& field, int position);
+    explicit SaveInfo(const Window& window, const Field& field, int position);
     ~SaveInfo();
-    // void setPosition(float Y);  // Next to add scrolling
     void moveUp();
     void moveDown();
     void blit() const override;

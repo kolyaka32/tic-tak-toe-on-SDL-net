@@ -8,11 +8,12 @@
 
 ServerGameCycle::ServerGameCycle(Window& _window, const Connection& _server)
 : InternetCycle(_window),
-connection(_server) {
+connection(_server),
+menu(_window) {
     if (!isRestarted()) {
         // Sending applying initialsiation message
         connection.sendConfirmed(ConnectionCode::Init);
-        field.setState(GameState::None);
+        field.restart();
     }
     logAdditional("Start server game cycle");
 }
@@ -21,88 +22,28 @@ bool ServerGameCycle::inputMouseDown() {
     if (InternetCycle::inputMouseDown()) {
         return true;
     }
+    if (gameSaveButton.in(mouse)) {
+        // Save current game field
+        menu.addField(field.saveField());
+        // Showing message of sucsessful saving
+        savedInfo.reset();
+    }
     if (gameMenuButton.in(mouse)) {
-        // Starting menu for selecting new field
-        field.setState(GameState::None);
+        // Starting game menu
+        menu.activate();
         return true;
     }
     // Checking, if game start
-    if (field.isGameEnd() || field.isWaiting()) {
-        // Check, if selecting new field
-        if (startFields.isActive()) {
-            // Check, if select
-            if (const Field* f = startFields.click(mouse)) {
-                if (field.setNewField(f, window)) {
-                    stop();
-                }
-                // Starting game
-                field.setState(GameState::CurrentPlay);
-                // Send that field
-                sendField(f);
-                // Update music
-                sounds.play(Sounds::Reset);
-                music.startFromCurrent(Music::MainCalm);
-                logAdditional("New game from starting fields");
-                return true;
-            }
-            return false;
+    if (menu.isActive()) {
+        if (const Field* f = menu.click(mouse)) {
+            field.setNewField(f, window);
         }
-        // Check, if loading fields
-        if (savedFields.isActive()) {
-            // Check, if select
-            if (const Field* f = savedFields.click(mouse)) {
-                if (field.setNewField(f, window)) {
-                    stop();
-                }
-                // Starting game
-                field.setState(GameState::CurrentPlay);
-                // Send that field
-                sendField(f);
-                // Update music
-                sounds.play(Sounds::Reset);
-                music.startFromCurrent(Music::MainCalm);
-                logAdditional("New game from saved fields");
-                return true;
-            }
-            return false;
-        }
-        // In menu checks
-        // Check for game start
-        if (menuRestartButton.in(mouse)) {
-            // Restarting current game
-            field.restart();
-
-            // Sending message
-            connection.sendConfirmed(ConnectionCode::GameRestart);
-
-            // Making sound
-            sounds.play(Sounds::Reset);
-            music.startFromCurrent(Music::MainCalm);
-            logAdditional("Restart game from menu");
-            return true;
-        }
-        if (menuStartNewButton.in(mouse)) {
-            // Starting selecting new field from avaliable
-            startFields.activate();
-        }
-        if (menuLoadButton.in(mouse)) {
-            // Starting selecting field from previous games
-            savedFields.activate();
-        }
-        if (menuExitButton.in(mouse)) {
-            // Going to menu
-            stop();
-            return true;
-        }
+        return true;
     } else {
         // Normal turn
         if (field.tryClickMultiplayerCurrent(mouse)) {
             // Sending to opponent
             connection.sendConfirmed<Uint8>(ConnectionCode::GameTurn, field.getLastTurn(mouse));
-
-            // Making sound
-            sounds.play(Sounds::Turn);
-            music.startFromCurrent(Music::MainCombat);
         }
     }
     return false;
@@ -111,18 +52,23 @@ bool ServerGameCycle::inputMouseDown() {
 void ServerGameCycle::inputKeys(SDL_Keycode _key) {
     if (_key == SDLK_R) {
         // Sending message of game clear
-        connection.sendConfirmed(ConnectionCode::GameRestart);
+        /*connection.sendConfirmed(ConnectionCode::GameRestart);
         // Making sound
         sounds.play(Sounds::Reset);
         music.startFromCurrent(Music::MainCalm);
 
         // Clearing field
         field.restart();
-        logAdditional("Restart game by key");
+        logAdditional("Restart game by key");*/
         return;
     } else {
         GameCycle::inputKeys(_key);
     }
+}
+
+void ServerGameCycle::inputMouseWheel(float _wheelY) {
+    BaseCycle::inputMouseWheel(_wheelY);
+    menu.scroll(_wheelY);
 }
 
 void ServerGameCycle::update() {
@@ -155,18 +101,6 @@ void ServerGameCycle::draw() const {
     // Blitting field
     field.blit();
 
-    // Bliting waiting menu, if need
-    if (field.isGameEnd() || field.isWaiting()) {
-        // Bliting end background
-        menuBackplate.blit();
-
-        // Blitting buttons
-        menuRestartButton.blit();
-        menuStartNewButton.blit();
-        menuLoadButton.blit();
-        menuExitButton.blit();
-    }
-
     // Draw game state
     switch (field.getState()) {
     case GameState::CurrentPlay:
@@ -192,9 +126,9 @@ void ServerGameCycle::draw() const {
     default:
         break;
     }
-    // Blitting start variants
-    startFields.blit();
-    savedFields.blit();
+
+    // Bliting waiting menu, if need
+    menu.blit();
 
     // Drawing buttons
     exitButton.blit();

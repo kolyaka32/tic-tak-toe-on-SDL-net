@@ -12,17 +12,18 @@ ClientGameCycle::ClientGameCycle(Window& _window, const Connection& _client)
 connection(_client),
 waitText(window, 0.5, 0.05, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}) {
     if (!isRestarted()) {
-        field.setState(GameState::None);
+        field.restart();
+        // ! Need to show text of waiting to start
     }
     logAdditional("Start client game cycle");
 }
 
 bool ClientGameCycle::inputMouseDown() {
-    if (InternetCycle::inputMouseDown()) {
+    /*if (InternetCycle::inputMouseDown()) {
         return true;
     }
     // Checking, if game start
-    if (field.getState() >= GameState::CurrentWin) {
+    if (menu.isActive()) {
         // Check for game start
         if (menuExitButton.in(mouse)) {
             // Going to menu
@@ -39,15 +40,8 @@ bool ClientGameCycle::inputMouseDown() {
             sounds.play(Sounds::Turn);
             music.startFromCurrent(Music::MainCombat);
         }
-    }
+    }*/
     return false;
-}
-
-void ClientGameCycle::inputKeys(const SDL_Keycode _key) {
-    // If not restart - act like normal key input
-    if (_key != SDLK_R) {
-        GameCycle::inputKeys(_key);
-    }
 }
 
 void ClientGameCycle::update() {
@@ -102,19 +96,20 @@ void ClientGameCycle::draw() const {
     field.blit();
 
     // Bliting game state, if need
-    if (field.getState() >= GameState::CurrentWin) {
+    /*if (field.getState() >= GameState::CurrentWin) {
         // Bliting end background
         menuBackplate.blit();
 
         // Blitting buttons
         menuExitButton.blit();
-    }
+    }*/
+    // menu.blit();
 
     // Draw game state
     switch (field.getState()) {
-    case GameState::None:
+    /*case GameState::None:
         waitText.blit();
-        break;
+        break;*/
 
     case GameState::CurrentPlay:
         playersTurnsTexts[0].blit();

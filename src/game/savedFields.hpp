@@ -6,7 +6,6 @@
 #pragma once
 
 #include <vector>
-#include <array>
 #include "saveInfo.hpp"
 
 
@@ -17,20 +16,23 @@ class SavedFields : GUI::Template {
 
     // Draw options
     static bool active;
+    static int startField;
+    static int endField;
     const int maxFieldNumber = 3;
-    int fieldNumber;
     GUI::RoundedBackplate backplate;
-    std::array<SaveInfo*, 3> saveInfos;
+    std::vector<SaveInfo*> saveInfos;
     GUI::HighlightedStaticText emptySavesText;
     GUI::TextButton exitButton;
 
  public:
-    SavedFields(const Window& window);
+    explicit SavedFields(const Window& window);
     ~SavedFields();
     void activate();
     bool isActive();
     void reset();
     const Field* click(const Mouse mouse);
+    void moveUp();
+    void moveDown();
     void blit() const override;
 
     // Work with global saves

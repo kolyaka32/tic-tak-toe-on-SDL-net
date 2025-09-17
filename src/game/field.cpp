@@ -43,7 +43,7 @@ void Field::reset() {
         data[i] = Cell::Empty;
     }
     count = 0;
-    gameState = GameState::None;
+    gameState = GameState::CurrentPlay;
 }
 
 Cell Field::getCell(SDL_Point p) const {
@@ -95,6 +95,10 @@ bool Field::clickSingle(SDL_Point p) {
         setCell(p, Cell::Current);
         count++;
 
+        // Making sound
+        sounds.play(Sounds::Turn);
+        music.startFromCurrent(Music::MainCombat);
+
         // Checking for win
         gameState = checkWin(p);
         // Check, if need computer to play
@@ -127,6 +131,10 @@ bool Field::clickTwo(SDL_Point p) {
         }
         count++;
 
+        // Making sound
+        sounds.play(Sounds::Turn);
+        music.startFromCurrent(Music::MainCombat);
+
         // Checking for win
         gameState = checkWin(p);
         checkSound();
@@ -154,6 +162,10 @@ bool Field::clickMultiplayerCurrent(SDL_Point p) {
         }
         count++;
 
+        // Making sound
+        sounds.play(Sounds::Turn);
+        music.startFromCurrent(Music::MainCombat);
+
         // Checking for win
         gameState = checkWin(p);
         checkSound();
@@ -179,6 +191,10 @@ void Field::clickMultiplayerOpponent(SDL_Point p) {
             break;
         }
         count++;
+
+        // Making sound
+        sounds.play(Sounds::Turn);
+        music.startFromCurrent(Music::MainCombat);
 
         // Checking for win
         gameState = checkWin(p);

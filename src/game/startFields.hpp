@@ -22,7 +22,7 @@ class StartFields {
     GUI::TextButton closeButton;
 
  public:
-    StartFields(const Window& window);
+    explicit StartFields(const Window& window);
 
     void activate();
     bool isActive();

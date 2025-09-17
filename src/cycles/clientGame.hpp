@@ -19,7 +19,6 @@ class ClientGameCycle : public InternetCycle {
 
     // Main run functions
     bool inputMouseDown() override;
-    void inputKeys(const SDL_Keycode key) override;
     void update() override;
     void draw() const override;
 

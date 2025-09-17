@@ -16,7 +16,7 @@ class GameField : public GUI::Template {
     static Field currentField;
 
  public:
-    GameField(const Window& window);
+    explicit GameField(const Window& window);
     GameState getState() const;
     void setTextureOffset(int offset);
     void setState(GameState state);
@@ -24,17 +24,16 @@ class GameField : public GUI::Template {
     static int getWindowWidth();
     static int getWindowHeight();
 
-    bool isWaiting() const;
     bool isGameEnd() const;
     void restart();
-    bool setNewField(const Field* field, Window& window);  // Return true, if need to restart cycle
+    void setNewField(const Field* field, Window& window);  // Return true, if need to restart cycle
     const Field& saveField();
 
     void blit() const override;
 
     // Game turns
-    bool tryClickSingle(const Mouse mouse);  // Clicking in singleplayer mode, return if have turn
-    bool tryClickTwo(const Mouse mouse);     // Clicking in two-player mode, return if have turn
+    void tryClickSingle(const Mouse mouse);  // Clicking in singleplayer mode, return if have turn
+    void tryClickTwo(const Mouse mouse);     // Clicking in two-player mode, return if have turn
     bool tryClickMultiplayerCurrent(const Mouse mouse);  // Clicking in multiplayer mode, return if have turn
     Uint8 getLastTurn(const Mouse mouse);                // Return last turn
     void clickMultiplayerOpponent(Uint8 position);       // Clicking in multiplayer mode by internet connection

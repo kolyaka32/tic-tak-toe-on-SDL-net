@@ -17,7 +17,6 @@ enum class Cell : Uint8 {
 
 // Types of game state
 enum class GameState : Uint8 {
-    None,
     CurrentPlay,
     OpponentPlay,
     CurrentWin,

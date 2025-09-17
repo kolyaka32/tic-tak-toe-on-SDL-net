@@ -32,7 +32,7 @@ class SettingsMenu : GUI::Template {
     GUI::TextButton exitButton;
 
  public:
-    SettingsMenu(const Window& window);
+    explicit SettingsMenu(const Window& window);
     void blit() const;
     bool click(const Mouse mouse);
     void unClick();

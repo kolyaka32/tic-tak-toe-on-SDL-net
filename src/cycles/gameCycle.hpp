@@ -7,8 +7,6 @@
 
 #include "baseCycle.hpp"
 #include "../game/gameField.hpp"
-#include "../game/startFields.hpp"
-#include "../game/savedFields.hpp"
 #include "../game/screamer.hpp"
 
 
@@ -17,8 +15,6 @@ class GameCycle : public BaseCycle {
  protected:
     // Active game part
     GameField field;
-    StartFields startFields;
-    SavedFields savedFields;
     Screamer screamer;
 
     GUI::ImageButton gameSaveButton;
@@ -26,12 +22,6 @@ class GameCycle : public BaseCycle {
     GUI::StaticText playersTurnsTexts[2];
     GUI::InfoBox savedInfo;
 
-    // Menu after game end
-    GUI::RoundedBackplate menuBackplate;
-    GUI::TextButton menuRestartButton;
-    GUI::TextButton menuStartNewButton;
-    GUI::TextButton menuLoadButton;
-    GUI::TextButton menuExitButton;
     // Ending options
     GUI::HighlightedStaticText firstWinText;
     GUI::HighlightedStaticText secondWinText;
@@ -41,7 +31,6 @@ class GameCycle : public BaseCycle {
     bool inputMouseDown() override;
     void inputKeys(const SDL_Keycode key) override;
     void update() override;
-    void draw() const override;
 
  public:
     GameCycle(Window& _window);

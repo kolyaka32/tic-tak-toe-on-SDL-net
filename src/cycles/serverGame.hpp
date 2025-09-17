@@ -7,6 +7,7 @@
 
 #include "internetCycle.hpp"
 #include "../internet/gameConnection.hpp"
+#include "../game/selectingMenu.hpp"
 
 
 // Game cycle with game part of server
@@ -16,10 +17,12 @@ class ServerGameCycle : public InternetCycle {
 
  protected:
     GameConnection connection;
+    GameMenu menu;
 
     // Main run functions
     bool inputMouseDown() override;
     void inputKeys(SDL_Keycode key) override;
+    void inputMouseWheel(float _wheelY) override;
     void update() override;
     void draw() const override;
 

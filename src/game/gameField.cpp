@@ -44,25 +44,20 @@ int GameField::getWindowHeight() {
     return currentField.getWindowHeight();
 }
 
-bool GameField::isWaiting() const {
-    return currentField.getState() == GameState::None;
-}
-
 bool GameField::isGameEnd() const {
     return currentField.getState() >= GameState::CurrentWin;
 }
 
-bool GameField::setNewField(const Field* field, Window& _window) {
+void GameField::setNewField(const Field* field, Window& _window) {
     // Check, if need restart window
     if (currentField.width != field->width) {
         currentField = field;
         // Setting new window width, height
         currentField.updateWindow(_window);
         CycleTemplate::restart();
-        return true;
+        CycleTemplate::stop();
     }
     currentField = field;
-    return false;
 }
 
 const Field& GameField::saveField() {
@@ -71,14 +66,13 @@ const Field& GameField::saveField() {
     return currentField;
 }
 
-bool GameField::tryClickSingle(const Mouse _mouse) {
+void GameField::tryClickSingle(const Mouse _mouse) {
     if (currentField.isValid(_mouse)) {
-        return currentField.clickSingle(currentField.getPosition(_mouse));
+        currentField.clickSingle(currentField.getPosition(_mouse));
     }
-    return false;
 }
 
-bool GameField::tryClickTwo(const Mouse _mouse) {
+void GameField::tryClickTwo(const Mouse _mouse) {
     if (currentField.isValid(_mouse)) {
         if (currentField.clickTwo(currentField.getPosition(_mouse))) {
             // Changing active player, if in game
@@ -86,10 +80,8 @@ bool GameField::tryClickTwo(const Mouse _mouse) {
                 // Inversing color of active player
                 currentField.setOffset(currentField.getOffset() ^ 1);
             }
-            return true;
         }
     }
-    return false;
 }
 
 bool GameField::tryClickMultiplayerCurrent(const Mouse _mouse) {
