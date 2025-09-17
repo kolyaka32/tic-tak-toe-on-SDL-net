@@ -4,7 +4,7 @@
  */
 
 #include "clientGame.hpp"
-#include "../game/savedFields.hpp"
+#include "../game/menu/savedFields.hpp"
 
 
 ClientGameCycle::ClientGameCycle(Window& _window, const Connection& _client)

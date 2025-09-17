@@ -37,16 +37,9 @@ bool GameCycle::inputMouseDown() {
 }
 
 void GameCycle::inputKeys(SDL_Keycode key) {
-    // Searching for key press
-    switch (key) {
-    case SDLK_ESCAPE:
-        settings.activate();
-        return;
-
-    case SDLK_Q:
-        // Quiting to menu
+    // Quiting to menu
+    if (key == SDLK_Q) {
         stop();
-        return;
     }
 }
 

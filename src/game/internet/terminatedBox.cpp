@@ -4,7 +4,7 @@
  */
 
 #include "terminatedBox.hpp"
-#include "../data/cycleTemplate.hpp"
+#include "../../data/cycleTemplate.hpp"
 
 
 bool TerminatedBox::active = false;

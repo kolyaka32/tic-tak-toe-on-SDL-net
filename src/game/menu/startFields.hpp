@@ -5,11 +5,11 @@
 
 #pragma once
 
-#include "../GUI/interface.hpp"
-#include "field.hpp"
+#include "../../GUI/interface.hpp"
+#include "../field.hpp"
 
 
-// Options for
+// Option to start from new clear field with need size
 class StartFields {
  private:
     // Start variants

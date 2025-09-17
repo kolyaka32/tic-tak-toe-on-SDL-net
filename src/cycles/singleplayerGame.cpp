@@ -49,6 +49,19 @@ void SinglePlayerGameCycle::inputMouseWheel(float _wheelY) {
     menu.scroll(_wheelY);
 }
 
+void SinglePlayerGameCycle::inputKeys(SDL_Keycode _key) {
+    if (_key == SDLK_ESCAPE) {
+        // Closing top open object
+        if (menu.isActive()) {
+            menu.escape();
+        } else {
+            settings.activate();
+        }
+        return;
+    }
+    GameCycle::inputKeys(_key);
+}
+
 void SinglePlayerGameCycle::draw() const {
     // Bliting background
     window.setDrawColor(BLACK);

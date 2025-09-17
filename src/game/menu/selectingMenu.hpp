@@ -9,8 +9,8 @@
 #include "savedFields.hpp"
 
 
-// 
-class GameMenu {
+// Options for start new game (new or saved)
+class SelectingMenu {
  private:
     bool active = false;
 
@@ -25,11 +25,12 @@ class GameMenu {
     GUI::TextButton exitButton;
 
  public:
-    explicit GameMenu(const Window& window);
+    explicit SelectingMenu(const Window& window);
     void activate();
     bool isActive() const;
     void addField(const Field& field);
     const Field* click(const Mouse mouse);
     void scroll(float wheelY);
+    void escape();
     void blit() const;
 };

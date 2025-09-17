@@ -5,11 +5,11 @@
 
 #pragma once
 
-#include "field.hpp"
-#include "../GUI/interface.hpp"
+#include "../field.hpp"
+#include "../../GUI/interface.hpp"
 
 
-// 
+// Information of one concrete save (date and picture for load)
 class SaveInfo : public GUI::Template {
  private:
     // Backplate

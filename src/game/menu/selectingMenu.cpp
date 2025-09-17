@@ -4,10 +4,10 @@
  */
 
 #include "selectingMenu.hpp"
-#include "../data/cycleTemplate.hpp"
+#include "../../data/cycleTemplate.hpp"
 
 
-GameMenu::GameMenu(const Window& _window)
+SelectingMenu::SelectingMenu(const Window& _window)
 : startFields(_window),
 savedFields(_window),
 backplate(_window, 0.5, 0.5, 0.8, 0.7, 40, 4),
@@ -16,21 +16,21 @@ startNewButton(_window, 0.5, 0.48, {"Create new", "Создать", "Schaffen", 
 loadButton(_window, 0.5, 0.61, {"Load", "Загрузить", "Hochladen", "Загрузіць"}),
 exitButton(_window, 0.5, 0.75, {"Exit to menu", "Выйти в меню", "Menü verlassen", "Выйсці ў меню"}) {}
 
-void GameMenu::activate() {
+void SelectingMenu::activate() {
     active ^= true;
     startFields.reset();
     savedFields.reset();
 }
 
-bool GameMenu::isActive() const {
+bool SelectingMenu::isActive() const {
     return active;
 }
 
-void GameMenu::addField(const Field& _field) {
+void SelectingMenu::addField(const Field& _field) {
     savedFields.addFieldRuntime(_field);
 }
 
-const Field* GameMenu::click(const Mouse _mouse) {
+const Field* SelectingMenu::click(const Mouse _mouse) {
     // If in menu
     if (active) {
         // Check, if selecting new field
@@ -69,7 +69,7 @@ const Field* GameMenu::click(const Mouse _mouse) {
     return nullptr;
 }
 
-void GameMenu::scroll(float _wheelY) {
+void SelectingMenu::scroll(float _wheelY) {
     if (active) {
         if (_wheelY > 0) {
             for (;_wheelY > 0; --_wheelY) {
@@ -83,7 +83,20 @@ void GameMenu::scroll(float _wheelY) {
     }
 }
 
-void GameMenu::blit() const {
+void SelectingMenu::escape() {
+    // Closing top object
+    if (startFields.isActive()) {
+        startFields.reset();
+        return;
+    }
+    if (savedFields.isActive()) {
+        savedFields.reset();
+        return;
+    }
+    active = false;
+}
+
+void SelectingMenu::blit() const {
     // Bliting waiting menu
     if (active) {
         // Bliting end background

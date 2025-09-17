@@ -6,8 +6,8 @@
 #pragma once
 
 #include "gameCycle.hpp"
-#include "../game/connectionLostBox.hpp"
-#include "../game/terminatedBox.hpp"
+#include "../game/internet/connectionLostBox.hpp"
+#include "../game/internet/terminatedBox.hpp"
 
 
 // Cycle with game part of internet connection

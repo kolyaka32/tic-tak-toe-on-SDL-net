@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "../GUI/interface.hpp"
+#include "../../GUI/interface.hpp"
 
 
 // Class with message box, showing information at center of screen

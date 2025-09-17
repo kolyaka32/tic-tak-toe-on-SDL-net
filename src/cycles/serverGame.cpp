@@ -50,20 +50,16 @@ bool ServerGameCycle::inputMouseDown() {
 }
 
 void ServerGameCycle::inputKeys(SDL_Keycode _key) {
-    if (_key == SDLK_R) {
-        // Sending message of game clear
-        /*connection.sendConfirmed(ConnectionCode::GameRestart);
-        // Making sound
-        sounds.play(Sounds::Reset);
-        music.startFromCurrent(Music::MainCalm);
-
-        // Clearing field
-        field.restart();
-        logAdditional("Restart game by key");*/
+    if (_key == SDLK_ESCAPE) {
+        // Closing top open object
+        if (menu.isActive()) {
+            menu.escape();
+        } else {
+            settings.activate();
+        }
         return;
-    } else {
-        GameCycle::inputKeys(_key);
     }
+    GameCycle::inputKeys(_key);
 }
 
 void ServerGameCycle::inputMouseWheel(float _wheelY) {

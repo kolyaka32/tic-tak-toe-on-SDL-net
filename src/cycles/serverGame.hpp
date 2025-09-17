@@ -7,7 +7,7 @@
 
 #include "internetCycle.hpp"
 #include "../internet/gameConnection.hpp"
-#include "../game/selectingMenu.hpp"
+#include "../game/menu/selectingMenu.hpp"
 
 
 // Game cycle with game part of server
@@ -17,7 +17,7 @@ class ServerGameCycle : public InternetCycle {
 
  protected:
     GameConnection connection;
-    GameMenu menu;
+    SelectingMenu menu;
 
     // Main run functions
     bool inputMouseDown() override;
