@@ -33,7 +33,6 @@ class Field {
     Cell data[81];        // Grid of cells, representing game field
     int count;            // Counter of filled cells
     GameState gameState;  // Current state of the game
-    int offset;           // Texture offset for draw with different colors
 
     // Data for save/load
     SDL_Time saveTime;
@@ -68,8 +67,6 @@ class Field {
     // Getters/setters
     GameState getState() const;
     void setState(GameState state);
-    int getOffset() const;
-    void setOffset(int offset);
     const char* getSaveTime() const;
     void updateSaveInfo();
     const char* getSave() const;

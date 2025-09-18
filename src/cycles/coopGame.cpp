@@ -37,6 +37,7 @@ bool TwoPlayerGameCycle::inputMouseDown() {
     if (menu.isActive()) {
         if (const Field* f = menu.click(mouse)) {
             field.setNewField(f, window);
+            menu.reset();
         }
         return true;
     } else {
@@ -83,11 +84,11 @@ void TwoPlayerGameCycle::draw() const {
         break;
 
     case GameState::CurrentWin:
-        firstWinText.blit();
+        secondWinText.blit();
         break;
 
     case GameState::OpponentWin:
-        secondWinText.blit();
+        firstWinText.blit();
         break;
 
     case GameState::NobodyWin:

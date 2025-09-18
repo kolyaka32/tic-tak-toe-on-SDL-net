@@ -15,7 +15,6 @@ SelectCycle::SelectCycle(Window& _window)
 : BaseCycle(_window),
 titleText(window, 0.5, 0.15, {"Tic-tac-toe", "Крестики нолики", "Tic-tac-toe", "Крыжыкі нулікі"}, 3, Height::Title),
 singleplayerButton(window, 0.5, 0.3, {"Singleplayer", "Одиночная игра", "Einzelspiel", "Адзіночная гульня"}),
-bigFieldInfobox(window, 0.5, 0.375, {"Too big field", "Слишком большое поле", "Zu großes Feld", "Занадта вялікае поле"}),
 twoPlayerButton(window, 0.5, 0.5, {"Two players", "Два игрока", "Zwei Spieler", "Два гульца"}),
 serverButton(window, 0.5, 0.7, {"Create server", "Создать сервер", "Server erstellen", "Стварыць сервер"}),
 connectButton(window, 0.5, 0.9, {"Connect", "Присоединиться", "Beitreten", "Далучыцца"}) {
@@ -30,12 +29,7 @@ bool SelectCycle::inputMouseDown() {
         return true;
     }
     if (singleplayerButton.in(mouse)) {
-        if (GameField::getWidth() == 3) {
-            runCycle<SinglePlayerGameCycle>(window);
-        } else {
-            bigFieldInfobox.reset();
-            logAdditional("Can't run singleplayer game (field width = %u)", GameField::getWidth());
-        }
+        runCycle<SinglePlayerGameCycle>(window);
         return true;
     }
     if (twoPlayerButton.in(mouse)) {
@@ -63,7 +57,6 @@ void SelectCycle::inputKeys(SDL_Keycode _key) {
 
 void SelectCycle::update() {
     BaseCycle::update();
-    bigFieldInfobox.update();
 }
 
 void SelectCycle::draw() const {
@@ -82,8 +75,6 @@ void SelectCycle::draw() const {
 
     // Settings menu
     settings.blit();
-
-    bigFieldInfobox.blit();
 
     // Bliting all to screen
     window.render();

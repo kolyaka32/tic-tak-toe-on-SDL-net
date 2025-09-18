@@ -28,10 +28,8 @@ const char* texturesFilesNames[unsigned(Textures::Count)] = {
     "img/GUI/Flag_BEL.png",
 
     // Game part
-    "img/game/green_cross.png",
-    "img/game/red_cross.png",
-    "img/game/green_circle.png",
-    "img/game/red_circle.png",
+    "img/game/cross.png",
+    "img/game/circle.png",
     "img/game/cell.png",
 
     "img/game/screamer.png",

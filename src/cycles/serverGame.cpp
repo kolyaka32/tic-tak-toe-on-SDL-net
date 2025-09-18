@@ -38,6 +38,7 @@ bool ServerGameCycle::inputMouseDown() {
     if (menu.isActive()) {
         if (const Field* f = menu.click(mouse)) {
             field.setNewField(f, window);
+            menu.reset();
         }
         return true;
     } else {
@@ -109,11 +110,11 @@ void ServerGameCycle::draw() const {
         break;
 
     case GameState::CurrentWin:
-        winText.blit();
+        secondWinText.blit();
         break;
 
     case GameState::OpponentWin:
-        looseText.blit();
+        firstWinText.blit();
         break;
 
     case GameState::NobodyWin:

@@ -18,7 +18,6 @@ class GameField : public GUI::Template {
  public:
     explicit GameField(const Window& window);
     GameState getState() const;
-    void setTextureOffset(int offset);
     void setState(GameState state);
     static int getWidth();
     static int getWindowWidth();

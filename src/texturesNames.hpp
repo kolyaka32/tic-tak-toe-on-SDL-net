@@ -30,12 +30,9 @@ enum class Textures : unsigned {
     FlagBEL,
 
     // Main game part
-    // Green (current player) figures
-    GreenCross,
-    RedCross,
-    // Red (opponent player) figures
-    GreenCircle,
-    RedCircle,
+    // Game figures
+    Cross,
+    Circle,
     // Empty cell
     Cell,
 

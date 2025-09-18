@@ -16,16 +16,11 @@ GameField::GameField(const Window& _window)
 
 void GameField::restart() {
     currentField.reset();
-    currentField.setOffset(0);
     currentField.setState(GameState::CurrentPlay);
 }
 
 GameState GameField::getState() const {
     return currentField.getState();
-}
-
-void GameField::setTextureOffset(int _offset) {
-    currentField.setOffset(_offset);
 }
 
 void GameField::setState(GameState _state) {
@@ -67,25 +62,19 @@ const Field& GameField::saveField() {
 }
 
 void GameField::tryClickSingle(const Mouse _mouse) {
-    if (currentField.isValid(_mouse)) {
+    if (currentField.isValid(_mouse) && currentField.getState() <= GameState::OpponentPlay) {
         currentField.clickSingle(currentField.getPosition(_mouse));
     }
 }
 
 void GameField::tryClickTwo(const Mouse _mouse) {
-    if (currentField.isValid(_mouse)) {
-        if (currentField.clickTwo(currentField.getPosition(_mouse))) {
-            // Changing active player, if in game
-            if (currentField.getState() <= GameState::OpponentPlay) {
-                // Inversing color of active player
-                currentField.setOffset(currentField.getOffset() ^ 1);
-            }
-        }
+    if (currentField.isValid(_mouse) && currentField.getState() <= GameState::OpponentPlay) {
+        currentField.clickTwo(currentField.getPosition(_mouse));
     }
 }
 
 bool GameField::tryClickMultiplayerCurrent(const Mouse _mouse) {
-    if (currentField.isValid(_mouse)) {
+    if (currentField.isValid(_mouse) && currentField.getState() == GameState::OpponentPlay) {
         return currentField.clickMultiplayerCurrent(currentField.getPosition(_mouse));
     }
     return false;

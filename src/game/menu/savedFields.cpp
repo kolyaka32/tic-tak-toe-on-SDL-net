@@ -23,7 +23,6 @@ exitButton(_window, 0.5, 0.81, {"Close", "Закрыть", "Schließen", "Зач
 }
 
 SavedFields::~SavedFields() {
-    // ! Need to check on correct clearance of saveInfos
     for (int i=0; i < startOptions.size(); ++i) {
         delete saveInfos[i];
     }

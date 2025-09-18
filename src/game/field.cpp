@@ -14,7 +14,6 @@ const float Field::upperLine = 0.1f;
 Field::Field(int _width, int _winWidth)
 : width(_width),
 winWidth(_winWidth),
-offset(0),
 upperLinePixels(upperLine*getWindowWidth()) {
     reset();
 }
@@ -24,7 +23,6 @@ Field::Field(const Field& _field)
 winWidth(_field.winWidth),
 count(_field.count),
 gameState(_field.gameState),
-offset(_field.offset),
 saveTime(_field.saveTime),
 upperLinePixels(upperLine*getWindowWidth()) {
     memcpy(data, _field.data, sizeof(data));
@@ -63,14 +61,6 @@ void Field::setState(GameState _state) {
 
 GameState Field::getState() const {
     return gameState;
-}
-
-int Field::getOffset() const {
-    return offset;
-}
-
-void Field::setOffset(int _offset) {
-    offset = _offset;
 }
 
 const char* Field::getSaveTime() const {
@@ -182,7 +172,7 @@ bool Field::clickTwo(SDL_Point p) {
 
 bool Field::clickMultiplayerCurrent(SDL_Point p) {
     // Checking, if turn avaliable
-    if (gameState == GameState::CurrentPlay && getCell(p) == Cell::Empty) {
+    if (getCell(p) == Cell::Empty) {
         switch (gameState) {
         case GameState::CurrentPlay:
             setCell(p, Cell::Current);
@@ -400,13 +390,13 @@ GameState Field::checkWin(SDL_Point p) {
 void Field::checkEnd() {
     switch (gameState) {
     case GameState::CurrentWin:
-        sounds.play(Sounds::Win);
-        logAdditional("Current win");
+        sounds.play(Sounds::Loose);
+        logAdditional("Opponent win");
         break;
 
     case GameState::OpponentWin:
-        sounds.play(Sounds::Loose);
-        logAdditional("Opponent win");
+        sounds.play(Sounds::Win);
+        logAdditional("Current win");
         break;
 
     case GameState::NobodyWin:
@@ -433,11 +423,11 @@ void Field::blit(const Window& window) const {
             // Rendering cells
             switch (getCell({x, y})) {
             case Cell::Current:
-                window.blit(window.getTexture(Textures::GreenCross + getOffset()), dest);
+                window.blit(window.getTexture(Textures::Cross), dest);
                 break;
 
             case Cell::Opponent:
-                window.blit(window.getTexture(Textures::RedCircle - getOffset()), dest);
+                window.blit(window.getTexture(Textures::Circle), dest);
                 break;
 
             default:
@@ -462,11 +452,11 @@ void Field::blitIcon(const Window& _window) const {
             // Rendering cells
             switch (getCell({x, y})) {
             case Cell::Current:
-                _window.blit(_window.getTexture(Textures::GreenCross + getOffset()), dest);
+                _window.blit(_window.getTexture(Textures::Cross), dest);
                 break;
 
             case Cell::Opponent:
-                _window.blit(_window.getTexture(Textures::RedCircle - getOffset()), dest);
+                _window.blit(_window.getTexture(Textures::Circle), dest);
                 break;
 
             default:
@@ -502,8 +492,7 @@ SDL_Point Field::getPosition(const Mouse _mouse) const {
 Field::Field(const char* _saveText)
 : width(_saveText[1]-'0'),
 winWidth(_saveText[2]-'0'),
-gameState(GameState(_saveText[3]-'0')),
-offset(0) {
+gameState(GameState(_saveText[3]-'0')) {
     memcpy(&saveTime, _saveText+4, sizeof(saveTime));
     memcpy(data, _saveText+4+sizeof(saveTime), width*width);
 }
