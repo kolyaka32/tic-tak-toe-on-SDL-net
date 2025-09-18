@@ -16,10 +16,11 @@
 // Message, waiting for applying of getting
 class Message {
  private:
-    timer nextResend;    // Time, when need to resend message
     static Uint8 globalMessageIndex;
+    static void updateGlobalIndex();
     Uint8 messageIndex;  // Index to check applying and getting messages
-    SendPacket packet;
+    timer nextResend;    // Time, when need to resend message
+    SendPacket packet;   // Packet itself
 
  protected:
     void resend(const Connection& connection);
@@ -38,13 +39,7 @@ packet(Uint8(_code), messageIndex, args...) {
     logAdditional("Firstly sending message with code: %u, index: %u", (Uint8)_code, messageIndex);
     // Firstly sending message
     resend(_connection);
-
-    // Upating global message index, skipping 0
-    if (globalMessageIndex == 127) {
-        globalMessageIndex = 1;
-    } else {
-        globalMessageIndex++;
-    }
+    updateGlobalIndex();
 }
 
 #endif  // (USE_SDL_NET)

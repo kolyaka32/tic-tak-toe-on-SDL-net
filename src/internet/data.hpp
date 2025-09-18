@@ -5,7 +5,8 @@
 
 #pragma once
 
-#include "codes.hpp"
+#include <array>
+#include "../codes.hpp"
 
 // Check, if need internet library
 #if (USE_SDL_NET)
@@ -35,8 +36,13 @@ class SendPacket : public Data {
 
  protected:
     // Functions for converting data to raw array
+    // Write single object
     template <typename T>
     void write(int offset, T object);
+    // Write array of objects
+    template<typename T, size_t N>
+    void write(int offset, std::array<T, N> object);
+    // Write multiple objects
     template <typename T, typename ...Args>
     void write(int offset, T object, Args&& ...args);
 
@@ -83,10 +89,17 @@ void SendPacket::write(int _offset, T _object) {
     *(data + _offset) = swapLE<T>(_object);
 }
 
+template<typename T, size_t N>
+void SendPacket::write(int _offset, std::array<T, N> _object) {
+    for (int i=0; i < N; ++i) {
+        write(_offset+i*sizeof(T), _object[i]);
+    }
+}
+
 template <typename T, typename ...Args>
 void SendPacket::write(int _offset, T _object, Args&& ...args) {
     // Writing current object
-    *(data + _offset) = swapLE<T>(_object);
+    write<T>(_offset, _object);
     write(_offset + sizeof(T), args...);
 }
 
