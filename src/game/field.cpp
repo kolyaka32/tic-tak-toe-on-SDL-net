@@ -497,7 +497,7 @@ gameState(GameState(_saveText[3]-'0')) {
     memcpy(data, _saveText+4+sizeof(saveTime), width*width);
 }
 
-const char* Field::getSave() const {
+const Array<char> Field::getSave() const {
     static char buffer[95];
     buffer[0] = getCheckSum();
     buffer[1] = width + '0';
@@ -507,7 +507,7 @@ const char* Field::getSave() const {
     // Writing data itself
     // ! should be optimised to fit better (write straight bits)
     memcpy(buffer+4+sizeof(saveTime), data, width*width);
-    return buffer;
+    return Array<char>(buffer, getSaveSize(width));
 }
 
 char Field::getCheckSum() const {
@@ -521,8 +521,4 @@ char Field::getCheckSum() const {
 
 int Field::getSaveSize(int _width) {
     return 4+sizeof(saveTime)+_width*_width;
-}
-
-int Field::getSaveSize() const {
-    return getSaveSize(width);
 }

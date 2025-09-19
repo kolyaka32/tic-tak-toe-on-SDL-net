@@ -35,12 +35,12 @@ class GameConnection : public Connection {
     ~GameConnection();
     ConnectionCode updateMessages();
     template <typename ...Args>
-    void sendConfirmed(ConnectionCode code, Args&& ...args);
+    void sendConfirmed(ConnectionCode code, const Args ...args);
     void tryReconnect();
 };
 
 template <typename ...Args>
-void GameConnection::sendConfirmed(ConnectionCode _code, Args&& ...args) {
+void GameConnection::sendConfirmed(ConnectionCode _code, const Args ...args) {
     // Adding new message to confirme array and send it
     Message* newMessage = new Message{*this, _code, args...};
     unconfirmedMessages.push_back(newMessage);

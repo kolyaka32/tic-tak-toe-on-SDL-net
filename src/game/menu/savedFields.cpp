@@ -153,7 +153,8 @@ void SavedFields::addField(const std::string _saveText) {
 void SavedFields::saveFields(std::ofstream& _fout) {
     for (auto f : startOptions) {
         _fout << "save = ";
-        _fout.write(f.getSave(), f.getSaveSize());
+        const Array<char> save = f.getSave();
+        _fout.write(save.getData(), save.getSize());
         _fout << '\n';
     }
 }

@@ -27,6 +27,7 @@ class GameField : public GUI::Template {
     void restart();
     void setNewField(const Field* field, Window& window);  // Return true, if need to restart cycle
     const Field& saveField();
+    const Array<char> getSave() const;
 
     void blit() const override;
 

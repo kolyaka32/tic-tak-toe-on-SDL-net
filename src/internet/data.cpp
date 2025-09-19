@@ -20,6 +20,11 @@ Sint8 Data::swapLE<Sint8>(Sint8 object) {
 }
 
 template <>
+char Data::swapLE<char>(char object) {
+    return object;
+}
+
+template <>
 Uint16 Data::swapLE<Uint16>(Uint16 object) {
     return SDL_Swap16LE(object);
 }
@@ -52,6 +57,21 @@ Uint64 Data::swapLE<Uint64>(Uint64 object) {
 template <>
 Sint64 Data::swapLE<Sint64>(Sint64 object) {
     return SDL_Swap64LE(object);
+}
+
+template <typename T>
+size_t Data::size(const Array<T> _object) {
+    return sizeof(T)*_object.size();
+}
+
+template <typename T>
+size_t Data::size(const T _object) {
+    return sizeof(T);
+}
+
+template <typename T, typename ...Args>
+size_t Data::size(const T _object, const Args ..._args) {
+    return size<T>(_object) + size(_args...);
 }
 
 // Send packet class

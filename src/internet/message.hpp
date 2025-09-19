@@ -27,13 +27,13 @@ class Message {
 
  public:
     template <typename ...Args>
-    Message(const Connection& connection, ConnectionCode code, Args&& ...args);
+    Message(const Connection& connection, ConnectionCode code, const Args ...args);
     void checkNeedResend(const Connection& connection);
     bool applyMessage(Uint8 index);  // Check, if that message arrived and need to clearing
 };
 
 template <typename ...Args>
-Message::Message(const Connection& _connection, ConnectionCode _code, Args&& ...args)
+Message::Message(const Connection& _connection, ConnectionCode _code, const Args ...args)
 : messageIndex(globalMessageIndex),
 packet(Uint8(_code), messageIndex, args...) {
     logAdditional("Firstly sending message with code: %u, index: %u", (Uint8)_code, messageIndex);

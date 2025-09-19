@@ -61,6 +61,10 @@ const Field& GameField::saveField() {
     return currentField;
 }
 
+const Array<char> GameField::getSave() const {
+    return currentField.getSave();
+}
+
 void GameField::tryClickSingle(const Mouse _mouse) {
     if (currentField.isValid(_mouse) && currentField.getState() <= GameState::OpponentPlay) {
         currentField.clickSingle(currentField.getPosition(_mouse));

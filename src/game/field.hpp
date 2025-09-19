@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <array>
+#include "../data/array.hpp"
 #include "../data/app.hpp"
 
 
@@ -69,10 +69,9 @@ class Field {
     void setState(GameState state);
     const char* getSaveTime() const;
     void updateSaveInfo();
-    const char* getSave() const;
+    const Array<char> getSave() const;
     char getCheckSum() const;
     static int getSaveSize(int width);
-    int getSaveSize() const;
 
     // Turns of sides
     bool clickSingle(SDL_Point p);  // Clicking in singleplayer mode
