@@ -22,9 +22,6 @@ class ClientGameCycle : public InternetCycle {
     void update() override;
     void draw() const override;
 
-    // Update current field from server field
-    void loadField();
-
  public:
     explicit ClientGameCycle(Window& _window, const Connection& client);
 };

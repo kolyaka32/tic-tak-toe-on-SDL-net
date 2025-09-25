@@ -26,6 +26,7 @@ bool SinglePlayerGameCycle::inputMouseDown() {
         menu.addField(field.saveField());
         // Showing message of sucsessful saving
         savedInfo.reset();
+        logAdditional("Saving field");
     }
     if (gameMenuButton.in(mouse)) {
         // Starting game menu
@@ -37,6 +38,7 @@ bool SinglePlayerGameCycle::inputMouseDown() {
         if (const Field* f = menu.click(mouse)) {
             field.setNewField(f, window);
             menu.reset();
+            logAdditional("Select new field");
         }
         return true;
     } else {

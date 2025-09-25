@@ -12,9 +12,6 @@
 
 // Game cycle with game part of server
 class ServerGameCycle : public InternetCycle {
- private:
-    void sendField();
-
  protected:
     GameConnection connection;
     SelectingMenu menu;

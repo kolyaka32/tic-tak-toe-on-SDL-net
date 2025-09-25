@@ -16,7 +16,7 @@ menu(_window) {
         connection.sendConfirmed(ConnectionCode::Init);
         field.restart();
         // Sending first field
-        sendField();
+        connection.sendConfirmed<Array<char>>(ConnectionCode::GameNew, field.getSave());
     }
     logAdditional("Start server game cycle");
 }
@@ -30,6 +30,7 @@ bool ServerGameCycle::inputMouseDown() {
         menu.addField(field.saveField());
         // Showing message of sucsessful saving
         savedInfo.reset();
+        logAdditional("Saving field");
     }
     if (gameMenuButton.in(mouse)) {
         // Starting game menu
@@ -39,9 +40,12 @@ bool ServerGameCycle::inputMouseDown() {
     // Checking, if game start
     if (menu.isActive()) {
         if (const Field* f = menu.click(mouse)) {
+            // Setting new field localy
             field.setNewField(f, window);
-            sendField();
+            // Sending it
+            connection.sendConfirmed<Array<char>>(ConnectionCode::GameNew, field.getSave());
             menu.reset();
+            logAdditional("Selecting new field");
         }
         return true;
     } else {
@@ -81,11 +85,11 @@ void ServerGameCycle::update() {
         if (connection.lastPacket->isBytesAvaliable(3)) {
             // Making turn
             field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2));
-            logAdditional("Turn of opponent player to %u", connection.lastPacket->getData<Uint8>(2));
 
             // Making sound
             sounds.play(Sounds::Turn);
             music.startFromCurrent(Music::MainCombat);
+            logAdditional("Turn of opponent player to %u", connection.lastPacket->getData<Uint8>(2));
         }
         return;
 
@@ -146,12 +150,4 @@ void ServerGameCycle::draw() const {
 
     // Bliting all to screen
     window.render();
-}
-
-void ServerGameCycle::sendField() {
-    //connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::Init, field.getWidth(), field.getWinWidth());
-    // ! Need to write in correct way
-    field.saveField();
-    const Array<char> s = field.getSave();
-    connection.sendConfirmed<Array<char>>(ConnectionCode::GameNew, s);
 }

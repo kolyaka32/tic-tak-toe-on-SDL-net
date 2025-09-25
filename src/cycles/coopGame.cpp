@@ -27,6 +27,7 @@ bool TwoPlayerGameCycle::inputMouseDown() {
         menu.addField(field.saveField());
         // Showing message of sucsessful saving
         savedInfo.reset();
+        logAdditional("Saving field");
     }
     if (gameMenuButton.in(mouse)) {
         // Starting game menu
@@ -38,6 +39,7 @@ bool TwoPlayerGameCycle::inputMouseDown() {
         if (const Field* f = menu.click(mouse)) {
             field.setNewField(f, window);
             menu.reset();
+            logAdditional("Selecting new field");
         }
         return true;
     } else {

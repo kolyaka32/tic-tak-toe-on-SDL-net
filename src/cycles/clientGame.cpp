@@ -27,6 +27,7 @@ bool ClientGameCycle::inputMouseDown() {
         SavedFields::addField(field.saveField());
         // Showing message of sucsessful saving
         savedInfo.reset();
+        logAdditional("Saving field");
     }
     // Normal turn
     if (field.tryClickMultiplayerCurrent(mouse)) {
@@ -50,13 +51,28 @@ void ClientGameCycle::update() {
 
     case ConnectionCode::GameNew:
         if (connection.lastPacket->isBytesAvaliable(3)) {
-            // Loading new field from connection
-            loadField();
+            // Creating new field from get data
+            const Field f = Field((char*)(connection.lastPacket->getPointer())+2);
+            // Setting it as current
+            field.setNewField(&f, window);
+            // Inverting game state
+            switch (field.getState()) {
+            case GameState::CurrentPlay:
+                field.setState(GameState::OpponentPlay);
+                break;
+
+            case GameState::OpponentPlay:
+                field.setState(GameState::CurrentPlay);
+                break;
+
+            default:
+                break;
+            }
 
             // Making sound
             sounds.play(Sounds::Reset);
             music.startFromCurrent(Music::MainCalm);
-            logAdditional("Resetting game by connection");
+            logAdditional("Starting new game by connection");
         }
         return;
 
@@ -116,23 +132,4 @@ void ClientGameCycle::draw() const {
 
     // Bliting all to screen
     window.render();
-}
-
-void ClientGameCycle::loadField() {
-    // Creating new field from get data
-    const Field f = Field((char*)(connection.lastPacket->getPointer())+2);
-    field.setNewField(&f, window);
-    // Inverting game state
-    switch (field.getState()) {
-    case GameState::CurrentPlay:
-        field.setState(GameState::OpponentPlay);
-        break;
-
-    case GameState::OpponentPlay:
-        field.setState(GameState::CurrentPlay);
-        break;
-
-    default:
-        break;
-    }
 }

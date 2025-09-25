@@ -40,7 +40,6 @@ class Connection {
     template <typename ...Args>
     void send(ConnectionCode code, Uint8 index, Args ...args);
     void send(const SendPacket& _packet) const;
-    //void sendRaw(ConnectionCode code, Uint8 index, void* data, int size) const;
     // Function for recieve new packets and update packets
     ConnectionCode getCode();
     // Packet with last getted data
