@@ -78,7 +78,7 @@ void GameField::tryClickTwo(const Mouse _mouse) {
 }
 
 bool GameField::tryClickMultiplayerCurrent(const Mouse _mouse) {
-    if (currentField.isValid(_mouse) && currentField.getState() == GameState::OpponentPlay) {
+    if (currentField.isValid(_mouse) && currentField.getState() == GameState::CurrentPlay) {
         return currentField.clickMultiplayerCurrent(currentField.getPosition(_mouse));
     }
     return false;

@@ -68,12 +68,12 @@ void ServerGameCycle::inputKeys(SDL_Keycode _key) {
 }
 
 void ServerGameCycle::inputMouseWheel(float _wheelY) {
-    BaseCycle::inputMouseWheel(_wheelY);
+    GameCycle::inputMouseWheel(_wheelY);
     menu.scroll(_wheelY);
 }
 
 void ServerGameCycle::update() {
-    BaseCycle::update();
+    GameCycle::update();
 
     // Getting internet messages
     switch (connection.updateMessages()) {
@@ -154,11 +154,4 @@ void ServerGameCycle::sendField() {
     field.saveField();
     const Array<char> s = field.getSave();
     connection.sendConfirmed<Array<char>>(ConnectionCode::GameNew, s);
-
-    /*
-    field.setState(GameState::CurrentPlay);
-    connection.sendConfirmed<Uint8>(ConnectionCode::GameNew, (Uint8)GameState::OpponentPlay);
-    field.setTextureOffset(0);
-    logAdditional("Start game as cross (first)");
-    */
 }

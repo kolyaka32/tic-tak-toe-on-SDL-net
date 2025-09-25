@@ -76,6 +76,17 @@ void Connection::send(const SendPacket& _packet) const {
     // Sending it
     NET_SendDatagram(gettingSocket, sendAddress, sendPort, _packet.getData(), _packet.getLength());
 }
+/*
+void Connection::sendRaw(ConnectionCode _code, Uint8 _index, void* data, int size) const {
+    #if (CHECK_CORRECTION)
+    if (sendAddress == nullptr || sendPort == 0) {
+        logAdditional("Can't send packet at unspecified address");
+        return;
+    }
+    #endif
+    // Sending it
+    NET_SendDatagram(gettingSocket, sendAddress, sendPort, );
+}*/
 
 const char* Connection::getLocalIP() {
     // Getting local addresses

@@ -25,11 +25,11 @@ class Data {
     template <typename T>
     T swapLE(T object);
     template <typename T>
-    size_t size(const Array<T> object);
+    static size_t size(const Array<T> object);
     template <typename T>
-    size_t size(const T object);
+    static size_t size(const T object);
     template <typename T, typename ...Args>
-    size_t size(const T object, const Args ...args);
+    static size_t size(const T object, const Args ...args);
 
  public:
     Data() {}
@@ -57,6 +57,7 @@ class SendPacket : public Data {
     void write(int offset, const T object, const Args ...args);
 
  public:
+    SendPacket(const void* data, int size);
     template <typename ...Args>
     SendPacket(const Args ...args);
     ~SendPacket();
@@ -80,7 +81,24 @@ class GetPacket : public Data {
     // Functions for get data from message at specified position
     template <typename T>
     T getData(int offset);
+    const void* getPointer() const;
 };
+
+
+template <typename T>
+size_t Data::size(const Array<T> _object) {
+    return sizeof(T)*_object.getSize();
+}
+
+template <typename T>
+size_t Data::size(const T _object) {
+    return sizeof(T);
+}
+
+template <typename T, typename ...Args>
+size_t Data::size(const T _object, const Args ..._args) {
+    return size<T>(_object) + size(_args...);
+}
 
 
 template <typename ...Args>

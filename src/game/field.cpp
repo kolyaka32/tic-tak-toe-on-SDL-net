@@ -492,7 +492,8 @@ SDL_Point Field::getPosition(const Mouse _mouse) const {
 Field::Field(const char* _saveText)
 : width(_saveText[1]-'0'),
 winWidth(_saveText[2]-'0'),
-gameState(GameState(_saveText[3]-'0')) {
+gameState(GameState(_saveText[3]-'0')),
+upperLinePixels(upperLine*getWindowWidth()) {
     memcpy(&saveTime, _saveText+4, sizeof(saveTime));
     memcpy(data, _saveText+4+sizeof(saveTime), width*width);
 }

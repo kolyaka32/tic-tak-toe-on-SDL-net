@@ -40,6 +40,7 @@ class Connection {
     template <typename ...Args>
     void send(ConnectionCode code, Uint8 index, Args ...args);
     void send(const SendPacket& _packet) const;
+    //void sendRaw(ConnectionCode code, Uint8 index, void* data, int size) const;
     // Function for recieve new packets and update packets
     ConnectionCode getCode();
     // Packet with last getted data
@@ -62,7 +63,7 @@ void Connection::send(ConnectionCode _code, Uint8 index, Args ...args) {
     SendPacket packet(Uint8(_code), index, args...);
     // Sending it
     NET_SendDatagram(gettingSocket, sendAddress, sendPort, packet.getData(), packet.getLength());
-    // Destrying packet
+    // Destroying packet
 }
 
 #endif  // (USE_SDL_NET)

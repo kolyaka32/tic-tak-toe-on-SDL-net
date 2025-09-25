@@ -59,21 +59,6 @@ Sint64 Data::swapLE<Sint64>(Sint64 object) {
     return SDL_Swap64LE(object);
 }
 
-template <typename T>
-size_t Data::size(const Array<T> _object) {
-    return sizeof(T)*_object.size();
-}
-
-template <typename T>
-size_t Data::size(const T _object) {
-    return sizeof(T);
-}
-
-template <typename T, typename ...Args>
-size_t Data::size(const T _object, const Args ..._args) {
-    return size<T>(_object) + size(_args...);
-}
-
 // Send packet class
 SendPacket::~SendPacket() {
     // Clearing rest data
@@ -97,6 +82,10 @@ GetPacket::GetPacket(NET_Datagram* datagramm) {
 
 bool GetPacket::isBytesAvaliable(int bytes) {
     return size >= bytes;
+}
+
+const void* GetPacket::getPointer() const {
+    return data;
 }
 
 #endif  // (USE_SDL_NET)

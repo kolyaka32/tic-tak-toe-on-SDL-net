@@ -37,7 +37,7 @@ bool ClientGameCycle::inputMouseDown() {
 }
 
 void ClientGameCycle::update() {
-    BaseCycle::update();
+    GameCycle::update();
 
     // Getting internet messages
     switch (connection.updateMessages()) {
@@ -119,18 +119,20 @@ void ClientGameCycle::draw() const {
 }
 
 void ClientGameCycle::loadField() {
-    /*switch (connection.lastPacket->getData<Uint8>(2)) {
-    case Uint8(GameState::CurrentPlay):
-        field.reset();
-        field.setState(GameState::CurrentPlay);
-        field.setTextureOffset(1);
+    // Creating new field from get data
+    const Field f = Field((char*)(connection.lastPacket->getPointer())+2);
+    field.setNewField(&f, window);
+    // Inverting game state
+    switch (field.getState()) {
+    case GameState::CurrentPlay:
+        field.setState(GameState::OpponentPlay);
         break;
 
-    case Uint8(GameState::OpponentPlay):
-        field.reset();
-        field.setState(GameState::OpponentPlay);
-        field.setTextureOffset(0);
+    case GameState::OpponentPlay:
+        field.setState(GameState::CurrentPlay);
         break;
-    }*/
-    // ! Need to write in correct way
+
+    default:
+        break;
+    }
 }
