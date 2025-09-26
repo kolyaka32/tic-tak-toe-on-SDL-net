@@ -14,6 +14,10 @@ class GameField : public GUI::Template {
  private:
     // Game field
     static Field currentField;
+    // Function for do after game end
+    void checkEnd();
+    // Similar to checkEnd(), but for client side
+    void checkEndInverted();
 
  public:
     explicit GameField(const Window& window);
@@ -32,9 +36,11 @@ class GameField : public GUI::Template {
     void blit() const override;
 
     // Game turns
-    void tryClickSingle(const Mouse mouse);  // Clicking in singleplayer mode, return if have turn
-    void tryClickTwo(const Mouse mouse);     // Clicking in two-player mode, return if have turn
-    bool tryClickMultiplayerCurrent(const Mouse mouse);  // Clicking in multiplayer mode, return if have turn
-    Uint8 getLastTurn(const Mouse mouse);                // Return last turn
-    void clickMultiplayerOpponent(Uint8 position);       // Clicking in multiplayer mode by internet connection
+    void tryClickSingle(const Mouse mouse);         // Clicking in singleplayer mode, return if have turn
+    void tryClickCoop(const Mouse mouse);           // Clicking in coop mode, return if have turn
+    bool tryClickServerCurrent(const Mouse mouse);  // Clicking on server side by current user, return if have turn
+    bool tryClickClientCurrent(const Mouse mouse);  // Clicking on client side by current user, return if have turn
+    Uint8 getLastTurn(const Mouse mouse);           // Return last turn
+    void clickServerOpponent(Uint8 position);       // Clicking on server side by internet connection
+    void clickClientOpponent(Uint8 position);       // Clicking on client side by internet connection
 };

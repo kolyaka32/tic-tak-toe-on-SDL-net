@@ -44,7 +44,7 @@ bool TwoPlayerGameCycle::inputMouseDown() {
         return true;
     } else {
         // Normal turn
-        field.tryClickTwo(mouse);
+        field.tryClickCoop(mouse);
     }
     return false;
 }
@@ -86,11 +86,11 @@ void TwoPlayerGameCycle::draw() const {
         break;
 
     case GameState::CurrentWin:
-        secondWinText.blit();
+        firstWinText.blit();
         break;
 
     case GameState::OpponentWin:
-        firstWinText.blit();
+        secondWinText.blit();
         break;
 
     case GameState::NobodyWin:

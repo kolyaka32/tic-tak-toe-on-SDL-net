@@ -85,11 +85,11 @@ void SinglePlayerGameCycle::draw() const {
         break;
 
     case GameState::CurrentWin:
-        secondWinText.blit();
+        firstWinText.blit();
         break;
 
     case GameState::OpponentWin:
-        firstWinText.blit();
+        secondWinText.blit();
         break;
 
     case GameState::NobodyWin:

@@ -5,6 +5,7 @@
 
 #include "gameField.hpp"
 #include "../data/cycleTemplate.hpp"
+#include "menu/selectingMenu.hpp"
 
 
 // Creating start game field 3 by 3
@@ -53,6 +54,10 @@ void GameField::setNewField(const Field* field, Window& _window) {
         CycleTemplate::stop();
     }
     currentField = field;
+    // Check, if game already started
+    if (currentField.isStarted()) {
+        music.startFromCurrent(Music::MainCombat);
+    }
 }
 
 const Field& GameField::saveField() {
@@ -68,18 +73,29 @@ const Array<char> GameField::getSave() const {
 void GameField::tryClickSingle(const Mouse _mouse) {
     if (currentField.isValid(_mouse) && currentField.getState() <= GameState::OpponentPlay) {
         currentField.clickSingle(currentField.getPosition(_mouse));
+        checkEnd();
     }
 }
 
-void GameField::tryClickTwo(const Mouse _mouse) {
+void GameField::tryClickCoop(const Mouse _mouse) {
     if (currentField.isValid(_mouse) && currentField.getState() <= GameState::OpponentPlay) {
         currentField.clickTwo(currentField.getPosition(_mouse));
+        checkEnd();
     }
 }
 
-bool GameField::tryClickMultiplayerCurrent(const Mouse _mouse) {
+bool GameField::tryClickServerCurrent(const Mouse _mouse) {
     if (currentField.isValid(_mouse) && currentField.getState() == GameState::CurrentPlay) {
         return currentField.clickMultiplayerCurrent(currentField.getPosition(_mouse));
+        checkEnd();
+    }
+    return false;
+}
+
+bool GameField::tryClickClientCurrent(const Mouse _mouse) {
+    if (currentField.isValid(_mouse) && currentField.getState() == GameState::OpponentPlay) {
+        return currentField.clickMultiplayerCurrent(currentField.getPosition(_mouse));
+        checkEndInverted();
     }
     return false;
 }
@@ -89,11 +105,74 @@ Uint8 GameField::getLastTurn(const Mouse _mouse) {
     return p.y*currentField.width+p.x;
 }
 
-void GameField::clickMultiplayerOpponent(Uint8 _p) {
+void GameField::clickServerOpponent(Uint8 _p) {
     // No additional checks for correct internet connection
     currentField.clickMultiplayerOpponent({_p%currentField.width, _p/currentField.width});
+    checkEnd();
+}
+
+void GameField::clickClientOpponent(Uint8 _p) {
+    // No additional checks for correct internet connection
+    currentField.clickMultiplayerOpponent({_p%currentField.width, _p/currentField.width});
+    checkEndInverted();
 }
 
 void GameField::blit() const {
     currentField.blit(window);
+}
+
+void GameField::checkEnd() {
+    // Starting main combat music
+    music.startFromCurrent(Music::MainCombat);
+    // Making sound depend on state
+    switch (currentField.getState()) {
+    case GameState::CurrentWin:
+        sounds.play(Sounds::Win);
+        logAdditional("Opponent win");
+        break;
+
+    case GameState::OpponentWin:
+        sounds.play(Sounds::Loose);
+        logAdditional("Current win");
+        break;
+
+    case GameState::NobodyWin:
+        sounds.play(Sounds::Loose);
+        logAdditional("Nobody win");
+        break;
+
+    default:
+        sounds.play(Sounds::Turn);
+        return;
+    }
+    // Setting start menu for next game
+    SelectingMenu::open();
+}
+
+void GameField::checkEndInverted() {
+    // Starting main combat music
+    music.startFromCurrent(Music::MainCombat);
+    // Making sound depend on state
+    switch (currentField.getState()) {
+    case GameState::CurrentWin:
+        sounds.play(Sounds::Loose);
+        logAdditional("Current win");
+        break;
+
+    case GameState::OpponentWin:
+        sounds.play(Sounds::Win);
+        logAdditional("Opponent win");
+        break;
+
+    case GameState::NobodyWin:
+        sounds.play(Sounds::Loose);
+        logAdditional("Nobody win");
+        break;
+
+    default:
+        sounds.play(Sounds::Turn);
+        return;
+    }
+    // Setting start menu for next game
+    SelectingMenu::open();
 }

@@ -30,7 +30,7 @@ bool ClientGameCycle::inputMouseDown() {
         logAdditional("Saving field");
     }
     // Normal turn
-    if (field.tryClickMultiplayerCurrent(mouse)) {
+    if (field.tryClickClientCurrent(mouse)) {
         // Sending to opponent
         connection.sendConfirmed<Uint8>(ConnectionCode::GameTurn, field.getLastTurn(mouse));
     }
@@ -44,7 +44,7 @@ void ClientGameCycle::update() {
     switch (connection.updateMessages()) {
     case ConnectionCode::GameTurn:
         if (connection.lastPacket->isBytesAvaliable(3)) {
-            field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2));
+            field.clickClientOpponent(connection.lastPacket->getData<Uint8>(2));
             logAdditional("Turn of opponent player to %u", connection.lastPacket->getData<Uint8>(2));
         }
         return;
@@ -55,19 +55,6 @@ void ClientGameCycle::update() {
             const Field f = Field((char*)(connection.lastPacket->getPointer())+2);
             // Setting it as current
             field.setNewField(&f, window);
-            // Inverting game state
-            switch (field.getState()) {
-            case GameState::CurrentPlay:
-                field.setState(GameState::OpponentPlay);
-                break;
-
-            case GameState::OpponentPlay:
-                field.setState(GameState::CurrentPlay);
-                break;
-
-            default:
-                break;
-            }
 
             // Making sound
             sounds.play(Sounds::Reset);
@@ -95,27 +82,23 @@ void ClientGameCycle::draw() const {
     // Draw game state
     switch (field.getState()) {
     case GameState::CurrentPlay:
-        playersTurnsTexts[0].blit();
-        break;
-
-    case GameState::OpponentPlay:
         playersTurnsTexts[1].blit();
         break;
 
+    case GameState::OpponentPlay:
+        playersTurnsTexts[0].blit();
+        break;
+
     case GameState::CurrentWin:
-        winText.blit();
+        looseText.blit();
         break;
 
     case GameState::OpponentWin:
-        looseText.blit();
+        winText.blit();
         break;
 
     case GameState::NobodyWin:
         nobodyWinText.blit();
-        break;
-
-    case GameState::WaitState:
-        waitText.blit();
         break;
     }
     // Drawing upper dashboard

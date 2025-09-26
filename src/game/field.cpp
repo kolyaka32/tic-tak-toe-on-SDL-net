@@ -4,7 +4,6 @@
  */
 
 #include "field.hpp"
-#include "menu/selectingMenu.hpp"
 
 
 const float Field::cellSide = 100;
@@ -61,6 +60,10 @@ void Field::setState(GameState _state) {
 
 GameState Field::getState() const {
     return gameState;
+}
+
+bool Field::isStarted() const {
+    return count > 0;
 }
 
 const char* Field::getSaveTime() const {
@@ -132,7 +135,6 @@ bool Field::clickSingle(SDL_Point p) {
         if (gameState < GameState::CurrentWin) {
             AImove();
         }
-        checkEnd();
         return true;
     }
     return false;
@@ -158,13 +160,8 @@ bool Field::clickTwo(SDL_Point p) {
         }
         count++;
 
-        // Making sound
-        sounds.play(Sounds::Turn);
-        music.startFromCurrent(Music::MainCombat);
-
         // Checking for win
         gameState = checkWin(p);
-        checkEnd();
         return true;
     }
     return false;
@@ -189,45 +186,33 @@ bool Field::clickMultiplayerCurrent(SDL_Point p) {
         }
         count++;
 
-        // Making sound
-        sounds.play(Sounds::Turn);
-        music.startFromCurrent(Music::MainCombat);
-
         // Checking for win
         gameState = checkWin(p);
-        checkEnd();
         return true;
     }
     return false;
 }
 
 void Field::clickMultiplayerOpponent(SDL_Point p) {
-    if (gameState == GameState::OpponentPlay) {
-        switch (gameState) {
-        case GameState::CurrentPlay:
-            setCell(p, Cell::Current);
-            gameState = GameState::OpponentPlay;
-            break;
+    switch (gameState) {
+    case GameState::CurrentPlay:
+        setCell(p, Cell::Current);
+        gameState = GameState::OpponentPlay;
+        break;
 
-        case GameState::OpponentPlay:
-            setCell(p, Cell::Opponent);
-            gameState = GameState::CurrentPlay;
-            break;
+    case GameState::OpponentPlay:
+        setCell(p, Cell::Opponent);
+        gameState = GameState::CurrentPlay;
+        break;
 
-        default:
-            break;
-        }
-        count++;
-
-        // Making sound
-        sounds.play(Sounds::Turn);
-        music.startFromCurrent(Music::MainCombat);
-
-        // Checking for win
-        gameState = checkWin(p);
-        checkEnd();
-        return;
+    default:
+        break;
     }
+    count++;
+
+    // Checking for win
+    gameState = checkWin(p);
+    return;
 }
 
 // Recursivly solve, where cell need to be placed
@@ -320,7 +305,7 @@ GameState Field::checkWin(SDL_Point p) {
         }
 
         if (state) {
-            return (GameState)(state+2);
+            return (GameState)(state+1);
         }
     }
 
@@ -334,7 +319,7 @@ GameState Field::checkWin(SDL_Point p) {
         }
 
         if (state) {
-            return (GameState)(state+2);
+            return (GameState)(state+1);
         }
     }
 
@@ -346,7 +331,7 @@ GameState Field::checkWin(SDL_Point p) {
             state &= (Uint8)data[t + (p.y + t - p.x) * width];
         }
         if (state) {
-            return (GameState)(state+2);
+            return (GameState)(state+1);
         }
     }
 
@@ -362,7 +347,7 @@ GameState Field::checkWin(SDL_Point p) {
                 pos -= (width-1);
             }
             if (state) {
-                return (GameState)(state+2);
+                return (GameState)(state+1);
             }
         }
     } else {
@@ -376,7 +361,7 @@ GameState Field::checkWin(SDL_Point p) {
                 pos -= (width-1);
             }
             if (state) {
-                return (GameState)(state+2);
+                return (GameState)(state+1);
             }
         }
     }
@@ -385,30 +370,6 @@ GameState Field::checkWin(SDL_Point p) {
         return GameState::NobodyWin;
     }
     return gameState;
-}
-
-void Field::checkEnd() {
-    switch (gameState) {
-    case GameState::CurrentWin:
-        sounds.play(Sounds::Loose);
-        logAdditional("Opponent win");
-        break;
-
-    case GameState::OpponentWin:
-        sounds.play(Sounds::Win);
-        logAdditional("Current win");
-        break;
-
-    case GameState::NobodyWin:
-        sounds.play(Sounds::Loose);
-        logAdditional("Nobody win");
-        break;
-
-    default:
-        return;
-    }
-    // Setting start menu for next game
-    SelectingMenu::open();
 }
 
 void Field::blit(const Window& window) const {

@@ -50,7 +50,7 @@ bool ServerGameCycle::inputMouseDown() {
         return true;
     } else {
         // Normal turn
-        if (field.tryClickMultiplayerCurrent(mouse)) {
+        if (field.tryClickServerCurrent(mouse)) {
             // Sending to opponent
             connection.sendConfirmed<Uint8>(ConnectionCode::GameTurn, field.getLastTurn(mouse));
         }
@@ -84,7 +84,7 @@ void ServerGameCycle::update() {
     case ConnectionCode::GameTurn:
         if (connection.lastPacket->isBytesAvaliable(3)) {
             // Making turn
-            field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2));
+            field.clickServerOpponent(connection.lastPacket->getData<Uint8>(2));
 
             // Making sound
             sounds.play(Sounds::Turn);
@@ -117,11 +117,11 @@ void ServerGameCycle::draw() const {
         break;
 
     case GameState::CurrentWin:
-        secondWinText.blit();
+        firstWinText.blit();
         break;
 
     case GameState::OpponentWin:
-        firstWinText.blit();
+        secondWinText.blit();
         break;
 
     case GameState::NobodyWin:

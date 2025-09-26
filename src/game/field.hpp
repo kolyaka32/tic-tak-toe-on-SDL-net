@@ -46,7 +46,6 @@ class Field {
     Cell getCell(SDL_Point p) const;
     void setCell(SDL_Point p, Cell state);
 
-    void checkEnd();    // Function for do actions at game end
     void AImove();      // Move of computer
     int recursivelySolve(Uint8 round);  // Function for solve game in singleplayer recursively
     GameState checkWin(SDL_Point p);    // Check, if anyone win after his turn, return who win
@@ -68,6 +67,9 @@ class Field {
     GameState getState() const;
     void setState(GameState state);
     const char* getSaveTime() const;
+    bool isStarted() const;
+
+    // Save system
     void updateSaveInfo();
     const Array<char> getSave() const;
     char getCheckSum() const;
