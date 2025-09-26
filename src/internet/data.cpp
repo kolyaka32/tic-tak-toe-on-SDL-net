@@ -20,6 +20,11 @@ Sint8 Data::swapLE<Sint8>(Sint8 object) {
 }
 
 template <>
+char Data::swapLE<char>(char object) {
+    return object;
+}
+
+template <>
 Uint16 Data::swapLE<Uint16>(Uint16 object) {
     return SDL_Swap16LE(object);
 }
@@ -77,6 +82,10 @@ GetPacket::GetPacket(NET_Datagram* datagramm) {
 
 bool GetPacket::isBytesAvaliable(int bytes) {
     return size >= bytes;
+}
+
+const void* GetPacket::getPointer() const {
+    return data;
 }
 
 #endif  // (USE_SDL_NET)

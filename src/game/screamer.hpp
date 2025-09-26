@@ -15,7 +15,7 @@ class Screamer : GUI::Template {
     bool active = false;
 
  public:
-    Screamer(const Window& window);
+    explicit Screamer(const Window& window);
     bool click(const Mouse mouse);
     void update();
     void blit() const override;

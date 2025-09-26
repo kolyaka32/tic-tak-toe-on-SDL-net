@@ -11,7 +11,7 @@
 
 
 // Check if has initfile
-#if USE_SETTING_FILE
+#if (USE_SETTING_FILE)
 #include <string>
 
 
@@ -28,4 +28,4 @@ class InitFile {
     void saveSettings();
 };
 
-#endif  // USE_SETTING_FILE
+#endif  // (USE_SETTING_FILE)

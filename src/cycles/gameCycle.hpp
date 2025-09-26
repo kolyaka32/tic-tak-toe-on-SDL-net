@@ -17,13 +17,11 @@ class GameCycle : public BaseCycle {
     GameField field;
     Screamer screamer;
 
-    const GUI::ImageButton gameRestartButton;
+    GUI::ImageButton gameSaveButton;
+    GUI::ImageButton gameMenuButton;
     GUI::StaticText playersTurnsTexts[2];
+    GUI::InfoBox savedInfo;
 
-    // Menu after game end
-    GUI::RoundedBackplate menuBackplate;
-    GUI::TextButton menuRestartButton;
-    GUI::TextButton menuExitButton;
     // Ending options
     GUI::HighlightedStaticText firstWinText;
     GUI::HighlightedStaticText secondWinText;
@@ -33,7 +31,6 @@ class GameCycle : public BaseCycle {
     bool inputMouseDown() override;
     void inputKeys(const SDL_Keycode key) override;
     void update() override;
-    void draw() const override;
 
  public:
     GameCycle(Window& _window);

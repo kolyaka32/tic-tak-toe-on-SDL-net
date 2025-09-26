@@ -18,6 +18,10 @@ class Client : public Connection {
     ~Client();
     void tryConnect(const char* address, Uint16 port);
     void connectToLastMessage();
+
+    // Static objects for save inputted parameters
+    static char baseIP[15];
+    static char basePort[6];
 };
 
 #endif  // (USE_SDL_NET)

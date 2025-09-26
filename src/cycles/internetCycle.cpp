@@ -14,8 +14,8 @@ playersTurnsTexts {
 },
 disconnectedBox(window),
 termianatedBox(window),
-looseText(window, 0.5, 0.35, {"You loose", "Вы проиграли", "Sie haben verloren", "Вы прайгралі"}, 1, Height::Info),
-winText(window, 0.5, 0.35, {"Win", "Победа", "Sieg", "Перамога"}, 1, Height::Info) {
+looseText(window, 0.5, 0.05, {"You loose", "Вы проиграли", "Sie haben verloren", "Вы прайгралі"}, 1),
+winText(window, 0.5, 0.05, {"Win", "Победа", "Sieg", "Перамога"}, 1) {
     // Resetting flag
     if (!isRestarted()) {
         disconnectedBox.reset();

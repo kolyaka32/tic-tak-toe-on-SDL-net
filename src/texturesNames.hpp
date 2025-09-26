@@ -16,11 +16,13 @@
 enum class Textures : unsigned {
     // Base part
     // Graphic interface sprites
-    PauseButton,
     SliderButton,
     SliderLine,
     QuitButton,
-    RestartButton,
+    MenuButton,
+    SaveButton,
+    SettingsButton,
+
     // Base flags in settings
     FlagUSA,
     FlagRUS,
@@ -28,12 +30,9 @@ enum class Textures : unsigned {
     FlagBEL,
 
     // Main game part
-    // Green (current player) figures
-    GreenCross,
-    RedCross,
-    // Red (opponent player) figures
-    GreenCircle,
-    RedCircle,
+    // Game figures
+    Cross,
+    Circle,
     // Empty cell
     Cell,
 

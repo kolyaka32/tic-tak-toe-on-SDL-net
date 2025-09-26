@@ -4,13 +4,17 @@
  */
 
 #include "clientGame.hpp"
-#include "selectCycle.hpp"
+#include "../game/menu/savedFields.hpp"
 
 
 ClientGameCycle::ClientGameCycle(Window& _window, const Connection& _client)
 : InternetCycle(_window),
 connection(_client),
 waitText(window, 0.5, 0.05, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}) {
+    if (!isRestarted()) {
+        field.restart();
+        field.setState(GameState::WaitState);
+    }
     logAdditional("Start client game cycle");
 }
 
@@ -18,81 +22,44 @@ bool ClientGameCycle::inputMouseDown() {
     if (InternetCycle::inputMouseDown()) {
         return true;
     }
-    // Checking, if game start
-    if (field.getState() >= GameState::CurrentWin) {
-        // Check for game start
-        if (menuExitButton.in(mouse)) {
-            // Going to menu
-            stop();
-            return true;
-        }
-    } else {
-        // Normal turn
-        if (field.tryClickMultiplayerCurrent(mouse)) {
-            // Making sound
-            sounds.play(Sounds::Turn);
-            music.startFromCurrent(Music::MainCombat);
-
-            // Sending to opponent
-            connection.sendConfirmed<Uint8, Uint8>(ConnectionCode::GameTurn,
-                field.getXPos(mouse), field.getYPos(mouse));
-        }
+    if (gameSaveButton.in(mouse)) {
+        // Save current game field
+        SavedFields::addField(field.saveField());
+        // Showing message of sucsessful saving
+        savedInfo.reset();
+        logAdditional("Saving field");
+    }
+    // Normal turn
+    if (field.tryClickClientCurrent(mouse)) {
+        // Sending to opponent
+        connection.sendConfirmed<Uint8>(ConnectionCode::GameTurn, field.getLastTurn(mouse));
     }
     return false;
 }
 
-void ClientGameCycle::inputKeys(const SDL_Keycode _key) {
-    // If not restart - act like normal key input
-    if (_key != SDLK_R) {
-        GameCycle::inputKeys(_key);
-    }
-}
-
 void ClientGameCycle::update() {
-    BaseCycle::update();
+    GameCycle::update();
 
     // Getting internet messages
     switch (connection.updateMessages()) {
     case ConnectionCode::GameTurn:
-        if (connection.lastPacket->isBytesAvaliable(4)) {
-            logAdditional("Turn of opponent player: from %u to %u",
-                connection.lastPacket->getData<Uint8>(2), connection.lastPacket->getData<Uint8>(3));
-            field.clickMultiplayerOpponent(connection.lastPacket->getData<Uint8>(2),
-                connection.lastPacket->getData<Uint8>(3));
-            // Making sound
-            sounds.play(Sounds::Turn);
-            // Changing music theme
-            music.startFromCurrent(Music::MainCombat);
+        if (connection.lastPacket->isBytesAvaliable(3)) {
+            field.clickClientOpponent(connection.lastPacket->getData<Uint8>(2));
+            logAdditional("Turn of opponent player to %u", connection.lastPacket->getData<Uint8>(2));
         }
         return;
 
-    case ConnectionCode::GameClear:
-        // Making sound
-        sounds.play(Sounds::Reset);
-        music.startFromCurrent(Music::MainCalm);
-
-        // Resetting game
-        field.reset();
-        logAdditional("Resetting game by connection");
-        return;
-
-    case ConnectionCode::GameStart:
+    case ConnectionCode::GameNew:
         if (connection.lastPacket->isBytesAvaliable(3)) {
-            logAdditional("Starting new round: %u", connection.lastPacket->getData<Uint8>(2));
-            // Starting game
-            switch (connection.lastPacket->getData<Uint8>(2)) {
-            case Uint8(GameState::CurrentPlay):
-                field.reset();
-                field.setState(GameState::CurrentPlay);
-                field.setTextureOffset(1);
-                break;
+            // Creating new field from get data
+            const Field f = Field((char*)(connection.lastPacket->getPointer())+2);
+            // Setting it as current
+            field.setNewField(&f, window);
 
-            case Uint8(GameState::OpponentPlay):
-                field.reset();
-                field.setState(GameState::OpponentPlay);
-                field.setTextureOffset(0);
-                break;
-            }
+            // Making sound
+            sounds.play(Sounds::Reset);
+            music.startFromCurrent(Music::MainCalm);
+            logAdditional("Starting new game by connection");
         }
         return;
 
@@ -109,48 +76,38 @@ void ClientGameCycle::draw() const {
     // Blitting field
     field.blit();
 
-    // Bliting game state, if need
-    if (field.getState() >= GameState::CurrentWin) {
-        // Bliting end background
-        menuBackplate.blit();
-
-        // Blitting buttons
-        menuExitButton.blit();
-    }
+    // Bliting game menu
+    // menu.blit();
 
     // Draw game state
     switch (field.getState()) {
-    case GameState::None:
-        waitText.blit();
-        break;
-
     case GameState::CurrentPlay:
-        playersTurnsTexts[0].blit();
-        break;
-
-    case GameState::OpponentPlay:
         playersTurnsTexts[1].blit();
         break;
 
+    case GameState::OpponentPlay:
+        playersTurnsTexts[0].blit();
+        break;
+
     case GameState::CurrentWin:
-        winText.blit();
+        looseText.blit();
         break;
 
     case GameState::OpponentWin:
-        looseText.blit();
+        winText.blit();
         break;
 
     case GameState::NobodyWin:
         nobodyWinText.blit();
         break;
     }
-    // Drawing buttons
+    // Drawing upper dashboard
     exitButton.blit();
-
-    // Drawing setting menu
+    gameSaveButton.blit();
     settings.blit();
 
     // Messages
+    savedInfo.blit();
     disconnectedBox.blit();
     termianatedBox.blit();
 

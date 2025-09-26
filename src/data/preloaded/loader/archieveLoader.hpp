@@ -15,12 +15,10 @@
 #include <SDL3/SDL_iostream.h>
 
 
-// Setting password for archive
-#define ARCHIEVE_PASSWORD NULL
-
 // Implimentation of loader for arcives
 class ArchieveLoader {
  private:
+    const char* password = nullptr;  // Absence of password
     zip_t* archive;  // Archive, where data is located
 
  public:

@@ -7,17 +7,12 @@
 #include "clientGame.hpp"
 
 
-// Base link connections realisations
-char baseIP[12] = "127.0.0.1";
-char basePort[6] = "8000";
-
-
 ClientLobbyCycle::ClientLobbyCycle(Window& _window)
 : BaseCycle(_window),
 enterIPText(window, 0.5, 0.2, {"Enter IP:", "Введите IP:", "Geben Sie die IP ein:", "Увядзіце IP:"}, Height::SubTitle),
-enterIPField(window, 0.5, 0.32, baseIP),
+enterIPField(window, 0.5, 0.32, Client::baseIP),
 enterPortText(window, 0.5, 0.45, {"Enter port:", "Введите порт:", "Port eingeben:", "Увядзіце порт:"}, Height::SubTitle),
-enterPortField(window, 0.5, 0.57, basePort),
+enterPortField(window, 0.5, 0.57, Client::basePort),
 pasteButton(window, 0.5, 0.75, {"Paste the address", "Вставить адрес", "Kopierte Adresse", "Уставіць адрас"}),
 connectButton(window, 0.5, 0.9, {"Connect", "Присоединится", "Beitritt", "Далучыцца"}) {
     if (isAdditionalRestarted()) {
@@ -58,6 +53,9 @@ bool ClientLobbyCycle::inputMouseDown() {
                 return true;
             }
         }
+        // Saving inputted address
+        memcpy(Client::baseIP, enterIPField.getString(), sizeof(Client::baseIP));
+        memcpy(Client::basePort, portTextCorrected, sizeof(Client::basePort));
         // Trying connect at specified address
         client.tryConnect(enterIPField.getString(), std::stoi(portTextCorrected));
         return true;
@@ -89,12 +87,6 @@ void ClientLobbyCycle::update() {
     case ConnectionCode::Init:
         // Settings options to this connection
         client.connectToLastMessage();
-        // Applying field size
-        GameField::setWidth(client.lastPacket->getData<Uint8>(2));
-        GameField::setWinWidth(client.lastPacket->getData<Uint8>(3));
-        // Changing window size
-        window.setWidth(GameField::getWindowWidth());
-        window.setHeight(GameField::getWindowHeight());
         // Starting game
         runCycle<ClientGameCycle, Connection&>(window, client);
         // Exiting to menu after game

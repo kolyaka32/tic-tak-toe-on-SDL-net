@@ -5,7 +5,9 @@
 
 #pragma once
 
-#include "codes.hpp"
+#include <array>
+#include "../data/array.hpp"
+#include "../codes.hpp"
 
 // Check, if need internet library
 #if (USE_SDL_NET)
@@ -22,6 +24,12 @@ class Data {
     // Function for correct bits order to prevent wrong understanding
     template <typename T>
     T swapLE(T object);
+    template <typename T>
+    static size_t size(const Array<T> object);
+    template <typename T>
+    static size_t size(const T object);
+    template <typename T, typename ...Args>
+    static size_t size(const T object, const Args ...args);
 
  public:
     Data() {}
@@ -35,12 +43,21 @@ class SendPacket : public Data {
 
  protected:
     // Functions for converting data to raw array
+    // Write single object
     template <typename T>
-    void write(int offset, T object);
+    void write(int offset, const T object);
+    // Write standart array of objects
+    template<typename T, size_t N>
+    void write(int offset, const std::array<T, N> object);
+    // Write custom array
+    template<typename T>
+    void write(int offset, const Array<T> object);
+    // Write multiple objects
     template <typename T, typename ...Args>
-    void write(int offset, T object, Args&& ...args);
+    void write(int offset, const T object, const Args ...args);
 
  public:
+    SendPacket(const void* data, int size);
     template <typename ...Args>
     SendPacket(const Args ...args);
     ~SendPacket();
@@ -64,13 +81,30 @@ class GetPacket : public Data {
     // Functions for get data from message at specified position
     template <typename T>
     T getData(int offset);
+    const void* getPointer() const;
 };
+
+
+template <typename T>
+size_t Data::size(const Array<T> _object) {
+    return sizeof(T)*_object.getSize();
+}
+
+template <typename T>
+size_t Data::size(const T _object) {
+    return sizeof(T);
+}
+
+template <typename T, typename ...Args>
+size_t Data::size(const T _object, const Args ..._args) {
+    return size<T>(_object) + size(_args...);
+}
 
 
 template <typename ...Args>
 SendPacket::SendPacket(const Args ...args) {
     // Getting length as sum of all sizes of arguments
-    length = sizeof...(args);
+    length = size(args...);
 
     // Creating array for data
     data = new Uint8[length];
@@ -79,14 +113,28 @@ SendPacket::SendPacket(const Args ...args) {
 }
 
 template <typename T>
-void SendPacket::write(int _offset, T _object) {
+void SendPacket::write(int _offset, const T _object) {
     *(data + _offset) = swapLE<T>(_object);
 }
 
+template<typename T, size_t N>
+void SendPacket::write(int _offset, const std::array<T, N> _object) {
+    for (int i=0; i < N; ++i) {
+        write(_offset+i*sizeof(T), _object[i]);
+    }
+}
+
+template<typename T>
+void SendPacket::write(int _offset, const Array<T> _object) {
+    for (int i=0; i < _object.getSize(); ++i) {
+        write<T>(_offset+i*sizeof(T), _object[i]);
+    }
+}
+
 template <typename T, typename ...Args>
-void SendPacket::write(int _offset, T _object, Args&& ...args) {
+void SendPacket::write(int _offset, const T _object, const Args ...args) {
     // Writing current object
-    *(data + _offset) = swapLE<T>(_object);
+    write<T>(_offset, _object);
     write(_offset + sizeof(T), args...);
 }
 

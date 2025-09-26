@@ -10,6 +10,15 @@
 
 Uint8 Message::globalMessageIndex = 1;
 
+void Message::updateGlobalIndex() {
+    // Upating global message index, skipping 0
+    if (globalMessageIndex == 127) {
+        globalMessageIndex = 1;
+    } else {
+        globalMessageIndex++;
+    }
+}
+
 void Message::resend(const Connection& connection) {
     // Sending message itself
     connection.send(packet);

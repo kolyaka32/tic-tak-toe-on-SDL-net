@@ -7,7 +7,7 @@
 
 
 // Check if has initfile
-#if USE_SETTING_FILE
+#if (USE_SETTING_FILE)
 
 InitFile::InitFile() {
     loadSettings();
@@ -25,4 +25,4 @@ const unsigned InitFile::getValue(const std::string _line) const {
     return std::stoi(_line.substr(_line.rfind('=') + 2));
 }
 
-#endif  // USE_SETTING_FILE
+#endif  // (USE_SETTING_FILE)

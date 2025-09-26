@@ -10,14 +10,13 @@
 // Check if has initfile
 #if (USE_SETTING_FILE)
 
-
 // Files to setup
 #include "data/languages.hpp"
 #include "game/gameField.hpp"
 #include "cycles/clientLobby.hpp"
+#include "internet/client.hpp"
+#include "game/menu/savedFields.hpp"
 
-
-InitFile initFile{};
 
 // Data, load from setting file
 void InitFile::loadSettings() {
@@ -46,14 +45,12 @@ void InitFile::loadSettings() {
             music.setVolume(getValue(currentLine));
         } else if (parameter == "sounds") {
             sounds.setVolume(getValue(currentLine));
-        } else if (parameter == "width") {
-            GameField::setWidth(std::stoi(getText(currentLine).c_str()));
-        } else if (parameter == "winWidth") {
-            GameField::setWinWidth(std::stoi(getText(currentLine).c_str()));
         } else if (parameter == "IP") {
-            strncpy(baseIP, getText(currentLine).c_str(), sizeof(baseIP));
+            strncpy(Client::baseIP, getText(currentLine).c_str(), sizeof(Client::baseIP));
         } else if (parameter == "port") {
-            strncpy(basePort, getText(currentLine).c_str(), sizeof(basePort));
+            strncpy(Client::basePort, getText(currentLine).c_str(), sizeof(Client::basePort));
+        } else if (parameter == "save") {
+            SavedFields::addField(getText(currentLine));
         }
     }
     // Closing reading file
@@ -95,15 +92,14 @@ void InitFile::saveSettings() {
     outSettings << "music = " << music.getVolume() << "\n";
     outSettings << "sounds = " << sounds.getVolume() << "\n";
 
-    // Writing starting config (order of figures)
-    outSettings << "\nGame configuration:\n";
-    outSettings << "width = " << GameField::getWidth() << "\n";
-    outSettings << "winWidth = " << GameField::getWinWidth() << "\n";
-
     // Writing internet connection data
     outSettings << "\n# Internet base parameters:\n";
-    outSettings << "IP = " << baseIP << "\n";
-    outSettings << "port = " << basePort << "\n";
+    outSettings << "IP = " << Client::baseIP << "\n";
+    outSettings << "port = " << Client::basePort << "\n";
+
+    // Saving fields
+    outSettings << "\n# Saves:\n";
+    SavedFields::saveFields(outSettings);
 }
 
 #endif  // (USE_SETTING_FILE)

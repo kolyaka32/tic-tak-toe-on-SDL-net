@@ -6,7 +6,7 @@
 #pragma once
 
 #include <SDL3/SDL_stdinc.h>
-#include "../define.hpp"
+#include "define.hpp"
 
 
 // Codes for send/recieve in internet messages
@@ -19,7 +19,9 @@ enum class ConnectionCode : Uint8 {
     ApplyConnection,  // Code of confirmation of continued connection
 
     // Game codes
-    GameClear,  // Code of clearing field
-    GameStart,  // Code of restart game with options of new game (field, turn)
-    GameTurn,   // Code of normal game turn with it options
+    // Global
+    GameTurn,     // Code of normal game turn with it options
+    // Server-side
+    GameNew,      // Code of sending new field
+    // GameRestart,  // Code of restart game with options of new game (field, turn)
 };

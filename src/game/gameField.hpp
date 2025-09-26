@@ -12,39 +12,35 @@
 // Cycle with field with game objects on it
 class GameField : public GUI::Template {
  private:
-    static const float cellSide;   // Width and height of mine in pixels
-    static const float separator;  // Width of separator between cells in pixels
-    static Field field;            // Field with whole game
-    static float upperLineHeight;  // Height of upper line for settings
-    static int offset;             // Texture offset for draw with different colors
+    // Game field
+    static Field currentField;
+    // Function for do after game end
+    void checkEnd();
+    // Similar to checkEnd(), but for client side
+    void checkEndInverted();
 
  public:
-    GameField(const Window& window);
-    void reset();
-    void setState(GameState state);
+    explicit GameField(const Window& window);
     GameState getState() const;
-
-    // Setting texture for changing color of cells
-    void setTextureOffset(int offset);
-
-    // Getting position at grid
-    int getXPos(const Mouse mouse);
-    int getYPos(const Mouse mouse);
-
-    // Game turns
-    bool tryClickSingle(const Mouse mouse);  // Clicking in singleplayer mode, return if have turn
-    bool tryClickTwo(const Mouse mouse);     // Clicking in two-player mode, return if have turn
-    bool tryClickMultiplayerCurrent(const Mouse mouse);   // Clicking in multiplayer mode, return if have turn
-    void clickMultiplayerOpponent(Uint8 x, Uint8 y);      // Clicking in multiplayer mode by internet connection
-
-    // Drawing field with his background
-    void blit() const;
-
-    // Global options to work with field
+    void setState(GameState state);
     static int getWidth();
-    static void setWidth(int width);
-    static int getWinWidth();
-    static void setWinWidth(int winWidth);
     static int getWindowWidth();
     static int getWindowHeight();
+
+    bool isGameEnd() const;
+    void restart();
+    void setNewField(const Field* field, Window& window);  // Return true, if need to restart cycle
+    const Field& saveField();
+    const Array<char> getSave() const;
+
+    void blit() const override;
+
+    // Game turns
+    void tryClickSingle(const Mouse mouse);         // Clicking in singleplayer mode, return if have turn
+    void tryClickCoop(const Mouse mouse);           // Clicking in coop mode, return if have turn
+    bool tryClickServerCurrent(const Mouse mouse);  // Clicking on server side by current user, return if have turn
+    bool tryClickClientCurrent(const Mouse mouse);  // Clicking on client side by current user, return if have turn
+    Uint8 getLastTurn(const Mouse mouse);           // Return last turn
+    void clickServerOpponent(Uint8 position);       // Clicking on server side by internet connection
+    void clickClientOpponent(Uint8 position);       // Clicking on client side by internet connection
 };

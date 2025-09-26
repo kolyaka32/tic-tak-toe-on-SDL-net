@@ -13,11 +13,13 @@
 // File names of the corresponding textures
 const char* texturesFilesNames[unsigned(Textures::Count)] = {
     // Graphic interface sprites
-    "img/GUI/esc_button.png",
     "img/GUI/slider_button.png",
     "img/GUI/slider_line.png",
+
     "img/GUI/quit_button.png",
-    "img/GUI/restart_button.png",
+    "img/GUI/menu_button.png",
+    "img/GUI/save_button.png",
+    "img/GUI/settings_button.png",
 
     // Flags
     "img/GUI/Flag_USA.png",
@@ -26,10 +28,8 @@ const char* texturesFilesNames[unsigned(Textures::Count)] = {
     "img/GUI/Flag_BEL.png",
 
     // Game part
-    "img/game/green_cross.png",
-    "img/game/red_cross.png",
-    "img/game/green_circle.png",
-    "img/game/red_circle.png",
+    "img/game/cross.png",
+    "img/game/circle.png",
     "img/game/cell.png",
 
     "img/game/screamer.png",

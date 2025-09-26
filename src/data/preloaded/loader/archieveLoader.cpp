@@ -16,9 +16,9 @@ ArchieveLoader::ArchieveLoader() {
     // Open archive with need name
     archive = zip_open(DATA_FILE, ZIP_RDONLY, NULL);
 
-    #if ARCHIEVE_PASSWORD
-    zip_set_default_password(archive, ARCHIEVE_PASSWORD);
-    #endif
+    if (password) {
+        zip_set_default_password(archive, password);
+    }
 
     // Checking openning correction
     #if (CHECK_CORRECTION)
@@ -34,7 +34,7 @@ ArchieveLoader::~ArchieveLoader() {
 
 SDL_IOStream* ArchieveLoader::load(const char* _file) const {
     // Openning need file
-    zip_file_t *file = zip_fopen_encrypted(archive, _file, 0, ARCHIEVE_PASSWORD);
+    zip_file_t *file = zip_fopen_encrypted(archive, _file, 0, password);
 
     // Checking correction of openned file
     #if (CHECK_CORRECTION)

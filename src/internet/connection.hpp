@@ -62,7 +62,7 @@ void Connection::send(ConnectionCode _code, Uint8 index, Args ...args) {
     SendPacket packet(Uint8(_code), index, args...);
     // Sending it
     NET_SendDatagram(gettingSocket, sendAddress, sendPort, packet.getData(), packet.getLength());
-    // Destrying packet
+    // Destroying packet
 }
 
 #endif  // (USE_SDL_NET)

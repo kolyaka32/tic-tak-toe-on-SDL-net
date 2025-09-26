@@ -4,7 +4,7 @@
  */
 
 #include "connectionLostBox.hpp"
-#include "../data/cycleTemplate.hpp"
+#include "../../data/cycleTemplate.hpp"
 
 
 bool ConnectionLostBox::active = false;

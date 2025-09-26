@@ -37,6 +37,7 @@ namespace GUI {
 
      public:
         TextureTemplate(const Window& window);
+        void move(float X, float Y);
         void blit() const override;
         virtual bool in(const Mouse mouse) const;
     };

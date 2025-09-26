@@ -8,8 +8,8 @@
 #if (USE_SDL_NET)
 
 #include "../data/cycleTemplate.hpp"
-#include "../game/connectionLostBox.hpp"
-#include "../game/terminatedBox.hpp"
+#include "../game/internet/connectionLostBox.hpp"
+#include "../game/internet/terminatedBox.hpp"
 
 
 GameConnection::GameConnection(const Connection& _connection)
