@@ -5,18 +5,10 @@
 
 #pragma once
 
-#include "../data/array.hpp"
-#include "../codes.hpp"
+#include "swap.hpp"
 
 // Check, if need internet library
 #if (USE_SDL_NET)
-
-#include <SDL3_net/SDL_net.h>
-
-
-// Function for correct bits order to prevent wrong understanding
-template <typename T>
-T swapLE(T object);
 
 
 // Class with data for sending somewhere
@@ -44,27 +36,6 @@ class SendPacket {
     // Getters
     const Uint8* getData() const;
     size_t getLength() const;
-};
-
-
-// Class with getted data from somewhere
-class GetPacket {
- private:
-    // Data, contained in this array
-    Uint8* data = nullptr;
-    int offset = 0;
-    int size;  // Size of packet for check on correction
-
- public:
-    explicit GetPacket(NET_Datagram* datagramm);
-    bool isBytesAvaliable(int bytes);
-    // Functions for get data from message by order
-    template <typename T>
-    T getData();
-    // Functions for get data from message at specified position
-    template <typename T>
-    T getData(int offset);
-    const void* getPointer() const;
 };
 
 
@@ -98,29 +69,6 @@ void SendPacket::write(const T _object, const Args ...args) {
     // Writing current object
     write<T>(_object);
     write(args...);
-}
-
-template <typename T>
-T GetPacket::getData() {
-    #if (CHECK_CORRECTION)
-    if (offset + sizeof(T) > size) {
-        throw "Can't read data - not enogh length";
-    }
-    #endif
-
-    // Moving caret for reading next object correct
-    offset += sizeof(T);
-    return swapLE<T>((T)(*(data + offset - sizeof(T))));
-}
-
-template <typename T>
-T GetPacket::getData(int _offset) {
-    #if (CHECK_CORRECTION)
-    if (_offset + sizeof(T) > size) {
-        throw "Can't read data - not enogh length";
-    }
-    #endif
-    return swapLE<T>((T)(*(data + _offset)));
 }
 
 #endif  // (USE_SDL_NET)

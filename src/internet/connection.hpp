@@ -10,7 +10,8 @@
 // Check, if need internet library
 #if (USE_SDL_NET)
 
-#include "data.hpp"
+#include "sendPacket.hpp"
+#include "getPacket.hpp"
 #include "../data/logger.hpp"
 
 
@@ -61,9 +62,7 @@ void Connection::send(ConnectionCode _code, Uint8 index, Args ...args) {
     // Creating new send packet
     SendPacket packet(Uint8(_code), index, args...);
     // Sending it
-    const void* d = packet.getData();
-    int s = packet.getLength();
-    NET_SendDatagram(gettingSocket, sendAddress, sendPort, d, s);
+    NET_SendDatagram(gettingSocket, sendAddress, sendPort, packet.getData(), packet.getLength());
     // Destroying packet
 }
 

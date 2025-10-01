@@ -3,7 +3,7 @@
  * <nik.kazankov.05@mail.ru>
  */
 
-#include "data.hpp"
+#include "swap.hpp"
 
 #if (USE_SDL_NET)
 
@@ -57,32 +57,6 @@ Uint64 swapLE<Uint64>(Uint64 object) {
 template <>
 Sint64 swapLE<Sint64>(Sint64 object) {
     return SDL_Swap64LE(object);
-}
-
-// Send packet class
-SendPacket::SendPacket() {}
-
-const Uint8* SendPacket::getData() const {
-    return data;
-}
-
-size_t SendPacket::getLength() const {
-    return currentPosition - data;
-}
-
-
-// Get packet class
-GetPacket::GetPacket(NET_Datagram* datagramm) {
-    data = datagramm->buf;
-    size = datagramm->buflen;
-}
-
-bool GetPacket::isBytesAvaliable(int bytes) {
-    return size >= bytes;
-}
-
-const void* GetPacket::getPointer() const {
-    return data;
 }
 
 #endif  // (USE_SDL_NET)
