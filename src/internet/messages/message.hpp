@@ -5,42 +5,70 @@
 
 #pragma once
 
-#include "../connection.hpp"
+#include "swap.hpp"
 
 // Check, if need internet library
 #if (USE_SDL_NET)
 
-#include "../../data/time.hpp"
-#include "indexesArray.cpp"
 
-
-// Message, waiting for applying of getting
+// Class with data for sending somewhere
 class Message {
  private:
-    static Uint8 globalMessageIndex;
-    static void updateGlobalIndex();
-    Uint8 messageIndex;  // Index to check applying and getting messages
-    timer nextResend;    // Time, when need to resend message
-    SendPacket packet;   // Packet itself
-
- protected:
-    void send(const Connection& connection);
+    static const int maxSize = 100;
+    Uint8 data[maxSize];
+    Uint8* currentPosition = data;
 
  public:
+    Message();
     template <typename ...Args>
-    Message(const Connection& connection, ConnectionCode code, const Args ...args);
-    void checkNeedResend(const Connection& connection);
-    bool applyMessage(Uint8 index);  // Check, if that message arrived and need to clearing
+    Message(const Args ...args);
+    // Writing functions
+    // Write multiple function
+    template <typename T, typename ...Args>
+    void write(const T object, const Args ...argv);
+    // Write single object
+    template <typename T>
+    void write(const T object);
+    // Write custom array
+    template<typename T>
+    void write(const Array<T> object);
+
+    // Getters
+    const Uint8* getData() const;
+    size_t getLength() const;
 };
 
+
 template <typename ...Args>
-Message::Message(const Connection& _connection, ConnectionCode _code, const Args ...args)
-: messageIndex(globalMessageIndex),
-packet(Uint8(_code), messageIndex, args...) {
-    logAdditional("Firstly sending message with code: %u, index: %u", (Uint8)_code, messageIndex);
-    // Firstly sending message
-    send(_connection);
-    updateGlobalIndex();
+Message::Message(const Args ...args)
+: Message() {
+    write(args...);
+}
+
+template <typename T>
+void Message::write(const T _object) {
+    // Check on avaliable space
+    #if (CHECK_CORRECTION)
+    if (currentPosition + sizeof(T) > data + maxSize) {
+        throw "Can't write data - not enogh size";
+    }
+    #endif
+    *currentPosition = swapLE<T>(_object);
+    currentPosition += sizeof(T);
+}
+
+template<typename T>
+void Message::write(const Array<T> _object) {
+    for (int i=0; i < _object.getSize(); ++i) {
+        write<T>(_object[i]);
+    }
+}
+
+template <typename T, typename ...Args>
+void Message::write(const T _object, const Args ...args) {
+    // Writing current object
+    write<T>(_object);
+    write(args...);
 }
 
 #endif  // (USE_SDL_NET)
