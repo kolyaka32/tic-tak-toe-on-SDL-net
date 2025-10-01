@@ -61,7 +61,9 @@ void Connection::send(ConnectionCode _code, Uint8 index, Args ...args) {
     // Creating new send packet
     SendPacket packet(Uint8(_code), index, args...);
     // Sending it
-    NET_SendDatagram(gettingSocket, sendAddress, sendPort, packet.getData(), packet.getLength());
+    const void* d = packet.getData();
+    int s = packet.getLength();
+    NET_SendDatagram(gettingSocket, sendAddress, sendPort, d, s);
     // Destroying packet
 }
 

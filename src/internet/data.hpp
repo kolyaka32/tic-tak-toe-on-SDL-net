@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include <array>
 #include "../data/array.hpp"
 #include "../codes.hpp"
 
@@ -15,60 +14,44 @@
 #include <SDL3_net/SDL_net.h>
 
 
-// Class with any ordered data
-class Data {
- protected:
-    // Data, contained in this array
-    Uint8* data = nullptr;
-
-    // Function for correct bits order to prevent wrong understanding
-    template <typename T>
-    T swapLE(T object);
-    template <typename T>
-    static size_t size(const Array<T> object);
-    template <typename T>
-    static size_t size(const T object);
-    template <typename T, typename ...Args>
-    static size_t size(const T object, const Args ...args);
-
- public:
-    Data() {}
-};
+// Function for correct bits order to prevent wrong understanding
+template <typename T>
+T swapLE(T object);
 
 
 // Class with data for sending somewhere
-class SendPacket : public Data {
+class SendPacket {
  private:
-    int length;
-
- protected:
-    // Functions for converting data to raw array
-    // Write single object
-    template <typename T>
-    void write(int offset, const T object);
-    // Write standart array of objects
-    template<typename T, size_t N>
-    void write(int offset, const std::array<T, N> object);
-    // Write custom array
-    template<typename T>
-    void write(int offset, const Array<T> object);
-    // Write multiple objects
-    template <typename T, typename ...Args>
-    void write(int offset, const T object, const Args ...args);
+    static const int maxSize = 100;
+    Uint8 data[maxSize];
+    Uint8* currentPosition = data;
 
  public:
-    SendPacket(const void* data, int size);
+    SendPacket();
     template <typename ...Args>
     SendPacket(const Args ...args);
-    ~SendPacket();
-    Uint8* getData() const;
-    int getLength() const;
+    // Writing functions
+    // Write multiple function
+    template <typename T, typename ...Args>
+    void write(const T object, const Args ...argv);
+    // Write single object
+    template <typename T>
+    void write(const T object);
+    // Write custom array
+    template<typename T>
+    void write(const Array<T> object);
+
+    // Getters
+    const Uint8* getData() const;
+    size_t getLength() const;
 };
 
 
 // Class with getted data from somewhere
-class GetPacket : public Data {
+class GetPacket {
  private:
+    // Data, contained in this array
+    Uint8* data = nullptr;
     int offset = 0;
     int size;  // Size of packet for check on correction
 
@@ -85,57 +68,36 @@ class GetPacket : public Data {
 };
 
 
-template <typename T>
-size_t Data::size(const Array<T> _object) {
-    return sizeof(T)*_object.getSize();
-}
-
-template <typename T>
-size_t Data::size(const T _object) {
-    return sizeof(T);
-}
-
-template <typename T, typename ...Args>
-size_t Data::size(const T _object, const Args ..._args) {
-    return size<T>(_object) + size(_args...);
-}
-
-
 template <typename ...Args>
-SendPacket::SendPacket(const Args ...args) {
-    // Getting length as sum of all sizes of arguments
-    length = size(args...);
-
-    // Creating array for data
-    data = new Uint8[length];
-
-    write(0, args...);
+SendPacket::SendPacket(const Args ...args)
+: SendPacket() {
+    write(args...);
 }
 
 template <typename T>
-void SendPacket::write(int _offset, const T _object) {
-    *(data + _offset) = swapLE<T>(_object);
-}
-
-template<typename T, size_t N>
-void SendPacket::write(int _offset, const std::array<T, N> _object) {
-    for (int i=0; i < N; ++i) {
-        write(_offset+i*sizeof(T), _object[i]);
+void SendPacket::write(const T _object) {
+    // Check on avaliable space
+    #if (CHECK_CORRECTION)
+    if (currentPosition + sizeof(T) > data + maxSize) {
+        throw "Can't write data - not enogh size";
     }
+    #endif
+    *currentPosition = swapLE<T>(_object);
+    currentPosition += sizeof(T);
 }
 
 template<typename T>
-void SendPacket::write(int _offset, const Array<T> _object) {
+void SendPacket::write(const Array<T> _object) {
     for (int i=0; i < _object.getSize(); ++i) {
-        write<T>(_offset+i*sizeof(T), _object[i]);
+        write<T>(_object[i]);
     }
 }
 
 template <typename T, typename ...Args>
-void SendPacket::write(int _offset, const T _object, const Args ...args) {
+void SendPacket::write(const T _object, const Args ...args) {
     // Writing current object
-    write<T>(_offset, _object);
-    write(_offset + sizeof(T), args...);
+    write<T>(_object);
+    write(args...);
 }
 
 template <typename T>
