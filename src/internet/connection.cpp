@@ -10,8 +10,6 @@
 
 
 Connection::Connection() {
-    // Intialasing internet library
-    NET_Init();
     #if (CHECK_CORRECTION)
     // Extra clearing
     gettingSocket = nullptr;

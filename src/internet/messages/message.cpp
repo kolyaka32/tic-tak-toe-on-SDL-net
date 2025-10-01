@@ -19,9 +19,9 @@ void Message::updateGlobalIndex() {
     }
 }
 
-void Message::resend(const Connection& connection) {
+void Message::send(const Connection& _connection) {
     // Sending message itself
-    connection.send(packet);
+    _connection.send(packet);
 
     // Resetting timer
     nextResend = getTime() + MESSAGE_RESEND_TIMEOUT;
@@ -31,7 +31,7 @@ void Message::checkNeedResend(const Connection& _connection) {
     // Check, if get over timer
     if (getTime() > nextResend) {
         logAdditional("Resending packet with code: %u, index: %u", packet.getData()[0], messageIndex);
-        resend(_connection);
+        send(_connection);
     }
 }
 

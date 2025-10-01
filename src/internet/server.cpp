@@ -29,16 +29,13 @@ Server::Server()
 }
 
 Server::~Server() {
-    logAdditional("Destroying server, closing net library");
+    logAdditional("Destroying server");
 
     // Clearing rest data
     NET_DestroyDatagramSocket(gettingSocket);
     if (sendAddress) {
        NET_UnrefAddress(sendAddress);
     }
-
-    // Closing new library
-    NET_Quit();
 }
 
 Uint16 Server::getPort() {

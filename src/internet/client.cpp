@@ -26,16 +26,13 @@ Client::Client()
 }
 
 Client::~Client() {
-    logAdditional("Destroying client, closing net library");
+    logAdditional("Destroying client");
 
     // Clearing rest data
     NET_DestroyDatagramSocket(gettingSocket);
     if (sendAddress) {
        NET_UnrefAddress(sendAddress);
     }
-
-    // Closing new library
-    NET_Quit();
 }
 
 void Client::tryConnect(const char* _address, Uint16 _port) {

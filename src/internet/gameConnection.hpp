@@ -5,13 +5,12 @@
 
 #pragma once
 
-#include "message.hpp"
+#include "messages/message.hpp"
 
 // Check, if need internet library
 #if (USE_SDL_NET)
 
 #include <vector>
-#include "indexesArray.cpp"
 
 
 // Class for deal with own internet connection (UDP-based)
@@ -19,6 +18,7 @@ class GameConnection : public Connection {
  private:
     timer needResendApplyConnection;  // Time, after which need resend apply connection message
     timer needDisconect;              // Time, after which connection will be recognized as disconected
+    // Array of messages, waiting for apply from connection, or resend if don't
     std::vector<Message*> unconfirmedMessages;
     IndexesArray<10> getIndexes;
     bool disconnected = false;

@@ -10,8 +10,8 @@
 // Check, if need internet library
 #if (USE_SDL_NET)
 
-#include "sendPacket.hpp"
-#include "getPacket.hpp"
+#include "messages/sendPacket.hpp"
+#include "messages/getPacket.hpp"
 #include "../data/logger.hpp"
 
 

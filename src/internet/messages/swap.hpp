@@ -5,12 +5,12 @@
 
 #pragma once
 
-#include "../data/array.hpp"
+#include "../../data/array.hpp"
 
 // Check, if need internet library
 #if (USE_SDL_NET)
 
-#include "../internetCodes.hpp"
+#include "../../internetCodes.hpp"
 #include <SDL3_net/SDL_net.h>
 
 

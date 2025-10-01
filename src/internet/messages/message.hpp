@@ -5,12 +5,13 @@
 
 #pragma once
 
-#include "connection.hpp"
+#include "../connection.hpp"
 
 // Check, if need internet library
 #if (USE_SDL_NET)
 
-#include "../data/time.hpp"
+#include "../../data/time.hpp"
+#include "indexesArray.cpp"
 
 
 // Message, waiting for applying of getting
@@ -23,7 +24,7 @@ class Message {
     SendPacket packet;   // Packet itself
 
  protected:
-    void resend(const Connection& connection);
+    void send(const Connection& connection);
 
  public:
     template <typename ...Args>
@@ -38,7 +39,7 @@ Message::Message(const Connection& _connection, ConnectionCode _code, const Args
 packet(Uint8(_code), messageIndex, args...) {
     logAdditional("Firstly sending message with code: %u, index: %u", (Uint8)_code, messageIndex);
     // Firstly sending message
-    resend(_connection);
+    send(_connection);
     updateGlobalIndex();
 }
 
