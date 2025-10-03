@@ -78,18 +78,6 @@ void GameConnection::checkConnectionStatus() {
     }
 }
 
-void GameConnection::checkNeedApplyConnection() {
-    if (getTime() > needResendApplyConnection) {
-        // Sending new message which keep connection
-        sendConfirmed(ConnectionCode::ApplyConnection);
-    }
-}
-
-void GameConnection::checkNeedResending() {
-    for (int i=0; i < unconfirmedMessages.size(); ++i) {
-        unconfirmedMessages[i]->checkNeedResend(*this);
-    }
-}
 
 ConnectionCode GameConnection::checkNewMessage() {
     // Checking, if get messages

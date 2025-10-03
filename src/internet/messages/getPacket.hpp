@@ -15,9 +15,10 @@
 class GetPacket {
  private:
     // Data, contained in this array
-    Uint8* data = nullptr;
+    NET_Datagram* datagram;
+    //Uint8* data = nullptr;
     int offset = 0;
-    int size;  // Size of packet for check on correction
+    //int size;  // Size of packet for check on correction
 
  public:
     explicit GetPacket(NET_Datagram* datagramm);

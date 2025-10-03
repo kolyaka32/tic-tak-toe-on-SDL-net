@@ -19,22 +19,38 @@ class Internet {
     // Getting part
     NET_DatagramSocket* gettingSocket;
     NET_Datagram* recievedDatagram;
+    // Check timer
+    static const timer messageGetTimeout = 5000;  // Time after which connection is considered lost
+    timer needDisconect = 0;                      // Time, after which connection will be recognized as disconected
+    // Array of indexes of last getted messages
+    IndexesArray<10> getIndexes;
+    //bool disconnected = false;
 
     // Special addresses
     char localhost[16];  // Address of current machine
     void getLocalAddress();
-    NET_Address* broadcastAddress = nullptr;  // Address for sending data to whole network
-    void getBroadcastAddress();
+    static const Uint16 broadcastPort = 8000;  // Port for broadcast send/recieve
+    Destination broadcast;        // Address for sending data to whole network
+    NET_Address* getBroadcastAddress();
 
     // Reciepients
     std::vector<Reciepient> reciepients;
 
  protected:
-    void send(Destination dest, const Message& message) const;
+    //
 
  public:
     Internet();
     ~Internet();
+
+    // Init part
+    void openServer();
+    void openClient();
+    void close();
+    void disconnect();
+
+    // Connectinf part
+    void connectTo();  // ! arguments
 
     // Sending data to all reciepients, without applience
     template <typename ...Args>
@@ -44,7 +60,15 @@ class Internet {
     void sendAllConfirmed(ConnectionCode code, const Args ...args);
     // Sending data to whole network
     template <typename ...Args>
-    void sendBroadcast(Uint16 port, ConnectionCode code, const Args ...args);
+    void sendBroadcast(ConnectionCode code, const Args ...args);
+
+    // Control part
+    bool checkStatus();  // Return true on disconect
+    void checkApplyMessages();
+    void checkResendMessages();
+
+    // Getting part
+    GetPacket getNewMessages();  // ! way it work
 };
 
 extern Internet internet;
@@ -54,32 +78,26 @@ extern Internet internet;
 template <typename ...Args>
 void Internet::sendAll(ConnectionCode _code, const Args ...args) {
     // Creating message
-    Message mess();
+    Message message(_code, args...);
     // Sending it to all
     for (int i=0; i < reciepients.size(); ++i) {
-        send(reciepients[i], mess);
+        reciepients[i].sendUnconfirmed(message);
     }
 }
 
 template <typename ...Args>
 void Internet::sendAllConfirmed(ConnectionCode _code, const Args ...args) {
-    // Adding new message to confirme array and send it
-    /*Message* newMessage = new Message{*this, _code, args...};
-    unconfirmedMessages.push_back(newMessage);
-    // Updating timer
-    needResendApplyConnection = getTime() + MESSAGE_APPLY_TIMEOUT;*/
+    // Creating message
+    ConfirmedMessage message(_code, args...);
     for (int i=0; i < reciepients.size(); ++i) {
-        // Adding to apply list
-        ConfirmedMessage* d = new ConfirmedMessage(_code, args...);
-        //unconfirmedMessages.push_back(newMessage);
-        // Sending it firstly
-        send(reciepients[i], d);
+        // Sending it
+        reciepients[i].sendConfirmed(gettingSocket, message);
     }
 }
 
 template <typename ...Args>
-void Internet::sendBroadcast(Uint16 _port, ConnectionCode _code, const Args ...args) {
-    send(Destination(broadcastAddress, _port), Message(_code, args));
+void Internet::sendBroadcast(ConnectionCode _code, const Args ...args) {
+    broadcast.send(gettingSocket, Message(_code, args));
 }
 
 #endif  // (USE_SDL_NET)

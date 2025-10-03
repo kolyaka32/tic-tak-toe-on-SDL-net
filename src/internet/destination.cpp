@@ -15,10 +15,6 @@ bool Destination::operator==(const Destination& b) {
     return (NET_CompareAddresses(address, b.address) == 0) && (port == b.port);
 }
 
-NET_Address* Destination::getAddress() const {
-    return address;
-}
-
-Uint16 Destination::getPort() const {
-    return port;
+void Destination::send(NET_DatagramSocket *_sock, const Message& _message) const {
+    NET_SendDatagram(_sock, address, port, _message.getData(), _message.getLength());
 }

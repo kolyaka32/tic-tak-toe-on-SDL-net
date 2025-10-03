@@ -15,7 +15,7 @@
 
 
 // Message, waiting for applying of getting
-class ConfirmedMessage : Message {
+class ConfirmedMessage : public Message {
  private:
     static Uint8 globalMessageIndex;
     static void updateGlobalIndex();

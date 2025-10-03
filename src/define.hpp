@@ -40,3 +40,8 @@
 #if USE_SETTING_FILE
 #define SETTING_FILE "settings-tic-tac-toe.ini"
 #endif
+
+// Number of active connections in internet part
+#if USE_SDL_NET
+#define MAX_CONNECTIONS 1
+#endif

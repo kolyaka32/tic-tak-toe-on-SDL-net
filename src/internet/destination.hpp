@@ -10,7 +10,7 @@
 // Check, if need internet library
 #if (USE_SDL_NET)
 
-#include <SDL3_net/SDL_net.h>
+#include "messages/message.hpp"
 
 
 // Class with address and port for send operation
@@ -24,8 +24,7 @@ class Destination {
     Destination(NET_Address* address, Uint16 port);
     ~Destination();
     bool operator==(const Destination& b);
-    NET_Address* getAddress() const;
-    Uint16 getPort() const;
+    void send(NET_DatagramSocket* sock, const Message& message) const;
 };
 
 #endif  // (USE_SDL_NET)

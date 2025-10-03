@@ -9,9 +9,10 @@
 
 
 
-Internet::Internet() {
-    getLocalAddress();
-    getBroadcastAddress();
+Internet::Internet()
+: localhost(),  // Initialasing from getBroadcastAddress()
+broadcast(getBroadcastAddress(), broadcastPort) {
+    
 }
 
 Internet::~Internet() {}
@@ -40,8 +41,11 @@ void Internet::getLocalAddress() {
     }
 }
 
-void Internet::getBroadcastAddress() {
-    char broadcastString[16];
+NET_Address* Internet::getBroadcastAddress() {
+    // Update address of current machine
+    getLocalAddress();
+
+    // Get byte address of current machine (from IPv4)
     Uint8 values[4] {0};
     int i=0;
     for (const char* c = localhost; *c; ++c) {
@@ -54,6 +58,7 @@ void Internet::getBroadcastAddress() {
             values[i] = values[i]*10 + *c - '0';
         }
     }
+    char broadcastString[16];
     if (values[0] < 128) {
         // Mask: 255.0.0.0
         snprintf(broadcastString, sizeof(broadcastString), "%d.255.255.255", values[0]);
@@ -66,9 +71,43 @@ void Internet::getBroadcastAddress() {
     } else {
         snprintf(broadcastString, sizeof(broadcastString), "255.255.255.255");
     }
-    broadcastAddress = NET_ResolveHostname(broadcastString);
+    return NET_ResolveHostname(broadcastString);
 }
 
-void Internet::send(Destination _dest, const Message& _message) const {
-    NET_SendDatagram(gettingSocket, _dest.getAddress(), _dest.getPort(), _message.getData(), _message.getLength());
+
+void Internet::openServer() {
+    // Creating concrete socket at specified or random port
+}
+
+void Internet::openClient() {
+    // Creating socket at random port
+}
+
+void Internet::close() {
+    // Destrying getting socket
+}
+
+void Internet::disconnect() {
+    // Sending message with quiting connection
+    for (int i=0; i < reciepients.size(); ++i) {
+        reciepients[i].sendUnconfirmed(gettingSocket, Message{ConnectionCode::Quit});
+    }
+    logAdditional("Disconnecting from games");
+}
+
+
+bool Internet::checkStatus() {
+    return (getTime() > needDisconect);
+}
+
+void Internet::checkApplyMessages() {
+    for (int i=0; i < reciepients.size(); ++i) {
+        reciepients[i].checkNeedApplyConnection(gettingSocket);
+    }
+}
+
+void Internet::checkResendMessages() {
+    for (int i=0; i < reciepients.size(); ++i) {
+        reciepients[i].checkResending(gettingSocket);
+    }
 }
