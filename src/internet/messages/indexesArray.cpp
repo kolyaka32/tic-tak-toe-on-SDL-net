@@ -26,13 +26,15 @@ bool IndexesArray<length>::isUnique(Uint8 _index) {
             return false;
         }
     }
+    // Adding to list
+    add(_index);
     return true;
 }
 
 template <unsigned length>
-void IndexesArray<length>::add(Uint8 index) {
+void IndexesArray<length>::add(Uint8 _index) {
     // Adding new index to array, replacing older
-    array[lastPosition] = index;
+    array[lastPosition] = _index;
     // Changing caret postion to next
     lastPosition = (lastPosition + 1) % length;
 }

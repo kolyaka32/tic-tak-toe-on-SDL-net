@@ -5,20 +5,18 @@
 
 #pragma once
 
-#include "baseCycle.hpp"
-#include "../internet/client.hpp"
+#include "internetCycle.hpp"
 
 
 // Game cycle (for single player (special animation))
 class ClientLobbyCycle : public BaseCycle {
  private:
-    // Internet parameters
-    Client client;
-
     // Input fields
     GUI::StaticText enterIPText;
+    static char baseIP[15];
     GUI::TypeBox<15> enterIPField;
     GUI::StaticText enterPortText;
+    static char basePort[6];
     GUI::TypeBox<6> enterPortField;
     GUI::TextButton pasteButton;
     GUI::TextButton connectButton;
@@ -35,4 +33,8 @@ class ClientLobbyCycle : public BaseCycle {
 
  public:
     explicit ClientLobbyCycle(Window& _window);
+    static void writeBaseIP(const char* text);
+    static const char* getBaseIP();
+    static void writeBasePort(const char* text);
+    static const char* getBasePort();
 };

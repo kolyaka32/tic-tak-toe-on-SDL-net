@@ -10,9 +10,9 @@
 ClientLobbyCycle::ClientLobbyCycle(Window& _window)
 : BaseCycle(_window),
 enterIPText(window, 0.5, 0.2, {"Enter IP:", "Введите IP:", "Geben Sie die IP ein:", "Увядзіце IP:"}, Height::SubTitle),
-enterIPField(window, 0.5, 0.32, Client::baseIP),
+enterIPField(window, 0.5, 0.32, baseIP),
 enterPortText(window, 0.5, 0.45, {"Enter port:", "Введите порт:", "Port eingeben:", "Увядзіце порт:"}, Height::SubTitle),
-enterPortField(window, 0.5, 0.57, Client::basePort),
+enterPortField(window, 0.5, 0.57, basePort),
 pasteButton(window, 0.5, 0.75, {"Paste the address", "Вставить адрес", "Kopierte Adresse", "Уставіць адрас"}),
 connectButton(window, 0.5, 0.9, {"Connect", "Присоединится", "Beitritt", "Далучыцца"}) {
     if (isAdditionalRestarted()) {
@@ -54,10 +54,10 @@ bool ClientLobbyCycle::inputMouseDown() {
             }
         }
         // Saving inputted address
-        memcpy(Client::baseIP, enterIPField.getString(), sizeof(Client::baseIP));
-        memcpy(Client::basePort, portTextCorrected, sizeof(Client::basePort));
+        memcpy(baseIP, enterIPField.getString(), sizeof(baseIP));
+        memcpy(basePort, portTextCorrected, sizeof(basePort));
         // Trying connect at specified address
-        client.tryConnect(enterIPField.getString(), std::stoi(portTextCorrected));
+        client.tryConnect(enterIPField.getString(), std::stoi(portTextCorrected));  // !
         return true;
     }
     return false;
@@ -88,7 +88,7 @@ void ClientLobbyCycle::update() {
         // Settings options to this connection
         client.connectToLastMessage();
         // Starting game
-        runCycle<ClientGameCycle, Connection&>(window, client);
+        runCycle<ClientGameCycle>(window);
         // Exiting to menu after game
         stop();
         return;
@@ -163,4 +163,20 @@ void ClientLobbyCycle::pasteFromClipboard() {
     enterIPField.setString(clipboard);
     enterPortField.setString(clipboard+i);
     SDL_free(clipboard);
+}
+
+void ClientLobbyCycle::writeBaseIP(const char* _text) {
+    snprintf(baseIP, sizeof(baseIP), "%s", _text);
+}
+
+const char* ClientLobbyCycle::getBaseIP() {
+    return baseIP;
+}
+
+void ClientLobbyCycle::writeBasePort(const char* _text) {
+    snprintf(basePort, sizeof(basePort), "%s", _text);
+}
+
+const char* ClientLobbyCycle::getBasePort() {
+    return basePort;
 }

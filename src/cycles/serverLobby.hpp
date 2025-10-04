@@ -5,16 +5,12 @@
 
 #pragma once
 
-#include "baseCycle.hpp"
-#include "../internet/server.hpp"
+#include "internetCycle.hpp"
 
 
 // Cycle with waiting for client connect
 class ServerLobbyCycle : public BaseCycle {
  private:
-    // Internet connection part
-    Server server;
-
     // Title
     GUI::HighlightedStaticText titleText;
 

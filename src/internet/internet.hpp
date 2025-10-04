@@ -6,7 +6,6 @@
 #pragma once
 
 #include <vector>
-#include "messages/confirmedMessage.hpp"
 #include "reciepient.hpp"
 
 // Check, if need internet library
@@ -18,13 +17,10 @@ class Internet {
  private:
     // Getting part
     NET_DatagramSocket* gettingSocket;
-    NET_Datagram* recievedDatagram;
     // Check timer
     static const timer messageGetTimeout = 5000;  // Time after which connection is considered lost
     timer needDisconect = 0;                      // Time, after which connection will be recognized as disconected
-    // Array of indexes of last getted messages
-    IndexesArray<10> getIndexes;
-    //bool disconnected = false;
+    //bool disconnected = false;  // ! Need to implement system
 
     // Special addresses
     char localhost[16];  // Address of current machine
@@ -36,9 +32,6 @@ class Internet {
     // Reciepients
     std::vector<Reciepient> reciepients;
 
- protected:
-    //
-
  public:
     Internet();
     ~Internet();
@@ -48,9 +41,6 @@ class Internet {
     void openClient();
     void close();
     void disconnect();
-
-    // Connectinf part
-    void connectTo();  // ! arguments
 
     // Sending data to all reciepients, without applience
     template <typename ...Args>
@@ -68,7 +58,7 @@ class Internet {
     void checkResendMessages();
 
     // Getting part
-    GetPacket getNewMessages();  // ! way it work
+    NET_Datagram* getNewMessages();  // ! way it work
 };
 
 extern Internet internet;
@@ -78,10 +68,10 @@ extern Internet internet;
 template <typename ...Args>
 void Internet::sendAll(ConnectionCode _code, const Args ...args) {
     // Creating message
-    Message message(_code, args...);
+    Message message(Uint8(_code), args...);
     // Sending it to all
     for (int i=0; i < reciepients.size(); ++i) {
-        reciepients[i].sendUnconfirmed(message);
+        reciepients[i].sendUnconfirmed(gettingSocket, message);
     }
 }
 
@@ -97,7 +87,7 @@ void Internet::sendAllConfirmed(ConnectionCode _code, const Args ...args) {
 
 template <typename ...Args>
 void Internet::sendBroadcast(ConnectionCode _code, const Args ...args) {
-    broadcast.send(gettingSocket, Message(_code, args));
+    broadcast.send(gettingSocket, Message(_code, args...));
 }
 
 #endif  // (USE_SDL_NET)

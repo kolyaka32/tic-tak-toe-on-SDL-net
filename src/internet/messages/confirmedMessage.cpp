@@ -24,7 +24,9 @@ bool ConfirmedMessage::isNeedResend() {
     if (getTime() > nextResend) {
         nextResend = getTime() + messageResendTimeout;
         logAdditional("Resending packet with code: %u, index: %u", getData()[0], messageIndex);
+        return true;
     }
+    return false;
 }
 
 bool ConfirmedMessage::applyMessage(Uint8 _index) const {

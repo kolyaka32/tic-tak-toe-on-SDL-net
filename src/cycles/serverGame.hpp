@@ -6,23 +6,21 @@
 #pragma once
 
 #include "internetCycle.hpp"
-#include "../internet/gameConnection.hpp"
 #include "../game/menu/selectingMenu.hpp"
 
 
 // Game cycle with game part of server
 class ServerGameCycle : public InternetCycle {
  protected:
-    GameConnection connection;
     SelectingMenu menu;
 
     // Main run functions
     bool inputMouseDown() override;
     void inputKeys(SDL_Keycode key) override;
     void inputMouseWheel(float _wheelY) override;
-    void update() override;
+    void getInternetPacket(GetPacket& packet) override;
     void draw() const override;
 
  public:
-    explicit ServerGameCycle(Window& window, const Connection& server);
+    ServerGameCycle(Window& window);
 };

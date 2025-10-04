@@ -22,6 +22,7 @@ class GetPacket {
 
  public:
     explicit GetPacket(NET_Datagram* datagramm);
+    ~GetPacket();
     bool isBytesAvaliable(int bytes);
     // Functions for get data from message by order
     template <typename T>
@@ -36,24 +37,24 @@ class GetPacket {
 template <typename T>
 T GetPacket::getData() {
     #if (CHECK_CORRECTION)
-    if (offset + sizeof(T) > size) {
+    if (offset + sizeof(T) > datagram->buflen) {
         throw "Can't read data - not enogh length";
     }
     #endif
 
     // Moving caret for reading next object correct
     offset += sizeof(T);
-    return swapLE<T>((T)(*(data + offset - sizeof(T))));
+    return swapLE<T>((T)(*(datagram->buf + offset - sizeof(T))));
 }
 
 template <typename T>
 T GetPacket::getData(int _offset) {
     #if (CHECK_CORRECTION)
-    if (_offset + sizeof(T) > size) {
+    if (_offset + sizeof(T) > datagram->buflen) {
         throw "Can't read data - not enogh length";
     }
     #endif
-    return swapLE<T>((T)(*(data + _offset)));
+    return swapLE<T>((T)(*(datagram->buf + _offset)));
 }
 
 #endif  // (USE_SDL_NET)

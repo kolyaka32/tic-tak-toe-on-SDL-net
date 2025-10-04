@@ -8,17 +8,20 @@
 #if (USE_SDL_NET)
 
 
-GetPacket::GetPacket(NET_Datagram* datagramm) {
-    data = datagramm->buf;
-    size = datagramm->buflen;
+GetPacket::GetPacket(NET_Datagram* _datagram)
+: datagram(_datagram) {}
+
+GetPacket::~GetPacket() {
+    // Clear rest packet
+    NET_DestroyDatagram(datagram);  // ! Check on correct use
 }
 
 bool GetPacket::isBytesAvaliable(int bytes) {
-    return size >= bytes;
+    return datagram->buflen >= bytes;
 }
 
 const void* GetPacket::getPointer() const {
-    return data;
+    return datagram->buf;
 }
 
 #endif  // (USE_SDL_NET)

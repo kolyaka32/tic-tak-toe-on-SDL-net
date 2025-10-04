@@ -36,3 +36,27 @@ bool InternetCycle::inputMouseDown() {
     }
     return false;
 }
+
+void InternetCycle::update() {
+    if (internet.checkStatus()) {
+        disconnectedBox.activate();
+    }
+    internet.checkApplyMessages();
+    internet.checkResendMessages();
+    // Getting messages
+    while (NET_Datagram* datagramm = internet.getNewMessages()) {
+        GetPacket packet(datagramm);
+        getInternetPacket(packet);
+    }
+}
+
+void InternetCycle::getInternetPacket(GetPacket& packet) {
+    switch (ConnectionCode(packet.getData<Uint8>())) {
+    case ConnectionCode::Quit:
+        termianatedBox.activate();
+        break;
+
+    default:
+        break;
+    }
+}

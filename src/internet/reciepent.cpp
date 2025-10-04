@@ -25,16 +25,36 @@ void Reciepient::checkNeedApplyConnection(NET_DatagramSocket* _sock) {
     }
 }
 
-void Reciepient::sendConfirmed(NET_DatagramSocket* _sock, const ConfirmedMessage _message) {
+void Reciepient::sendConfirmed(NET_DatagramSocket* _sock, const ConfirmedMessage& _message) {
     // Firstly sending it
     sendUnconfirmed(_sock, _message);
     // Adding to list to check status
     unconfirmedMessages.push_back(_message);
 }
 
-void Reciepient::sendUnconfirmed(NET_DatagramSocket* _sock, const Message _message) {
+void Reciepient::sendUnconfirmed(NET_DatagramSocket* _sock, const Message& _message) {
     // Sending it
     dest.send(_sock, _message);
     // Updating send timer
     needResendApplyConnection = getTime() + messageApplyTimeout;
+}
+
+bool Reciepient::isAddress(const Destination& _dest) {
+    return dest == _dest;
+}
+
+void Reciepient::applyMessage(Uint8 index) {
+    // Find that message
+    // !
+    /*for (int i=0; i < unconfirmedMessages.size(); ++i) {
+                if (unconfirmedMessages[i]->applyMessage(index)) {
+                    delete unconfirmedMessages[i];
+                    unconfirmedMessages.erase(unconfirmedMessages.begin() + i);
+                    break;
+                }
+            }*/
+}
+
+bool Reciepient::checkIndexUniqness(Uint8 _index) {
+    return getIndexes.isUnique(_index);
 }

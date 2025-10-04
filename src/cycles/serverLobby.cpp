@@ -26,7 +26,7 @@ hideAddressText(window, 0.5, 0.5, {"Hide address", "Скрыть адресс", 
     }
 
     // Getting string with full address of current app
-    snprintf(currentAddress, sizeof(currentAddress), "%s:%u", server.getLocalIP(), server.getPort());
+    snprintf(currentAddress, sizeof(currentAddress), "%s:%u", server.getLocalIP(), server.getPort());  // !
 
     // Setting showing/hidding address text
     if (showAddress) {
@@ -80,8 +80,11 @@ void ServerLobbyCycle::update() {
         // Sending approving code
         server.connectToLastMessage();
 
+        // Sending applying initialsiation message
+        internet.sendAllConfirmed(ConnectionCode::Init);
+
         // Starting game (as server)
-        runCycle<ServerGameCycle, Connection&>(window, server);
+        runCycle<ServerGameCycle>(window);
         // Exiting to menu after game
         stop();
         return;

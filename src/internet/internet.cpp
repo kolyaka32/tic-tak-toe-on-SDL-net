@@ -7,8 +7,6 @@
 #include "internet.hpp"
 
 
-
-
 Internet::Internet()
 : localhost(),  // Initialasing from getBroadcastAddress()
 broadcast(getBroadcastAddress(), broadcastPort) {
@@ -90,7 +88,7 @@ void Internet::close() {
 void Internet::disconnect() {
     // Sending message with quiting connection
     for (int i=0; i < reciepients.size(); ++i) {
-        reciepients[i].sendUnconfirmed(gettingSocket, Message{ConnectionCode::Quit});
+        reciepients[i].sendUnconfirmed(gettingSocket, Message{Uint8(ConnectionCode::Quit)});
     }
     logAdditional("Disconnecting from games");
 }
@@ -111,3 +109,56 @@ void Internet::checkResendMessages() {
         reciepients[i].checkResending(gettingSocket);
     }
 }
+
+NET_Datagram* Internet::getNewMessages() {
+    // Get message
+    NET_Datagram *datagram = nullptr;
+    if (NET_ReceiveDatagram(gettingSocket, &datagram) && datagram && datagram->buflen > 1) {
+        // Get message source
+        Reciepient* source = nullptr;
+        for (int i=0; i < reciepients.size(); ++i) {
+            if (reciepients[i].isAddress(Destination(datagram->addr, datagram->port))) {
+                source = &reciepients[i];
+                break;
+            }
+        }
+        // Update wait timer
+        needDisconect = getTime() + messageGetTimeout;
+
+        if (source) {
+            // Checking get message on special types
+            switch ((ConnectionCode)datagram->buf[0]) {
+            case ConnectionCode::Confirm:
+                // Applying in sended array, that message was delivered
+                source->applyMessage(datagram->buf[2]);
+                break;
+
+            case ConnectionCode::Null:
+            case ConnectionCode::ApplyConnection:
+                // Can be addtiotion to apply every connecrtion
+                break;
+
+            default:
+                // Sending message, applying that message was get
+                source->sendConfirmed(gettingSocket, ConfirmedMessage{ConnectionCode::Confirm, datagram->buf[1]});
+                // Check, if already get it
+                if (source->checkIndexUniqness(datagram->buf[1])) {
+                    logAdditional("Get data with code: %u, index: %u", datagram->buf[0], datagram->buf[1]);
+                    // In other cases - external updation
+                    return datagram;
+                }
+            }
+            return nullptr;
+        } else {
+            // Check on new connection
+            if (datagram->buf[0] == (Uint8)ConnectionCode::Init && reciepients.size() < MAX_CONNECTIONS) {
+                // Add new connection
+                reciepients.push_back(Reciepient(datagram->addr, datagram->port));
+            }
+        }
+    }
+    return nullptr;
+}
+
+// Object itself, no matter, where initialise
+Internet internet{};

@@ -6,6 +6,7 @@
 #pragma once
 
 #include "gameCycle.hpp"
+#include "../internet/internet.hpp"
 #include "../game/internet/connectionLostBox.hpp"
 #include "../game/internet/terminatedBox.hpp"
 
@@ -21,6 +22,8 @@ protected:
     GUI::HighlightedStaticText looseText;
 
     bool inputMouseDown() override;
+    void update() override;
+    virtual void getInternetPacket(GetPacket& packet);
 
 public:
     InternetCycle(Window& window);
