@@ -12,6 +12,10 @@
 
 
 // Initialasing global objects in correct order
+// Logger
+std::ofstream logFile{"log.txt"};
+
+// All side libries
 Libraries libraries{};
 
 #if (PRELOAD_DATA)
