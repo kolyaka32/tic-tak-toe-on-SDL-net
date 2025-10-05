@@ -7,8 +7,6 @@
 
 #include "gameCycle.hpp"
 #include "../internet/internet.hpp"
-#include "../game/internet/connectionLostBox.hpp"
-#include "../game/internet/terminatedBox.hpp"
 
 
 // Cycle with game part of internet connection
@@ -16,8 +14,8 @@ class InternetCycle : public GameCycle {
 protected:
     // Graphical part
     GUI::StaticText playersTurnsTexts[2];
-    ConnectionLostBox disconnectedBox;
-    TerminatedBox termianatedBox;
+    GUI::SelectBox<2> disconnectedBox;
+    GUI::SelectBox<1> termianatedBox;
     GUI::HighlightedStaticText winText;
     GUI::HighlightedStaticText looseText;
 

@@ -7,7 +7,6 @@
 
 #include "../define.hpp"
 
-// Check, if need internet library
 #if (USE_SDL_NET)
 
 #include "messages/message.hpp"

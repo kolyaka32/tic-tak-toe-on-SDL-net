@@ -5,6 +5,8 @@
 
 #include "destination.hpp"
 
+#if (USE_SDL_NET)
+
 
 Destination::Destination(NET_Address* _address, Uint16 _port)
 : address() {}
@@ -18,3 +20,5 @@ bool Destination::operator==(const Destination& b) {
 void Destination::send(NET_DatagramSocket *_sock, const Message& _message) const {
     NET_SendDatagram(_sock, address, port, _message.getData(), _message.getLength());
 }
+
+#endif  // (USE_SDL_NET)

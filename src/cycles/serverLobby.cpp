@@ -26,7 +26,7 @@ hideAddressText(window, 0.5, 0.5, {"Hide address", "Скрыть адресс", 
     }
 
     // Getting string with full address of current app
-    snprintf(currentAddress, sizeof(currentAddress), "%s:%u", server.getLocalIP(), server.getPort());  // !
+    //snprintf(currentAddress, sizeof(currentAddress), "%s:%u", server.getLocalIP(), server.getPort());  // !
 
     // Setting showing/hidding address text
     if (showAddress) {
@@ -75,7 +75,7 @@ void ServerLobbyCycle::update() {
     copiedInfoBox.update();
 
     // Getting internet packets
-    switch (server.getCode()) {
+    /*switch (server.getCode()) {
     case ConnectionCode::Init:
         // Sending approving code
         server.connectToLastMessage();
@@ -91,7 +91,7 @@ void ServerLobbyCycle::update() {
 
     default:
         break;
-    }
+    }*/
 }
 
 void ServerLobbyCycle::draw() const {

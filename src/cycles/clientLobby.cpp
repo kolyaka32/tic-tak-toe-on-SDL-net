@@ -7,6 +7,10 @@
 #include "clientGame.hpp"
 
 
+// Static objects for save inputted parameters
+char ClientLobbyCycle::baseIP[15] = "127.0.0.1";
+char ClientLobbyCycle::basePort[6] = "8000";
+
 ClientLobbyCycle::ClientLobbyCycle(Window& _window)
 : BaseCycle(_window),
 enterIPText(window, 0.5, 0.2, {"Enter IP:", "Введите IP:", "Geben Sie die IP ein:", "Увядзіце IP:"}, Height::SubTitle),
@@ -57,7 +61,7 @@ bool ClientLobbyCycle::inputMouseDown() {
         memcpy(baseIP, enterIPField.getString(), sizeof(baseIP));
         memcpy(basePort, portTextCorrected, sizeof(basePort));
         // Trying connect at specified address
-        client.tryConnect(enterIPField.getString(), std::stoi(portTextCorrected));  // !
+        // client.tryConnect(enterIPField.getString(), std::stoi(portTextCorrected));  // !
         return true;
     }
     return false;
@@ -83,7 +87,7 @@ void ClientLobbyCycle::update() {
     enterPortField.update(mouse.getX());
 
     // Getting internet data
-    switch (client.getCode()) {
+    /*switch (client.getCode()) {  // !
     case ConnectionCode::Init:
         // Settings options to this connection
         client.connectToLastMessage();
@@ -95,7 +99,7 @@ void ClientLobbyCycle::update() {
 
     default:
         return;
-    }
+    }*/
 }
 
 void ClientLobbyCycle::inputText(const char* text) {

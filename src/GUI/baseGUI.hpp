@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <array>
 #include "../data/app.hpp"
 
 
@@ -245,6 +246,32 @@ namespace GUI {
         void update();
         void reset();
     };
+
+
+    // Class for box with message and actions with it
+    template <unsigned buttonCount>
+    class SelectBox : public Template {
+     private:
+        // Flag of showing
+        bool active = false;
+
+        // Background plate for better visability
+        const GUI::RoundedBackplate background;
+        // Main text - title
+        const GUI::HighlightedStaticText mainText;
+        // Select variants
+        std::array<TextButton, buttonCount> buttons;
+
+     public:
+        SelectBox(const Window& window, const LanguagedText title,
+            const std::array<TextButton, buttonCount> buttonTexts);
+        int click(const Mouse mouse);
+        void activate();
+        void reset();
+        bool isActive() const;
+        void blit() const override;
+    };
+    
     #endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)
 
 }  // namespace GUI

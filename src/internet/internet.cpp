@@ -6,6 +6,8 @@
 #include <cstdio>
 #include "internet.hpp"
 
+#if (USE_SDL_NET)
+
 
 Internet::Internet()
 : localhost(),  // Initialasing from getBroadcastAddress()
@@ -160,5 +162,4 @@ NET_Datagram* Internet::getNewMessages() {
     return nullptr;
 }
 
-// Object itself, no matter, where initialise
-Internet internet{};
+#endif  // (USE_SDL_NET)

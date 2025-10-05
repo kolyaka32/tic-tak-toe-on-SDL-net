@@ -5,6 +5,8 @@
 
 #include "reciepient.hpp"
 
+#if (USE_SDL_NET)
+
 
 Reciepient::Reciepient(NET_Address* _address, Uint16 _port)
 : dest(_address, _port) {}
@@ -58,3 +60,5 @@ void Reciepient::applyMessage(Uint8 index) {
 bool Reciepient::checkIndexUniqness(Uint8 _index) {
     return getIndexes.isUnique(_index);
 }
+
+#endif  // (USE_SDL_NET)

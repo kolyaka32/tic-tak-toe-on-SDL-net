@@ -3,6 +3,7 @@
  * <nik.kazankov.05@mail.ru>
  */
 
+#include <array>
 #include "internetCycle.hpp"
 
 
@@ -12,8 +13,11 @@ playersTurnsTexts {
     {window, 0.5, 0.05, {"Your turn", "Ваш ход", "Sie spielen aus", "Ваш ход"}},
     {window, 0.5, 0.05, {"Wait", "Ожидайте", "Erwartet", "Чакаць"}},
 },
-disconnectedBox(window),
-termianatedBox(window),
+disconnectedBox(window, LanguagedText{"Connection lost", "Соединение потярено", "Verbindung verloren", "Злучэнне страчана"},
+    std::array<GUI::TextButton, 2>{GUI::TextButton{window, 0.3, 0.33, {"Reconnect", "Переприсоединится", "Wiederverbinden", "Паўторна падлучыцца"}},
+    GUI::TextButton{GUI::TextButton{window, 0.3, 0.67, {"Close", "Закрыть", "Schließen", "Зачыніць"}}}}),
+termianatedBox(window, LanguagedText{"Connection terminated", "Соединение разорвано", "Verbindung unterbrochen", "Злучэнне разарвана"},
+    std::array<GUI::TextButton, 1>{{GUI::TextButton{window, 0.5, 0.5, LanguagedText{"Close", "Закрыть", "Schließen", "Зачыніць"}}}}),
 looseText(window, 0.5, 0.05, {"You loose", "Вы проиграли", "Sie haben verloren", "Вы прайгралі"}, 1),
 winText(window, 0.5, 0.05, {"Win", "Победа", "Sieg", "Перамога"}, 1) {
     // Resetting flag
