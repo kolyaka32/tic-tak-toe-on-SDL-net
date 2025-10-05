@@ -24,7 +24,14 @@ connectButton(window, 0.5, 0.9, {"Connect", "Присоединится", "Beitr
         stop();
         return;
     }
+    // Starting random getting socket
+    internet.openClient();
+
     logAdditional("Start client lobby cycle");
+}
+
+ClientLobbyCycle::~ClientLobbyCycle() {
+    internet.close();
 }
 
 bool ClientLobbyCycle::inputMouseDown() {

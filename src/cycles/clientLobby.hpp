@@ -32,7 +32,8 @@ class ClientLobbyCycle : public BaseCycle {
     void draw() const override;
 
  public:
-    explicit ClientLobbyCycle(Window& _window);
+    ClientLobbyCycle(Window& _window);
+    ~ClientLobbyCycle();
     static void writeBaseIP(const char* text);
     static const char* getBaseIP();
     static void writeBasePort(const char* text);

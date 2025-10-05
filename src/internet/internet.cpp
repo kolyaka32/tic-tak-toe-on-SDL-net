@@ -12,7 +12,7 @@
 Internet::Internet()
 : localhost(),  // Initialasing from getBroadcastAddress()
 broadcast(getBroadcastAddress(), broadcastPort) {
-    
+    logAdditional("Internet created correctly");
 }
 
 Internet::~Internet() {}
@@ -75,16 +75,37 @@ NET_Address* Internet::getBroadcastAddress() {
 }
 
 
-void Internet::openServer() {
-    // Creating concrete socket at specified or random port
+Uint16 Internet::openServer() {
+    // Creating concrete socket at specified or random port, if busy
+    // Setting basic create port
+    Uint16 currentPort = broadcastPort;
+
+    // Finding avalialble port
+    SDL_srand(0);
+    while ((gettingSocket = NET_CreateDatagramSocket(nullptr, currentPort)) == nullptr) {
+        // Creating another random port
+        currentPort = SDL_rand(10000);
+    }
+
+    #if (CHECK_CORRECTION)
+    // Adding some packet loss for better testing
+    NET_SimulateDatagramPacketLoss(gettingSocket, CONNECTION_LOST_PERCENT);
+    #endif
+
+    logAdditional("Server created, address: %s, port: %u", localhost, currentPort);
+    return currentPort;
 }
 
 void Internet::openClient() {
     // Creating socket at random port
+    gettingSocket = NET_CreateDatagramSocket(nullptr, 0);
+    logAdditional("Client created, address: %s", localhost);
 }
 
 void Internet::close() {
     // Destrying getting socket
+    NET_DestroyDatagramSocket(gettingSocket);
+    logAdditional("Close datagramm socket");
 }
 
 void Internet::disconnect() {
@@ -93,6 +114,10 @@ void Internet::disconnect() {
         reciepients[i].sendUnconfirmed(gettingSocket, Message{Uint8(ConnectionCode::Quit)});
     }
     logAdditional("Disconnecting from games");
+}
+
+const char* Internet::getLocalhost() {
+    return localhost;
 }
 
 

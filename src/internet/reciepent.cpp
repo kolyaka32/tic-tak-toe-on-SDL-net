@@ -45,16 +45,15 @@ bool Reciepient::isAddress(const Destination& _dest) {
     return dest == _dest;
 }
 
-void Reciepient::applyMessage(Uint8 index) {
+void Reciepient::applyMessage(Uint8 _index) {
     // Find that message
-    // !
-    /*for (int i=0; i < unconfirmedMessages.size(); ++i) {
-                if (unconfirmedMessages[i]->applyMessage(index)) {
-                    delete unconfirmedMessages[i];
-                    unconfirmedMessages.erase(unconfirmedMessages.begin() + i);
-                    break;
-                }
-            }*/
+    for (int i=0; i < unconfirmedMessages.size(); ++i) {
+        if (unconfirmedMessages[i].applyMessage(_index)) {
+            // Delete it from list
+            unconfirmedMessages.erase(unconfirmedMessages.begin() + i);
+            break;
+        }
+    }
 }
 
 bool Reciepient::checkIndexUniqness(Uint8 _index) {

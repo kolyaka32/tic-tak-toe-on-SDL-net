@@ -37,10 +37,11 @@ class Internet {
     ~Internet();
 
     // Init part
-    void openServer();
+    Uint16 openServer();
     void openClient();
     void close();
     void disconnect();
+    const char* getLocalhost();
 
     // Sending data to all reciepients, without applience
     template <typename ...Args>
@@ -58,7 +59,7 @@ class Internet {
     void checkResendMessages();
 
     // Getting part
-    NET_Datagram* getNewMessages();  // ! way it work
+    NET_Datagram* getNewMessages();
 };
 
 extern Internet internet;

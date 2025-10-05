@@ -26,7 +26,8 @@ hideAddressText(window, 0.5, 0.5, {"Hide address", "Скрыть адресс", 
     }
 
     // Getting string with full address of current app
-    //snprintf(currentAddress, sizeof(currentAddress), "%s:%u", server.getLocalIP(), server.getPort());  // !
+    Uint16 port = internet.openServer();
+    snprintf(currentAddress, sizeof(currentAddress), "%s:%u", internet.getLocalhost(), port);
 
     // Setting showing/hidding address text
     if (showAddress) {
@@ -35,6 +36,11 @@ hideAddressText(window, 0.5, 0.5, {"Hide address", "Скрыть адресс", 
         addressText.setValues("********");
     }
     logAdditional("Start server lobby cycle");
+}
+
+ServerLobbyCycle::~ServerLobbyCycle() {
+    // Clear getting socket
+    internet.close();
 }
 
 bool ServerLobbyCycle::inputMouseDown() {
