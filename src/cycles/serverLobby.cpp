@@ -80,24 +80,27 @@ void ServerLobbyCycle::update() {
     // Update infobox
     copiedInfoBox.update();
 
-    // Getting internet packets
-    /*switch (server.getCode()) {
-    case ConnectionCode::Init:
-        // Sending approving code
-        server.connectToLastMessage();
+    // Getting internet data
+    while (NET_Datagram* message = internet.getNewMessages()) {
+        switch (ConnectionCode(message->buf[0])) {
+        case ConnectionCode::Init:
+            // Sending approving code
+            internet.connectTo(message->addr, message->port);
 
-        // Sending applying initialsiation message
-        internet.sendAllConfirmed(ConnectionCode::Init);
+            // Sending applying initialsiation message
+            internet.sendAllConfirmed(ConnectionCode::Init);
 
-        // Starting game (as server)
-        runCycle<ServerGameCycle>(window);
-        // Exiting to menu after game
-        stop();
-        return;
+            // Starting game (as server)
+            runCycle<ServerGameCycle>(window);
+            // Exiting to menu after game
+            stop();
+            return;
 
-    default:
-        break;
-    }*/
+        default:
+            return;
+        }
+        NET_DestroyDatagram(message);
+    }
 }
 
 void ServerLobbyCycle::draw() const {

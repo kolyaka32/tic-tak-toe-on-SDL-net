@@ -60,4 +60,8 @@ bool Reciepient::checkIndexUniqness(Uint8 _index) {
     return getIndexes.isUnique(_index);
 }
 
+const char* Reciepient::getName() const {
+    return dest.getName();
+}
+
 #endif  // (USE_SDL_NET)

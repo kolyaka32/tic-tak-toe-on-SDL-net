@@ -42,6 +42,7 @@ class Reciepient {
     bool isAddress(const Destination& dest);
     void applyMessage(Uint8 index);
     bool checkIndexUniqness(Uint8 index);
+    const char* getName() const;
 };
 
 

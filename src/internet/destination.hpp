@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "../define.hpp"
+#include "../data/logger.hpp"
 
 #if (USE_SDL_NET)
 
@@ -21,9 +21,9 @@ class Destination {
 
  public:
     Destination(NET_Address* address, Uint16 port);
-    ~Destination();
     bool operator==(const Destination& b);
     void send(NET_DatagramSocket* sock, const Message& message) const;
+    const char* getName() const;
 };
 
 #endif  // (USE_SDL_NET)

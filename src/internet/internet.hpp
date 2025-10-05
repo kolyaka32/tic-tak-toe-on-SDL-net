@@ -39,10 +39,14 @@ class Internet {
     // Init part
     Uint16 openServer();
     void openClient();
+    void connectTo(NET_Address* address, Uint16 port);
     void close();
     void disconnect();
     const char* getLocalhost();
 
+    // Sending data to specialised user, without applience
+    template <typename ...Args>
+    void sendFirst(const char* address, Uint16 port, ConnectionCode code, const Args ...args);
     // Sending data to all reciepients, without applience
     template <typename ...Args>
     void sendAll(ConnectionCode code, const Args ...args);
@@ -62,10 +66,27 @@ class Internet {
     NET_Datagram* getNewMessages();
 };
 
+// Global system to send/recieve messages throw internet
 extern Internet internet;
 
 
 // Template function realisations
+template <typename ...Args>
+void Internet::sendFirst(const char* _address, Uint16 _port, ConnectionCode _code, const Args ...args) {
+    // Creating send destination
+    NET_Address* address = NET_ResolveHostname(_address);
+    Destination dest(address, _port);
+    // Creating message
+    Message message(Uint8(_code), args...);
+    // Waiting until hostname resolved
+    if (NET_WaitUntilResolved(address, 10) == NET_SUCCESS) {
+        // Sending it here
+        dest.send(gettingSocket, message);
+    }
+    // Clearing address
+    NET_UnrefAddress(address);
+}
+
 template <typename ...Args>
 void Internet::sendAll(ConnectionCode _code, const Args ...args) {
     // Creating message

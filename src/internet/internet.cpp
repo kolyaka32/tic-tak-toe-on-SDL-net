@@ -102,6 +102,11 @@ void Internet::openClient() {
     logAdditional("Client created, address: %s", localhost);
 }
 
+void Internet::connectTo(NET_Address* _address, Uint16 _port) {
+    // Add new connection
+    reciepients.push_back(Reciepient(_address, _port));
+}
+
 void Internet::close() {
     // Destrying getting socket
     NET_DestroyDatagramSocket(gettingSocket);
@@ -153,6 +158,8 @@ NET_Datagram* Internet::getNewMessages() {
         needDisconect = getTime() + messageGetTimeout;
 
         if (source) {
+            // Logging get message
+            logAdditional("Get message from %s, type %u, size %u", source->getName(), datagram->buf[0], datagram->buflen);
             // Checking get message on special types
             switch ((ConnectionCode)datagram->buf[0]) {
             case ConnectionCode::Confirm:
@@ -177,11 +184,10 @@ NET_Datagram* Internet::getNewMessages() {
             }
             return nullptr;
         } else {
-            // Check on new connection
-            if (datagram->buf[0] == (Uint8)ConnectionCode::Init && reciepients.size() < MAX_CONNECTIONS) {
-                // Add new connection
-                reciepients.push_back(Reciepient(datagram->addr, datagram->port));
-            }
+            // Logging get message
+            logAdditional("Get unknown message, type %u, size %u", datagram->buf[0], datagram->buflen);
+            // Special action, if address is unknown
+            return datagram;
         }
     }
     return nullptr;

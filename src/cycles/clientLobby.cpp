@@ -68,7 +68,7 @@ bool ClientLobbyCycle::inputMouseDown() {
         memcpy(baseIP, enterIPField.getString(), sizeof(baseIP));
         memcpy(basePort, portTextCorrected, sizeof(basePort));
         // Trying connect at specified address
-        // client.tryConnect(enterIPField.getString(), std::stoi(portTextCorrected));  // !
+        internet.sendFirst(enterIPField.getString(), std::stoi(portTextCorrected), ConnectionCode::Init, 1);
         return true;
     }
     return false;
@@ -94,19 +94,21 @@ void ClientLobbyCycle::update() {
     enterPortField.update(mouse.getX());
 
     // Getting internet data
-    /*switch (client.getCode()) {  // !
-    case ConnectionCode::Init:
-        // Settings options to this connection
-        client.connectToLastMessage();
-        // Starting game
-        runCycle<ClientGameCycle>(window);
-        // Exiting to menu after game
-        stop();
-        return;
+    while (auto message = internet.getNewMessages()) {
+        switch (ConnectionCode(message->buf[0])) {
+        case ConnectionCode::Init:
+            // Settings options to this connection
+            internet.connectTo(message->addr, message->port);
+            // Starting game
+            runCycle<ClientGameCycle>(window);
+            // Exiting to menu after game
+            stop();
+            return;
 
-    default:
-        return;
-    }*/
+        default:
+            return;
+        }
+    }
 }
 
 void ClientLobbyCycle::inputText(const char* text) {
