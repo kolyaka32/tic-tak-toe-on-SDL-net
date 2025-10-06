@@ -30,7 +30,6 @@ class Reciepient {
 
  public:
     Reciepient(NET_Address* address, Uint16 port);
-    ~Reciepient();
 
     // Send part
     void sendConfirmed(NET_DatagramSocket* sock, const ConfirmedMessage& message);

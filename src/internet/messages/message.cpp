@@ -15,7 +15,7 @@ const Uint8* Message::getData() const {
 }
 
 size_t Message::getLength() const {
-    return currentPosition - data;
+    return size;
 }
 
 #endif  // (USE_SDL_NET)

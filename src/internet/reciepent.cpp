@@ -11,12 +11,10 @@
 Reciepient::Reciepient(NET_Address* _address, Uint16 _port)
 : dest(_address, _port) {}
 
-Reciepient::~Reciepient() {}
-
 void Reciepient::checkResending(NET_DatagramSocket *_sock) {
     for (int i=0; i < unconfirmedMessages.size(); ++i) {
         if (unconfirmedMessages[i].isNeedResend()) {
-            dest.send(_sock, unconfirmedMessages[i]);
+            sendUnconfirmed(_sock, unconfirmedMessages[i]);
         }
     }
 }
@@ -46,6 +44,9 @@ bool Reciepient::isAddress(const Destination& _dest) {
 }
 
 void Reciepient::applyMessage(Uint8 _index) {
+    // Appling getting message
+    logAdditional("Appling, that message with index %u was delivered", _index);
+
     // Find that message
     for (int i=0; i < unconfirmedMessages.size(); ++i) {
         if (unconfirmedMessages[i].applyMessage(_index)) {

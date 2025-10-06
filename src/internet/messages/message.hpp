@@ -16,7 +16,7 @@ class Message {
  private:
     static const int maxSize = 100;
     Uint8 data[maxSize];
-    Uint8* currentPosition = data;
+    unsigned size = 0;
 
  public:
     Message();
@@ -49,12 +49,12 @@ template <typename T>
 void Message::write(const T _object) {
     // Check on avaliable space
     #if (CHECK_CORRECTION)
-    if (currentPosition + sizeof(T) > data + maxSize) {
+    if (size + sizeof(T) > maxSize) {
         throw "Can't write data - not enogh size";
     }
     #endif
-    *currentPosition = swapLE<T>(_object);
-    currentPosition += sizeof(T);
+    *(data + size) = swapLE<T>(_object);
+    size += sizeof(T);
 }
 
 template<typename T>

@@ -15,8 +15,6 @@ broadcast(getBroadcastAddress(), broadcastPort) {
     logAdditional("Internet created correctly");
 }
 
-Internet::~Internet() {}
-
 void Internet::getLocalAddress() {
     // Getting local addresses
     int addressesNumber = 0;
@@ -105,6 +103,7 @@ void Internet::openClient() {
 void Internet::connectTo(NET_Address* _address, Uint16 _port) {
     // Add new connection
     reciepients.push_back(Reciepient(_address, _port));
+    logAdditional("Connecting to %s:%u", _address, _port);
 }
 
 void Internet::close() {
@@ -116,7 +115,7 @@ void Internet::close() {
 void Internet::disconnect() {
     // Sending message with quiting connection
     for (int i=0; i < reciepients.size(); ++i) {
-        reciepients[i].sendUnconfirmed(gettingSocket, Message{Uint8(ConnectionCode::Quit)});
+        reciepients[i].sendUnconfirmed(gettingSocket, Message{Uint8(ConnectionCode::Quit), 1});
     }
     logAdditional("Disconnecting from games");
 }
@@ -126,20 +125,20 @@ const char* Internet::getLocalhost() {
 }
 
 
-bool Internet::checkStatus() {
-    return (getTime() > needDisconect);
+void Internet::checkResendMessages() {
+    for (int i=0; i < reciepients.size(); ++i) {
+        reciepients[i].checkResending(gettingSocket);
+    }
 }
 
-void Internet::checkApplyMessages() {
+void Internet::checkNeedApplyConnection() {
     for (int i=0; i < reciepients.size(); ++i) {
         reciepients[i].checkNeedApplyConnection(gettingSocket);
     }
 }
 
-void Internet::checkResendMessages() {
-    for (int i=0; i < reciepients.size(); ++i) {
-        reciepients[i].checkResending(gettingSocket);
-    }
+bool Internet::checkStatus() {
+    return (getTime() > needDisconect);
 }
 
 NET_Datagram* Internet::getNewMessages() {
@@ -159,22 +158,34 @@ NET_Datagram* Internet::getNewMessages() {
 
         if (source) {
             // Logging get message
-            logAdditional("Get message from %s, type %u, size %u", source->getName(), datagram->buf[0], datagram->buflen);
+            #if (CHECK_ALL)
+            char buffer[100];
+            for (int i=0; i < datagram->buflen; ++i) {
+                buffer[i] = char(datagram->buf[i] + '0');
+            }
+            buffer[datagram->buflen] = '\0';
+            logAdditional("Get message from %s, size %u: %s", source->getName(), datagram->buflen, buffer);
+            #endif
+
             // Checking get message on special types
             switch ((ConnectionCode)datagram->buf[0]) {
             case ConnectionCode::Confirm:
                 // Applying in sended array, that message was delivered
-                source->applyMessage(datagram->buf[2]);
+                source->applyMessage(datagram->buf[1]);
                 break;
 
             case ConnectionCode::Null:
             case ConnectionCode::ApplyConnection:
-                // Can be addtiotion to apply every connecrtion
+                // Can be addtiotion to apply every connection
+
+                // Sending message, applying that message was get
+                source->sendUnconfirmed(gettingSocket, Message{Uint8(ConnectionCode::Confirm), datagram->buf[1]});
                 break;
 
             default:
                 // Sending message, applying that message was get
-                source->sendConfirmed(gettingSocket, ConfirmedMessage{ConnectionCode::Confirm, datagram->buf[1]});
+                source->sendUnconfirmed(gettingSocket, Message{Uint8(ConnectionCode::Confirm), datagram->buf[1]});
+
                 // Check, if already get it
                 if (source->checkIndexUniqness(datagram->buf[1])) {
                     logAdditional("Get data with code: %u, index: %u", datagram->buf[0], datagram->buf[1]);

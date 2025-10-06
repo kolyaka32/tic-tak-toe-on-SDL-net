@@ -34,7 +34,6 @@ class Internet {
 
  public:
     Internet();
-    ~Internet();
 
     // Init part
     Uint16 openServer();
@@ -58,9 +57,9 @@ class Internet {
     void sendBroadcast(ConnectionCode code, const Args ...args);
 
     // Control part
-    bool checkStatus();  // Return true on disconect
-    void checkApplyMessages();
     void checkResendMessages();
+    void checkNeedApplyConnection();
+    bool checkStatus();  // Return true on disconect
 
     // Getting part
     NET_Datagram* getNewMessages();
@@ -101,8 +100,8 @@ template <typename ...Args>
 void Internet::sendAllConfirmed(ConnectionCode _code, const Args ...args) {
     // Creating message
     ConfirmedMessage message(_code, args...);
+    // Sending it to all reciepients
     for (int i=0; i < reciepients.size(); ++i) {
-        // Sending it
         reciepients[i].sendConfirmed(gettingSocket, message);
     }
 }

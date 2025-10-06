@@ -42,15 +42,20 @@ bool InternetCycle::inputMouseDown() {
 }
 
 void InternetCycle::update() {
-    if (internet.checkStatus()) {
-        disconnectedBox.activate();
-    }
-    internet.checkApplyMessages();
-    internet.checkResendMessages();
     // Getting messages
     while (NET_Datagram* datagramm = internet.getNewMessages()) {
         GetPacket packet(datagramm);
         getInternetPacket(packet);
+    }
+    // Checking applied messages
+    internet.checkResendMessages();
+
+    // Appling status
+    internet.checkNeedApplyConnection();
+
+    // Checking status
+    if (internet.checkStatus()) {
+        disconnectedBox.activate();
     }
 }
 

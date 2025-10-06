@@ -17,8 +17,15 @@ bool Destination::operator==(const Destination& b) {
 }
 
 void Destination::send(NET_DatagramSocket *_sock, const Message& _message) const {
-    logAdditional("Sending packet to %s, with code %u, length %u", NET_GetAddressString(address),
-        _message.getData()[0], _message.getLength());
+    #if (CHECK_ALL)
+    char buffer[100];
+    for (int i=0; i < _message.getLength(); ++i) {
+        buffer[i] = char(_message.getData()[i] + '0');
+    }
+    buffer[_message.getLength()] = '\0';
+    logAdditional("Sending packet to %s:%u, length %u: %s", NET_GetAddressString(address),
+        port, _message.getLength(), buffer);
+    #endif
     NET_SendDatagram(_sock, address, port, _message.getData(), _message.getLength());
 }
 

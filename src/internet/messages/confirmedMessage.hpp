@@ -32,7 +32,7 @@ class ConfirmedMessage : public Message {
 
 template <typename ...Args>
 ConfirmedMessage::ConfirmedMessage(ConnectionCode _code, const Args ...args)
-: Message(Uint8(_code), messageIndex, args...),
+: Message(Uint8(_code), globalMessageIndex, args...),
 messageIndex(globalMessageIndex) {
     updateGlobalIndex();
 }
