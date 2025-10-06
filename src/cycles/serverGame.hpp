@@ -23,4 +23,5 @@ class ServerGameCycle : public InternetCycle {
 
  public:
     ServerGameCycle(Window& window);
+    ~ServerGameCycle();
 };

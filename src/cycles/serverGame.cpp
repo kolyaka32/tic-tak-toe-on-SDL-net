@@ -18,6 +18,11 @@ menu(_window) {
     logAdditional("Start server game cycle");
 }
 
+ServerGameCycle::~ServerGameCycle() {
+    // Sending message of disconect
+    internet.disconnect();
+}
+
 bool ServerGameCycle::inputMouseDown() {
     if (InternetCycle::inputMouseDown()) {
         return true;

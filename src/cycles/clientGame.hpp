@@ -20,5 +20,6 @@ class ClientGameCycle : public InternetCycle {
     void draw() const override;
 
  public:
-    explicit ClientGameCycle(Window& _window);
+    ClientGameCycle(Window& _window);
+    ~ClientGameCycle();
 };

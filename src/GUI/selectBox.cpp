@@ -14,7 +14,7 @@ GUI::SelectBox<Count>::SelectBox(const Window& _window, const LanguagedText _tit
 : Template(_window),
 buttons(_buttonTexts),
 mainText(_window, 0.5, 0.4, _title, 1, Height::SubTitle),
-background(_window, 0.5, 0.5, 0.8, 0.5, 5.0, 1.0) {}
+background(_window, 0.5, 0.5, 0.9, 0.4, 5.0, 1.0) {}
 
 template <unsigned Count>
 int GUI::SelectBox<Count>::click(const Mouse _mouse) {

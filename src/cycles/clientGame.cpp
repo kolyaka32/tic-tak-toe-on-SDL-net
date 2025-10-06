@@ -17,6 +17,11 @@ waitText(window, 0.5, 0.05, {"Wait start", "Ожидайте начала", "War
     logAdditional("Start client game cycle");
 }
 
+ClientGameCycle::~ClientGameCycle() {
+    // Sending message of disconect
+    internet.disconnect();
+}
+
 bool ClientGameCycle::inputMouseDown() {
     if (InternetCycle::inputMouseDown()) {
         return true;
