@@ -44,6 +44,10 @@ bool ClientGameCycle::inputMouseDown() {
 void ClientGameCycle::getInternetPacket(GetPacket& packet) {
     // Getting internet messages
     switch (ConnectionCode(packet.getData<Uint8>())) {
+    case ConnectionCode::Quit:
+        termianatedBox.activate();
+        break;
+
     case ConnectionCode::GameTurn:
         if (packet.isBytesAvaliable(3)) {
             field.clickClientOpponent(packet.getData<Uint8>(2));

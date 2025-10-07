@@ -81,6 +81,10 @@ void ServerGameCycle::inputMouseWheel(float _wheelY) {
 void ServerGameCycle::getInternetPacket(GetPacket& packet) {
     // Getting internet messages
     switch (ConnectionCode(packet.getData<Uint8>())) {
+    case ConnectionCode::Quit:
+        termianatedBox.activate();
+        break;
+
     case ConnectionCode::GameTurn:
         if (packet.isBytesAvaliable(3)) {
             // Making turn

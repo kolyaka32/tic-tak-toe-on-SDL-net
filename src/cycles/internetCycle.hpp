@@ -14,8 +14,8 @@ class InternetCycle : public GameCycle {
 protected:
     // Graphical part
     GUI::StaticText playersTurnsTexts[2];
-    GUI::SelectBox<2> disconnectedBox;
-    GUI::SelectBox<1> termianatedBox;
+    GUI::TwoOptionBox disconnectedBox;
+    GUI::OneOptionBox termianatedBox;
     GUI::HighlightedStaticText winText;
     GUI::HighlightedStaticText looseText;
 
