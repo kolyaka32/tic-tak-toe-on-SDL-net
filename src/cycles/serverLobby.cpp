@@ -20,14 +20,16 @@ hideAddressText(window, 0.5, 0.5, {"Hide address", "Скрыть адресс", 
     if (!isRestarted()) {
         showAddress = false;
     }
-    if (isAdditionalRestarted()) {
-        stop();
-        return;
-    }
 
     // Getting string with full address of current app
     Uint16 port = internet.openServer();
     snprintf(currentAddress, sizeof(currentAddress), "%s:%u", internet.getLocalhost(), port);
+
+    // Stopping, if go from another cycle
+    if (isAdditionalRestarted()) {
+        stop();
+        return;
+    }
 
     // Setting showing/hidding address text
     if (showAddress) {

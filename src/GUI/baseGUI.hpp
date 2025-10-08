@@ -264,7 +264,7 @@ namespace GUI {
      public:
         TwoOptionBox(const Window& window, const LanguagedText title,
             const LanguagedText button1Text, const LanguagedText button2Text);
-        int click(const Mouse mouse);
+        int click(const Mouse mouse);  // Return 1, if active; 2 if 1 button pressed; 3 if 2 button pressed
         void activate();
         void reset();
         bool isActive() const;
@@ -288,7 +288,7 @@ namespace GUI {
      public:
         OneOptionBox(const Window& window, const LanguagedText title,
             const LanguagedText buttonText);
-        bool click(const Mouse mouse);
+        int click(const Mouse mouse);  // Return 1, if active; 2 if button pressed
         void activate();
         void reset();
         bool isActive() const;

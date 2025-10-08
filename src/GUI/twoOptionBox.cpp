@@ -20,11 +20,12 @@ int GUI::TwoOptionBox::click(const Mouse _mouse) {
     if (active) {
         // Returning to menu
         if (button1.in(_mouse)) {
-            return 1;
-        }
-        if (button2.in(_mouse)) {
             return 2;
         }
+        if (button2.in(_mouse)) {
+            return 3;
+        }
+        return 1;
     }
     return 0;
 }

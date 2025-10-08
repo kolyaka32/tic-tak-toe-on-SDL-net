@@ -19,13 +19,14 @@ enterPortText(window, 0.5, 0.45, {"Enter port:", "Введите порт:", "Po
 enterPortField(window, 0.5, 0.57, basePort),
 pasteButton(window, 0.5, 0.75, {"Paste the address", "Вставить адрес", "Kopierte Adresse", "Уставіць адрас"}),
 connectButton(window, 0.5, 0.9, {"Connect", "Присоединится", "Beitritt", "Далучыцца"}) {
+    // Starting random getting socket
+    internet.openClient();
+
+    // Stopping, if go from another cycle
     if (isAdditionalRestarted()) {
-        // Stopping cycle from launching after end of client game
         stop();
         return;
     }
-    // Starting random getting socket
-    internet.openClient();
 
     logAdditional("Start client lobby cycle");
 }

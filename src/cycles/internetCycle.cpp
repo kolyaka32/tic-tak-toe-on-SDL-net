@@ -32,10 +32,23 @@ bool InternetCycle::inputMouseDown() {
     if (GameCycle::inputMouseDown()) {
         return true;
     }
-    if (termianatedBox.click(mouse)) {
+    if (int code = termianatedBox.click(mouse)) {
+        if (code == 2) {
+            // Quiting to menu
+            stop();
+        }
+        // Not allowing to any another actions
         return true;
     }
-    if (disconnectedBox.click(mouse)) {
+    if (int code = disconnectedBox.click(mouse)) {
+        if (code == 2) {
+            // Trying to reconnect
+            internet.sendAll(ConnectionCode::ApplyConnection);
+        } else if (code == 3) {
+            // Going to menu
+            stop();
+        }
+        // Not allowing to any another actions
         return true;
     }
     return false;

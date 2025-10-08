@@ -95,29 +95,29 @@ Uint16 Internet::openServer() {
 }
 
 void Internet::openClient() {
+    logAdditional("Client created, address: %s", localhost);
     // Creating socket at random port
     gettingSocket = NET_CreateDatagramSocket(nullptr, 0);
-    logAdditional("Client created, address: %s", localhost);
 }
 
 void Internet::connectTo(NET_Address* _address, Uint16 _port) {
+    logAdditional("Connecting to %s:%u", _address, _port);
     // Add new connection
     reciepients.push_back(Reciepient(_address, _port));
-    logAdditional("Connecting to %s:%u", _address, _port);
 }
 
 void Internet::close() {
+    logAdditional("Close datagramm socket");
     // Destrying getting socket
     NET_DestroyDatagramSocket(gettingSocket);
-    logAdditional("Close datagramm socket");
 }
 
 void Internet::disconnect() {
+    logAdditional("Disconnecting from games");
     // Sending message with quiting connection
     for (int i=0; i < reciepients.size(); ++i) {
         reciepients[i].sendUnconfirmed(gettingSocket, Message{Uint8(ConnectionCode::Quit), 1});
     }
-    logAdditional("Disconnecting from games");
 }
 
 const char* Internet::getLocalhost() {

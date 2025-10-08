@@ -15,14 +15,15 @@ button(_window, 0.5, 0.55, _buttonText),
 mainText(_window, 0.5, 0.45, _title, 1, Height::SubTitle),
 background(_window, 0.5, 0.5, 0.9, 0.2, 5.0, 1.0) {}
 
-bool GUI::OneOptionBox::click(const Mouse _mouse) {
+int GUI::OneOptionBox::click(const Mouse _mouse) {
     if (active) {
         // Returning to menu
         if (button.in(_mouse)) {
-            return true;
+            return 2;
         }
+        return 1;
     }
-    return false;
+    return 0;
 }
 
 void GUI::OneOptionBox::activate() {
