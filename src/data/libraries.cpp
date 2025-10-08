@@ -15,6 +15,9 @@
 #if (CHECK_CORRECTION)
 #include "exceptions.hpp"
 #endif
+#if (USE_SDL_NET)
+#include <SDL3_net/SDL_net.h>
+#endif
 
 
 Libraries::Libraries() {
@@ -45,6 +48,13 @@ Libraries::Libraries() {
         throw LibararyLoadException("Couldn't initialase audio chanel: " + std::string(SDL_GetError()));
     }
     #endif
+    // Intialasing internet library
+    #if (USE_SDL_NET)
+    if (!NET_Init()) {
+        throw LibararyLoadException("Couldn't initialase internet library: " + std::string(SDL_GetError()));
+    }
+    #endif
+
     logAdditional("Libraries load correctly");
     #else  // (CHECK_CORRECTION)
     SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO);
@@ -56,10 +66,18 @@ Libraries::Libraries() {
     audioDeviceID = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
     Mix_OpenAudio(audioDeviceID, NULL);
     #endif
+    #if (USE_SDL_NET)
+    NET_Init();
+    #endif
     #endif  // (CHECK_CORRECTION)
 }
 
 Libraries::~Libraries() noexcept {
+    // Closing internet library
+    #if (USE_SDL_NET)
+    NET_Quit();
+    #endif
+
     // Closing audio device
     #if (USE_SDL_MIXER)
     Mix_CloseAudio();
@@ -73,5 +91,6 @@ Libraries::~Libraries() noexcept {
     #if (USE_SDL_FONT)
     TTF_Quit();
     #endif
+    // Closing main SDL library
     SDL_Quit();
 }

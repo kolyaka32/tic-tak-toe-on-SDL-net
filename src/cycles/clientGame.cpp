@@ -7,15 +7,19 @@
 #include "../game/menu/savedFields.hpp"
 
 
-ClientGameCycle::ClientGameCycle(Window& _window, const Connection& _client)
+ClientGameCycle::ClientGameCycle(Window& _window)
 : InternetCycle(_window),
-connection(_client),
 waitText(window, 0.5, 0.05, {"Wait start", "Ожидайте начала", "Warte auf Start", "Чаканне старту"}) {
     if (!isRestarted()) {
         field.restart();
         field.setState(GameState::WaitState);
     }
     logAdditional("Start client game cycle");
+}
+
+ClientGameCycle::~ClientGameCycle() {
+    // Sending message of disconect
+    internet.disconnect();
 }
 
 bool ClientGameCycle::inputMouseDown() {
@@ -32,27 +36,29 @@ bool ClientGameCycle::inputMouseDown() {
     // Normal turn
     if (field.tryClickClientCurrent(mouse)) {
         // Sending to opponent
-        connection.sendConfirmed<Uint8>(ConnectionCode::GameTurn, field.getLastTurn(mouse));
+        internet.sendAllConfirmed<Uint8>(ConnectionCode::GameTurn, field.getLastTurn(mouse));
     }
     return false;
 }
 
-void ClientGameCycle::update() {
-    GameCycle::update();
-
+void ClientGameCycle::getInternetPacket(GetPacket& packet) {
     // Getting internet messages
-    switch (connection.updateMessages()) {
+    switch (ConnectionCode(packet.getData<Uint8>())) {
+    case ConnectionCode::Quit:
+        termianatedBox.activate();
+        break;
+
     case ConnectionCode::GameTurn:
-        if (connection.lastPacket->isBytesAvaliable(3)) {
-            field.clickClientOpponent(connection.lastPacket->getData<Uint8>(2));
-            logAdditional("Turn of opponent player to %u", connection.lastPacket->getData<Uint8>(2));
+        if (packet.isBytesAvaliable(3)) {
+            field.clickClientOpponent(packet.getData<Uint8>(2));
+            logAdditional("Turn of opponent player to %u", packet.getData<Uint8>(2));
         }
         return;
 
     case ConnectionCode::GameNew:
-        if (connection.lastPacket->isBytesAvaliable(3)) {
+        if (packet.isBytesAvaliable(3)) {
             // Creating new field from get data
-            const Field f = Field((char*)(connection.lastPacket->getPointer())+2);
+            const Field f = Field((char*)(packet.getPointer())+2);
             // Setting it as current
             field.setNewField(&f, window);
 

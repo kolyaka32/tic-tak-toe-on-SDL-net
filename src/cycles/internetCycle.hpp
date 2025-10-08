@@ -6,8 +6,7 @@
 #pragma once
 
 #include "gameCycle.hpp"
-#include "../game/internet/connectionLostBox.hpp"
-#include "../game/internet/terminatedBox.hpp"
+#include "../internet/internet.hpp"
 
 
 // Cycle with game part of internet connection
@@ -15,12 +14,14 @@ class InternetCycle : public GameCycle {
 protected:
     // Graphical part
     GUI::StaticText playersTurnsTexts[2];
-    ConnectionLostBox disconnectedBox;
-    TerminatedBox termianatedBox;
+    GUI::TwoOptionBox disconnectedBox;
+    GUI::OneOptionBox termianatedBox;
     GUI::HighlightedStaticText winText;
     GUI::HighlightedStaticText looseText;
 
     bool inputMouseDown() override;
+    void update() override;
+    virtual void getInternetPacket(GetPacket& packet);
 
 public:
     InternetCycle(Window& window);

@@ -6,22 +6,20 @@
 #pragma once
 
 #include "internetCycle.hpp"
-#include "../internet/gameConnection.hpp"
 
 
 // Game cycle (for single player (special animation))
 class ClientGameCycle : public InternetCycle {
  private:
-    GameConnection connection;
-
     // Additional text
     GUI::StaticText waitText;
 
     // Main run functions
     bool inputMouseDown() override;
-    void update() override;
+    void getInternetPacket(GetPacket& packet) override;
     void draw() const override;
 
  public:
-    explicit ClientGameCycle(Window& _window, const Connection& client);
+    ClientGameCycle(Window& _window);
+    ~ClientGameCycle();
 };

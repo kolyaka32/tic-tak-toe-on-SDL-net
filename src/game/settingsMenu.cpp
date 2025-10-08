@@ -34,6 +34,9 @@ bool SettingsMenu::click(const Mouse _mouse) {
     }
     // Clicking in menu
     if (active) {
+        // Resetting holding object
+        holdingSlider = 0;
+
         // Check on changing language
         for (unsigned i = 0; i < (unsigned)Language::Count; ++i) {
             if (flags[i].in(_mouse)) {
@@ -47,7 +50,6 @@ bool SettingsMenu::click(const Mouse _mouse) {
             }
         }
         if (musicSlider.in(_mouse)) {
-            // Checking, if click on sliders or flag
             holdingSlider = 1;
             return true;
         }

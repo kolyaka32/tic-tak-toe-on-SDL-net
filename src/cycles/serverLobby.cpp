@@ -20,13 +20,16 @@ hideAddressText(window, 0.5, 0.5, {"Hide address", "Скрыть адресс", 
     if (!isRestarted()) {
         showAddress = false;
     }
+
+    // Getting string with full address of current app
+    Uint16 port = internet.openServer();
+    snprintf(currentAddress, sizeof(currentAddress), "%s:%u", internet.getLocalhost(), port);
+
+    // Stopping, if go from another cycle
     if (isAdditionalRestarted()) {
         stop();
         return;
     }
-
-    // Getting string with full address of current app
-    snprintf(currentAddress, sizeof(currentAddress), "%s:%u", server.getLocalIP(), server.getPort());
 
     // Setting showing/hidding address text
     if (showAddress) {
@@ -35,6 +38,11 @@ hideAddressText(window, 0.5, 0.5, {"Hide address", "Скрыть адресс", 
         addressText.setValues("********");
     }
     logAdditional("Start server lobby cycle");
+}
+
+ServerLobbyCycle::~ServerLobbyCycle() {
+    // Clear getting socket
+    internet.close();
 }
 
 bool ServerLobbyCycle::inputMouseDown() {
@@ -74,20 +82,26 @@ void ServerLobbyCycle::update() {
     // Update infobox
     copiedInfoBox.update();
 
-    // Getting internet packets
-    switch (server.getCode()) {
-    case ConnectionCode::Init:
-        // Sending approving code
-        server.connectToLastMessage();
+    // Getting internet data
+    while (NET_Datagram* message = internet.getNewMessages()) {
+        switch (ConnectionCode(message->buf[0])) {
+        case ConnectionCode::Init:
+            // Sending approving code
+            internet.connectTo(message->addr, message->port);
 
-        // Starting game (as server)
-        runCycle<ServerGameCycle, Connection&>(window, server);
-        // Exiting to menu after game
-        stop();
-        return;
+            // Sending applying initialsiation message
+            internet.sendAllConfirmed(ConnectionCode::Init);
 
-    default:
-        break;
+            // Starting game (as server)
+            runCycle<ServerGameCycle>(window);
+            // Exiting to menu after game
+            stop();
+            return;
+
+        default:
+            return;
+        }
+        NET_DestroyDatagram(message);
     }
 }
 

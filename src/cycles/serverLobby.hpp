@@ -5,21 +5,17 @@
 
 #pragma once
 
-#include "baseCycle.hpp"
-#include "../internet/server.hpp"
+#include "internetCycle.hpp"
 
 
 // Cycle with waiting for client connect
 class ServerLobbyCycle : public BaseCycle {
  private:
-    // Internet connection part
-    Server server;
-
     // Title
     GUI::HighlightedStaticText titleText;
 
     // Text with current connection address
-    char currentAddress[24];          // String with current app address for connection
+    char currentAddress[25];          // String with current app address for connection
     static bool showAddress;          // Flag of showing current address to screen
     GUI::DynamicText addressText;     // Text for showing/copying current address
     GUI::InfoBox copiedInfoBox;       // Message about copying to clipboard address
@@ -33,4 +29,5 @@ class ServerLobbyCycle : public BaseCycle {
 
  public:
     ServerLobbyCycle(Window& window);
+    ~ServerLobbyCycle();
 };

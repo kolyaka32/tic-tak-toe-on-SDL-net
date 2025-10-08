@@ -7,20 +7,32 @@
 #include "clientGame.hpp"
 
 
+// Static objects for save inputted parameters
+char ClientLobbyCycle::baseIP[15] = "127.0.0.1";
+char ClientLobbyCycle::basePort[6] = "8000";
+
 ClientLobbyCycle::ClientLobbyCycle(Window& _window)
 : BaseCycle(_window),
 enterIPText(window, 0.5, 0.2, {"Enter IP:", "Введите IP:", "Geben Sie die IP ein:", "Увядзіце IP:"}, Height::SubTitle),
-enterIPField(window, 0.5, 0.32, Client::baseIP),
+enterIPField(window, 0.5, 0.32, baseIP),
 enterPortText(window, 0.5, 0.45, {"Enter port:", "Введите порт:", "Port eingeben:", "Увядзіце порт:"}, Height::SubTitle),
-enterPortField(window, 0.5, 0.57, Client::basePort),
+enterPortField(window, 0.5, 0.57, basePort),
 pasteButton(window, 0.5, 0.75, {"Paste the address", "Вставить адрес", "Kopierte Adresse", "Уставіць адрас"}),
 connectButton(window, 0.5, 0.9, {"Connect", "Присоединится", "Beitritt", "Далучыцца"}) {
+    // Starting random getting socket
+    internet.openClient();
+
+    // Stopping, if go from another cycle
     if (isAdditionalRestarted()) {
-        // Stopping cycle from launching after end of client game
         stop();
         return;
     }
+
     logAdditional("Start client lobby cycle");
+}
+
+ClientLobbyCycle::~ClientLobbyCycle() {
+    internet.close();
 }
 
 bool ClientLobbyCycle::inputMouseDown() {
@@ -54,10 +66,10 @@ bool ClientLobbyCycle::inputMouseDown() {
             }
         }
         // Saving inputted address
-        memcpy(Client::baseIP, enterIPField.getString(), sizeof(Client::baseIP));
-        memcpy(Client::basePort, portTextCorrected, sizeof(Client::basePort));
+        memcpy(baseIP, enterIPField.getString(), sizeof(baseIP));
+        memcpy(basePort, portTextCorrected, sizeof(basePort));
         // Trying connect at specified address
-        client.tryConnect(enterIPField.getString(), std::stoi(portTextCorrected));
+        internet.sendFirst(enterIPField.getString(), std::stoi(portTextCorrected), ConnectionCode::Init, 1);
         return true;
     }
     return false;
@@ -83,18 +95,20 @@ void ClientLobbyCycle::update() {
     enterPortField.update(mouse.getX());
 
     // Getting internet data
-    switch (client.getCode()) {
-    case ConnectionCode::Init:
-        // Settings options to this connection
-        client.connectToLastMessage();
-        // Starting game
-        runCycle<ClientGameCycle, Connection&>(window, client);
-        // Exiting to menu after game
-        stop();
-        return;
+    while (auto message = internet.getNewMessages()) {
+        switch (ConnectionCode(message->buf[0])) {
+        case ConnectionCode::Init:
+            // Settings options to this connection
+            internet.connectTo(message->addr, message->port);
+            // Starting game
+            runCycle<ClientGameCycle>(window);
+            // Exiting to menu after game
+            stop();
+            return;
 
-    default:
-        return;
+        default:
+            return;
+        }
     }
 }
 
@@ -163,4 +177,20 @@ void ClientLobbyCycle::pasteFromClipboard() {
     enterIPField.setString(clipboard);
     enterPortField.setString(clipboard+i);
     SDL_free(clipboard);
+}
+
+void ClientLobbyCycle::writeBaseIP(const char* _text) {
+    snprintf(baseIP, sizeof(baseIP), "%s", _text);
+}
+
+const char* ClientLobbyCycle::getBaseIP() {
+    return baseIP;
+}
+
+void ClientLobbyCycle::writeBasePort(const char* _text) {
+    snprintf(basePort, sizeof(basePort), "%s", _text);
+}
+
+const char* ClientLobbyCycle::getBasePort() {
+    return basePort;
 }

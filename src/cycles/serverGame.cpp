@@ -6,19 +6,21 @@
 #include "serverGame.hpp"
 
 
-ServerGameCycle::ServerGameCycle(Window& _window, const Connection& _server)
+ServerGameCycle::ServerGameCycle(Window& _window)
 : InternetCycle(_window),
-connection(_server),
 menu(_window) {
     if (!isRestarted()) {
         menu.reset();
-        // Sending applying initialsiation message
-        connection.sendConfirmed(ConnectionCode::Init);
         field.restart();
         // Sending first field
-        connection.sendConfirmed<Array<char>>(ConnectionCode::GameNew, field.getSave());
+        internet.sendAllConfirmed<Array<char>>(ConnectionCode::GameNew, field.getSave());
     }
     logAdditional("Start server game cycle");
+}
+
+ServerGameCycle::~ServerGameCycle() {
+    // Sending message of disconect
+    internet.disconnect();
 }
 
 bool ServerGameCycle::inputMouseDown() {
@@ -43,7 +45,7 @@ bool ServerGameCycle::inputMouseDown() {
             // Setting new field localy
             field.setNewField(f, window);
             // Sending it
-            connection.sendConfirmed<Array<char>>(ConnectionCode::GameNew, field.getSave());
+            internet.sendAllConfirmed<Array<char>>(ConnectionCode::GameNew, field.getSave());
             menu.reset();
             logAdditional("Selecting new field");
         }
@@ -52,7 +54,7 @@ bool ServerGameCycle::inputMouseDown() {
         // Normal turn
         if (field.tryClickServerCurrent(mouse)) {
             // Sending to opponent
-            connection.sendConfirmed<Uint8>(ConnectionCode::GameTurn, field.getLastTurn(mouse));
+            internet.sendAllConfirmed<Uint8>(ConnectionCode::GameTurn, field.getLastTurn(mouse));
         }
     }
     return false;
@@ -76,20 +78,22 @@ void ServerGameCycle::inputMouseWheel(float _wheelY) {
     menu.scroll(_wheelY);
 }
 
-void ServerGameCycle::update() {
-    GameCycle::update();
-
+void ServerGameCycle::getInternetPacket(GetPacket& packet) {
     // Getting internet messages
-    switch (connection.updateMessages()) {
+    switch (ConnectionCode(packet.getData<Uint8>())) {
+    case ConnectionCode::Quit:
+        termianatedBox.activate();
+        break;
+
     case ConnectionCode::GameTurn:
-        if (connection.lastPacket->isBytesAvaliable(3)) {
+        if (packet.isBytesAvaliable(3)) {
             // Making turn
-            field.clickServerOpponent(connection.lastPacket->getData<Uint8>(2));
+            field.clickServerOpponent(packet.getData<Uint8>(2));
 
             // Making sound
             sounds.play(Sounds::Turn);
             music.startFromCurrent(Music::MainCombat);
-            logAdditional("Turn of opponent player to %u", connection.lastPacket->getData<Uint8>(2));
+            logAdditional("Turn of opponent player to %u", packet.getData<Uint8>(2));
         }
         return;
 

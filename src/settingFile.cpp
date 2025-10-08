@@ -14,7 +14,6 @@
 #include "data/languages.hpp"
 #include "game/gameField.hpp"
 #include "cycles/clientLobby.hpp"
-#include "internet/client.hpp"
 #include "game/menu/savedFields.hpp"
 
 
@@ -46,9 +45,9 @@ void InitFile::loadSettings() {
         } else if (parameter == "sounds") {
             sounds.setVolume(getValue(currentLine));
         } else if (parameter == "IP") {
-            strncpy(Client::baseIP, getText(currentLine).c_str(), sizeof(Client::baseIP));
+            ClientLobbyCycle::writeBaseIP(getText(currentLine).c_str());
         } else if (parameter == "port") {
-            strncpy(Client::basePort, getText(currentLine).c_str(), sizeof(Client::basePort));
+            ClientLobbyCycle::writeBasePort(getText(currentLine).c_str());
         } else if (parameter == "save") {
             SavedFields::addField(getText(currentLine));
         }
@@ -94,8 +93,8 @@ void InitFile::saveSettings() {
 
     // Writing internet connection data
     outSettings << "\n# Internet base parameters:\n";
-    outSettings << "IP = " << Client::baseIP << "\n";
-    outSettings << "port = " << Client::basePort << "\n";
+    outSettings << "IP = " << ClientLobbyCycle::getBaseIP() << "\n";
+    outSettings << "port = " << ClientLobbyCycle::getBasePort() << "\n";
 
     // Saving fields
     outSettings << "\n# Saves:\n";

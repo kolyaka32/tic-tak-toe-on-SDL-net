@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <array>
 #include "../data/app.hpp"
 
 
@@ -245,6 +246,55 @@ namespace GUI {
         void update();
         void reset();
     };
+
+
+    // Class for box with message and actions with it
+    class TwoOptionBox : public Template {
+     private:
+        // Flag of showing
+        bool active = false;
+
+        // Background plate for better visability
+        const GUI::RoundedBackplate background;
+        // Main text - title
+        const GUI::HighlightedStaticText mainText;
+        // Select variants
+        const TextButton button1, button2;
+
+     public:
+        TwoOptionBox(const Window& window, const LanguagedText title,
+            const LanguagedText button1Text, const LanguagedText button2Text);
+        int click(const Mouse mouse);  // Return 1, if active; 2 if 1 button pressed; 3 if 2 button pressed
+        void activate();
+        void reset();
+        bool isActive() const;
+        void blit() const override;
+    };
+
+
+    // Class for box with message and actions with it
+    class OneOptionBox : public Template {
+     private:
+        // Flag of showing
+        bool active = false;
+
+        // Background plate for better visability
+        const GUI::RoundedBackplate background;
+        // Main text - title
+        const GUI::HighlightedStaticText mainText;
+        // Select variants
+        const TextButton button;
+
+     public:
+        OneOptionBox(const Window& window, const LanguagedText title,
+            const LanguagedText buttonText);
+        int click(const Mouse mouse);  // Return 1, if active; 2 if button pressed
+        void activate();
+        void reset();
+        bool isActive() const;
+        void blit() const override;
+    };
+
     #endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)
 
 }  // namespace GUI

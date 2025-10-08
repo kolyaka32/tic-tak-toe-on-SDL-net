@@ -8,9 +8,14 @@
 #include "data/initFile.hpp"
 #include "game/gameField.hpp"      // Get window width and height
 #include "cycles/selectCycle.hpp"  // Start game cycle
+#include "internet/internet.hpp"
 
 
 // Initialasing global objects in correct order
+// Logger
+std::ofstream logFile{"log.txt"};
+
+// All side libries
 Libraries libraries{};
 
 #if (PRELOAD_DATA)
@@ -23,6 +28,10 @@ SoundsData sounds{};
 
 #if (USE_SDL_MIXER) && (PRELOAD_SOUNDS)
 MusicData music{};
+#endif
+
+#if (USE_SDL_NET)
+Internet internet{};
 #endif
 
 // Main function
