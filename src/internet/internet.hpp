@@ -17,10 +17,8 @@ class Internet {
  private:
     // Getting part
     NET_DatagramSocket* gettingSocket;
-    // Check timer
-    static const timer messageGetTimeout = 5000;  // Time after which connection is considered lost
-    timer needDisconect = 0;                      // Time, after which connection will be recognized as disconected
-    //bool disconnected = false;  // ! Need to implement system
+    // Flag of disconnecting current user from main internet system
+    bool disconnected;
 
     // Special addresses
     char localhost[16];  // Address of current machine

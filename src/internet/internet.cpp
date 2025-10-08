@@ -95,15 +95,15 @@ Uint16 Internet::openServer() {
 }
 
 void Internet::openClient() {
-    logAdditional("Client created, address: %s", localhost);
     // Creating socket at random port
     gettingSocket = NET_CreateDatagramSocket(nullptr, 0);
+    logAdditional("Client created, address: %s", localhost);
 }
 
 void Internet::connectTo(NET_Address* _address, Uint16 _port) {
-    logAdditional("Connecting to %s:%u", _address, _port);
     // Add new connection
     reciepients.push_back(Reciepient(_address, _port));
+    logAdditional("Connecting to %s:%u", _address, _port);
 }
 
 void Internet::close() {
@@ -113,11 +113,11 @@ void Internet::close() {
 }
 
 void Internet::disconnect() {
-    logAdditional("Disconnecting from games");
     // Sending message with quiting connection
     for (int i=0; i < reciepients.size(); ++i) {
         reciepients[i].sendUnconfirmed(gettingSocket, Message{Uint8(ConnectionCode::Quit), 1});
     }
+    logAdditional("Disconnecting from games");
 }
 
 const char* Internet::getLocalhost() {
@@ -138,7 +138,13 @@ void Internet::checkNeedApplyConnection() {
 }
 
 bool Internet::checkStatus() {
-    return (getTime() > needDisconect);
+    // Resetting flag
+    disconnected = true;
+    // Check all connections
+    for (int i=0; i < reciepients.size(); ++i) {
+        disconnected &= reciepients[i].checkDisconnect();
+    }
+    return disconnected;
 }
 
 NET_Datagram* Internet::getNewMessages() {
@@ -153,8 +159,6 @@ NET_Datagram* Internet::getNewMessages() {
                 break;
             }
         }
-        // Update wait timer
-        needDisconect = getTime() + messageGetTimeout;
 
         if (source) {
             // Logging get message
@@ -166,6 +170,9 @@ NET_Datagram* Internet::getNewMessages() {
             buffer[datagram->buflen] = '\0';
             logAdditional("Get message from %s, size %u: %s", source->getName(), datagram->buflen, buffer);
             #endif
+
+            // Update wait timer
+            source->updateGetTimeout();
 
             // Checking get message on special types
             switch ((ConnectionCode)datagram->buf[0]) {
