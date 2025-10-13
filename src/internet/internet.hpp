@@ -17,6 +17,7 @@ class Internet {
  private:
     // Getting part
     NET_DatagramSocket* gettingSocket;
+    NET_DatagramSocket* broadcastSocket;
     // Flag of disconnecting current user from main internet system
     bool disconnected;
 
@@ -24,8 +25,7 @@ class Internet {
     char localhost[16];  // Address of current machine
     void getLocalAddress();
     static const Uint16 broadcastPort = 8000;  // Port for broadcast send/recieve
-    Destination broadcast;        // Address for sending data to whole network
-    NET_Address* getBroadcastAddress();
+    StringDestination broadcast;        // Address for sending data to whole network
 
     // Reciepients
     std::vector<Reciepient> reciepients;
@@ -61,6 +61,7 @@ class Internet {
 
     // Getting part
     NET_Datagram* getNewMessages();
+    NET_Datagram* getBroadcastMessages();
 };
 
 // Global system to send/recieve messages throw internet

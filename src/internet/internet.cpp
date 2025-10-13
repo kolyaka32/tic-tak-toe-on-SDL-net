@@ -10,8 +10,8 @@
 
 
 Internet::Internet()
-: localhost(),  // Initialasing from getBroadcastAddress()
-broadcast(getBroadcastAddress(), broadcastPort) {
+: broadcast("255.255.255.255", broadcastPort) {
+    getLocalAddress();
     logAdditional("Internet created correctly");
 }
 
@@ -33,45 +33,15 @@ void Internet::getLocalAddress() {
         }
         // Check, if not basic '127.0.0.1'
         if (usefull && strcmp(address, "127.0.0.1")) {
-            // Use this address
+            // Writing get address to buffer
             snprintf(localhost, sizeof(localhost), "%s", address);
+            // Clear used addresses
+            NET_FreeLocalAddresses(addresses);
+            return;
         }
     }
+    NET_FreeLocalAddresses(addresses);
 }
-
-NET_Address* Internet::getBroadcastAddress() {
-    // Update address of current machine
-    getLocalAddress();
-
-    // Get byte address of current machine (from IPv4)
-    Uint8 values[4] {0};
-    int i=0;
-    for (const char* c = localhost; *c; ++c) {
-        if (*c == '.') {
-            i++;
-            if (i == 4) {
-                break;
-            }
-        } else {
-            values[i] = values[i]*10 + *c - '0';
-        }
-    }
-    char broadcastString[16];
-    if (values[0] < 128) {
-        // Mask: 255.0.0.0
-        snprintf(broadcastString, sizeof(broadcastString), "%d.255.255.255", values[0]);
-    } else if (values[0] < 192) {
-        // Mask: 255.255.0.0
-        snprintf(broadcastString, sizeof(broadcastString), "%d.%d.255.255", values[0], values[1]);
-    } else if (values[0] < 224) {
-        // Mask: 255.255.255.0
-        snprintf(broadcastString, sizeof(broadcastString), "%d.%d.%d.255", values[0], values[1], values[2]);
-    } else {
-        snprintf(broadcastString, sizeof(broadcastString), "255.255.255.255");
-    }
-    return NET_ResolveHostname(broadcastString);
-}
-
 
 Uint16 Internet::openServer() {
     // Creating concrete socket at specified or random port, if busy
@@ -84,6 +54,8 @@ Uint16 Internet::openServer() {
         // Creating another random port
         currentPort = SDL_rand(10000);
     }
+    // Openning broadcast get socket
+    broadcastSocket = broadcast.getDatagrammSocket();
 
     #if (CHECK_CORRECTION)
     // Adding some packet loss for better testing
@@ -97,6 +69,8 @@ Uint16 Internet::openServer() {
 void Internet::openClient() {
     // Creating socket at random port
     gettingSocket = NET_CreateDatagramSocket(nullptr, 0);
+    // Openning broadcast get socket
+    broadcastSocket = broadcast.getDatagrammSocket();
     logAdditional("Client created, address: %s", localhost);
 }
 
@@ -108,8 +82,12 @@ void Internet::connectTo(NET_Address* _address, Uint16 _port) {
 
 void Internet::close() {
     logAdditional("Close datagramm socket");
-    // Destrying getting socket
+    // Closing all reciepients
+    reciepients.clear();
+    // Destrying main getting socket
     NET_DestroyDatagramSocket(gettingSocket);
+    // Destrying broadcast getting socket
+    NET_DestroyDatagramSocket(broadcastSocket);
 }
 
 void Internet::disconnect() {
@@ -123,7 +101,6 @@ void Internet::disconnect() {
 const char* Internet::getLocalhost() {
     return localhost;
 }
-
 
 void Internet::checkResendMessages() {
     for (int i=0; i < reciepients.size(); ++i) {
@@ -207,6 +184,25 @@ NET_Datagram* Internet::getNewMessages() {
             // Special action, if address is unknown
             return datagram;
         }
+    }
+    return nullptr;
+}
+
+NET_Datagram* Internet::getBroadcastMessages() {
+    // Get message
+    NET_Datagram *datagram = nullptr;
+    if (NET_ReceiveDatagram(broadcastSocket, &datagram) && datagram) {
+        // Logging get message
+        #if (CHECK_ALL)
+        char buffer[100];
+        for (int i=0; i < datagram->buflen; ++i) {
+            buffer[i] = char(datagram->buf[i] + '0');
+        }
+        buffer[datagram->buflen] = '\0';
+        logAdditional("Get broadcast message from %s, size %u: %s", NET_GetAddressString(datagram->addr), datagram->buflen, buffer);
+        #endif
+
+        return datagram;
     }
     return nullptr;
 }

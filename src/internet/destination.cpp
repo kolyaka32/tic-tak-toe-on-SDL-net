@@ -33,4 +33,16 @@ const char* Destination::getName() const {
     return NET_GetAddressString(address);
 }
 
+NET_DatagramSocket* Destination::getDatagrammSocket() {
+    return NET_CreateDatagramSocket(address, port);
+}
+
+
+StringDestination::StringDestination(const char* _address, Uint16 _port)
+: Destination(NET_ResolveHostname(_address), _port) {}
+
+StringDestination::~StringDestination() {
+    NET_UnrefAddress(address);
+}
+
 #endif  // (USE_SDL_NET)

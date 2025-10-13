@@ -14,7 +14,7 @@
 
 // Class with address and port for send operation
 class Destination {
- private:
+ protected:
     // Adress and port of client, sending to
     NET_Address* address;
     Uint16 port;
@@ -24,6 +24,15 @@ class Destination {
     bool operator==(const Destination& b);
     void send(NET_DatagramSocket* sock, const Message& message) const;
     const char* getName() const;
+    NET_DatagramSocket* getDatagrammSocket();
+};
+
+
+//
+class StringDestination : public Destination {
+ public:
+   StringDestination(const char* address, Uint16 port);
+   ~StringDestination();
 };
 
 #endif  // (USE_SDL_NET)
