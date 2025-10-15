@@ -39,7 +39,10 @@ NET_DatagramSocket* Destination::getDatagrammSocket() {
 
 
 StringDestination::StringDestination(const char* _address, Uint16 _port)
-: Destination(NET_ResolveHostname(_address), _port) {}
+: Destination(NET_ResolveHostname(_address), _port) {
+    // Waiting until hostname resolved
+    NET_WaitUntilResolved(address, 10);
+}
 
 StringDestination::~StringDestination() {
     NET_UnrefAddress(address);

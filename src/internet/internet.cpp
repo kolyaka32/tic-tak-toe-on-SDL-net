@@ -46,23 +46,27 @@ void Internet::getLocalAddress() {
 Uint16 Internet::openServer() {
     // Creating concrete socket at specified or random port, if busy
     // Setting basic create port
-    Uint16 currentPort = broadcastPort;
+    Uint16 currentPort = 0;
 
     // Finding avalialble port
     SDL_srand(0);
-    while ((gettingSocket = NET_CreateDatagramSocket(nullptr, currentPort)) == nullptr) {
-        // Creating another random port
+    do {
+        // Creating random port
         currentPort = SDL_rand(10000);
-    }
+        // Getting new socket
+        gettingSocket = NET_CreateDatagramSocket(nullptr, currentPort);
+    } while(gettingSocket == nullptr);
+    logAdditional("Server created, address: %s, port: %u", localhost, currentPort);
+
     // Openning broadcast get socket
     broadcastSocket = broadcast.getDatagrammSocket();
+    logAdditional("Broadcast address: %u", broadcastSocket);
 
     #if (CHECK_CORRECTION)
     // Adding some packet loss for better testing
     NET_SimulateDatagramPacketLoss(gettingSocket, CONNECTION_LOST_PERCENT);
     #endif
 
-    logAdditional("Server created, address: %s, port: %u", localhost, currentPort);
     return currentPort;
 }
 
@@ -72,6 +76,7 @@ void Internet::openClient() {
     // Openning broadcast get socket
     broadcastSocket = broadcast.getDatagrammSocket();
     logAdditional("Client created, address: %s", localhost);
+    logAdditional("Broadcast address: %u", broadcastSocket);
 }
 
 void Internet::connectTo(NET_Address* _address, Uint16 _port) {

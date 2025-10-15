@@ -69,7 +69,7 @@ bool ClientLobbyCycle::inputMouseDown() {
         memcpy(baseIP, enterIPField.getString(), sizeof(baseIP));
         memcpy(basePort, portTextCorrected, sizeof(basePort));
         // Trying connect at specified address
-        internet.sendFirst(enterIPField.getString(), std::stoi(portTextCorrected), ConnectionCode::Init, 1);
+        internet.sendFirst(StringDestination(enterIPField.getString(), std::stoi(portTextCorrected)), ConnectionCode::Init, 1);
         return true;
     }
     return false;

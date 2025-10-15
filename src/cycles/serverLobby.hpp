@@ -20,7 +20,7 @@ class ServerLobbyCycle : public BaseCycle {
     GUI::DynamicText addressText;     // Text for showing/copying current address
     GUI::InfoBox copiedInfoBox;       // Message about copying to clipboard address
     GUI::TextButton showAddressText;  // Buttons to change state of showing address at screen
-    GUI::TextButton hideAddressText;
+    GUI::TextButton hideAddressText;  // Button with illustration of address, hidden by stars
 
     // Main run functions
     bool inputMouseDown() override;

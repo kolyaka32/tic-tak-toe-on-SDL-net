@@ -82,7 +82,7 @@ void ServerLobbyCycle::update() {
     // Update infobox
     copiedInfoBox.update();
 
-    // Getting internet data
+    // Getting internet data (applied messages)
     while (NET_Datagram* message = internet.getNewMessages()) {
         switch (ConnectionCode(message->buf[0])) {
         case ConnectionCode::Init:
@@ -102,6 +102,15 @@ void ServerLobbyCycle::update() {
             return;
         }
         NET_DestroyDatagram(message);
+    }
+
+    // Getting internet broadcast messages
+    while (NET_Datagram* message = internet.getBroadcastMessages()) {
+        // Checking correction of get message
+        if (message->buflen == 3 && ConnectionCode(message->buf[0]) == ConnectionCode::Init) {
+            // Sending applying message
+            internet.sendFirst<Uint8>(Destination(message->addr, message->port), ConnectionCode::Confirm, message->buf[1]);
+        }
     }
 }
 
