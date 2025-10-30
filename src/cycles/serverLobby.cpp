@@ -16,11 +16,6 @@ addressText(window, 0.5, 0.3, {"Your address: %s", "Ваш адресс: %s", "I
 copiedInfoBox(window, 0.5, 0.4, {"Address copied", "Адрес скопирован", "Adresse kopiert", "Скапіяваны адрас"}),
 showAddressText(window, 0.5, 0.5, {"Show address", "Показать адресс", "Adresse anzeigen", "Паказаць адрас"}),
 hideAddressText(window, 0.5, 0.5, {"Hide address", "Скрыть адресс", "Adresse verbergen", "Схаваць адрас"}) {
-    // Resetting flag of showing address
-    if (!isRestarted()) {
-        showAddress = false;
-    }
-
     // Getting string with full address of current app
     Uint16 port = internet.openServer();
     snprintf(currentAddress, sizeof(currentAddress), "%s:%u", internet.getLocalhost(), port);
@@ -29,6 +24,11 @@ hideAddressText(window, 0.5, 0.5, {"Hide address", "Скрыть адресс", 
     if (isAdditionalRestarted()) {
         stop();
         return;
+    }
+
+    // Resetting flag of showing address
+    if (!isRestarted()) {
+        showAddress = false;
     }
 
     // Setting showing/hidding address text
@@ -102,15 +102,6 @@ void ServerLobbyCycle::update() {
             return;
         }
         NET_DestroyDatagram(message);
-    }
-
-    // Getting internet broadcast messages
-    while (NET_Datagram* message = internet.getBroadcastMessages()) {
-        // Checking correction of get message
-        if (message->buflen == 3 && ConnectionCode(message->buf[0]) == ConnectionCode::Init) {
-            // Sending applying message
-            internet.sendFirst<Uint8>(Destination(message->addr, message->port), ConnectionCode::Confirm, message->buf[1]);
-        }
     }
 }
 

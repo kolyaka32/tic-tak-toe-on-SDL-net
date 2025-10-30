@@ -17,15 +17,12 @@ class Internet {
  private:
     // Getting part
     NET_DatagramSocket* gettingSocket;
-    NET_DatagramSocket* broadcastSocket;
     // Flag of disconnecting current user from main internet system
     bool disconnected;
 
     // Special addresses
     char localhost[16];  // Address of current machine
     void getLocalAddress();
-    static const Uint16 broadcastPort = 8000;  // Port for broadcast send/recieve
-    StringDestination broadcast;        // Address for sending data to whole network
 
     // Reciepients
     std::vector<Reciepient> reciepients;
@@ -50,9 +47,6 @@ class Internet {
     // Sending data to all reciepients, confirming for delievery
     template <typename ...Args>
     void sendAllConfirmed(ConnectionCode code, const Args ...args);
-    // Sending data to whole network
-    template <typename ...Args>
-    void sendBroadcast(ConnectionCode code, const Args ...args);
 
     // Control part
     void checkResendMessages();
@@ -61,7 +55,6 @@ class Internet {
 
     // Getting part
     NET_Datagram* getNewMessages();
-    NET_Datagram* getBroadcastMessages();
 };
 
 // Global system to send/recieve messages throw internet
@@ -95,11 +88,6 @@ void Internet::sendAllConfirmed(ConnectionCode _code, const Args ...args) {
     for (int i=0; i < reciepients.size(); ++i) {
         reciepients[i].sendConfirmed(gettingSocket, message);
     }
-}
-
-template <typename ...Args>
-void Internet::sendBroadcast(ConnectionCode _code, const Args ...args) {
-    broadcast.send(gettingSocket, Message(_code, args...));
 }
 
 #endif  // (USE_SDL_NET)

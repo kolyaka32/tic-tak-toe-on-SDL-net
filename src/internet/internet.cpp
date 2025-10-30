@@ -9,8 +9,7 @@
 #if (USE_SDL_NET)
 
 
-Internet::Internet()
-: broadcast("255.255.255.255", broadcastPort) {
+Internet::Internet() {
     getLocalAddress();
     logAdditional("Internet created correctly");
 }
@@ -46,21 +45,18 @@ void Internet::getLocalAddress() {
 Uint16 Internet::openServer() {
     // Creating concrete socket at specified or random port, if busy
     // Setting basic create port
-    Uint16 currentPort = 0;
+    Uint16 currentPort = basePort;
+    gettingSocket = NET_CreateDatagramSocket(nullptr, currentPort);
 
     // Finding avalialble port
     SDL_srand(0);
-    do {
+    while (gettingSocket == nullptr) {
         // Creating random port
         currentPort = SDL_rand(10000);
         // Getting new socket
         gettingSocket = NET_CreateDatagramSocket(nullptr, currentPort);
-    } while(gettingSocket == nullptr);
+    };
     logAdditional("Server created, address: %s, port: %u", localhost, currentPort);
-
-    // Openning broadcast get socket
-    broadcastSocket = broadcast.getDatagrammSocket();
-    logAdditional("Broadcast address: %u", broadcastSocket);
 
     #if (CHECK_CORRECTION)
     // Adding some packet loss for better testing
@@ -73,10 +69,7 @@ Uint16 Internet::openServer() {
 void Internet::openClient() {
     // Creating socket at random port
     gettingSocket = NET_CreateDatagramSocket(nullptr, 0);
-    // Openning broadcast get socket
-    broadcastSocket = broadcast.getDatagrammSocket();
     logAdditional("Client created, address: %s", localhost);
-    logAdditional("Broadcast address: %u", broadcastSocket);
 }
 
 void Internet::connectTo(NET_Address* _address, Uint16 _port) {
@@ -91,8 +84,6 @@ void Internet::close() {
     reciepients.clear();
     // Destrying main getting socket
     NET_DestroyDatagramSocket(gettingSocket);
-    // Destrying broadcast getting socket
-    NET_DestroyDatagramSocket(broadcastSocket);
 }
 
 void Internet::disconnect() {
@@ -189,25 +180,6 @@ NET_Datagram* Internet::getNewMessages() {
             // Special action, if address is unknown
             return datagram;
         }
-    }
-    return nullptr;
-}
-
-NET_Datagram* Internet::getBroadcastMessages() {
-    // Get message
-    NET_Datagram *datagram = nullptr;
-    if (NET_ReceiveDatagram(broadcastSocket, &datagram) && datagram) {
-        // Logging get message
-        #if (CHECK_ALL)
-        char buffer[100];
-        for (int i=0; i < datagram->buflen; ++i) {
-            buffer[i] = char(datagram->buf[i] + '0');
-        }
-        buffer[datagram->buflen] = '\0';
-        logAdditional("Get broadcast message from %s, size %u: %s", NET_GetAddressString(datagram->addr), datagram->buflen, buffer);
-        #endif
-
-        return datagram;
     }
     return nullptr;
 }
