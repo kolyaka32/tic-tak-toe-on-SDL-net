@@ -23,6 +23,7 @@ ClientGameCycle::~ClientGameCycle() {
 }
 
 bool ClientGameCycle::inputMouseDown() {
+    Mouse mouse{};
     if (InternetCycle::inputMouseDown()) {
         return true;
     }

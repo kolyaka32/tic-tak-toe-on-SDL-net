@@ -7,11 +7,8 @@
 #include "mouse.hpp"
 
 
-Mouse::Mouse()
-: position({0, 0}),
-state(0) {}
-
-void Mouse::updatePos() {
+Mouse::Mouse() {
+    // Updating parameters
     state = SDL_GetMouseState(&position.x, &position.y);
 }
 

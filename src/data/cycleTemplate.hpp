@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <thread>
 #include <SDL3/SDL_keyboard.h>
 #include <SDL3/SDL_events.h>
 #include "idleTimer.hpp"
@@ -17,14 +18,26 @@ class CycleTemplate {
     static bool running;            // Flag of current running state
     static bool restarting;         // Flag, if game was restarted
     static bool additionalRestart;  // Flag of additional game restart
-    IdleTimer idleTimer{1000/60};   // Timer to idle in main cycle
+
+    // Internal cycles of work
+    std::mutex startMutex{};
+    // Cycle for separated thread to get any input
+    void inputCycle();
+    IdleTimer inputTimer{1000/60};  // Timer to idle properly
+    // Cycle for separated thread to draw
+    void drawCycle();
+    IdleTimer drawTimer{1000/60};  // Timer to idle properly
+
+    // Threads itself
+    std::thread drawThread{drawCycle, this};
 
  protected:
     Window& window;  // Target, where draw to
-    Mouse mouse;     // Position of mouse on screen
 
-    // Cycle functions for cycle (should be overriden)
-    void getInput();            // Getting all user input
+    // Start options
+    void waitStart();
+
+    // Cycle functions for cycle (could be overriden)
     virtual void update();      // Getting special objects update
     virtual void draw() const;  // Draw all need objects
 
@@ -32,7 +45,7 @@ class CycleTemplate {
     virtual bool inputMouseDown();                // Actioning for mouse button pressing
     virtual void inputMouseUp();                  // Actioning for mouse button unpressing
     virtual void inputKeys(SDL_Keycode key);      // Actioning for any keys pressing
-    virtual void inputMouseWheel(float _wheelY);  // Actioning for scrolling wheel
+    virtual void inputMouseWheel(float wheelY);   // Actioning for scrolling wheel
     virtual void inputText(const char* text);     // Actioning for typing text
 
  public:

@@ -21,6 +21,7 @@ bool SinglePlayerGameCycle::inputMouseDown() {
     if (GameCycle::inputMouseDown()) {
         return true;
     }
+    Mouse mouse{};
     if (gameSaveButton.in(mouse)) {
         // Save current game field
         menu.addField(field.saveField());

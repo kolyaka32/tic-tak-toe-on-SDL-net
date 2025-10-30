@@ -50,6 +50,7 @@ bool ServerLobbyCycle::inputMouseDown() {
         return true;
     }
     // Check on copying address
+    Mouse mouse{};
     if (addressText.in(mouse)) {
         // Copying address to buffer
         static char clipboardText[24];

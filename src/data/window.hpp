@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <mutex>
 #include <SDL3/SDL_render.h>
 #include "colors.hpp"
 #include "time.hpp"

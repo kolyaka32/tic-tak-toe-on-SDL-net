@@ -41,6 +41,7 @@ bool ClientLobbyCycle::inputMouseDown() {
     }
 
     // Connection part
+    Mouse mouse{};
     if (enterIPField.click(mouse)) {
         return true;
     }
@@ -90,7 +91,7 @@ void ClientLobbyCycle::update() {
     BaseCycle::update();
 
     // Updating typeboxes
-    mouse.updatePos();
+    Mouse mouse{};
     enterIPField.update(mouse.getX());
     enterPortField.update(mouse.getX());
 

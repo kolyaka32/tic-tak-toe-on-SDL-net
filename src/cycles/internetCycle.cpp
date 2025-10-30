@@ -32,6 +32,7 @@ bool InternetCycle::inputMouseDown() {
     if (GameCycle::inputMouseDown()) {
         return true;
     }
+    Mouse mouse{};
     if (int code = termianatedBox.click(mouse)) {
         if (code == 2) {
             // Quiting to menu

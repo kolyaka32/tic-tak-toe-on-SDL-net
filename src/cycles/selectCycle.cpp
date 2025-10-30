@@ -25,6 +25,7 @@ connectButton(window, 0.5, 0.9, {"Connect", "Присоединиться", "Bei
 
 // Getting selected button
 bool SelectCycle::inputMouseDown() {
+    Mouse mouse{};
     if (settings.click(mouse)) {
         return true;
     }

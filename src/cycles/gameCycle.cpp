@@ -30,6 +30,7 @@ nobodyWinText(window, 0.5, 0.05, {"Nobody win", "Ничья", "Unentschieden", "
 }
 
 bool GameCycle::inputMouseDown() {
+    Mouse mouse{};
     if (screamer.click(mouse)) {
         return true;
     }

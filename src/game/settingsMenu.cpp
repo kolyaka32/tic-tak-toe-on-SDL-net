@@ -91,8 +91,7 @@ void SettingsMenu::scroll(const Mouse mouse, float _wheelY) {
 void SettingsMenu::update() {
     if (active) {
         // Creating and finding mouse position
-        Mouse mouse;
-        mouse.updatePos();
+        Mouse mouse{};
 
         // Updating pressing on sliders
         switch (holdingSlider) {

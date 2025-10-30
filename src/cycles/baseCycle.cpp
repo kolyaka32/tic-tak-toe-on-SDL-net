@@ -13,6 +13,8 @@ exitButton(window, 0.04, 0.05, 0.08, Textures::QuitButton),
 settings(window) {}
 
 bool BaseCycle::inputMouseDown() {
+    Mouse mouse{};
+
     if (settings.click(mouse)) {
         return true;
     }
@@ -32,5 +34,6 @@ void BaseCycle::inputMouseUp() {
 }
 
 void BaseCycle::inputMouseWheel(float _wheelY) {
+    Mouse mouse{};
     settings.scroll(mouse, _wheelY);
 }

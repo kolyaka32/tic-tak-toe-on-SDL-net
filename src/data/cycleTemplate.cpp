@@ -14,6 +14,9 @@ bool CycleTemplate::additionalRestart;
 // Reset basic cycle template variables
 CycleTemplate::CycleTemplate(Window& _window)
 : window(_window) {
+    // Locking start mutex
+    startMutex.lock();
+
     // Resetting input
     SDL_Event event;
     while (SDL_PollEvent(&event) != 0) {}
@@ -37,50 +40,75 @@ bool CycleTemplate::isAdditionalRestarted() {
     return additionalRestart;
 }
 
-// Getting user input
-void CycleTemplate::getInput() {
-    // Creating event for get user input
-    SDL_Event event;
 
-    // Getting input
-    while (SDL_PollEvent(&event)) {
-        switch (event.type) {
-        // Code of program exiting
-        case SDL_EVENT_QUIT:
-            // Stopping program at all
-            App::stop();
-            return;
+void CycleTemplate::waitStart() {
+    // Waiting, until mutex will be avaliable
+    startMutex.lock();
+    // Unlocking it for next cycles
+    startMutex.unlock();
+}
 
-        // Getting mouse input
-        case SDL_EVENT_MOUSE_BUTTON_DOWN:
-            mouse.updatePos();
-            inputMouseDown();
-            break;
+void CycleTemplate::inputCycle() {
+    // Running loop with inputting
+    while (running) {
+        // Creating event for get user input
+        SDL_Event event;
 
-        case SDL_EVENT_MOUSE_BUTTON_UP:
-            mouse.updatePos();
-            inputMouseUp();
-            break;
+        // Getting input
+        while (SDL_PollEvent(&event)) {
+            switch (event.type) {
+            // Code of program exiting
+            case SDL_EVENT_QUIT:
+                // Stopping program at all
+                App::stop();
+                return;
 
-        case SDL_EVENT_MOUSE_WHEEL:
-            mouse.updatePos();
-            inputMouseWheel(event.wheel.y);
-            break;
+            // Getting mouse input
+            case SDL_EVENT_MOUSE_BUTTON_DOWN:
+                inputMouseDown();
+                break;
 
-        // Getting keys presses
-        case SDL_EVENT_KEY_DOWN:
-            inputKeys(event.key.key);
-            break;
+            case SDL_EVENT_MOUSE_BUTTON_UP:
+                inputMouseUp();
+                break;
 
-        // Text inputing
-        case SDL_EVENT_TEXT_INPUT:
-            inputText(event.text.text);
-            break;
+            case SDL_EVENT_MOUSE_WHEEL:
+                inputMouseWheel(event.wheel.y);
+                break;
+
+            // Getting keys presses
+            case SDL_EVENT_KEY_DOWN:
+                inputKeys(event.key.key);
+                break;
+
+            // Text inputing
+            case SDL_EVENT_TEXT_INPUT:
+                inputText(event.text.text);
+                break;
+            }
         }
+
+        // Waiting
+        inputTimer.sleep();
     }
 }
 
-// Empty template for draw
+void CycleTemplate::drawCycle() {
+    // Waiting, until can run this
+    waitStart();
+
+    // Running draw cycle
+    while (running) {
+        // Drawing
+        draw();
+
+        // Waiting
+        drawTimer.sleep();
+    }
+}
+
+
+// Empty templates
 void CycleTemplate::draw() const {}
 
 void CycleTemplate::update() {}
@@ -118,18 +146,9 @@ void CycleTemplate::run() {
     restarting = false;
     additionalRestart = false;
 
-    // Starting main cycle
-    while (running) {
-        // Getting user input
-        getInput();
+    // Allowing other cycles to start
+    startMutex.unlock();
 
-        // Updating things
-        update();
-
-        // Drawing interface
-        draw();
-
-        // Standing in idle state
-        idleTimer.sleep();
-    }
+    // Starting input cycle
+    inputCycle();
 }
