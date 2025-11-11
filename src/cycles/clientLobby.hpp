@@ -29,7 +29,7 @@ class ClientLobbyCycle : public BaseCycle {
     void inputKeys(SDL_Keycode key) override;
     void inputText(const char* text) override;
     void update() override;
-    void draw() const override;
+    void draw() override;
 
  public:
     ClientLobbyCycle(Window& _window);

@@ -67,7 +67,7 @@ void SinglePlayerGameCycle::inputKeys(SDL_Keycode _key) {
     GameCycle::inputKeys(_key);
 }
 
-void SinglePlayerGameCycle::draw() const {
+void SinglePlayerGameCycle::draw() {
     // Bliting background
     window.setDrawColor(BLACK);
     window.clear();

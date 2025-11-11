@@ -61,6 +61,7 @@ void MusicData::loadMusic(Music _index, const char* _name) {
 }
 
 void MusicData::start(Music _index) {
+    mutex.lock();
     // Check, if already playing it
     if (currentPlay != music[unsigned(_index)]) {
         // Infinite playing selected music
@@ -68,9 +69,11 @@ void MusicData::start(Music _index) {
         // Set new playing track
         currentPlay = music[unsigned(_index)];
     }
+    mutex.unlock();
 }
 
 void MusicData::startFading(Music _index) {
+    mutex.lock();
     // Check, if already playing it
     if (currentPlay != music[unsigned(_index)]) {
         // Infinite playing selected music
@@ -78,9 +81,11 @@ void MusicData::startFading(Music _index) {
         // Set new playing track
         currentPlay = music[unsigned(_index)];
     }
+    mutex.unlock();
 }
 
 void MusicData::startFromCurrent(Music _index) {
+    mutex.lock();
     // Check, if already playing it
     if (currentPlay != music[unsigned(_index)]) {
         // Getting position of current song
@@ -90,9 +95,11 @@ void MusicData::startFromCurrent(Music _index) {
         // Set new playing track
         currentPlay = music[unsigned(_index)];
     }
+    mutex.unlock();
 }
 
 void MusicData::setVolume(unsigned _volume) {
+    mutex.lock();
     // Checking correction given volume
     #if (CHECK_CORRECTION)
     if (_volume/2 > MIX_MAX_VOLUME) {
@@ -101,6 +108,7 @@ void MusicData::setVolume(unsigned _volume) {
     #endif
     volume = _volume/2;
     Mix_VolumeMusic(volume);
+    mutex.unlock();
 }
 
 unsigned MusicData::getVolume() const {

@@ -11,7 +11,13 @@
 
 // Cycle with game part of internet connection
 class InternetCycle : public GameCycle {
-protected:
+ private:
+    // Cycle for separated thread to get internet packets
+    void internetCycle();
+    IdleTimer internetTimer{1000/60};  // Timer to idle properly
+    std::thread drawThread{internetCycle, this};  // Threads itself
+
+ protected:
     // Graphical part
     GUI::StaticText playersTurnsTexts[2];
     GUI::TwoOptionBox disconnectedBox;
@@ -20,9 +26,8 @@ protected:
     GUI::HighlightedStaticText looseText;
 
     bool inputMouseDown() override;
-    void update() override;
     virtual void getInternetPacket(GetPacket& packet);
 
-public:
+ public:
     InternetCycle(Window& window);
 };

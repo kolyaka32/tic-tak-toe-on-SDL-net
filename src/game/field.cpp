@@ -4,6 +4,7 @@
  */
 
 #include "field.hpp"
+#include "../internet/internet.hpp"
 
 
 const float Field::cellSide = 100;
@@ -188,6 +189,9 @@ bool Field::clickMultiplayerCurrent(SDL_Point p) {
 
         // Checking for win
         gameState = checkWin(p);
+
+        // Sending to opponent
+        internet.sendAllConfirmed<Uint8>(ConnectionCode::GameTurn, p.x+p.y*width);
         return true;
     }
     return false;

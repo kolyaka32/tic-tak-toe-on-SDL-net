@@ -47,8 +47,8 @@ int main(int argv, char **args) {
     Window window{GameField::getWindowWidth(), GameField::getWindowHeight(),
         {"Tic-tac-toe", "Крестики нолики", "Tic-tac-toe", "Крыжыкі нулікі"}};
 
-    // Running menu
-    CycleTemplate::runCycle<SelectCycle>(window);
+    // Starting main cycles selecting system
+    App::run(window);
 
     // Successful end of program
     return 0;

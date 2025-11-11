@@ -9,14 +9,10 @@
 // Static class members
 bool CycleTemplate::running;
 bool CycleTemplate::restarting;
-bool CycleTemplate::additionalRestart;
 
 // Reset basic cycle template variables
 CycleTemplate::CycleTemplate(Window& _window)
 : window(_window) {
-    // Locking start mutex
-    startMutex.lock();
-
     // Resetting input
     SDL_Event event;
     while (SDL_PollEvent(&event) != 0) {}
@@ -25,6 +21,10 @@ CycleTemplate::CycleTemplate(Window& _window)
 
 void CycleTemplate::stop() {
     running = false;
+}
+
+bool CycleTemplate::isRunning() {
+    return running;
 }
 
 void CycleTemplate::restart() {
@@ -36,21 +36,15 @@ bool CycleTemplate::isRestarted() {
     return restarting;
 }
 
-bool CycleTemplate::isAdditionalRestarted() {
-    return additionalRestart;
-}
-
-
-void CycleTemplate::waitStart() {
-    // Waiting, until mutex will be avaliable
-    startMutex.lock();
-    // Unlocking it for next cycles
-    startMutex.unlock();
+void CycleTemplate::startNext(const Cycle _nextCycle) {
+    App::startNext(_nextCycle);
+    stop();
 }
 
 void CycleTemplate::inputCycle() {
+    logAdditional("Start input cycle");
     // Running loop with inputting
-    while (running) {
+    while (isRunning()) {
         // Creating event for get user input
         SDL_Event event;
 
@@ -95,11 +89,13 @@ void CycleTemplate::inputCycle() {
 
 void CycleTemplate::drawCycle() {
     // Waiting, until can run this
-    waitStart();
+    App::waitStart();
+
+    logAdditional("Start draw cycle");
 
     // Running draw cycle
-    while (running) {
-        // Drawing
+    while (isRunning()) {
+        // Drawing objects
         draw();
 
         // Waiting
@@ -109,7 +105,7 @@ void CycleTemplate::drawCycle() {
 
 
 // Empty templates
-void CycleTemplate::draw() const {}
+void CycleTemplate::draw() {}
 
 void CycleTemplate::update() {}
 
@@ -144,10 +140,9 @@ void CycleTemplate::inputText(const char* text) {
 void CycleTemplate::run() {
     // Resetting restart flag after all started
     restarting = false;
-    additionalRestart = false;
 
     // Allowing other cycles to start
-    startMutex.unlock();
+    App::start();
 
     // Starting input cycle
     inputCycle();

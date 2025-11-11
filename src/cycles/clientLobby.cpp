@@ -22,12 +22,6 @@ connectButton(window, 0.5, 0.9, {"Connect", "Присоединится", "Beitr
     // Starting random getting socket
     internet.openClient();
 
-    // Stopping, if go from another cycle
-    if (isAdditionalRestarted()) {
-        stop();
-        return;
-    }
-
     logAdditional("Start client lobby cycle");
 }
 
@@ -102,9 +96,7 @@ void ClientLobbyCycle::update() {
             // Settings options to this connection
             internet.connectTo(message->addr, message->port);
             // Starting game
-            runCycle<ClientGameCycle>(window);
-            // Exiting to menu after game
-            stop();
+            App::startNext(Cycle::ClientGame);
             return;
 
         default:
@@ -119,7 +111,7 @@ void ClientLobbyCycle::inputText(const char* text) {
     enterPortField.writeString(text);
 }
 
-void ClientLobbyCycle::draw() const {
+void ClientLobbyCycle::draw() {
     // Bliting background
     window.setDrawColor(BLACK);
     window.clear();

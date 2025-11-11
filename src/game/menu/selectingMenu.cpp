@@ -72,7 +72,7 @@ const Field* SelectingMenu::click(const Mouse _mouse) {
         }
         if (exitButton.in(_mouse)) {
             // Going to menu
-            CycleTemplate::stop();
+            App::startNext(Cycle::Menu);
             return nullptr;
         }
     }
@@ -106,7 +106,7 @@ void SelectingMenu::escape() {
     active = false;
 }
 
-void SelectingMenu::blit() const {
+void SelectingMenu::blit() {
     // Bliting waiting menu
     if (active) {
         // Bliting end background

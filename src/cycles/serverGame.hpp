@@ -19,7 +19,7 @@ class ServerGameCycle : public InternetCycle {
     void inputKeys(SDL_Keycode key) override;
     void inputMouseWheel(float _wheelY) override;
     void getInternetPacket(GetPacket& packet) override;
-    void draw() const override;
+    void draw() override;
 
  public:
     ServerGameCycle(Window& window);

@@ -29,20 +29,26 @@ SavedFields::~SavedFields() {
 }
 
 void SavedFields::activate() {
+    mutex.lock();
     active = true;
+    mutex.unlock();
+}
+
+void SavedFields::reset() {
+    mutex.lock();
+    active = false;
+    mutex.unlock();
 }
 
 bool SavedFields::isActive() {
     return active;
 }
 
-void SavedFields::reset() {
-    active = false;
-}
-
 const Field* SavedFields::click(const Mouse _mouse) {
+    mutex.lock();
     if (exitButton.in(_mouse)) {
         active = false;
+        mutex.unlock();
         return nullptr;
     }
     for (int i=startField; i < endField; ++i) {
@@ -52,13 +58,16 @@ const Field* SavedFields::click(const Mouse _mouse) {
             music.startFromCurrent(Music::MainCalm);
             // Setting new field
             active = false;
+            mutex.unlock();
             return &startOptions[i];
         }
     }
+    mutex.unlock();
     return nullptr;
 }
 
 void SavedFields::moveUp() {
+    mutex.lock();
     // Check, if can scroll up
     if (endField < saveInfos.size()) {
         startField++;
@@ -67,9 +76,11 @@ void SavedFields::moveUp() {
             saveInfos[i]->moveDown();
         }
     }
+    mutex.unlock();
 }
 
 void SavedFields::moveDown() {
+    mutex.lock();
     // Check, if can scroll down
     if (startField > 0) {
         startField--;
@@ -78,9 +89,11 @@ void SavedFields::moveDown() {
             saveInfos[i]->moveUp();
         }
     }
+    mutex.unlock();
 }
 
-void SavedFields::blit() const {
+void SavedFields::blit() {
+    mutex.lock();
     if (active) {
         backplate.blit();
         // Check, if has fields
@@ -93,9 +106,11 @@ void SavedFields::blit() const {
         }
         exitButton.blit();
     }
+    mutex.unlock();
 }
 
 void SavedFields::addFieldRuntime(const Field& _field) {
+    mutex.lock();
     // Add to global list
     addField(_field);
 
@@ -124,6 +139,7 @@ void SavedFields::addFieldRuntime(const Field& _field) {
             saveInfos.push_back(new SaveInfo(window, _field, startField-endField));
         }
     }
+    mutex.unlock();
 }
 
 

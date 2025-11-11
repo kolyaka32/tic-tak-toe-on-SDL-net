@@ -35,10 +35,7 @@ bool ClientGameCycle::inputMouseDown() {
         logAdditional("Saving field");
     }
     // Normal turn
-    if (field.tryClickClientCurrent(mouse)) {
-        // Sending to opponent
-        internet.sendAllConfirmed<Uint8>(ConnectionCode::GameTurn, field.getLastTurn(mouse));
-    }
+    field.tryClickClientCurrent(mouse);
     return false;
 }
 
@@ -75,7 +72,7 @@ void ClientGameCycle::getInternetPacket(GetPacket& packet) {
     }
 }
 
-void ClientGameCycle::draw() const {
+void ClientGameCycle::draw() {
     // Bliting background
     window.setDrawColor(BLACK);
     window.clear();

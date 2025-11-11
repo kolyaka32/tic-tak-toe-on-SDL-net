@@ -27,9 +27,11 @@ soundSlider{window, 0.5, 0.76, 0.5, sounds.getVolume()},
 exitButton{window, 0.5, 0.85, {"Exit", "Выход", "Ausfahrt", "Выхад"}} {}
 
 bool SettingsMenu::click(const Mouse _mouse) {
+    mutex.lock();
     // Check, if click on setting butoon
     if (settingButton.in(_mouse)) {
         active ^= true;  // Changing state
+        mutex.unlock();
         return false;
     }
     // Clicking in menu
@@ -45,36 +47,37 @@ bool SettingsMenu::click(const Mouse _mouse) {
                     window.updateTitle();
                     // Restarting game
                     CycleTemplate::restart();
+                    mutex.unlock();
                     return true;
                 }
             }
         }
         if (musicSlider.in(_mouse)) {
             holdingSlider = 1;
-            return true;
-        }
-        if (soundSlider.in(_mouse)) {
+        } else if (soundSlider.in(_mouse)) {
             holdingSlider = 2;
-            return true;
-        }
-        if (exitButton.in(_mouse)) {
+        } else if (exitButton.in(_mouse)) {
             // Checking on exit
             active = false;
-            return true;
         }
+        mutex.unlock();
         return true;
     }
+    mutex.unlock();
     return false;
 }
 
 void SettingsMenu::unClick() {
+    mutex.lock();
     if (active) {
         // Resetting selected box
         holdingSlider = 0;
     }
+    mutex.unlock();
 }
 
 void SettingsMenu::scroll(const Mouse mouse, float _wheelY) {
+    mutex.lock();
     if (active) {
         // Checking scroll on sliders
         if (musicSlider.in(mouse)) {
@@ -86,9 +89,12 @@ void SettingsMenu::scroll(const Mouse mouse, float _wheelY) {
             return;
         }
     }
+    mutex.unlock();
 }
 
 void SettingsMenu::update() {
+    mutex.lock();
+
     if (active) {
         // Creating and finding mouse position
         Mouse mouse{};
@@ -112,9 +118,10 @@ void SettingsMenu::update() {
             break;
         }
     }
+    mutex.unlock();
 }
 
-void SettingsMenu::blit() const {
+void SettingsMenu::blit() {
     // Draw pause button
     settingButton.blit();
 

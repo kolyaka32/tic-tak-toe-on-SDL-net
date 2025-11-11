@@ -38,12 +38,14 @@ bool GUI::OneOptionBox::isActive() const {
     return active;
 }
 
-void GUI::OneOptionBox::blit() const {
+void GUI::OneOptionBox::blit() {
+    mutex.lock();
     if (active) {
         background.blit();
         button.blit();
         mainText.blit();
     }
+    mutex.unlock();
 }
 
 #endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)

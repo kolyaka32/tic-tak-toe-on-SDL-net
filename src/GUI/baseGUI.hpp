@@ -23,10 +23,11 @@ namespace GUI {
     class Template {
      protected:
         const Window& window;
+        std::mutex mutex;
 
      public:
         Template(const Window& window);
-        virtual void blit() const;
+        virtual void blit();
     };
 
 
@@ -39,7 +40,7 @@ namespace GUI {
      public:
         TextureTemplate(const Window& window);
         void move(float X, float Y);
-        void blit() const override;
+        void blit() override;
         virtual bool in(const Mouse mouse) const;
     };
 
@@ -81,7 +82,7 @@ namespace GUI {
             Textures lineImage = Textures::SliderLine, Textures buttonImage = Textures::SliderButton, unsigned max = 255);
         unsigned setValue(float mouseX);  // Setting new state from mouse position
         unsigned scroll(float wheelY);    // Checking mouse wheel action
-        void blit() const override;       // Drawing slider with need button position
+        void blit() override;       // Drawing slider with need button position
     };
 
 
@@ -146,6 +147,8 @@ namespace GUI {
         ~DynamicText();
         template <typename ...Args>
         void setValues(Args&& ...args) {
+            mutex.lock();
+    
             // Checking for all chars
             char buffer[100];
             std::snprintf(buffer, sizeof(buffer), texts.getString().c_str(), args...);
@@ -157,6 +160,7 @@ namespace GUI {
             rect.w = texture->w;
             rect.h = texture->h;
             rect.x = window.getWidth() * posX - (rect.w * (unsigned)aligment / 2);
+            mutex.unlock();
         }
     };
 
@@ -204,7 +208,7 @@ namespace GUI {
         void unclick();                      // Function of resetting pressing
         const char* getString();             // Function of getting typed string
         void setString(const char* string);  // Function for replace text with new string
-        void blit() const override;          // Function for draw at screen
+        void blit() override;                // Function for draw at screen
     };
 
 
@@ -217,7 +221,7 @@ namespace GUI {
      public:
         TypeBox(const Window& window, float posX, float posY, const char *startText = "", float height = Height::TypeBox,
             Aligment aligment = Aligment::Midle, unsigned frameWidth = 2, Color textColor = BLACK);
-        void blit() const override;  // Function for draw inputting text with backplate
+        void blit() override;
         bool in(const Mouse mouse) const override;
     };
 
@@ -225,12 +229,12 @@ namespace GUI {
     // Class of buttons with text on it
     class TextButton : public HighlightedStaticText {
      private:
-        const RoundedBackplate backplate;
+        RoundedBackplate backplate;
 
      public:
         TextButton(const Window& window, float X, float Y, const LanguagedText texts, float size = Height::Main,
             Color color = WHITE, Aligment aligment = Aligment::Midle);
-        void blit() const override;
+        void blit() override;
     };
 
 
@@ -255,11 +259,11 @@ namespace GUI {
         bool active = false;
 
         // Background plate for better visability
-        const GUI::RoundedBackplate background;
+        GUI::RoundedBackplate background;
         // Main text - title
-        const GUI::HighlightedStaticText mainText;
+        GUI::HighlightedStaticText mainText;
         // Select variants
-        const TextButton button1, button2;
+        TextButton button1, button2;
 
      public:
         TwoOptionBox(const Window& window, const LanguagedText title,
@@ -268,7 +272,7 @@ namespace GUI {
         void activate();
         void reset();
         bool isActive() const;
-        void blit() const override;
+        void blit() override;
     };
 
 
@@ -279,11 +283,11 @@ namespace GUI {
         bool active = false;
 
         // Background plate for better visability
-        const GUI::RoundedBackplate background;
+        GUI::RoundedBackplate background;
         // Main text - title
-        const GUI::HighlightedStaticText mainText;
+        GUI::HighlightedStaticText mainText;
         // Select variants
-        const TextButton button;
+        TextButton button;
 
      public:
         OneOptionBox(const Window& window, const LanguagedText title,
@@ -292,7 +296,7 @@ namespace GUI {
         void activate();
         void reset();
         bool isActive() const;
-        void blit() const override;
+        void blit() override;
     };
 
     #endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)

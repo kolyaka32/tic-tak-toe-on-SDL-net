@@ -16,7 +16,7 @@ backplate(_window, {_posX*_window.getWidth() - (6.5f*bufferSize+2), _posY*_windo
     13.0f * bufferSize+4, _height * 1.8f}, 2) {}
 
 template <unsigned bufferSize>
-void GUI::TypeBox<bufferSize>::blit() const {
+void GUI::TypeBox<bufferSize>::blit() {
     // Rendering background picture for better typing
     backplate.blit();
 

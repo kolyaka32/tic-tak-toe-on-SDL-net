@@ -10,12 +10,14 @@
 // Check, if use mixer and preload music
 #if (USE_SDL_MIXER) && (PRELOAD_MUSIC)
 
+#include <mutex>
 #include <SDL3_mixer/SDL_mixer.h>
 
 
 // Class for play music
 class MusicData {
  private:
+    std::mutex mutex{};
     Mix_Music* music[unsigned(Music::Count)];
     Uint8 volume = 0;
     Mix_Music* currentPlay = nullptr;

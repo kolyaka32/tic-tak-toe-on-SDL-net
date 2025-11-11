@@ -16,13 +16,13 @@ class SettingsMenu : GUI::Template {
     Uint8 holdingSlider = 0;  // Index of holded slider
 
     // Button for enter and quit settings menu
-    const GUI::ImageButton settingButton;
+    GUI::ImageButton settingButton;
     // Background plate
-    const GUI::RoundedBackplate background;
+    GUI::RoundedBackplate background;
     // Title
     GUI::HighlightedStaticText titleText;
     // Flags for select language
-    const GUI::ImageButton flags[(unsigned)Language::Count];
+    GUI::ImageButton flags[(unsigned)Language::Count];
     // Sliders and it texts
     GUI::HighlightedStaticText musicText;
     GUI::Slider musicSlider;
@@ -33,7 +33,7 @@ class SettingsMenu : GUI::Template {
 
  public:
     explicit SettingsMenu(const Window& window);
-    void blit() const;
+    void blit() override;
     bool click(const Mouse mouse);
     void unClick();
     void scroll(const Mouse mouse, float wheelY);

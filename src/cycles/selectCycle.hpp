@@ -21,7 +21,7 @@ class SelectCycle : public BaseCycle {
     bool inputMouseDown() override;
     void inputKeys(SDL_Keycode key) override;
     void update() override;
-    void draw() const override;
+    void draw() override;
 
  public:
     SelectCycle(Window& window);

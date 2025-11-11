@@ -34,11 +34,11 @@ class SavedFields : GUI::Template {
     const Field* click(const Mouse mouse);
     void moveUp();
     void moveDown();
-    void blit() const override;
+    void blit() override;
 
     // Work with global saves
     void addFieldRuntime(const Field& field);  // Add another field during runtime
-    static void addField(const Field& field);
+    static void addField(const Field& field);  // Add fiel, when not at runtime
     static void addField(const std::string saveText);
     static void saveFields(std::ofstream& stream);
 };

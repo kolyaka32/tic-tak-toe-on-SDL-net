@@ -193,6 +193,8 @@ void GUI::TypeField<bufferSize>::type(SDL_Keycode _code) {
         return;
     }
 
+    mutex.lock();
+
     // Getting current shft and control state
     SDL_Keymod keyMods = SDL_GetModState();
 
@@ -203,6 +205,7 @@ void GUI::TypeField<bufferSize>::type(SDL_Keycode _code) {
         // Coping after caret
         if (selectLength == 0) {
             if (caret == 0) {
+                mutex.unlock();
                 return;
             }
             selectLength = -1;
@@ -214,6 +217,7 @@ void GUI::TypeField<bufferSize>::type(SDL_Keycode _code) {
         // Coping after caret
         if (selectLength == 0) {
             if (caret == length) {
+                mutex.unlock();
                 return;
             }
             selectLength = 1;
@@ -239,6 +243,7 @@ void GUI::TypeField<bufferSize>::type(SDL_Keycode _code) {
             selectLength = 0;
         }
         updateSelected();
+        mutex.unlock();
         return;
 
     case SDLK_RIGHT:
@@ -258,6 +263,7 @@ void GUI::TypeField<bufferSize>::type(SDL_Keycode _code) {
             selectLength = 0;
         }
         updateSelected();
+        mutex.unlock();
         return;
 
     // Special keys for faster caret move
@@ -270,6 +276,7 @@ void GUI::TypeField<bufferSize>::type(SDL_Keycode _code) {
         }
         caret = length;
         updateSelected();
+        mutex.unlock();
         return;
 
     case SDLK_HOME:
@@ -281,6 +288,7 @@ void GUI::TypeField<bufferSize>::type(SDL_Keycode _code) {
         }
         caret = 0;
         updateSelected();
+        mutex.unlock();
         return;
 
     // Clipboard
@@ -301,6 +309,7 @@ void GUI::TypeField<bufferSize>::type(SDL_Keycode _code) {
         if (keyMods & SDL_KMOD_CTRL) {
             writeClipboard();
         } else {
+            mutex.unlock();
             return;
         }
         break;
@@ -309,6 +318,7 @@ void GUI::TypeField<bufferSize>::type(SDL_Keycode _code) {
         if (keyMods & SDL_KMOD_CTRL) {
             copyToClipboard();
         } else {
+            mutex.unlock();
             return;
         }
         break;
@@ -318,6 +328,7 @@ void GUI::TypeField<bufferSize>::type(SDL_Keycode _code) {
             copyToClipboard();
             deleteSelected();
         } else {
+            mutex.unlock();
             return;
         }
         break;
@@ -331,14 +342,17 @@ void GUI::TypeField<bufferSize>::type(SDL_Keycode _code) {
         break;
 
     default:
+        mutex.unlock();
         return;
     }
     // Updating texture after modifiying text
     updateTexture();
+    mutex.unlock();
 }
 
 template <unsigned bufferSize>
 bool GUI::TypeField<bufferSize>::click(const Mouse _mouse) {
+    mutex.lock();
     if (in(_mouse)) {
         // Resetting values
         pressed = true;
@@ -358,7 +372,6 @@ bool GUI::TypeField<bufferSize>::click(const Mouse _mouse) {
         }
         // Showing caret
         updateSelected();
-        return false;
     } else if (selected) {
         // Resetting selection
         selected = false;
@@ -374,8 +387,10 @@ bool GUI::TypeField<bufferSize>::click(const Mouse _mouse) {
         updateSelected();
 
         // Return, that finish text input
+        mutex.unlock();
         return true;
     }
+    mutex.unlock();
     return false;
 }
 
@@ -386,6 +401,7 @@ void GUI::TypeField<bufferSize>::unclick() {
 
 template <unsigned bufferSize>
 void GUI::TypeField<bufferSize>::update(float _mouseX) {
+    mutex.lock();
     if (pressed) {
         size_t measure;
         if (length) {
@@ -404,25 +420,7 @@ void GUI::TypeField<bufferSize>::update(float _mouseX) {
         // Update timer
         needSwapCaret = getTime() + 400;
     }
-}
-
-template <unsigned bufferSize>
-void GUI::TypeField<bufferSize>::blit() const {
-    // Rendering main text
-    if (length) {
-        window.blit(texture, rect);
-    }
-
-    // Rendering selection text (as reversed)
-    if (selectLength) {
-        window.blit(inverseTexture, &inversedRectDest, &inversedRectSrc);
-    }
-
-    // Rendering caret
-    if (showCaret) {
-        window.setDrawColor({50, 50, 50, 50});
-        window.drawRect(caretRect);
-    }
+    mutex.unlock();
 }
 
 template <unsigned bufferSize>
@@ -433,6 +431,8 @@ const char* GUI::TypeField<bufferSize>::getString() {
 
 template <unsigned bufferSize>
 void GUI::TypeField<bufferSize>::setString(const char* _newString) {
+    mutex.lock();
+
     length = min(strlen(_newString), (size_t)bufferSize);
     memcpy(buffer, _newString, length);
 
@@ -448,6 +448,29 @@ void GUI::TypeField<bufferSize>::setString(const char* _newString) {
     selectLength = 0;
 
     updateTexture();
+
+    mutex.unlock();
+}
+
+template <unsigned bufferSize>
+void GUI::TypeField<bufferSize>::blit() {
+    mutex.lock();
+    // Rendering main text
+    if (length) {
+        window.blit(texture, rect);
+    }
+
+    // Rendering selection text (as reversed)
+    if (selectLength) {
+        window.blit(inverseTexture, &inversedRectDest, &inversedRectSrc);
+    }
+
+    // Rendering caret
+    if (showCaret) {
+        window.setDrawColor({50, 50, 50, 50});
+        window.drawRect(caretRect);
+    }
+    mutex.unlock();
 }
 
 #endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)

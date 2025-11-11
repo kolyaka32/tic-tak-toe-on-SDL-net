@@ -60,11 +60,14 @@ void SoundsData::loadSound(unsigned _index, const char* _name) {
     #endif
 }
 
-void SoundsData::play(Sounds _index) const {
+void SoundsData::play(Sounds _index) {
+    mutex.lock();
     Mix_PlayChannel(int(_index), sounds[unsigned(_index)], 0);
+    mutex.unlock();
 }
 
 void SoundsData::setVolume(unsigned _volume) {
+    mutex.lock();
     // Checking correction given volume
     #if (CHECK_CORRECTION)
     if (_volume/2 > MIX_MAX_VOLUME) {
@@ -75,6 +78,7 @@ void SoundsData::setVolume(unsigned _volume) {
     for (int i=0; i < unsigned(Sounds::Count); ++i) {
         Mix_VolumeChunk(sounds[i], volume);
     }
+    mutex.unlock();
 }
 
 unsigned SoundsData::getVolume() const {

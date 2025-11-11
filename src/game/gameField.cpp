@@ -16,8 +16,10 @@ GameField::GameField(const Window& _window)
 : Template(_window) {}
 
 void GameField::restart() {
+    mutex.lock();
     currentField.reset();
     currentField.setState(GameState::CurrentPlay);
+    mutex.unlock();
 }
 
 GameState GameField::getState() const {
@@ -45,24 +47,27 @@ bool GameField::isGameEnd() const {
 }
 
 void GameField::setNewField(const Field* field, Window& _window) {
+    mutex.lock();
     // Check, if need restart window
     if (currentField.width != field->width) {
         currentField = field;
         // Setting new window width, height
         currentField.updateWindow(_window);
         CycleTemplate::restart();
-        CycleTemplate::stop();
     }
     currentField = field;
     // Check, if game already started
     if (currentField.isStarted()) {
         music.startFromCurrent(Music::MainCombat);
     }
+    mutex.unlock();
 }
 
 const Field& GameField::saveField() {
+    mutex.lock();
     // Update save timer
     currentField.updateSaveInfo();
+    mutex.unlock();
     return currentField;
 }
 
@@ -71,57 +76,65 @@ const Array<char> GameField::getSave() const {
 }
 
 void GameField::tryClickSingle(const Mouse _mouse) {
+    mutex.lock();
     if (currentField.isValid(_mouse) && currentField.getState() <= GameState::OpponentPlay) {
         currentField.clickSingle(currentField.getPosition(_mouse));
         checkEnd();
     }
+    mutex.unlock();
 }
 
 void GameField::tryClickCoop(const Mouse _mouse) {
+    mutex.lock();
     if (currentField.isValid(_mouse) && currentField.getState() <= GameState::OpponentPlay) {
         currentField.clickTwo(currentField.getPosition(_mouse));
         checkEnd();
     }
+    mutex.unlock();
 }
 
-bool GameField::tryClickServerCurrent(const Mouse _mouse) {
+void GameField::tryClickServerCurrent(const Mouse _mouse) {
+    mutex.lock();
     if (currentField.isValid(_mouse) && currentField.getState() == GameState::CurrentPlay) {
-        return currentField.clickMultiplayerCurrent(currentField.getPosition(_mouse));
+        currentField.clickMultiplayerCurrent(currentField.getPosition(_mouse));
         checkEnd();
     }
-    return false;
+    mutex.unlock();
 }
 
-bool GameField::tryClickClientCurrent(const Mouse _mouse) {
+void GameField::tryClickClientCurrent(const Mouse _mouse) {
+    mutex.lock();
     if (currentField.isValid(_mouse) && currentField.getState() == GameState::OpponentPlay) {
-        return currentField.clickMultiplayerCurrent(currentField.getPosition(_mouse));
+        currentField.clickMultiplayerCurrent(currentField.getPosition(_mouse));
         checkEndInverted();
     }
-    return false;
-}
-
-Uint8 GameField::getLastTurn(const Mouse _mouse) {
-    SDL_Point p = currentField.getPosition(_mouse);
-    return p.y*currentField.width+p.x;
+    mutex.unlock();
 }
 
 void GameField::clickServerOpponent(Uint8 _p) {
+    mutex.lock();
     // No additional checks for correct internet connection
     currentField.clickMultiplayerOpponent({_p%currentField.width, _p/currentField.width});
     checkEnd();
+    mutex.unlock();
 }
 
 void GameField::clickClientOpponent(Uint8 _p) {
+    mutex.lock();
     // No additional checks for correct internet connection
     currentField.clickMultiplayerOpponent({_p%currentField.width, _p/currentField.width});
     checkEndInverted();
+    mutex.unlock();
 }
 
-void GameField::blit() const {
+void GameField::blit() {
+    mutex.lock();
     currentField.blit(window);
+    mutex.unlock();
 }
 
 void GameField::checkEnd() {
+    mutex.lock();
     // Starting main combat music
     music.startFromCurrent(Music::MainCombat);
     // Making sound depend on state
@@ -147,9 +160,12 @@ void GameField::checkEnd() {
     }
     // Setting start menu for next game
     SelectingMenu::open();
+
+    mutex.unlock();
 }
 
 void GameField::checkEndInverted() {
+    mutex.lock();
     // Starting main combat music
     music.startFromCurrent(Music::MainCombat);
     // Making sound depend on state
@@ -175,4 +191,6 @@ void GameField::checkEndInverted() {
     }
     // Setting start menu for next game
     SelectingMenu::open();
+
+    mutex.unlock();
 }

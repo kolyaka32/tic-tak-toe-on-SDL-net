@@ -27,11 +27,6 @@ maxValue(_max) {
     buttonRect.x = rect.x + rect.w * _startValue / maxValue - buttonRect.w / 2;
 }
 
-void GUI::Slider::blit() const {
-    window.blit(texture, rect);
-    window.blit(textureButton, buttonRect);
-}
-
 unsigned GUI::Slider::setValue(float _mouseX) {
     // Setting new position
     buttonRect.x = _mouseX;
@@ -53,6 +48,13 @@ unsigned GUI::Slider::scroll(float _wheelY) {
         return setValue(buttonRect.x + buttonRect.w/2 - rect.w / 16);
     }
     return 0;
+}
+
+void GUI::Slider::blit() {
+    mutex.lock();
+    window.blit(texture, rect);
+    window.blit(textureButton, buttonRect);
+    mutex.unlock();
 }
 
 #endif  // (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)

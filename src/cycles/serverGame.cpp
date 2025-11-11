@@ -53,10 +53,7 @@ bool ServerGameCycle::inputMouseDown() {
         return true;
     } else {
         // Normal turn
-        if (field.tryClickServerCurrent(mouse)) {
-            // Sending to opponent
-            internet.sendAllConfirmed<Uint8>(ConnectionCode::GameTurn, field.getLastTurn(mouse));
-        }
+        field.tryClickServerCurrent(mouse);
     }
     return false;
 }
@@ -103,7 +100,7 @@ void ServerGameCycle::getInternetPacket(GetPacket& packet) {
     }
 }
 
-void ServerGameCycle::draw() const {
+void ServerGameCycle::draw() {
     // Bliting background
     window.setDrawColor(BLACK);
     window.clear();

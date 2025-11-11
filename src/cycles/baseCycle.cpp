@@ -19,7 +19,7 @@ bool BaseCycle::inputMouseDown() {
         return true;
     }
     if (exitButton.in(mouse)) {
-        stop();
+        App::startNext(Cycle::Menu);
         return true;
     }
     return false;

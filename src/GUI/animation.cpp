@@ -26,12 +26,14 @@ GUI::Animation::~Animation() {
 }
 
 void GUI::Animation::update() {
+    mutex.lock();
     if (SDL_GetTicks() > prevTick) {
         frame = (frame + 1) % animation->count;
         SDL_DestroyTexture(texture);
         texture = window.createTexture(animation->frames[frame]);
         prevTick = getTime() + animation->delays[frame];
     }
+    mutex.unlock();
 }
 
 #endif  // (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)

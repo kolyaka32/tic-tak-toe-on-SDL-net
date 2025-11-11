@@ -30,5 +30,5 @@ class StartFields {
 
     const Field* click(const Mouse mouse);
 
-    void blit() const;
+    void blit();
 };

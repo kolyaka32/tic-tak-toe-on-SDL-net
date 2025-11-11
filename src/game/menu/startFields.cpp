@@ -28,12 +28,12 @@ void StartFields::activate() {
     active = true;
 }
 
-bool StartFields::isActive() {
-    return active;
-}
-
 void StartFields::reset() {
     active = false;
+}
+
+bool StartFields::isActive() {
+    return active;
 }
 
 const Field* StartFields::click(const Mouse _mouse) {
@@ -54,7 +54,7 @@ const Field* StartFields::click(const Mouse _mouse) {
     return nullptr;
 }
 
-void StartFields::blit() const {
+void StartFields::blit() {
     if (active) {
         backplate.blit();
         for (int i=0; i < 4; ++i) {

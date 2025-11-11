@@ -33,14 +33,14 @@ class GameField : public GUI::Template {
     const Field& saveField();
     const Array<char> getSave() const;
 
-    void blit() const override;
-
     // Game turns
     void tryClickSingle(const Mouse mouse);         // Clicking in singleplayer mode, return if have turn
     void tryClickCoop(const Mouse mouse);           // Clicking in coop mode, return if have turn
-    bool tryClickServerCurrent(const Mouse mouse);  // Clicking on server side by current user, return if have turn
-    bool tryClickClientCurrent(const Mouse mouse);  // Clicking on client side by current user, return if have turn
-    Uint8 getLastTurn(const Mouse mouse);           // Return last turn
+    void tryClickServerCurrent(const Mouse mouse);  // Clicking on server side by current user, return if have turn
+    void tryClickClientCurrent(const Mouse mouse);  // Clicking on client side by current user, return if have turn
     void clickServerOpponent(Uint8 position);       // Clicking on server side by internet connection
     void clickClientOpponent(Uint8 position);       // Clicking on client side by internet connection
+
+    // Draw system
+    void blit() override;
 };

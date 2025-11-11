@@ -36,7 +36,7 @@ bool InternetCycle::inputMouseDown() {
     if (int code = termianatedBox.click(mouse)) {
         if (code == 2) {
             // Quiting to menu
-            stop();
+            App::startNext(Cycle::Menu);
         }
         // Not allowing to any another actions
         return true;
@@ -47,7 +47,7 @@ bool InternetCycle::inputMouseDown() {
             internet.sendAll(ConnectionCode::ApplyConnection);
         } else if (code == 3) {
             // Going to menu
-            stop();
+            App::startNext(Cycle::Menu);
         }
         // Not allowing to any another actions
         return true;
@@ -55,26 +55,31 @@ bool InternetCycle::inputMouseDown() {
     return false;
 }
 
-void InternetCycle::update() {
-    // Getting messages
-    while (NET_Datagram* datagramm = internet.getNewMessages()) {
-        GetPacket packet(datagramm);
-        getInternetPacket(packet);
-    }
-    // Checking applied messages
-    internet.checkResendMessages();
+void InternetCycle::internetCycle() {
+    logAdditional("Start internet cycle");
+    // Running loop with inputting
+    while (isRunning()) {
+        // Getting messages
+        while (NET_Datagram* datagramm = internet.getNewMessages()) {
+            GetPacket packet(datagramm);
+            getInternetPacket(packet);
+        }
+        // Checking applied messages
+        internet.checkResendMessages();
 
-    // Appling status
-    internet.checkNeedApplyConnection();
+        // Appling status
+        internet.checkNeedApplyConnection();
 
-    // Checking status
-    if (internet.checkStatus()) {
-        disconnectedBox.activate();
-    } else {
-        disconnectedBox.reset();
+        // Checking status
+        if (internet.checkStatus()) {
+            disconnectedBox.activate();
+        } else {
+            disconnectedBox.reset();
+        }
+
+        // Waiting
+        internetTimer.sleep();
     }
-    // Basic update
-    BaseCycle::update();
 }
 
 void InternetCycle::getInternetPacket(GetPacket& packet) {

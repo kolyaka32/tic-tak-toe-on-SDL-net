@@ -30,19 +30,19 @@ bool SelectCycle::inputMouseDown() {
         return true;
     }
     if (singleplayerButton.in(mouse)) {
-        runCycle<SinglePlayerGameCycle>(window);
+        App::startNext(Cycle::Singleplayer);
         return true;
     }
     if (twoPlayerButton.in(mouse)) {
-        runCycle<TwoPlayerGameCycle>(window);
+        App::startNext(Cycle::Coop);
         return true;
     }
     if (serverButton.in(mouse)) {
-        runCycle<ServerLobbyCycle>(window);
+        App::startNext(Cycle::ServerLobby);
         return true;
     }
     if (connectButton.in(mouse)) {
-        runCycle<ClientLobbyCycle>(window);
+        App::startNext(Cycle::ClientLobby);
         return true;
     }
     return false;
@@ -60,7 +60,7 @@ void SelectCycle::update() {
     BaseCycle::update();
 }
 
-void SelectCycle::draw() const {
+void SelectCycle::draw() {
     // Bliting background
     window.setDrawColor(BLACK);
     window.clear();
@@ -76,7 +76,4 @@ void SelectCycle::draw() const {
 
     // Settings menu
     settings.blit();
-
-    // Bliting all to screen
-    window.render();
 }

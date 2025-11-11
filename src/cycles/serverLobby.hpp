@@ -25,7 +25,7 @@ class ServerLobbyCycle : public BaseCycle {
     // Main run functions
     bool inputMouseDown() override;
     void update() override;
-    void draw() const override;
+    void draw() override;
 
  public:
     ServerLobbyCycle(Window& window);

@@ -26,6 +26,6 @@ class SaveInfo : public GUI::Template {
     ~SaveInfo();
     void moveUp();
     void moveDown();
-    void blit() const override;
+    void blit() override;
     bool in(Mouse mouse) const;
 };

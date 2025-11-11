@@ -42,13 +42,19 @@ bool GUI::TwoOptionBox::isActive() const {
     return active;
 }
 
-void GUI::TwoOptionBox::blit() const {
+void GUI::TwoOptionBox::blit() {
+    // Locking current process
+    mutex.lock();
+
+    // Checking, if need to draw
     if (active) {
         background.blit();
         button1.blit();
         button2.blit();
         mainText.blit();
     }
+    // Unlocking it
+    mutex.unlock();
 }
 
 #endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)

@@ -11,4 +11,4 @@ GUI::Template::Template(const Window& _window)
 : window(_window) {}
 
 // Template function for draw
-void GUI::Template::blit() const {}
+void GUI::Template::blit() {}

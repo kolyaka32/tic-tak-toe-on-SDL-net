@@ -16,15 +16,19 @@ GUI::InfoBox::InfoBox(const Window& _window, float _X, float _Y, const Languaged
 }
 
 void GUI::InfoBox::update() {
+    mutex.lock();
     if (counter) {
         // Setting text to be less and less visible
         SDL_SetTextureAlphaModFloat(texture, (float)counter/maxCounter);
         counter--;
     }
+    mutex.unlock();
 }
 
 void GUI::InfoBox::reset() {
+    mutex.lock();
     counter = maxCounter;
+    mutex.unlock();
 }
 
 #endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)

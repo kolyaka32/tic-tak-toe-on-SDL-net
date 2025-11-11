@@ -16,7 +16,7 @@ class TwoPlayerGameCycle : public GameCycle {
     bool inputMouseDown() override;
     void inputMouseWheel(float _wheelY) override;
     void inputKeys(SDL_Keycode _key) override;
-    void draw() const override;
+    void draw() override;
 
  public:
     TwoPlayerGameCycle(Window& _window);

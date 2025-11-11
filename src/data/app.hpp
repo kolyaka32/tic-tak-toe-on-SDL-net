@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "../cyclesNames.hpp"
 #include "preloaded/sounds.hpp"
 #include "preloaded/music.hpp"
 #include "window.hpp"
@@ -17,9 +18,28 @@ class App {
  private:
     // Flags of work
     static bool running;
+    static std::mutex startMutex;
+    // Next cycle, that will be run
+    static Cycle nextCycle;
+    // Option for compact launch of cycle
+    template <class Cycle>
+    static void runCycle(Window& window);
 
  public:
     // Commands to operate with global running
     static void stop();
     static bool isRunning();
+    static void waitStart();
+    static void start();
+    static void startNext(const Cycle nextCycle);
+    static void run(Window& window);
 };
+
+template <class Cycle>
+void App::runCycle(Window& _window) {
+   // Create new cycle
+   Cycle cycle{_window};
+   // Running it
+   cycle.run();
+   // Deleting it
+}

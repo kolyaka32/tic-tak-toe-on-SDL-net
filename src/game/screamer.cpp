@@ -14,17 +14,21 @@ acceptButton(window, 0.5, 0.95, {"Okay...", "Ладно...", "Okay...", "Доб�
 }
 
 bool Screamer::click(const Mouse _mouse) {
+    mutex.lock();
     if (active) {
         // Check on button
         if (acceptButton.in(_mouse)) {
             active = false;
         }
+        mutex.unlock();
         return true;
     }
+    mutex.unlock();
     return false;
 }
 
 void Screamer::update() {
+    mutex.lock();
     // Randomly in near 2 minutes
     if (SDL_rand(60*60*5) == 0) {
         // Checking, if not already activated
@@ -37,9 +41,11 @@ void Screamer::update() {
             logAdditional("Show screamer");
         }
     }
+    mutex.unlock();
 }
 
-void Screamer::blit() const {
+void Screamer::blit() {
+    mutex.lock();
     if (active) {
         // Draw image itself
         window.blit(window.getTexture(Textures::Screamer));
@@ -47,4 +53,5 @@ void Screamer::blit() const {
         // Draw exit button
         acceptButton.blit();
     }
+    mutex.unlock();
 }

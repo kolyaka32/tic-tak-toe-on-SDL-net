@@ -26,23 +26,29 @@ SaveInfo::~SaveInfo() {
 
 void SaveInfo::moveUp() {
     backplate.move(0, -0.2);
+    mutex.lock();
     lastModifiedText.move(0, -0.2);
     dest.y -= 0.2*window.getHeight();
+    mutex.unlock();
 }
 
 void SaveInfo::moveDown() {
     backplate.move(0, 0.2);
+    mutex.lock();
     lastModifiedText.move(0, 0.2);
     dest.y += 0.2*window.getHeight();
+    mutex.unlock();
 }
 
 bool SaveInfo::in(Mouse _mouse) const {
     return backplate.in(_mouse);
 }
 
-void SaveInfo::blit() const {
+void SaveInfo::blit() {
+    mutex.lock();
     backplate.blit();
     window.blit(texture, dest);
     //saveNameText.blit();
     lastModifiedText.blit();
+    mutex.unlock();
 }

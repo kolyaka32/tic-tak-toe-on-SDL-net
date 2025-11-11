@@ -15,31 +15,27 @@
 // Template for any cycles
 class CycleTemplate {
  private:
-    static bool running;            // Flag of current running state
-    static bool restarting;         // Flag, if game was restarted
-    static bool additionalRestart;  // Flag of additional game restart
+    static bool running;     // Flag of current running state
+    static bool restarting;  // Flag, if game was restarted
 
     // Internal cycles of work
-    std::mutex startMutex{};
     // Cycle for separated thread to get any input
     void inputCycle();
     IdleTimer inputTimer{1000/60};  // Timer to idle properly
     // Cycle for separated thread to draw
     void drawCycle();
     IdleTimer drawTimer{1000/60};  // Timer to idle properly
-
-    // Threads itself
-    std::thread drawThread{drawCycle, this};
+    std::thread drawThread{drawCycle, this};  // Threads itself
 
  protected:
     Window& window;  // Target, where draw to
 
     // Start options
-    void waitStart();
+    void startNext(const Cycle nextCycle);
 
     // Cycle functions for cycle (could be overriden)
-    virtual void update();      // Getting special objects update
-    virtual void draw() const;  // Draw all need objects
+    virtual void update();  // Getting special objects update
+    virtual void draw();    // Draw all need objects
 
     // Subprograms for get need input
     virtual bool inputMouseDown();                // Actioning for mouse button pressing
@@ -53,29 +49,7 @@ class CycleTemplate {
     void run();
     // Function for stop current running cycle
     static void stop();
+    static bool isRunning();
     static void restart();
     static bool isRestarted();
-    static bool isAdditionalRestarted();
-    // Function for starting new cycle with posible arguments
-    template <class NewCycle, typename ...Args>
-    static void runCycle(Window& window, const Args& ...args);
 };
-
-
-template <class NewCycle, typename ...Args>
-void CycleTemplate::runCycle(Window& _window, const Args& ...args) {
-    restarting = false;
-    additionalRestart = false;
-
-    // Running current cycle, while restarting
-    do {
-        // Launching new cycle
-        NewCycle cycle(_window, args...);
-        cycle.run();
-    } while (App::isRunning() && (restarting | additionalRestart));
-
-    // Restarting external running cycle for correct language change
-    restarting = false;
-    additionalRestart = true;
-    running = false;
-}

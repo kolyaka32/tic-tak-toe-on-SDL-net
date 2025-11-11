@@ -10,12 +10,14 @@
 // Check, if use mixer and preload sounds
 #if (USE_SDL_MIXER) && (PRELOAD_SOUNDS)
 
+#include <mutex>
 #include <SDL3_mixer/SDL_mixer.h>
 
 
 // Class for playing sound with need name
 class SoundsData {
  private:
+    std::mutex mutex;
     Mix_Chunk* sounds[unsigned(Sounds::Count)];
     Uint8 volume = 0;
     void loadSound(unsigned index, const char* name);
@@ -23,7 +25,7 @@ class SoundsData {
  public:
     SoundsData();
     ~SoundsData();
-    void play(Sounds name) const;
+    void play(Sounds name);
     void setVolume(unsigned _volume);
     unsigned getVolume() const;
 };

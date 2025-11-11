@@ -13,9 +13,15 @@ GUI::TextButton::TextButton(const Window& _window, float _X, float _Y, const Lan
 : HighlightedStaticText(_window, _X, _Y, _texts, 1, _size, _color, _aligment),
 backplate(_window, {rect.x-10, rect.y-1, rect.w+20, rect.h+4}, _size * 0.75, 3) {}
 
-void GUI::TextButton::blit() const {
+void GUI::TextButton::blit() {
+    // Locking current process
+    mutex.lock();
+
     backplate.blit();
     window.blit(texture, rect);
+
+    // Unlocking it
+    mutex.unlock();
 }
 
 #endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)

@@ -4,7 +4,6 @@
  */
 
 #include "serverLobby.hpp"
-#include "serverGame.hpp"
 
 
 bool ServerLobbyCycle::showAddress = false;
@@ -19,12 +18,6 @@ hideAddressText(window, 0.5, 0.5, {"Hide address", "Скрыть адресс", 
     // Getting string with full address of current app
     Uint16 port = internet.openServer();
     snprintf(currentAddress, sizeof(currentAddress), "%s:%u", internet.getLocalhost(), port);
-
-    // Stopping, if go from another cycle
-    if (isAdditionalRestarted()) {
-        stop();
-        return;
-    }
 
     // Resetting flag of showing address
     if (!isRestarted()) {
@@ -94,9 +87,7 @@ void ServerLobbyCycle::update() {
             internet.sendAllConfirmed(ConnectionCode::Init);
 
             // Starting game (as server)
-            runCycle<ServerGameCycle>(window);
-            // Exiting to menu after game
-            stop();
+            App::startNext(Cycle::ServerGame);
             return;
 
         default:
@@ -106,7 +97,7 @@ void ServerLobbyCycle::update() {
     }
 }
 
-void ServerLobbyCycle::draw() const {
+void ServerLobbyCycle::draw() {
     // Bliting background
     window.setDrawColor(BLACK);
     window.clear();
