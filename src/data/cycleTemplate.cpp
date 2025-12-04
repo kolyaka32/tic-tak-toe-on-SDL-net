@@ -88,9 +88,6 @@ void CycleTemplate::inputCycle() {
 }
 
 void CycleTemplate::drawCycle() {
-    // Waiting, until can run this
-    App::waitStart();
-
     logAdditional("Start draw cycle");
 
     // Running draw cycle

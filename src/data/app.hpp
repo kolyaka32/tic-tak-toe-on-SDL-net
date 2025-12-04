@@ -18,7 +18,6 @@ class App {
  private:
     // Flags of work
     static bool running;
-    static std::mutex startMutex;
     // Next cycle, that will be run
     static Cycle nextCycle;
     // Option for compact launch of cycle
@@ -29,8 +28,6 @@ class App {
     // Commands to operate with global running
     static void stop();
     static bool isRunning();
-    static void waitStart();
-    static void start();
     static void startNext(const Cycle nextCycle);
     static void run(Window& window);
 };
