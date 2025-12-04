@@ -7,9 +7,7 @@
 
 #include "define.hpp"
 
-
-// Check, if can load images and preload it
-#if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
+#if (PRELOAD_TEXTURES)
 
 
 // Names of all images with related numbers
@@ -50,4 +48,4 @@ Textures operator-(const Textures index, int offset);
 // File names of the corresponding textures
 extern const char* texturesFilesNames[unsigned(Textures::Count)];
 
-#endif  // (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
+#endif  // (PRELOAD_TEXTURES)

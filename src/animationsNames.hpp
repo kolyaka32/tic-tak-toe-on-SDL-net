@@ -7,9 +7,7 @@
 
 #include "define.hpp"
 
-
-// Check, if can load animations and should preload it
-#if (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
+#if (PRELOAD_ANIMATIONS)
 
 
 // Names of all images with related numbers
@@ -22,4 +20,4 @@ enum class Animations : unsigned {
 // File names of the corresponding animations
 extern const char* animationsFilesNames[unsigned(Animations::Count)];
 
-#endif  // (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
+#endif  // (PRELOAD_ANIMATIONS)

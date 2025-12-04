@@ -12,7 +12,7 @@
 #if (USE_SDL_MIXER)
 #include <SDL3_mixer/SDL_mixer.h>
 #else
-#error Can't preload music without library
+#error "Can't preload music without library"
 #endif
 
 

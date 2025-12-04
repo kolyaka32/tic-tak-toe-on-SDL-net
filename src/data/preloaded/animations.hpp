@@ -7,9 +7,13 @@
 
 #include "../../animationsNames.hpp"
 
-// Check, if can load animations and should preload it
-#if (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
+#if (PRELOAD_ANIMATIONS)
+
+#if (USE_SDL_IMAGE)
 #include <SDL3_image/SDL_image.h>
+#else
+#error "Can't preload animations without library"
+#endif
 
 
 // Class for load, get and clear preloaded animations
@@ -24,4 +28,4 @@ class AnimationsData {
     IMG_Animation* operator[] (Animations name) const;
 };
 
-#endif  // (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
+#endif  // (PRELOAD_TEXTURES)

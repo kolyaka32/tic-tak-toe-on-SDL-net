@@ -5,9 +5,7 @@
 
 #include "texturesNames.hpp"
 
-
-// Check, if can load images and preload it
-#if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
+#if (PRELOAD_TEXTURES)
 
 
 // File names of the corresponding textures
@@ -43,4 +41,4 @@ Textures operator-(const Textures _color, int _offset) {
     return Textures(unsigned(_color) - _offset);
 }
 
-#endif  // (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
+#endif  // (PRELOAD_TEXTURES)
