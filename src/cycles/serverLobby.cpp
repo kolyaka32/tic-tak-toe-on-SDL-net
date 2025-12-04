@@ -20,12 +20,6 @@ hideAddressText(window, 0.5, 0.5, {"Hide address", "Скрыть адресс", 
     Uint16 port = internet.openServer();
     snprintf(currentAddress, sizeof(currentAddress), "%s:%u", internet.getLocalhost(), port);
 
-    // Stopping, if go from another cycle
-    if (isAdditionalRestarted()) {
-        stop();
-        return;
-    }
-
     // Resetting flag of showing address
     if (!isRestarted()) {
         showAddress = false;
@@ -93,9 +87,7 @@ void ServerLobbyCycle::update() {
             internet.sendAllConfirmed(ConnectionCode::Init);
 
             // Starting game (as server)
-            runCycle<ServerGameCycle>(window);
-            // Exiting to menu after game
-            stop();
+            App::setNextCycle(Cycle::ServerGame);
             return;
 
         default:

@@ -7,9 +7,7 @@
 
 #include "define.hpp"
 
-
-// Check, if use mixer and preload music
-#if (USE_SDL_MIXER) && (PRELOAD_MUSIC)
+#if (PRELOAD_MUSIC)
 
 
 // Names of music tracks
@@ -28,4 +26,4 @@ enum class Music {
 // File names of the corresponding music
 extern const char* musicFilesNames[unsigned(Music::Count)];
 
-#endif  // (USE_SDL_MIXER) && (PRELOAD_MUSIC)
+#endif  // (PRELOAD_MUSIC)

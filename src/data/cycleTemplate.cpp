@@ -9,7 +9,6 @@
 // Static class members
 bool CycleTemplate::running;
 bool CycleTemplate::restarting;
-bool CycleTemplate::additionalRestart;
 
 // Reset basic cycle template variables
 CycleTemplate::CycleTemplate(Window& _window)
@@ -31,10 +30,6 @@ void CycleTemplate::restart() {
 
 bool CycleTemplate::isRestarted() {
     return restarting;
-}
-
-bool CycleTemplate::isAdditionalRestarted() {
-    return additionalRestart;
 }
 
 // Getting user input
@@ -116,7 +111,6 @@ void CycleTemplate::inputText(const char* text) {
 void CycleTemplate::run() {
     // Resetting restart flag after all started
     restarting = false;
-    additionalRestart = false;
 
     // Starting main cycle
     while (running) {

@@ -17,3 +17,8 @@ void App::stop() {
 bool App::isRunning() {
     return running;
 }
+
+void App::setNextCycle(Cycle _nextCycle) {
+    nextCycle = _nextCycle;
+    CycleTemplate::stop();
+}

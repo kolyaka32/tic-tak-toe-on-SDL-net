@@ -7,9 +7,7 @@
 
 #include "define.hpp"
 
-
-// Check, if use mixer and preload sounds
-#if (USE_SDL_MIXER) && (PRELOAD_SOUNDS)
+#if (PRELOAD_SOUNDS)
 
 
 // Names of sound effects
@@ -33,4 +31,4 @@ enum class Sounds : unsigned {
 // File names of the corresponding sounds
 extern const char* soundsFilesNames[unsigned(Sounds::Count)];
 
-#endif  // (USE_SDL_MIXER) && (PRELOAD_SOUNDS)
+#endif  // (PRELOAD_SOUNDS)

@@ -35,7 +35,7 @@ bool InternetCycle::inputMouseDown() {
     if (int code = termianatedBox.click(mouse)) {
         if (code == 2) {
             // Quiting to menu
-            stop();
+            App::setNextCycle(Cycle::Menu);
         }
         // Not allowing to any another actions
         return true;
@@ -46,7 +46,7 @@ bool InternetCycle::inputMouseDown() {
             internet.sendAll(ConnectionCode::ApplyConnection);
         } else if (code == 3) {
             // Going to menu
-            stop();
+            App::setNextCycle(Cycle::Menu);
         }
         // Not allowing to any another actions
         return true;

@@ -24,11 +24,11 @@ Libraries libraries{};
 const DataLoader dataLoader{};
 #endif
 
-#if (USE_SDL_MIXER) && (PRELOAD_MUSIC)
+#if (PRELOAD_MUSIC)
 MusicData music{};
 #endif
 
-#if (USE_SDL_MIXER) && (PRELOAD_SOUNDS)
+#if (PRELOAD_SOUNDS)
 SoundsData sounds{};
 #endif
 
@@ -48,7 +48,7 @@ int main(int argv, char **args) {
         {"Tic-tac-toe", "Крестики нолики", "Tic-tac-toe", "Крыжыкі нулікі"}};
 
     // Running menu
-    CycleTemplate::runCycle<SelectCycle>(window);
+    App::run(window);
 
     // Successful end of program
     return 0;
