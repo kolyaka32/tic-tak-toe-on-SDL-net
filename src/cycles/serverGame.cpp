@@ -13,7 +13,7 @@ menu(_window) {
         menu.reset();
         field.restart();
         // Sending first field
-        internet.sendAllConfirmed<Array<char>>(ConnectionCode::GameNew, field.getSave());
+        internet.sendAllConfirmed({ConnectionCode::GameNew, field.getSave()});
     }
     logAdditional("Start server game cycle");
 }
@@ -21,6 +21,8 @@ menu(_window) {
 ServerGameCycle::~ServerGameCycle() {
     // Sending message of disconect
     internet.disconnect();
+    // Closing connection
+    internet.close();
 }
 
 bool ServerGameCycle::inputMouseDown() {
@@ -45,7 +47,7 @@ bool ServerGameCycle::inputMouseDown() {
             // Setting new field localy
             field.setNewField(f, window);
             // Sending it
-            internet.sendAllConfirmed<Array<char>>(ConnectionCode::GameNew, field.getSave());
+            internet.sendAllConfirmed({ConnectionCode::GameNew, field.getSave()});
             menu.reset();
             logAdditional("Selecting new field");
         }
@@ -54,7 +56,7 @@ bool ServerGameCycle::inputMouseDown() {
         // Normal turn
         if (field.tryClickServerCurrent(mouse)) {
             // Sending to opponent
-            internet.sendAllConfirmed<Uint8>(ConnectionCode::GameTurn, field.getLastTurn(mouse));
+            internet.sendAllConfirmed({ConnectionCode::GameTurn, field.getLastTurn(mouse)});
         }
     }
     return false;

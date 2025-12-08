@@ -12,15 +12,24 @@ Reciepient::Reciepient(NET_Address* _address, Uint16 _port)
 : dest(_address, _port) {}
 
 void Reciepient::checkResending(NET_DatagramSocket *_sock) {
-    for (int i=0; i < unconfirmedMessages.size(); ++i) {
-        if (unconfirmedMessages[i].isNeedResend()) {
-            sendUnconfirmed(_sock, unconfirmedMessages[i]);
+    // Check if client connected
+    if (getTime() < wasDisconected) {
+        for (int i=0; i < unconfirmedMessages.size(); ++i) {
+            if (unconfirmedMessages[i].isNeedResend()) {
+                // Resending message
+                sendUnconfirmed(_sock, unconfirmedMessages[i]);
+            }
         }
     }
 }
 
+bool Reciepient::checkDisconnect() {
+    return getTime() > wasDisconected;
+}
+
 void Reciepient::checkNeedApplyConnection(NET_DatagramSocket* _sock) {
-    if (getTime() > needResendApplyConnection) {
+    // Check if client connected and need to apply connection
+    if (getTime() < wasDisconected && getTime() > needResendApplyConnection) {
         sendConfirmed(_sock, ConfirmedMessage{ConnectionCode::ApplyConnection});
     }
 }
@@ -41,6 +50,10 @@ void Reciepient::sendUnconfirmed(NET_DatagramSocket* _sock, const Message& _mess
 
 bool Reciepient::isAddress(const Destination& _dest) {
     return dest == _dest;
+}
+
+void Reciepient::updateGetTimeout() {
+    wasDisconected = getTime() + connectionGetTimeout;
 }
 
 void Reciepient::applyMessage(Uint8 _index) {

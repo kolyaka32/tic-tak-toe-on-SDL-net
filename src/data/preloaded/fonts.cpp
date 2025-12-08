@@ -5,7 +5,7 @@
 
 #include "fonts.hpp"
 
-#if (USE_SDL_FONT) && (PRELOAD_FONTS)
+#if (PRELOAD_FONTS)
 
 #include "loader/loader.hpp"
 #include "../exceptions.hpp"
@@ -59,4 +59,4 @@ TTF_Font* FontsData::operator[](Fonts _index) const {
     return fonts[unsigned(_index)];
 }
 
-#endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)
+#endif  // (PRELOAD_FONTS)

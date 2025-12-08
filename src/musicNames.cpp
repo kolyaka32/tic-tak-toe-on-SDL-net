@@ -5,8 +5,7 @@
 
 #include "musicNames.hpp"
 
-// Check, if use mixer and preload music
-#if (USE_SDL_MIXER) && (PRELOAD_MUSIC)
+#if (PRELOAD_MUSIC)
 
 // File names of the corresponding music
 const char* musicFilesNames[unsigned(Music::Count)] = {
@@ -18,4 +17,4 @@ const char* musicFilesNames[unsigned(Music::Count)] = {
     "mus/main-combat.mp3",
 };
 
-#endif  // (USE_SDL_MIXER) && (PRELOAD_MUSIC)
+#endif  // (PRELOAD_MUSIC)

@@ -7,9 +7,13 @@
 
 #include "../../texturesNames.hpp"
 
-// Check, if can load images and preload it
-#if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
-#include <SDL3/SDL_render.h>
+#if (PRELOAD_TEXTURES)
+
+#if (USE_SDL_IMAGE)
+#include <SDL3_image/SDL_image.h>
+#else
+#error "Can't preload images without library"
+#endif
 
 
 // Class for load, draw and clear textures
@@ -24,4 +28,4 @@ class TexturesData {
     SDL_Texture* operator[] (Textures name) const;
 };
 
-#endif  // (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
+#endif  // (PRELOAD_TEXTURES)

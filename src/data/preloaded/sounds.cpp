@@ -5,7 +5,7 @@
 
 #include "sounds.hpp"
 
-#if (USE_SDL_MIXER) && (PRELOAD_SOUNDS)
+#if (PRELOAD_SOUNDS)
 
 #include "loader/loader.hpp"
 #include "../exceptions.hpp"
@@ -81,4 +81,4 @@ unsigned SoundsData::getVolume() const {
     return volume*2;
 }
 
-#endif  // (USE_SDL_MIXER) && (PRELOAD_SOUNDS)
+#endif  // (PRELOAD_SOUNDS)

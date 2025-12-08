@@ -13,6 +13,7 @@
 class Mouse {
  private:
     SDL_FPoint position;
+    SDL_MouseButtonFlags state;
 
  public:
     Mouse();
@@ -21,4 +22,5 @@ class Mouse {
     bool near(float x, float y) const;
     float getX() const;
     float getY() const;
+    SDL_MouseButtonFlags getState() const;
 };

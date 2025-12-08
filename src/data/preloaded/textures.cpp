@@ -5,9 +5,8 @@
 
 #include "textures.hpp"
 
-#if (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
+#if (PRELOAD_TEXTURES)
 
-#include <SDL3_image/SDL_image.h>
 #include "loader/loader.hpp"
 #include "../exceptions.hpp"
 
@@ -74,4 +73,4 @@ SDL_Texture* TexturesData::operator[] (Textures _index) const {
     return textures[unsigned(_index)];
 }
 
-#endif  // (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)
+#endif  // (PRELOAD_TEXTURES)

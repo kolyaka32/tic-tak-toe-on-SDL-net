@@ -7,10 +7,13 @@
 
 #include "../../musicNames.hpp"
 
-// Check, if use mixer and preload music
-#if (USE_SDL_MIXER) && (PRELOAD_MUSIC)
+#if (PRELOAD_MUSIC)
 
+#if (USE_SDL_MIXER)
 #include <SDL3_mixer/SDL_mixer.h>
+#else
+#error "Can't preload music without library"
+#endif
 
 
 // Class for play music
@@ -34,4 +37,4 @@ class MusicData {
 // Global system for launch music tracks
 extern MusicData music;
 
-#endif  // (USE_SDL_MIXER) && (PRELOAD_MUSIC)
+#endif  // (PRELOAD_MUSIC)

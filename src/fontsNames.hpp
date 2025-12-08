@@ -7,9 +7,7 @@
 
 #include "define.hpp"
 
-
-// Check, if use fonts and preload it
-#if (USE_SDL_FONT) && (PRELOAD_FONTS)
+#if (PRELOAD_FONTS)
 
 
 // Names of fonts
@@ -34,4 +32,4 @@ enum Height : int {
 // File names of the corresponding fonts
 extern const char* fontsFilesNames[unsigned(Fonts::Count)];
 
-#endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)
+#endif  // (PRELOAD_FONTS)

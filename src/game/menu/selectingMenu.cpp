@@ -72,7 +72,7 @@ const Field* SelectingMenu::click(const Mouse _mouse) {
         }
         if (exitButton.in(_mouse)) {
             // Going to menu
-            CycleTemplate::stop();
+            App::setNextCycle(Cycle::Menu);
             return nullptr;
         }
     }

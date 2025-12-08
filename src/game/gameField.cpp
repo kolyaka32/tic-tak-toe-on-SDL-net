@@ -51,7 +51,6 @@ void GameField::setNewField(const Field* field, Window& _window) {
         // Setting new window width, height
         currentField.updateWindow(_window);
         CycleTemplate::restart();
-        CycleTemplate::stop();
     }
     currentField = field;
     // Check, if game already started

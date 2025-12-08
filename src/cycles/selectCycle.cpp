@@ -29,19 +29,19 @@ bool SelectCycle::inputMouseDown() {
         return true;
     }
     if (singleplayerButton.in(mouse)) {
-        runCycle<SinglePlayerGameCycle>(window);
+        App::setNextCycle(Cycle::Singleplayer);
         return true;
     }
     if (twoPlayerButton.in(mouse)) {
-        runCycle<TwoPlayerGameCycle>(window);
+        App::setNextCycle(Cycle::Coop);
         return true;
     }
     if (serverButton.in(mouse)) {
-        runCycle<ServerLobbyCycle>(window);
+        App::setNextCycle(Cycle::ServerLobby);
         return true;
     }
     if (connectButton.in(mouse)) {
-        runCycle<ClientLobbyCycle>(window);
+        App::setNextCycle(Cycle::ClientLobby);
         return true;
     }
     return false;

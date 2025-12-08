@@ -20,6 +20,8 @@ waitText(window, 0.5, 0.05, {"Wait start", "Ожидайте начала", "War
 ClientGameCycle::~ClientGameCycle() {
     // Sending message of disconect
     internet.disconnect();
+    // Closing connection
+    internet.close();
 }
 
 bool ClientGameCycle::inputMouseDown() {
@@ -36,7 +38,7 @@ bool ClientGameCycle::inputMouseDown() {
     // Normal turn
     if (field.tryClickClientCurrent(mouse)) {
         // Sending to opponent
-        internet.sendAllConfirmed<Uint8>(ConnectionCode::GameTurn, field.getLastTurn(mouse));
+        internet.sendAllConfirmed({ConnectionCode::GameTurn, field.getLastTurn(mouse)});
     }
     return false;
 }

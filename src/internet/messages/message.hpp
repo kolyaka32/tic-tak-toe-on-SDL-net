@@ -7,7 +7,6 @@
 
 #include "swap.hpp"
 
-// Check, if need internet library
 #if (USE_SDL_NET)
 
 
@@ -26,6 +25,8 @@ class Message {
     // Write multiple function
     template <typename T, typename ...Args>
     void write(const T object, const Args ...argv);
+    //
+    void write(const ConnectionCode object);
     // Write single object
     template <typename T>
     void write(const T object);
@@ -60,14 +61,14 @@ void Message::write(const T _object) {
 template<typename T>
 void Message::write(const Array<T> _object) {
     for (int i=0; i < _object.getSize(); ++i) {
-        write<T>(_object[i]);
+        write(_object[i]);
     }
 }
 
 template <typename T, typename ...Args>
 void Message::write(const T _object, const Args ...args) {
     // Writing current object
-    write<T>(_object);
+    write(_object);
     write(args...);
 }
 

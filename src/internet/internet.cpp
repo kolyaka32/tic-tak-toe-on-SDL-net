@@ -9,9 +9,8 @@
 #if (USE_SDL_NET)
 
 
-Internet::Internet()
-: localhost(),  // Initialasing from getBroadcastAddress()
-broadcast(getBroadcastAddress(), broadcastPort) {
+Internet::Internet() {
+    getLocalAddress();
     logAdditional("Internet created correctly");
 }
 
@@ -33,97 +32,71 @@ void Internet::getLocalAddress() {
         }
         // Check, if not basic '127.0.0.1'
         if (usefull && strcmp(address, "127.0.0.1")) {
-            // Use this address
+            // Writing get address to buffer
             snprintf(localhost, sizeof(localhost), "%s", address);
+            // Clear used addresses
+            NET_FreeLocalAddresses(addresses);
+            return;
         }
     }
+    NET_FreeLocalAddresses(addresses);
 }
-
-NET_Address* Internet::getBroadcastAddress() {
-    // Update address of current machine
-    getLocalAddress();
-
-    // Get byte address of current machine (from IPv4)
-    Uint8 values[4] {0};
-    int i=0;
-    for (const char* c = localhost; *c; ++c) {
-        if (*c == '.') {
-            i++;
-            if (i == 4) {
-                break;
-            }
-        } else {
-            values[i] = values[i]*10 + *c - '0';
-        }
-    }
-    char broadcastString[16];
-    if (values[0] < 128) {
-        // Mask: 255.0.0.0
-        snprintf(broadcastString, sizeof(broadcastString), "%d.255.255.255", values[0]);
-    } else if (values[0] < 192) {
-        // Mask: 255.255.0.0
-        snprintf(broadcastString, sizeof(broadcastString), "%d.%d.255.255", values[0], values[1]);
-    } else if (values[0] < 224) {
-        // Mask: 255.255.255.0
-        snprintf(broadcastString, sizeof(broadcastString), "%d.%d.%d.255", values[0], values[1], values[2]);
-    } else {
-        snprintf(broadcastString, sizeof(broadcastString), "255.255.255.255");
-    }
-    return NET_ResolveHostname(broadcastString);
-}
-
 
 Uint16 Internet::openServer() {
     // Creating concrete socket at specified or random port, if busy
     // Setting basic create port
-    Uint16 currentPort = broadcastPort;
+    Uint16 currentPort = basePort;
+    gettingSocket = NET_CreateDatagramSocket(nullptr, currentPort);
 
     // Finding avalialble port
     SDL_srand(0);
-    while ((gettingSocket = NET_CreateDatagramSocket(nullptr, currentPort)) == nullptr) {
-        // Creating another random port
+    while (gettingSocket == nullptr) {
+        // Creating random port
         currentPort = SDL_rand(10000);
-    }
+        // Getting new socket
+        gettingSocket = NET_CreateDatagramSocket(nullptr, currentPort);
+    };
+    logAdditional("Server created, address: %s, port: %u", localhost, currentPort);
 
     #if (CHECK_CORRECTION)
     // Adding some packet loss for better testing
     NET_SimulateDatagramPacketLoss(gettingSocket, CONNECTION_LOST_PERCENT);
     #endif
 
-    logAdditional("Server created, address: %s, port: %u", localhost, currentPort);
     return currentPort;
 }
 
 void Internet::openClient() {
-    logAdditional("Client created, address: %s", localhost);
     // Creating socket at random port
     gettingSocket = NET_CreateDatagramSocket(nullptr, 0);
+    logAdditional("Client created, address: %s", localhost);
 }
 
 void Internet::connectTo(NET_Address* _address, Uint16 _port) {
-    logAdditional("Connecting to %s:%u", _address, _port);
     // Add new connection
     reciepients.push_back(Reciepient(_address, _port));
+    logAdditional("Connecting to %s:%u", _address, _port);
 }
 
 void Internet::close() {
     logAdditional("Close datagramm socket");
-    // Destrying getting socket
+    // Closing all reciepients
+    reciepients.clear();
+    // Destrying main getting socket
     NET_DestroyDatagramSocket(gettingSocket);
 }
 
 void Internet::disconnect() {
-    logAdditional("Disconnecting from games");
     // Sending message with quiting connection
     for (int i=0; i < reciepients.size(); ++i) {
-        reciepients[i].sendUnconfirmed(gettingSocket, Message{Uint8(ConnectionCode::Quit), 1});
+        reciepients[i].sendUnconfirmed(gettingSocket, Message{ConnectionCode::Quit, 1});
     }
+    logAdditional("Disconnecting from games");
 }
 
 const char* Internet::getLocalhost() {
     return localhost;
 }
-
 
 void Internet::checkResendMessages() {
     for (int i=0; i < reciepients.size(); ++i) {
@@ -138,7 +111,13 @@ void Internet::checkNeedApplyConnection() {
 }
 
 bool Internet::checkStatus() {
-    return (getTime() > needDisconect);
+    // Resetting flag
+    disconnected = true;
+    // Check all connections
+    for (int i=0; i < reciepients.size(); ++i) {
+        disconnected &= reciepients[i].checkDisconnect();
+    }
+    return disconnected;
 }
 
 NET_Datagram* Internet::getNewMessages() {
@@ -153,8 +132,6 @@ NET_Datagram* Internet::getNewMessages() {
                 break;
             }
         }
-        // Update wait timer
-        needDisconect = getTime() + messageGetTimeout;
 
         if (source) {
             // Logging get message
@@ -166,6 +143,9 @@ NET_Datagram* Internet::getNewMessages() {
             buffer[datagram->buflen] = '\0';
             logAdditional("Get message from %s, size %u: %s", source->getName(), datagram->buflen, buffer);
             #endif
+
+            // Update wait timer
+            source->updateGetTimeout();
 
             // Checking get message on special types
             switch ((ConnectionCode)datagram->buf[0]) {
@@ -202,6 +182,25 @@ NET_Datagram* Internet::getNewMessages() {
         }
     }
     return nullptr;
+}
+
+void Internet::sendFirst(Destination _dest, const Message _message) {
+    // Sending it here
+    _dest.send(gettingSocket, _message);
+}
+
+void Internet::sendAll(const Message _message) {
+    // Sending it to all
+    for (int i=0; i < reciepients.size(); ++i) {
+        reciepients[i].sendUnconfirmed(gettingSocket, _message);
+    }
+}
+
+void Internet::sendAllConfirmed(const ConfirmedMessage _message) {
+    // Sending it to all reciepients
+    for (int i=0; i < reciepients.size(); ++i) {
+        reciepients[i].sendConfirmed(gettingSocket, _message);
+    }
 }
 
 #endif  // (USE_SDL_NET)

@@ -7,10 +7,13 @@
 
 #include "../../soundsNames.hpp"
 
-// Check, if use mixer and preload sounds
-#if (USE_SDL_MIXER) && (PRELOAD_SOUNDS)
+#if (PRELOAD_SOUNDS)
 
+#if (USE_SDL_MIXER)
 #include <SDL3_mixer/SDL_mixer.h>
+#else
+#error "Can't preload sounds without library"
+#endif
 
 
 // Class for playing sound with need name
@@ -31,4 +34,4 @@ class SoundsData {
 // Global system for launch music tracks
 extern SoundsData sounds;
 
-#endif  // (USE_SDL_MIXER) && (PRELOAD_SOUNDS)
+#endif  // (PRELOAD_SOUNDS)

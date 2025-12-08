@@ -9,7 +9,6 @@
 // Static class members
 bool CycleTemplate::running;
 bool CycleTemplate::restarting;
-bool CycleTemplate::additionalRestart;
 
 // Reset basic cycle template variables
 CycleTemplate::CycleTemplate(Window& _window)
@@ -31,10 +30,6 @@ void CycleTemplate::restart() {
 
 bool CycleTemplate::isRestarted() {
     return restarting;
-}
-
-bool CycleTemplate::isAdditionalRestarted() {
-    return additionalRestart;
 }
 
 // Getting user input
@@ -83,25 +78,22 @@ void CycleTemplate::getInput() {
 // Empty template for draw
 void CycleTemplate::draw() const {}
 
-// Getting special update (if need)
 void CycleTemplate::update() {}
 
-
-// Getting input
 bool CycleTemplate::inputMouseDown() {
-   return false;
+    return false;
 }
 
 void CycleTemplate::inputMouseUp() {}
 
 // Example for getting keys input
 void CycleTemplate::inputKeys(SDL_Keycode _key) {
-    switch (_key) {
+    /*switch (_key) {
     case SDLK_ESCAPE:
         // Stopping ruuning by escape
         running = false;
         return;
-    }
+    }*/
 }
 
 // Example for getting mouse wheel input
@@ -113,14 +105,12 @@ void CycleTemplate::inputMouseWheel(float _wheelY) {
 // Example for getting text input
 void CycleTemplate::inputText(const char* text) {
     // typeBox.writeString(event.text.text);
-    // press = false;
 }
 
 // Function for start need cycle
 void CycleTemplate::run() {
     // Resetting restart flag after all started
     restarting = false;
-    additionalRestart = false;
 
     // Starting main cycle
     while (running) {

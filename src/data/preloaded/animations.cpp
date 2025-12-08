@@ -5,7 +5,7 @@
 
 #include "animations.hpp"
 
-#if (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
+#if (PRELOAD_ANIMATIONS)
 
 #include "loader/loader.hpp"
 #include "../exceptions.hpp"
@@ -61,4 +61,4 @@ IMG_Animation* AnimationsData::operator[] (Animations _index) const {
     return animations[unsigned(_index)];
 }
 
-#endif  // (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
+#endif  // (PRELOAD_ANIMATIONS)

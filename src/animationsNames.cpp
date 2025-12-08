@@ -5,9 +5,7 @@
 
 #include "animationsNames.hpp"
 
-
-// Check, if can load animations and should preload it
-#if (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
+#if (PRELOAD_ANIMATIONS)
 
 
 // File names of the corresponding textures
@@ -15,4 +13,4 @@ const char* animationsFilesNames[unsigned(Animations::Count)] = {
 
 };
 
-#endif  // (USE_SDL_IMAGE) && (PRELOAD_ANIMATIONS)
+#endif  // (PRELOAD_ANIMATIONS)

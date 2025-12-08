@@ -22,17 +22,15 @@ connectButton(window, 0.5, 0.9, {"Connect", "Присоединится", "Beitr
     // Starting random getting socket
     internet.openClient();
 
-    // Stopping, if go from another cycle
-    if (isAdditionalRestarted()) {
-        stop();
-        return;
-    }
-
     logAdditional("Start client lobby cycle");
 }
 
 ClientLobbyCycle::~ClientLobbyCycle() {
-    internet.close();
+    // Check, if not launching game
+    if (App::getNextCycle() != Cycle::ClientGame) {
+        // Clear getting socket
+        internet.close();
+    }
 }
 
 bool ClientLobbyCycle::inputMouseDown() {
@@ -69,7 +67,7 @@ bool ClientLobbyCycle::inputMouseDown() {
         memcpy(baseIP, enterIPField.getString(), sizeof(baseIP));
         memcpy(basePort, portTextCorrected, sizeof(basePort));
         // Trying connect at specified address
-        internet.sendFirst(enterIPField.getString(), std::stoi(portTextCorrected), ConnectionCode::Init, 1);
+        internet.sendFirst(StringDestination(enterIPField.getString(), std::stoi(portTextCorrected)), {ConnectionCode::Init, 1});
         return true;
     }
     return false;
@@ -101,9 +99,7 @@ void ClientLobbyCycle::update() {
             // Settings options to this connection
             internet.connectTo(message->addr, message->port);
             // Starting game
-            runCycle<ClientGameCycle>(window);
-            // Exiting to menu after game
-            stop();
+            App::setNextCycle(Cycle::ClientGame);
             return;
 
         default:

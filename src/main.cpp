@@ -13,7 +13,9 @@
 
 // Initialasing global objects in correct order
 // Logger
+#if (CHECK_ALL)
 std::ofstream logFile{"log.txt"};
+#endif
 
 // All side libries
 Libraries libraries{};
@@ -22,12 +24,12 @@ Libraries libraries{};
 const DataLoader dataLoader{};
 #endif
 
-#if (USE_SDL_MIXER) && (PRELOAD_MUSIC)
-SoundsData sounds{};
+#if (PRELOAD_MUSIC)
+MusicData music{};
 #endif
 
-#if (USE_SDL_MIXER) && (PRELOAD_SOUNDS)
-MusicData music{};
+#if (PRELOAD_SOUNDS)
+SoundsData sounds{};
 #endif
 
 #if (USE_SDL_NET)
@@ -46,7 +48,7 @@ int main(int argv, char **args) {
         {"Tic-tac-toe", "Крестики нолики", "Tic-tac-toe", "Крыжыкі нулікі"}};
 
     // Running menu
-    CycleTemplate::runCycle<SelectCycle>(window);
+    App::run(window);
 
     // Successful end of program
     return 0;
