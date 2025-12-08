@@ -184,4 +184,23 @@ NET_Datagram* Internet::getNewMessages() {
     return nullptr;
 }
 
+void Internet::sendFirst(Destination _dest, const Message _message) {
+    // Sending it here
+    _dest.send(gettingSocket, _message);
+}
+
+void Internet::sendAll(const Message _message) {
+    // Sending it to all
+    for (int i=0; i < reciepients.size(); ++i) {
+        reciepients[i].sendUnconfirmed(gettingSocket, _message);
+    }
+}
+
+void Internet::sendAllConfirmed(const ConfirmedMessage _message) {
+    // Sending it to all reciepients
+    for (int i=0; i < reciepients.size(); ++i) {
+        reciepients[i].sendConfirmed(gettingSocket, _message);
+    }
+}
+
 #endif  // (USE_SDL_NET)

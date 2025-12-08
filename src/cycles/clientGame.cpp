@@ -36,7 +36,7 @@ bool ClientGameCycle::inputMouseDown() {
     // Normal turn
     if (field.tryClickClientCurrent(mouse)) {
         // Sending to opponent
-        internet.sendAllConfirmed<Uint8>(ConnectionCode::GameTurn, field.getLastTurn(mouse));
+        internet.sendAllConfirmed({ConnectionCode::GameTurn, field.getLastTurn(mouse)});
     }
     return false;
 }

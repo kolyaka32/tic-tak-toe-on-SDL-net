@@ -39,14 +39,11 @@ class Internet {
     const char* getLocalhost();
 
     // Sending data to specialised user, without applience
-    template <typename ...Args>
-    void sendFirst(Destination dest, ConnectionCode code, const Args ...args);
+    void sendFirst(Destination dest, const Message message);
     // Sending data to all reciepients, without applience
-    template <typename ...Args>
-    void sendAll(ConnectionCode code, const Args ...args);
+    void sendAll(const Message message);
     // Sending data to all reciepients, confirming for delievery
-    template <typename ...Args>
-    void sendAllConfirmed(ConnectionCode code, const Args ...args);
+    void sendAllConfirmed(const ConfirmedMessage message);
 
     // Control part
     void checkResendMessages();
@@ -59,35 +56,5 @@ class Internet {
 
 // Global system to send/recieve messages throw internet
 extern Internet internet;
-
-
-// Template function realisations
-template <typename ...Args>
-void Internet::sendFirst(Destination _dest, ConnectionCode _code, const Args ...args) {
-    // Creating message
-    Message message(Uint8(_code), args...);
-    // Sending it here
-    _dest.send(gettingSocket, message);
-}
-
-template <typename ...Args>
-void Internet::sendAll(ConnectionCode _code, const Args ...args) {
-    // Creating message
-    Message message(Uint8(_code), args...);
-    // Sending it to all
-    for (int i=0; i < reciepients.size(); ++i) {
-        reciepients[i].sendUnconfirmed(gettingSocket, message);
-    }
-}
-
-template <typename ...Args>
-void Internet::sendAllConfirmed(ConnectionCode _code, const Args ...args) {
-    // Creating message
-    ConfirmedMessage message(_code, args...);
-    // Sending it to all reciepients
-    for (int i=0; i < reciepients.size(); ++i) {
-        reciepients[i].sendConfirmed(gettingSocket, message);
-    }
-}
 
 #endif  // (USE_SDL_NET)
