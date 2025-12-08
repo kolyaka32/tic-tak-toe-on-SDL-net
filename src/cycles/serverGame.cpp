@@ -21,6 +21,8 @@ menu(_window) {
 ServerGameCycle::~ServerGameCycle() {
     // Sending message of disconect
     internet.disconnect();
+    // Closing connection
+    internet.close();
 }
 
 bool ServerGameCycle::inputMouseDown() {

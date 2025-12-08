@@ -22,3 +22,7 @@ void App::setNextCycle(Cycle _nextCycle) {
     nextCycle = _nextCycle;
     CycleTemplate::stop();
 }
+
+Cycle App::getNextCycle() {
+    return nextCycle;
+}

@@ -28,7 +28,7 @@ class Destination {
 };
 
 
-//
+// Class with port and address, created from string
 class StringDestination : public Destination {
  public:
    StringDestination(const char* address, Uint16 port);

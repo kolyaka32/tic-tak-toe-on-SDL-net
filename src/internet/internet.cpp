@@ -89,7 +89,7 @@ void Internet::close() {
 void Internet::disconnect() {
     // Sending message with quiting connection
     for (int i=0; i < reciepients.size(); ++i) {
-        reciepients[i].sendUnconfirmed(gettingSocket, Message{Uint8(ConnectionCode::Quit), 1});
+        reciepients[i].sendUnconfirmed(gettingSocket, Message{ConnectionCode::Quit, 1});
     }
     logAdditional("Disconnecting from games");
 }

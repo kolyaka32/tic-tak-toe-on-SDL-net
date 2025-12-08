@@ -28,6 +28,7 @@ class App {
     static void stop();
     static bool isRunning();
     static void setNextCycle(Cycle nextCycle);
+    static Cycle getNextCycle();
     // Start current thread
     static void run(Window& window);
 };

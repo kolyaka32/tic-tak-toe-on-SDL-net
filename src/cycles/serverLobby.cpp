@@ -35,8 +35,11 @@ hideAddressText(window, 0.5, 0.5, {"Hide address", "Скрыть адресс", 
 }
 
 ServerLobbyCycle::~ServerLobbyCycle() {
-    // Clear getting socket
-    internet.close();
+    // Check, if not launching game
+    if (App::getNextCycle() != Cycle::ServerGame) {
+        // Clear getting socket
+        internet.close();
+    }
 }
 
 bool ServerLobbyCycle::inputMouseDown() {

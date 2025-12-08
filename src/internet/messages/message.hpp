@@ -7,7 +7,6 @@
 
 #include "swap.hpp"
 
-// Check, if need internet library
 #if (USE_SDL_NET)
 
 

@@ -26,7 +26,11 @@ connectButton(window, 0.5, 0.9, {"Connect", "Присоединится", "Beitr
 }
 
 ClientLobbyCycle::~ClientLobbyCycle() {
-    internet.close();
+    // Check, if not launching game
+    if (App::getNextCycle() != Cycle::ClientGame) {
+        // Clear getting socket
+        internet.close();
+    }
 }
 
 bool ClientLobbyCycle::inputMouseDown() {

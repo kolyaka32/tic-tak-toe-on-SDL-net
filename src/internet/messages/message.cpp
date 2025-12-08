@@ -21,7 +21,7 @@ size_t Message::getLength() const {
 void Message::write(const ConnectionCode _object) {
     // Check on avaliable space
     #if (CHECK_CORRECTION)
-    if (size + sizeof(T) > maxSize) {
+    if (size + sizeof(Uint8) > maxSize) {
         throw "Can't write data - not enogh size";
     }
     #endif
