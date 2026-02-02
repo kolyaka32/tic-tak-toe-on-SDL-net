@@ -1,11 +1,9 @@
 /*
- * Copyright (C) 2024-2026, Kazankov Nikolay
+ * Copyright (C) 2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
 #include "confirmedMessage.hpp"
-
-#if (USE_SDL_NET)
 
 
 Uint8 ConfirmedMessage::globalMessageIndex = 1;
@@ -32,5 +30,3 @@ bool ConfirmedMessage::isNeedResend() {
 bool ConfirmedMessage::applyMessage(Uint8 _index) const {
     return messageIndex == _index;
 }
-
-#endif  // (USE_SDL_NET)

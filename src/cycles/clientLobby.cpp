@@ -20,17 +20,7 @@ enterPortField(window, 0.5, 0.57, basePort),
 pasteButton(window, 0.5, 0.75, {"Paste the address", "Вставить адрес", "Kopierte Adresse", "Уставіць адрас"}),
 connectButton(window, 0.5, 0.9, {"Connect", "Присоединится", "Beitritt", "Далучыцца"}) {
     // Starting random getting socket
-    internet.openClient();
-
     logAdditional("Start client lobby cycle");
-}
-
-ClientLobbyCycle::~ClientLobbyCycle() {
-    // Check, if not launching game
-    if (App::getNextCycle() != Cycle::ClientGame) {
-        // Clear getting socket
-        internet.close();
-    }
 }
 
 bool ClientLobbyCycle::inputMouseDown() {
@@ -67,7 +57,8 @@ bool ClientLobbyCycle::inputMouseDown() {
         memcpy(baseIP, enterIPField.getString(), sizeof(baseIP));
         memcpy(basePort, portTextCorrected, sizeof(basePort));
         // Trying connect at specified address
-        internet.sendFirst(StringDestination(enterIPField.getString(), std::stoi(portTextCorrected)), {ConnectionCode::Init, 1});
+        Destination dest{enterIPField.getString(), (Uint16)SDL_atoi(portTextCorrected)};
+        internet.sendFirst(dest, {ConnectionCode::Init, 1});
         return true;
     }
     return false;
@@ -93,12 +84,13 @@ void ClientLobbyCycle::update() {
     enterPortField.update(mouse.getX());
 
     // Getting internet data
-    while (auto message = internet.getNewMessages()) {
-        switch (ConnectionCode(message->buf[0])) {
+    while (const GetPacket* packet = internet.getNewMessages()) {
+        switch (ConnectionCode(packet->getData<Uint8>(0))) {
         case ConnectionCode::Init:
-            // Settings options to this connection
-            internet.connectTo(message->addr, message->port);
-            // Starting game
+            // Connecting to getted address
+            internet.connectTo(Destination{packet->getSourceAddress()});
+
+            // Starting game (as client)
             App::setNextCycle(Cycle::ClientGame);
             return;
 

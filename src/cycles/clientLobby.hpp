@@ -10,7 +10,7 @@
 
 // Game cycle (for single player (special animation))
 class ClientLobbyCycle : public BaseCycle {
- private:
+ protected:
     // Input fields
     GUI::StaticText enterIPText;
     static char baseIP[15];
@@ -33,7 +33,6 @@ class ClientLobbyCycle : public BaseCycle {
 
  public:
     ClientLobbyCycle(Window& _window);
-    ~ClientLobbyCycle();
     static void writeBaseIP(const char* text);
     static const char* getBaseIP();
     static void writeBasePort(const char* text);

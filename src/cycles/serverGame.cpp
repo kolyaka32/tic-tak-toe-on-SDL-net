@@ -19,10 +19,13 @@ menu(_window) {
 }
 
 ServerGameCycle::~ServerGameCycle() {
-    // Sending message of disconect
-    internet.disconnect();
-    // Closing connection
-    internet.close();
+    // Check, if not launching game
+    if (!isRestarted()) {
+        // Sending message of disconect
+        internet.disconnect();
+        // Clear getting socket
+        internet.close();
+    }
 }
 
 bool ServerGameCycle::inputMouseDown() {
@@ -80,9 +83,9 @@ void ServerGameCycle::inputMouseWheel(float _wheelY) {
     menu.scroll(_wheelY);
 }
 
-void ServerGameCycle::getInternetPacket(GetPacket& packet) {
+void ServerGameCycle::getInternetPacket(const GetPacket& packet) {
     // Getting internet messages
-    switch (ConnectionCode(packet.getData<Uint8>())) {
+    switch (ConnectionCode(packet.getData<Uint8>(0))) {
     case ConnectionCode::Quit:
         termianatedBox.activate();
         break;

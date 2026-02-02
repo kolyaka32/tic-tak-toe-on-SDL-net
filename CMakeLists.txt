@@ -7,17 +7,20 @@ set(CMAKE_CXX_STANDARD 14)
 # Creating project
 project(Tic-tak-toe)
 
-# Hidding console on windows
+# Add all source files (that needed) under the src directory
+file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp" "src/*.rc")
+add_executable(${PROJECT_NAME} ${SOURCES})
+
+# Building depending on platform
 if (WIN32)
-    set(CMAKE_CXX_FLAGS "-mwindows -static")
+    # Hidding console on windows
+    set(CMAKE_CXX_FLAGS "-mwindows")
+    # Linking library for net
+    target_link_libraries(${PROJECT_NAME} PRIVATE wsock32 iphlpapi)
 endif (WIN32)
 
 # Setting to link standart libraries statickly
 set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
-
-# Add all source files (that needed) under the src directory
-file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/*.cpp" "src/*.rc")
-add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Look for a SDL3 package
 find_package(SDL3 REQUIRED)

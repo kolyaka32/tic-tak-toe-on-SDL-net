@@ -1,25 +1,19 @@
 /*
- * Copyright (C) 2024-2026, Kazankov Nikolay
+ * Copyright (C) 2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
 #pragma once
 
-#include "destination.hpp"
-
-// Check, if need internet library
-#if (USE_SDL_NET)
-
 #include <vector>
-#include "messages/confirmedMessage.hpp"
-#include "messages/getPacket.hpp"
+#include "socket.hpp"
 
 
 // Basic class for internet connection
 class Reciepient {
  private:
     // Address, where send to or recieve from
-    Destination dest;
+    const Destination dest;
     // System for confirmation of connection
     timer needResendApplyConnection = 0;             // Time, after which need resend apply connection message
     static const timer messageApplyTimeout = 2000;   // Time to send apply message to keep connecion
@@ -31,22 +25,19 @@ class Reciepient {
     IndexesArray<10> getIndexes;
 
  public:
-    Reciepient(NET_Address* address, Uint16 port);
+    Reciepient(const Destination& dest);
 
     // Send part
-    void sendConfirmed(NET_DatagramSocket* sock, const ConfirmedMessage& message);
-    void sendUnconfirmed(NET_DatagramSocket* sock, const Message& message);
+    void sendConfirmed(const Socket& socket, const ConfirmedMessage& message);
+    void sendUnconfirmed(const Socket& socket, const Message& message);
 
     // Check part
-    void checkResending(NET_DatagramSocket* sock);
+    void checkResending(const Socket& socket);
     bool checkDisconnect();
-    void checkNeedApplyConnection(NET_DatagramSocket* sock);
-    bool isAddress(const Destination& dest);
+    void checkNeedApplyConnection(const Socket& socket);
+    bool isAddress(const sockaddr_in* dest);
     void updateGetTimeout();
     void applyMessage(Uint8 index);
     bool checkIndexUniqness(Uint8 index);
     const char* getName() const;
 };
-
-
-#endif  // (USE_SDL_NET)

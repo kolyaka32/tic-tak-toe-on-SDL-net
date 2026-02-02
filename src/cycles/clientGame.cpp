@@ -18,10 +18,13 @@ waitText(window, 0.5, 0.05, {"Wait start", "Ожидайте начала", "War
 }
 
 ClientGameCycle::~ClientGameCycle() {
-    // Sending message of disconect
-    internet.disconnect();
-    // Closing connection
-    internet.close();
+    // Check, if not launching game
+    if (!isRestarted()) {
+        // Sending message of disconect
+        internet.disconnect();
+        // Clear getting socket
+        internet.close();
+    }
 }
 
 bool ClientGameCycle::inputMouseDown() {
@@ -43,9 +46,9 @@ bool ClientGameCycle::inputMouseDown() {
     return false;
 }
 
-void ClientGameCycle::getInternetPacket(GetPacket& packet) {
+void ClientGameCycle::getInternetPacket(const GetPacket& packet) {
     // Getting internet messages
-    switch (ConnectionCode(packet.getData<Uint8>())) {
+    switch (ConnectionCode(packet.getData<Uint8>(0))) {
     case ConnectionCode::Quit:
         termianatedBox.activate();
         break;

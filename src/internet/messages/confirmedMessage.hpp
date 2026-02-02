@@ -1,14 +1,11 @@
 /*
- * Copyright (C) 2024-2026, Kazankov Nikolay
+ * Copyright (C) 2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
 #pragma once
 
 #include "message.hpp"
-
-#if (USE_SDL_NET)
-
 #include "../../data/time.hpp"
 #include "indexesArray.cpp"
 
@@ -36,5 +33,3 @@ ConfirmedMessage::ConfirmedMessage(ConnectionCode _code, const Args ...args)
 messageIndex(globalMessageIndex) {
     updateGlobalIndex();
 }
-
-#endif  // (USE_SDL_NET)

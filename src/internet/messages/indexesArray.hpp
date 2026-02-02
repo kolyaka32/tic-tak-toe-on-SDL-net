@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2026, Kazankov Nikolay
+ * Copyright (C) 2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -17,7 +17,6 @@ class IndexesArray {
 
  public:
     IndexesArray();
-    ~IndexesArray();
     bool isUnique(Uint8 index);
     void add(Uint8 index);
 };

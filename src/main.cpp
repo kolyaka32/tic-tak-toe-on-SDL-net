@@ -32,7 +32,7 @@ MusicData music{};
 SoundsData sounds{};
 #endif
 
-#if (USE_SDL_NET)
+#if (USE_NET)
 Internet internet{};
 #endif
 

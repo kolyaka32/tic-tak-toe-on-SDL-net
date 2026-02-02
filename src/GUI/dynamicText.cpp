@@ -16,14 +16,14 @@ aligment(_aligment),
 color(_color),
 texts(_texts),
 height(_height) {
-    rect.y = window.getHeight() * _Y - height / 2;
     // Creating surface with text
     texture = window.createTexture(Fonts::Main, height, texts.getString().c_str(), 0, color);
 
     // Moving draw rect to new place
     rect.w = texture->w;
     rect.h = texture->h;
-    rect.x = window.getWidth() * posX - (rect.w * (unsigned)aligment / 2);
+    rect.x = SDL_roundf(window.getWidth() * _X - (rect.w * (unsigned)_aligment / 2));
+    rect.y = SDL_roundf(window.getHeight() * _Y - rect.h / 2);
 }
 
 GUI::DynamicText::~DynamicText() {

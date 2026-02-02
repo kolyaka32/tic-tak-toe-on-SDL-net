@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2026, Kazankov Nikolay
+ * Copyright (C) 2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -13,9 +13,6 @@ IndexesArray<length>::IndexesArray() {
     memset(array, 0, length);
     lastPosition = 0;
 }
-
-template <unsigned length>
-IndexesArray<length>::~IndexesArray() {}
 
 template <unsigned length>
 bool IndexesArray<length>::isUnique(Uint8 _index) {

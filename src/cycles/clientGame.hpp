@@ -16,7 +16,7 @@ class ClientGameCycle : public InternetCycle {
 
     // Main run functions
     bool inputMouseDown() override;
-    void getInternetPacket(GetPacket& packet) override;
+    void getInternetPacket(const GetPacket& packet) override;
     void draw() const override;
 
  public:

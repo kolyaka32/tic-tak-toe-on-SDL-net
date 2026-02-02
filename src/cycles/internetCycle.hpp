@@ -11,7 +11,7 @@
 
 // Cycle with game part of internet connection
 class InternetCycle : public GameCycle {
-protected:
+ protected:
     // Graphical part
     GUI::StaticText playersTurnsTexts[2];
     GUI::TwoOptionBox disconnectedBox;
@@ -21,8 +21,8 @@ protected:
 
     bool inputMouseDown() override;
     void update() override;
-    virtual void getInternetPacket(GetPacket& packet);
+    virtual void getInternetPacket(const GetPacket& packet);
 
-public:
+ public:
     InternetCycle(Window& window);
 };
