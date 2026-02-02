@@ -16,6 +16,8 @@ class Internet {
     Socket socket;
     // Socket for broadcast recieve/send data
     Socket broadcastSocket;
+    // Address to send tp broadcast
+    Destination broadcstDest;
     // Flag of disconnecting current user from main internet system
     bool disconnected;
     // Reciepients
@@ -37,6 +39,8 @@ class Internet {
     void sendAll(const Message& message);
     // Sending data to all reciepients, confirming for delievery
     void sendAllConfirmed(const ConfirmedMessage& message);
+    // Broadcast message to whole subnet
+    void sendBroadcast(const Message& message);
 
     // Control part
     void checkResendMessages();
@@ -45,6 +49,7 @@ class Internet {
 
     // Getting part
     const GetPacket* getNewMessages();
+    const GetPacket* getNewBroadcasts();
 };
 
 // Global system to send/recieve messages throw internet

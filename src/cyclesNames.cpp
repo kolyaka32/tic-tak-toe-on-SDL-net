@@ -17,6 +17,9 @@
 Cycle App::nextCycle = Cycle::Menu;
 
 void App::run(Window& _window) {
+    logAdditional("\nStart selecting loop");
+
+    // Starting loop of selecting cycles
     while (running) {
         // Selecting new
         switch (nextCycle) {
