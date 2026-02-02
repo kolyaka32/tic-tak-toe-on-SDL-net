@@ -12,8 +12,10 @@
 // Global class for send/recieve data from internet
 class Internet {
  private:
-    // Socket for recieve/send data
+    // Socket for recieve/send data (general)
     Socket socket;
+    // Socket for broadcast recieve/send data
+    Socket broadcastSocket;
     // Flag of disconnecting current user from main internet system
     bool disconnected;
     // Reciepients

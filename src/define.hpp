@@ -42,6 +42,12 @@
 #endif
 
 // Number of active connections in internet part
-#if USE_NET
+#if (USE_NET)
 #define MAX_CONNECTIONS 1
+#define BASE_PORT 8000
+// Broadcast mode
+#define USE_BROADCAST true
+#if (USE_BROADCAST)
+#define BROADCAST_PORT 5667
 #endif
+#endif  // (USE_NET)

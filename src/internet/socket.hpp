@@ -22,12 +22,21 @@ class Socket {
     // Packet, with data that was recieved
     GetPacket packet;
 
+ protected:
+    int tryBind();
+    void setNonBlockingMode();
+    void setReuseAddressMode();
+    void setBroadcastMode();
+
  public:
-    // Try open socket at specified port
-    Socket(Uint16 port);
-    // Open at random port
+    // Created unspecified socket
     Socket();
     ~Socket();
+    // Setting socket to use for recieving specified data
+    void tryBindTo(Uint16 port);
+    // Setting socket to recieve/send to whole subnet
+    void setBroadcast();
+    // Working with socket itself
     Uint16 getPort() const;
     void send(const Destination& dest, const Message& message) const;
     GetPacket* recieve();

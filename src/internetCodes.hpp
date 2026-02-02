@@ -25,6 +25,3 @@ enum class ConnectionCode : Uint8 {
     GameNew,      // Code of sending new field
     // GameRestart,  // Code of restart game with options of new game (field, turn)
 };
-
-// Basic connecting port
-const Uint16 basePort = 8000;

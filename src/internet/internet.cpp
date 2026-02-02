@@ -8,8 +8,11 @@
 
 
 Internet::Internet()
-: socket(8000) {
-    logAdditional("Internet created correctly, socket openned at %d", socket.getPort());
+: socket(),
+broadcastSocket() {
+    socket.tryBindTo(BASE_PORT);
+    broadcastSocket.setBroadcast();
+    logAdditional("Internet created correctly");
 }
 
 void Internet::connectTo(const Destination& _dest) {
