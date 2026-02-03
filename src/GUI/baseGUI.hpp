@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <vector>
 #include <array>
 #include "../data/app.hpp"
 
@@ -292,6 +293,31 @@ namespace GUI {
         void activate();
         void reset();
         bool isActive() const;
+        void blit() const override;
+    };
+
+    // Menu for scrolling options
+    // Class of field, where user can type text
+    template <class Item, class SourceItem>
+    class ScrollBox : public Template {
+     protected:
+        // Draw options
+        int startField = 0;
+        int endField = 0;
+        const int maxItems;
+        std::vector<Item*> items;  // Items in reverce order for easier appending
+        GUI::RoundedBackplate backplate;
+        GUI::HighlightedStaticText emptySavesText;
+
+     public:
+        // Create menu for scrolling objects, placed at center with (posX, posY) and size. Shows fully maxItems at screen
+        ScrollBox(const Window& window, float posX, float posY, float width, float height,
+            std::vector<SourceItem> items, const LanguagedText emptyItemsText, int maxShowedItems = 3);
+        ~ScrollBox();
+        void addItem(const SourceItem& field);
+        //void addItem(const Item&& field);
+        const Item* click(const Mouse mouse);
+        void scroll(float wheelY);  // Checking mouse wheel action
         void blit() const override;
     };
 
