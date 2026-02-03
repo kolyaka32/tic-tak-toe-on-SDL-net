@@ -81,15 +81,7 @@ const Field* SelectingMenu::click(const Mouse _mouse) {
 
 void SelectingMenu::scroll(float _wheelY) {
     if (active) {
-        if (_wheelY > 0) {
-            for (;_wheelY > 0; --_wheelY) {
-                savedFields.moveUp();
-            }
-        } else {
-            for (;_wheelY < 0; ++_wheelY) {
-                savedFields.moveDown();
-            }
-        }
+        savedFields.scroll(_wheelY);
     }
 }
 

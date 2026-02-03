@@ -14,26 +14,19 @@
 class SavedFields : GUI::Template {
  private:
     static std::vector<Field> startOptions;
+    static bool active;
 
     // Draw options
-    static bool active;
-    static int startField;
-    static int endField;
-    static const int maxFieldNumber = 3;
-    GUI::RoundedBackplate backplate;
-    std::vector<SaveInfo*> saveInfos;
-    GUI::HighlightedStaticText emptySavesText;
+    GUI::ScrollBox<SaveInfo, Field> scroller;
     GUI::TextButton exitButton;
 
  public:
     explicit SavedFields(const Window& window);
-    ~SavedFields();
     void activate();
     bool isActive();
     void reset();
     const Field* click(const Mouse mouse);
-    void moveUp();
-    void moveDown();
+    void scroll(float wheelY);
     void blit() const override;
 
     // Work with global saves

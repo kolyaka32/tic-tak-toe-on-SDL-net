@@ -18,7 +18,7 @@ broadcstDest("255.255.255.255", BROADCAST_PORT) {
 
 void Internet::connectTo(const Destination& _dest) {
     // Add new connection
-    reciepients.push_back(Reciepient(_dest));
+    reciepients.emplace_back(_dest);
     logAdditional("Connecting to %s:%u", _dest.getAddress(), _dest.getPort());
 }
 

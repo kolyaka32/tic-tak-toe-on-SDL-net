@@ -296,8 +296,7 @@ namespace GUI {
         void blit() const override;
     };
 
-    // Menu for scrolling options
-    // Class of field, where user can type text
+    // Menu for scrolling items
     template <class Item, class SourceItem>
     class ScrollBox : public Template {
      protected:
@@ -305,7 +304,7 @@ namespace GUI {
         int startField = 0;
         int endField = 0;
         const int maxItems;
-        std::vector<Item*> items;  // Items in reverce order for easier appending
+        std::vector<Item> items;  // Items in reverce order for easier appending
         GUI::RoundedBackplate backplate;
         GUI::HighlightedStaticText emptySavesText;
 
@@ -315,9 +314,9 @@ namespace GUI {
             std::vector<SourceItem> items, const LanguagedText emptyItemsText, int maxShowedItems = 3);
         ~ScrollBox();
         void addItem(const SourceItem& field);
-        //void addItem(const Item&& field);
-        const Item* click(const Mouse mouse);
-        void scroll(float wheelY);  // Checking mouse wheel action
+        // Return index of selected+1 and 0, if don't
+        int click(const Mouse mouse) const;
+        void scroll(float wheelY);
         void blit() const override;
     };
 

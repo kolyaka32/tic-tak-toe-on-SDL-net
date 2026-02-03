@@ -18,7 +18,7 @@ class SaveInfo : public GUI::Template {
     SDL_Texture* texture;
     SDL_FRect dest;
     // Save parameters
-    //GUI::StaticText saveNameText;
+    //GUI::HighlightedStaticText saveNameText;
     GUI::HighlightedStaticText lastModifiedText;
 
  public:

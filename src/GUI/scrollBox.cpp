@@ -15,25 +15,26 @@ backplate(_window, _posX, _posY, _width, _height, 20.0, 4.0),
 emptySavesText(_window, _posX, _posY - _height/2, _emptyItemsText, 1) {
     // Creating options to start
     for (int i=0; i < _startItems.size(); ++i) {
-        items.push_back(new Item(_window, _startItems[i], _startItems.size() - i - 1));
+        items.emplace_back(_window, _startItems[i], _startItems.size() - i - 1);
     }
+    startField = 0;
+    endField = min((int)items.size(), maxItems);
+    logAdditional("Created scrolling box, start %d, end %d, size %d", startField, endField, items.size());
 }
 
 template <class Item, class SourceItem>
 GUI::ScrollBox<Item, SourceItem>::~ScrollBox() {
-    for (int i=0; i < items.size(); ++i) {
-        delete items[i];
-    }
+    items.clear();
 }
 
 template <class Item, class SourceItem>
-const Item* GUI::ScrollBox<Item, SourceItem>::click(const Mouse _mouse) {
+int GUI::ScrollBox<Item, SourceItem>::click(const Mouse _mouse) const {
     for (int i=startField; i < endField; ++i) {
-        if (items[i]->in(_mouse)) {
-            return &items[i];
+        if (items[i].in(_mouse)) {
+            return i+1;
         }
     }
-    return nullptr;
+    return 0;
 }
 
 template <class Item, class SourceItem>
@@ -49,7 +50,7 @@ void GUI::ScrollBox<Item, SourceItem>::scroll(float _wheelY) {
                     startField++;
                     endField++;
                     for (int i=0; i < items.size(); ++i) {
-                        items[i]->moveDown();
+                        items[i].moveDown();
                     }
                 } else {
                     return;
@@ -62,7 +63,7 @@ void GUI::ScrollBox<Item, SourceItem>::scroll(float _wheelY) {
                     startField--;
                     endField--;
                     for (int i=0; i < items.size(); ++i) {
-                        items[i]->moveUp();
+                        items[i].moveUp();
                     }
                 } else {
                     return;
@@ -78,7 +79,7 @@ void GUI::ScrollBox<Item, SourceItem>::blit() const {
     // Check, if has fields
     if (endField) {
         for (int i=startField; i < endField; ++i) {
-            items[i]->blit();
+            items[i].blit();
         }
     } else {
         emptySavesText.blit();
@@ -91,10 +92,9 @@ void GUI::ScrollBox<Item, SourceItem>::addItem(const SourceItem& _sourceItem) {
     if (endField < maxItems) {
         // Moving all infos
         for (int i=0; i < items.size(); ++i) {
-            items[i]->moveDown();
+            items[i].moveDown();
         }
-        // Creating new
-        items.push_back(new Item(window, _sourceItem, 0));
+        items.emplace_back(window, _sourceItem, 0);
         endField++;
         return;
     }
@@ -102,15 +102,13 @@ void GUI::ScrollBox<Item, SourceItem>::addItem(const SourceItem& _sourceItem) {
     if (endField == items.size()) {
         // Moving all down
         for (int i=0; i < items.size(); ++i) {
-            items[i]->moveDown();
+            items[i].moveDown();
         }
-        // Creating new
-        items.push_back(new Item(window, _sourceItem, 0));
+        items.emplace_back(window, _sourceItem, 0);
         endField++;
         startField++;
         return;
-    } else {
-        // Placing and not showing
-        items.push_back(new Item(window, _sourceItem, startField - endField));
     }
+    // Placing and not showing
+    items.emplace_back(window, _sourceItem, startField - endField);
 }
