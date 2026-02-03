@@ -4,7 +4,6 @@
  */
 
 #include "socket.hpp"
-#include "../data/time.hpp"
 
 
 #if (USE_WINSOCK)
@@ -58,14 +57,14 @@ void Socket::tryBindTo(Uint16 _port) {
     // Setting basic port
     port = _port;
     // Setting random seed from time
-    SDL_srand(getTime());
+    SDL_srand(0);
     // Finding avaliable port
     // Setting socket to send from created local host (as back address)
     while (tryBind() == SOCKET_ERROR) {
         // Check, if port already using
         if (WSAGetLastError() == WSAEADDRINUSE) {
             // Finding another port
-            port = SDL_rand(10000);
+            port = SDL_rand(40000) + 1500;
         } else {
             // Error
             logImportant("bind function failed with error %d", WSAGetLastError());
@@ -82,7 +81,7 @@ void Socket::setBroadcast() {
     port = BROADCAST_PORT;
     // Tring to set this port to use
     if (tryBind() == SOCKET_ERROR) {
-        logImportant("bind function failed with error %d", WSAGetLastError());
+        logImportant("Brodcast bind function failed with error %d", WSAGetLastError());
     }
     setNonBlockingMode();
     logAdditional("Openned broadcast socket at port %d", port);
