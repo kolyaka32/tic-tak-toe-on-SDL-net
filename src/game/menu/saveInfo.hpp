@@ -23,6 +23,7 @@ class SaveInfo : public GUI::Template {
 
  public:
     explicit SaveInfo(const Window& window, const Field& field, int position);
+    SaveInfo(SaveInfo&& info) noexcept;
     ~SaveInfo();
     void moveUp();
     void moveDown();

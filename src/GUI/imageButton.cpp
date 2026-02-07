@@ -22,4 +22,7 @@ GUI::ImageButton::ImageButton(const Window& _window, float _X, float _Y, float _
     rect.y = window.getHeight() * _Y - rect.h / 2;
 }
 
+GUI::ImageButton::ImageButton(ImageButton&& _object) noexcept
+: TextureTemplate(std::move(_object)) {}
+
 #endif  // (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)

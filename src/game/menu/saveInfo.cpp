@@ -18,11 +18,23 @@ lastModifiedText(_window, 0.26, _position*0.2f+0.23f, {_field.getSaveTime()}, 1,
     _field.blitIcon(window);
     window.resetRenderTarget();
     // Creating position to render it
-    dest = {0.08f*window.getWidth(), (_position*0.2f+0.14f)*window.getHeight(), 0.18f*window.getWidth(), 0.18f*window.getHeight()};
+    dest = {0.08f * window.getWidth(), (_position*0.2f + 0.14f) * window.getHeight(),
+        0.18f * window.getWidth(), 0.18f * window.getHeight()};
+}
+
+SaveInfo::SaveInfo(SaveInfo&& _info) noexcept
+: Template(_info.window),
+backplate(std::move(_info.backplate)),
+//saveNameText(_info.saveNameText),
+lastModifiedText(std::move(_info.lastModifiedText)),
+texture(_info.texture) {
+    _info.texture = nullptr;
 }
 
 SaveInfo::~SaveInfo() {
-    window.destroy(texture);
+    if (texture) {
+        window.destroy(texture);
+    }
 }
 
 void SaveInfo::moveUp() {

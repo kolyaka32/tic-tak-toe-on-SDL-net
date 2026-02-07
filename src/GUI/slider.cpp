@@ -10,26 +10,27 @@
 
 GUI::Slider::Slider(const Window& _window, float _X, float _Y, float _width, unsigned _startValue,
     Textures _lineImage, Textures _buttonImage, unsigned _max)
-: TextureTemplate(_window),
+: TextureTemplate(_window, _window.getTexture(_lineImage)),
 maxValue(_max) {
     // Getting need texture
-    texture = window.getTexture(_lineImage);
-    textureButton = window.getTexture(_buttonImage);
-    rect.w = window.getWidth() * _width;
+    buttonTexture = _window.getTexture(_buttonImage);
+    rect.w = _window.getWidth() * _width;
     rect.h = texture->h * rect.w / texture->w;
-    buttonRect.w = textureButton->w * rect.w / texture->w;
-    buttonRect.h = textureButton->h * rect.w / texture->w;
+    buttonRect.w = buttonTexture->w * rect.w / texture->w;
+    buttonRect.h = buttonTexture->h * rect.w / texture->w;
 
     // Setting it to need place
-    rect.x = window.getWidth() * _X - rect.w / 2;
-    rect.y = window.getHeight() * _Y - rect.h / 2;
-    buttonRect.y = window.getHeight() * _Y - buttonRect.h / 2;
+    rect.x = _window.getWidth() * _X - rect.w / 2;
+    rect.y = _window.getHeight() * _Y - rect.h / 2;
+    buttonRect.y = _window.getHeight() * _Y - buttonRect.h / 2;
     buttonRect.x = rect.x + rect.w * _startValue / maxValue - buttonRect.w / 2;
 }
 
-void GUI::Slider::blit() const {
-    window.blit(texture, rect);
-    window.blit(textureButton, buttonRect);
+GUI::Slider::Slider(Slider&& _object) noexcept
+: TextureTemplate(std::move(_object)),
+maxValue(_object.maxValue) {
+    buttonTexture = _object.buttonTexture;
+    buttonRect = _object.buttonRect;
 }
 
 unsigned GUI::Slider::setValue(float _mouseX) {
@@ -53,6 +54,11 @@ unsigned GUI::Slider::scroll(float _wheelY) {
         return setValue(buttonRect.x + buttonRect.w/2 - rect.w / 16);
     }
     return 0;
+}
+
+void GUI::Slider::blit() const {
+    window.blit(texture, rect);
+    window.blit(buttonTexture, buttonRect);
 }
 
 #endif  // (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)

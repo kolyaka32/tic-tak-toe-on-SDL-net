@@ -69,6 +69,7 @@ class Window {
         SDL_PixelFormat format = SDL_PIXELFORMAT_RGBA32) const;
     SDL_Texture* createTexture(SDL_Surface* surface) const;
     SDL_Texture* createTextureAndFree(SDL_Surface* surface) const;
+    void copyTexture(SDL_Texture* dest, SDL_Texture* src) const;
     void blit(SDL_Texture* texture, const SDL_FRect& dest) const;
     void blit(SDL_Texture* texture, const SDL_FRect* dest = nullptr, const SDL_FRect* src = nullptr) const;
     void blit(SDL_Texture* texture, float angle, const SDL_FRect& rect, const SDL_FRect* src = nullptr,

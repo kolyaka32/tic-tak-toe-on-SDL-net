@@ -16,6 +16,11 @@ backplate(_window, {_posX*_window.getWidth() - (6.5f*bufferSize+2), _posY*_windo
     13.0f * bufferSize+4, _height * 1.8f}, 2) {}
 
 template <unsigned bufferSize>
+GUI::TypeBox<bufferSize>::TypeBox(TypeBox&& _object) noexcept
+: TypeField<bufferSize>(std::move(_object)),
+backplate(std::move(_object.backplate)) {}
+
+template <unsigned bufferSize>
 void GUI::TypeBox<bufferSize>::blit() const {
     // Rendering background picture for better typing
     backplate.blit();

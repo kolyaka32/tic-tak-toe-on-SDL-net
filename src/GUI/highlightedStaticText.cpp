@@ -9,12 +9,12 @@
 
 
 GUI::HighlightedStaticText::HighlightedStaticText(const Window& _window, float _X, float _Y,
-    const LanguagedText _texts, int frame, float _height, Color _color, Aligment _aligment)
+    const LanguagedText&& _texts, int _frame, float _height, Color _color, Aligment _aligment)
 : TextureTemplate(_window) {
     // Creating texture of text
     TTF_Font* font = window.getFont(Fonts::Main);
     TTF_SetFontSize(font, _height);
-    TTF_SetFontOutline(font, frame);
+    TTF_SetFontOutline(font, _frame);
 
     // Creating surface
     SDL_Surface* surface = TTF_RenderText_Solid(font, _texts.getString().c_str(), 0, {1, 0, 0, 255});
@@ -39,8 +39,13 @@ GUI::HighlightedStaticText::HighlightedStaticText(const Window& _window, float _
     rect.y = SDL_roundf(window.getHeight() * _Y - rect.h / 2);
 }
 
-GUI::HighlightedStaticText::~HighlightedStaticText() {
-    SDL_DestroyTexture(texture);
+GUI::HighlightedStaticText::HighlightedStaticText(HighlightedStaticText&& _object) noexcept
+: TextureTemplate(std::move(_object)) {}
+
+GUI::HighlightedStaticText::~HighlightedStaticText() noexcept {
+    if (texture) {
+        SDL_DestroyTexture(texture);
+    }
 }
 
 #endif  // (USE_SDL_FONT) && (PRELOAD_FONTS)

@@ -123,6 +123,12 @@ SDL_Texture* Window::createTextureAndFree(SDL_Surface* _surface) const {
     return texture;
 }
 
+void Window::copyTexture(SDL_Texture* _dest, SDL_Texture* _src) const {
+    setRenderTarget(_dest);
+    SDL_RenderTexture(renderer, _src, nullptr, nullptr);
+    resetRenderTarget();
+}
+
 void Window::blit(SDL_Texture* _texture, const SDL_FRect& _dest) const {
     SDL_RenderTexture(renderer, _texture, nullptr, &_dest);
 }
