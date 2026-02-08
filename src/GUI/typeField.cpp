@@ -14,11 +14,12 @@
 // Type field class
 template <unsigned bufferSize>
 GUI::TypeField<bufferSize>::TypeField(const Window& _window, float _X, float _Y, const char* _startText,
-    float _height, Aligment _aligment, Color _color)
+    float _height, Aligment _aligment, Color _textColor, Color _backColor)
 : TextureTemplate(_window),
 posX(window.getWidth()*_X),
 aligment(_aligment),
-textColor(_color),
+textColor(_textColor),
+backColor(_backColor),
 font(window.createFontCopy(Fonts::Main, _height)) {
     // Setting rects
     rect = {0, window.getHeight()*_Y-_height/2, 0, 0};
@@ -49,6 +50,7 @@ GUI::TypeField<bufferSize>::TypeField(TypeField&& _object) noexcept
 posX(_object.posX),
 aligment(_object.aligment),
 textColor(_object.textColor),
+backColor(_object.backColor),
 font(_object.font),
 length(_object.length),
 caret(_object.caret),
@@ -89,11 +91,11 @@ void GUI::TypeField<bufferSize>::updateTexture() {
         }
 
         // Creating main text texture
-        SDL_Surface* mainSurface = TTF_RenderText_Shaded(font, buffer, length, textColor, WHITE);
+        SDL_Surface* mainSurface = TTF_RenderText_Shaded(font, buffer, length, textColor, backColor);
         texture = window.createTextureAndFree(mainSurface);
 
         // Create inversed text texture
-        SDL_Surface* inversedSurface = TTF_RenderText_Shaded(font, buffer, length, WHITE, textColor);
+        SDL_Surface* inversedSurface = TTF_RenderText_Shaded(font, buffer, length, backColor, textColor);
         inverseTexture = window.createTextureAndFree(inversedSurface);
 
         // Resetting place of text with saving aligment

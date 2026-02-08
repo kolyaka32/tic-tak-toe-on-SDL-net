@@ -32,6 +32,7 @@ const Field* SavedFields::click(const Mouse _mouse) {
         return nullptr;
     }
     if (int i = scroller.click(_mouse)) {
+        active = false;
         return &startOptions[i-1];
     }
     return nullptr;

@@ -84,7 +84,9 @@ void ServerGameCycle::inputKeys(SDL_Keycode _key) {
 }
 
 void ServerGameCycle::inputMouseWheel(float _wheelY) {
-    GameCycle::inputMouseWheel(_wheelY);
+    if (settings.scroll(mouse, _wheelY)) {
+        return;
+    }
     menu.scroll(_wheelY);
 }
 

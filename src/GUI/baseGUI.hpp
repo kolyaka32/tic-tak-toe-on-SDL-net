@@ -178,45 +178,47 @@ namespace GUI {
     class TypeField : public TextureTemplate {
      protected:
         // Class constants
-        const int posX;                    // Relevant x position on screen
-        const Aligment aligment;           // Aligment type for correct placed position
-        const Color textColor;             // Color of typing text
-        TTF_Font* font;                    // Font for type text
+        const int posX;               // Relevant x position on screen
+        const Aligment aligment;      // Aligment type for correct placed position
+        const Color textColor;        // Color of typing text (and inversed background)
+        const Color backColor;        // Color of background plate (and inversed text)
+        TTF_Font* font;               // Font for type text
 
         // Variables
-        char buffer[bufferSize+1];         // String, that was typed
-        size_t length = 0;                 // Length of all text
-        size_t caret = 0;                  // Position of place, where user type
-        timer needSwapCaret = 0;           // Time, when next need to change caret
-        int selectLength = 0;              // Length of selected box
+        char buffer[bufferSize+1];    // String, that was typed
+        size_t length = 0;            // Length of all text
+        size_t caret = 0;             // Position of place, where user type
+        timer needSwapCaret = 0;      // Time, when next need to change caret
+        int selectLength = 0;         // Length of selected box
 
-        bool showCaret = false;            // Flag, if need to show caret
-        SDL_FRect caretRect;               // Place, where caret should be at screen
-        SDL_FRect inversedRectDest;        // Rect of inversed selected text, where should be drawn
-        SDL_FRect inversedRectSrc;         // Part of text, that should be reversed (relative)
-        SDL_Texture* inverseTexture;       // Texture of inversed selected box
-        bool pressed = false;              //
-        bool selected = false;             //
+        bool showCaret = false;       // Flag, if need to show caret
+        SDL_FRect caretRect;          // Place, where caret should be at screen
+        SDL_FRect inversedRectDest;   // Rect of inversed selected text, where should be drawn
+        SDL_FRect inversedRectSrc;    // Part of text, that should be reversed (relative)
+        SDL_Texture* inverseTexture;  // Texture of inversed selected box
+        bool pressed = false;         // Flag if currently mouse is pressed and selecting text
+        bool selected = false;        // Flag if currently typing in this field
 
-        void updateTexture();              // Creat new texture of updated text
-        void updateSelected();             // Update reversed rect position (selected part)
-        void deleteSelected();             // Clearing selected part
-        void writeClipboard();             // Write clipboard content after caret
-        void copyToClipboard();            // Writing selected text to clipboard
+        void updateTexture();         // Creat new texture of updated text
+        void updateSelected();        // Update reversed rect position (selected part)
+        void deleteSelected();        // Clearing selected part
+        void writeClipboard();        // Write clipboard content after caret
+        void copyToClipboard();       // Writing selected text to clipboard
 
      public:
         TypeField(const Window& window, float posX, float posY, const char *startText = "",
-            float height = Height::TypeBox, Aligment aligment = Aligment::Midle, Color textColor = BLACK);
+            float height = Height::TypeBox, Aligment aligment = Aligment::Midle,
+            Color textColor = BLACK, Color backColor = WHITE);
         TypeField(TypeField<bufferSize>&& object) noexcept;
         ~TypeField() noexcept;
-        void writeString(const char* str);   // Function of writing any string to buffer at caret position
-        void type(SDL_Keycode code);         // Function of processing special keycodes
-        void update(float mouseX);           // Function of change caret symbol from '|' to ' ' and back
-        bool click(const Mouse mouse);       // Function of setting caret for typing after
-        void unclick();                      // Function of resetting pressing
-        const char* getString();             // Function of getting typed string
-        void setString(const char* string);  // Function for replace text with new string
-        void blit() const override;          // Function for draw at screen
+        void writeString(const char* str);   // Write string to buffer at caret position
+        void type(SDL_Keycode code);         // Processing special keycodes (like arrows, home, CTRL-C...)
+        void update(float mouseX);           // Highlated area of typing
+        bool click(const Mouse mouse);       // Set caret for typing at specified place
+        void unclick();                      // Reset pressing
+        const char* getString();             // Return typed string
+        void setString(const char* string);  // Replace text with new string
+        void blit() const override;          // Draw current text with selection at screen
     };
 
 

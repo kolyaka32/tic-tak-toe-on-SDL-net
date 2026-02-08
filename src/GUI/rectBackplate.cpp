@@ -13,7 +13,7 @@ GUI::RectBackplate::RectBackplate(const Window& _window, float _centerX, float _
 
 GUI::RectBackplate::RectBackplate(const Window& _window, const SDL_FRect& _rect, float _border,
     Color _frontColor, Color _backColor)
-: TextureTemplate(_window, _rect, _window.createTexture(rect.w, rect.h)) {
+: TextureTemplate(_window, _rect, _window.createTexture(_rect.w, _rect.h)) {
     // Rendering backplate
     window.setRenderTarget(texture);
     window.setDrawColor(GREY);
@@ -24,7 +24,7 @@ GUI::RectBackplate::RectBackplate(const Window& _window, const SDL_FRect& _rect,
 }
 
 GUI::RectBackplate::RectBackplate(const RectBackplate& _object) noexcept
-: TextureTemplate(_object.window, _object.rect, _object.window.createTexture(rect.w, rect.h)) {
+: TextureTemplate(_object.window, _object.rect, _object.window.createTexture(_object.rect.w, _object.rect.h)) {
     window.copyTexture(texture, _object.texture);
 }
 

@@ -154,10 +154,8 @@ template <class Item, class SourceItem>
 void GUI::ScrollBox<Item, SourceItem>::scroll(float _wheelY) {
     Mouse mouse{};
     mouse.updatePos();
-    // Resetting holding
-    holding = false;
     // Check, if scroll in this menu
-    if (backplate.in(mouse)) {
+    if (!holding && backplate.in(mouse)) {
         if (_wheelY > 0) {
             for (;_wheelY > 0; --_wheelY) {
                 // Check, if can scroll up

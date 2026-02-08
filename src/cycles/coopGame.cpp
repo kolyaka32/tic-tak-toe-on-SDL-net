@@ -55,7 +55,9 @@ void TwoPlayerGameCycle::inputMouseUp() {
 }
 
 void TwoPlayerGameCycle::inputMouseWheel(float _wheelY) {
-    BaseCycle::inputMouseWheel(_wheelY);
+    if (settings.scroll(mouse, _wheelY)) {
+        return;
+    }
     menu.scroll(_wheelY);
 }
 

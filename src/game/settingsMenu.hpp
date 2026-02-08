@@ -36,7 +36,7 @@ class SettingsMenu : GUI::Template {
     void blit() const;
     bool click(const Mouse mouse);
     void unClick();
-    void scroll(const Mouse mouse, float wheelY);
+    bool scroll(const Mouse mouse, float wheelY);
     void update();
     void activate();
 };
