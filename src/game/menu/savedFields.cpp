@@ -37,6 +37,18 @@ const Field* SavedFields::click(const Mouse _mouse) {
     return nullptr;
 }
 
+void SavedFields::unclick() {
+    scroller.unclick();
+}
+
+void SavedFields::update() {
+    if (active) {
+        Mouse mouse;
+        mouse.updatePos();
+        scroller.update(mouse);
+    }
+}
+
 void SavedFields::scroll(float _wheelY) {
     if (active) {
         scroller.scroll(_wheelY);

@@ -26,6 +26,8 @@ class SavedFields : GUI::Template {
     bool isActive();
     void reset();
     const Field* click(const Mouse mouse);
+    void unclick();
+    void update();
     void scroll(float wheelY);
     void blit() const override;
 
