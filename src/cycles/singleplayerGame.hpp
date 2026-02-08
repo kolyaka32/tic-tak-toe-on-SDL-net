@@ -13,10 +13,13 @@
 class SinglePlayerGameCycle : public GameCycle {
  private:
     SelectingMenu menu;
-    // Main run functions
+
+ protected:
     bool inputMouseDown() override;
+    void inputMouseUp() override;
     void inputMouseWheel(float _wheelY) override;
     void inputKeys(SDL_Keycode _key) override;
+    void update() override;
     void draw() const override;
 
  public:

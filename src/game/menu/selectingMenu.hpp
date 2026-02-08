@@ -32,6 +32,8 @@ class SelectingMenu {
     static bool isActive();
     void addField(const Field& field);
     const Field* click(const Mouse mouse);
+    void unclick();
+    void update();
     void scroll(float wheelY);
     void escape();
     void blit() const;

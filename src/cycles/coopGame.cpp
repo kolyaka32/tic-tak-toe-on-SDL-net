@@ -49,6 +49,11 @@ bool TwoPlayerGameCycle::inputMouseDown() {
     return false;
 }
 
+void TwoPlayerGameCycle::inputMouseUp() {
+    GameCycle::inputMouseUp();
+    menu.unclick();
+}
+
 void TwoPlayerGameCycle::inputMouseWheel(float _wheelY) {
     BaseCycle::inputMouseWheel(_wheelY);
     menu.scroll(_wheelY);
@@ -65,6 +70,11 @@ void TwoPlayerGameCycle::inputKeys(SDL_Keycode _key) {
         return;
     }
     GameCycle::inputKeys(_key);
+}
+
+void TwoPlayerGameCycle::update() {
+    GameCycle::update();
+    menu.update();
 }
 
 void TwoPlayerGameCycle::draw() const {

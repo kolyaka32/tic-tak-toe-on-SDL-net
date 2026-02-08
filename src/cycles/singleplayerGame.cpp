@@ -48,6 +48,11 @@ bool SinglePlayerGameCycle::inputMouseDown() {
     return false;
 }
 
+void SinglePlayerGameCycle::inputMouseUp() {
+    GameCycle::inputMouseUp();
+    menu.unclick();
+}
+
 void SinglePlayerGameCycle::inputMouseWheel(float _wheelY) {
     BaseCycle::inputMouseWheel(_wheelY);
     menu.scroll(_wheelY);
@@ -64,6 +69,11 @@ void SinglePlayerGameCycle::inputKeys(SDL_Keycode _key) {
         return;
     }
     GameCycle::inputKeys(_key);
+}
+
+void SinglePlayerGameCycle::update() {
+    GameCycle::update();
+    menu.update();
 }
 
 void SinglePlayerGameCycle::draw() const {

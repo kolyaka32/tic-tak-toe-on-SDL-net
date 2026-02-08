@@ -79,6 +79,16 @@ const Field* SelectingMenu::click(const Mouse _mouse) {
     return nullptr;
 }
 
+void SelectingMenu::unclick() {
+    savedFields.unclick();
+}
+
+void SelectingMenu::update() {
+    if (active) {
+        savedFields.update();
+    }
+}
+
 void SelectingMenu::scroll(float _wheelY) {
     if (active) {
         savedFields.scroll(_wheelY);

@@ -65,6 +65,11 @@ bool ServerGameCycle::inputMouseDown() {
     return false;
 }
 
+void ServerGameCycle::inputMouseUp() {
+    GameCycle::inputMouseUp();
+    menu.unclick();
+}
+
 void ServerGameCycle::inputKeys(SDL_Keycode _key) {
     if (_key == SDLK_ESCAPE) {
         // Closing top open object
@@ -105,6 +110,11 @@ void ServerGameCycle::getInternetPacket(const GetPacket& packet) {
     default:
         break;
     }
+}
+
+void ServerGameCycle::update() {
+    GameCycle::update();
+    menu.update();
 }
 
 void ServerGameCycle::draw() const {

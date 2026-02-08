@@ -318,16 +318,26 @@ namespace GUI {
     template <class Item, class SourceItem>
     class ScrollBox : public Template {
      protected:
-        // Draw options
+        // Items, for draw
         int startField = 0;
         int endField = 0;
         const int maxItems;
-        std::vector<Item> items;  // Items in reverce order for easier appending
+        // Items in reverce order for easier appending
+        std::vector<Item> items;
+        // Additional interface
         GUI::RoundedBackplate backplate;
+        // Slider for showing position
+        SDL_FRect sliderRect;
+        const SDL_FRect sliderBackRect;
+        bool holding = false;
+        float holdPosition;
         // Adding text of absence of objects
         #if (USE_SDL_FONT) && (PRELOAD_FONTS)
         GUI::HighlightedStaticText emptySavesText;
         #endif
+
+        void moveUp();
+        void moveDown();
 
      public:
         // Create menu for scrolling objects, placed at center with (posX, posY) and size. Shows fully maxItems at screen
@@ -337,7 +347,9 @@ namespace GUI {
         ~ScrollBox() noexcept;
         void addItem(const SourceItem& field);
         // Return index of selected+1 and 0, if don't
-        int click(const Mouse mouse) const;
+        int click(const Mouse mouse);
+        void unclick();
+        void update(const Mouse mouse);
         void scroll(float wheelY);
         void blit() const override;
     };

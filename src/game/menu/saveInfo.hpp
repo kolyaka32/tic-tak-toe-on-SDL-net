@@ -10,13 +10,10 @@
 
 
 // Information of one concrete save (date and picture for load)
-class SaveInfo : public GUI::Template {
+class SaveInfo : public GUI::TextureTemplate {
  private:
     // Backplate
     GUI::RoundedBackplate backplate;
-    // Picture of game field
-    SDL_Texture* texture;
-    SDL_FRect dest;
     // Save parameters
     //GUI::HighlightedStaticText saveNameText;
     GUI::HighlightedStaticText lastModifiedText;
@@ -24,7 +21,7 @@ class SaveInfo : public GUI::Template {
  public:
     explicit SaveInfo(const Window& window, const Field& field, int position);
     SaveInfo(SaveInfo&& info) noexcept;
-    ~SaveInfo();
+    ~SaveInfo() noexcept;
     void moveUp();
     void moveDown();
     void blit() const override;

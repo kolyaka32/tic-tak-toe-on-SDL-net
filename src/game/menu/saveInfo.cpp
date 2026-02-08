@@ -7,31 +7,26 @@
 
 
 SaveInfo::SaveInfo(const Window& _window, const Field& _field, int _position)
-: Template(_window),
-backplate(_window, 0.5, _position*0.2f+0.23f, 0.89, 0.2, 15, 2),
+: TextureTemplate(_window, {0.06f * _window.getWidth(), (_position*0.2f + 0.14f) * _window.getHeight(),
+    0.18f * _window.getWidth(), 0.18f * _window.getHeight()},
+    _window.createTexture(_field.getWindowWidth(), _field.getWindowWidth())),
+backplate(_window, 0.48, _position*0.2f+0.23f, 0.9, 0.2, 15, 2),
 //saveNameText(_window, 0.75, position*0.2f+0.16f, {field.getSaveName()}),
-lastModifiedText(_window, 0.26, _position*0.2f+0.23f, {_field.getSaveTime()}, 1, Height::Main, WHITE, GUI::Aligment::Left) {
+lastModifiedText(_window, 0.25, _position*0.2f+0.23f, {_field.getSaveTime()}, 1, Height::Main, WHITE, GUI::Aligment::Left) {
     // Creating texture
-    texture = window.createTexture(_field.getWindowWidth(), _field.getWindowWidth());
-    window.setRenderTarget(texture);
+    _window.setRenderTarget(texture);
     // Render full field at it
-    _field.blitIcon(window);
-    window.resetRenderTarget();
-    // Creating position to render it
-    dest = {0.08f * window.getWidth(), (_position*0.2f + 0.14f) * window.getHeight(),
-        0.18f * window.getWidth(), 0.18f * window.getHeight()};
+    _field.blitIcon(_window);
+    _window.resetRenderTarget();
 }
 
-SaveInfo::SaveInfo(SaveInfo&& _info) noexcept
-: Template(_info.window),
-backplate(std::move(_info.backplate)),
-//saveNameText(_info.saveNameText),
-lastModifiedText(std::move(_info.lastModifiedText)),
-texture(_info.texture) {
-    _info.texture = nullptr;
-}
+SaveInfo::SaveInfo(SaveInfo&& _object) noexcept
+: TextureTemplate(std::move(_object)),
+backplate(std::move(_object.backplate)),
+//saveNameText(_object.saveNameText),
+lastModifiedText(std::move(_object.lastModifiedText)) {}
 
-SaveInfo::~SaveInfo() {
+SaveInfo::~SaveInfo() noexcept {
     if (texture) {
         window.destroy(texture);
     }
@@ -40,13 +35,13 @@ SaveInfo::~SaveInfo() {
 void SaveInfo::moveUp() {
     backplate.move(0, -0.2);
     lastModifiedText.move(0, -0.2);
-    dest.y -= 0.2*window.getHeight();
+    rect.y -= 0.2*window.getHeight();
 }
 
 void SaveInfo::moveDown() {
     backplate.move(0, 0.2);
     lastModifiedText.move(0, 0.2);
-    dest.y += 0.2*window.getHeight();
+    rect.y += 0.2*window.getHeight();
 }
 
 bool SaveInfo::in(Mouse _mouse) const {
@@ -55,7 +50,7 @@ bool SaveInfo::in(Mouse _mouse) const {
 
 void SaveInfo::blit() const {
     backplate.blit();
-    window.blit(texture, dest);
+    window.blit(texture, rect);
     //saveNameText.blit();
     lastModifiedText.blit();
 }

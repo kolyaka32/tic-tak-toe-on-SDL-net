@@ -11,7 +11,7 @@ bool SavedFields::active = false;
 
 SavedFields::SavedFields(const Window& _window)
 : Template(_window),
-scroller(_window, 0.5, 0.51, 0.92, 0.8, startOptions, {"No saves", "Нет сохранений", "Keine Speicherung", "Няма захаванняў"}, 3),
+scroller(_window, 0.5, 0.51, 0.94, 0.8, startOptions, {"No saves", "Нет сохранений", "Keine Speicherung", "Няма захаванняў"}, 3),
 exitButton(_window, 0.5, 0.81, {"Close", "Закрыть", "Schließen", "Зачыніць"}) {}
 
 void SavedFields::activate() {
@@ -35,6 +35,18 @@ const Field* SavedFields::click(const Mouse _mouse) {
         return &startOptions[i-1];
     }
     return nullptr;
+}
+
+void SavedFields::unclick() {
+    scroller.unclick();
+}
+
+void SavedFields::update() {
+    if (active) {
+        Mouse mouse;
+        mouse.updatePos();
+        scroller.update(mouse);
+    }
 }
 
 void SavedFields::scroll(float _wheelY) {

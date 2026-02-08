@@ -11,14 +11,17 @@
 
 // Game cycle with game part of server
 class ServerGameCycle : public InternetCycle {
- protected:
+ private:
     SelectingMenu menu;
 
+ protected:
     // Main run functions
     bool inputMouseDown() override;
+    void inputMouseUp() override;
     void inputKeys(SDL_Keycode key) override;
     void inputMouseWheel(float _wheelY) override;
     void getInternetPacket(const GetPacket& packet) override;
+    void update() override;
     void draw() const override;
 
  public:
