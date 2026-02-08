@@ -16,15 +16,15 @@ emptySavesText(_window, _posX, _posY - _height/4, std::move(_emptyItemsText), 1)
 #endif
 maxItems(_maxItems),
 sliderBackRect({(_posX+_width/2-0.04f)*_window.getWidth(), (_posY - _height/2)*_window.getHeight(),
-    0.04f * _window.getWidth(), _height*_window.getHeight()}) {
+    0.03f * _window.getWidth(), _height*_window.getHeight()}) {
     // Creating options to start
-    //items.reserve(_startItems.size());
+    items.reserve(_startItems.size());
     for (int i=0; i < _startItems.size(); ++i) {
         items.emplace_back(_window, _startItems[i], _startItems.size()-i-1);
     }
     endField = items.size();
     // Side slider
-    sliderRect.x = sliderBackRect.x+0.01f*_window.getWidth();
+    sliderRect.x = sliderBackRect.x+0.005f*_window.getWidth();
     sliderRect.w = 0.02f*_window.getWidth();
 
     if (items.size() <= maxItems) {
