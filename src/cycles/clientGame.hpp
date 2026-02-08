@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -16,7 +16,7 @@ class ClientGameCycle : public InternetCycle {
 
     // Main run functions
     bool inputMouseDown() override;
-    void getInternetPacket(GetPacket& packet) override;
+    void getInternetPacket(const GetPacket& packet) override;
     void draw() const override;
 
  public:

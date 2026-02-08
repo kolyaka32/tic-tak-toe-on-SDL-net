@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -13,11 +13,7 @@ GUI::RoundedBackplate::RoundedBackplate(const Window& _window, float _centerX, f
 
 
 GUI::RoundedBackplate::RoundedBackplate(const Window& _window, const SDL_FRect& _rect, float _rad, float _bor, Color _frontColor, Color _backColor)
-: TextureTemplate(_window) {
-    // Creating new texture for drawing
-    texture = window.createTexture(_rect.w, _rect.h);
-    rect = _rect;
-
+: TextureTemplate(_window, _rect, _window.createTexture(_rect.w, _rect.h)) {
     // Setting render target to this texture
     window.setRenderTarget(texture);
 
@@ -62,6 +58,11 @@ GUI::RoundedBackplate::RoundedBackplate(const Window& _window, const SDL_FRect& 
     window.resetRenderTarget();
 }
 
+GUI::RoundedBackplate::RoundedBackplate(RoundedBackplate&& _object) noexcept
+: TextureTemplate(std::move(_object)) {}
+
 GUI::RoundedBackplate::~RoundedBackplate() {
-    SDL_DestroyTexture(texture);
+    if (texture) {
+        SDL_DestroyTexture(texture);
+    }
 }

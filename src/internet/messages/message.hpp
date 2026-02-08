@@ -1,32 +1,27 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
 #pragma once
 
-#include "swap.hpp"
-
-#if (USE_SDL_NET)
+#include "../library.hpp"
 
 
 // Class with data for sending somewhere
 class Message {
  private:
     static const int maxSize = 100;
-    Uint8 data[maxSize];
+    char data[maxSize];
     unsigned size = 0;
 
  public:
-    Message();
     template <typename ...Args>
     Message(const Args ...args);
     // Writing functions
     // Write multiple function
     template <typename T, typename ...Args>
     void write(const T object, const Args ...argv);
-    //
-    void write(const ConnectionCode object);
     // Write single object
     template <typename T>
     void write(const T object);
@@ -35,14 +30,13 @@ class Message {
     void write(const Array<T> object);
 
     // Getters
-    const Uint8* getData() const;
+    const char* getData() const;
     size_t getLength() const;
 };
 
 
 template <typename ...Args>
-Message::Message(const Args ...args)
-: Message() {
+Message::Message(const Args ...args) {
     write(args...);
 }
 
@@ -54,7 +48,7 @@ void Message::write(const T _object) {
         throw "Can't write data - not enogh size";
     }
     #endif
-    *(data + size) = swapLE<T>(_object);
+    *(data + size) = writeNet(_object);
     size += sizeof(T);
 }
 
@@ -71,5 +65,3 @@ void Message::write(const T _object, const Args ...args) {
     write(_object);
     write(args...);
 }
-
-#endif  // (USE_SDL_NET)

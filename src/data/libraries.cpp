@@ -1,10 +1,13 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
 #include "libraries.hpp"
 // External libraries for initialisation
+#if (CHECK_CORRECTION)
+#include "exceptions.hpp"
+#endif
 #include <SDL3/SDL.h>
 #if (USE_SDL_FONT)
 #include <SDL3_ttf/SDL_ttf.h>
@@ -12,12 +15,7 @@
 #if (USE_SDL_MIXER)
 #include <SDL3_mixer/SDL_mixer.h>
 #endif
-#if (CHECK_CORRECTION)
-#include "exceptions.hpp"
-#endif
-#if (USE_SDL_NET)
-#include <SDL3_net/SDL_net.h>
-#endif
+#include "../internet/library.hpp"
 
 
 Libraries::Libraries() {
@@ -49,8 +47,8 @@ Libraries::Libraries() {
     }
     #endif
     // Intialasing internet library
-    #if (USE_SDL_NET)
-    if (!NET_Init()) {
+    #if (USE_NET)
+    if (initNet()) {
         throw LibararyLoadException("Couldn't initialase internet library: " + std::string(SDL_GetError()));
     }
     #endif
@@ -66,16 +64,16 @@ Libraries::Libraries() {
     audioDeviceID = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
     Mix_OpenAudio(audioDeviceID, NULL);
     #endif
-    #if (USE_SDL_NET)
-    NET_Init();
+    #if (USE_NET)
+    initNet();
     #endif
     #endif  // (CHECK_CORRECTION)
 }
 
 Libraries::~Libraries() noexcept {
     // Closing internet library
-    #if (USE_SDL_NET)
-    NET_Quit();
+    #if (USE_NET)
+    closeNet();
     #endif
 
     // Closing audio device

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -11,7 +11,7 @@
 
 // Cycle with game part of internet connection
 class InternetCycle : public GameCycle {
-protected:
+ protected:
     // Graphical part
     GUI::StaticText playersTurnsTexts[2];
     GUI::TwoOptionBox disconnectedBox;
@@ -21,8 +21,8 @@ protected:
 
     bool inputMouseDown() override;
     void update() override;
-    virtual void getInternetPacket(GetPacket& packet);
+    virtual void getInternetPacket(const GetPacket& packet);
 
-public:
+ public:
     InternetCycle(Window& window);
 };

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -18,7 +18,7 @@ class ServerGameCycle : public InternetCycle {
     bool inputMouseDown() override;
     void inputKeys(SDL_Keycode key) override;
     void inputMouseWheel(float _wheelY) override;
-    void getInternetPacket(GetPacket& packet) override;
+    void getInternetPacket(const GetPacket& packet) override;
     void draw() const override;
 
  public:

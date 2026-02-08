@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -14,6 +14,11 @@ GUI::TypeBox<bufferSize>::TypeBox(const Window& _window, float _posX, float _pos
 : TypeField<bufferSize>(_window, _posX, _posY, _startText, _height, _aligment, _textColor),
 backplate(_window, {_posX*_window.getWidth() - (6.5f*bufferSize+2), _posY*_window.getHeight()-_height*0.85f,
     13.0f * bufferSize+4, _height * 1.8f}, 2) {}
+
+template <unsigned bufferSize>
+GUI::TypeBox<bufferSize>::TypeBox(TypeBox&& _object) noexcept
+: TypeField<bufferSize>(std::move(_object)),
+backplate(std::move(_object.backplate)) {}
 
 template <unsigned bufferSize>
 void GUI::TypeBox<bufferSize>::blit() const {

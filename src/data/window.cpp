@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -121,6 +121,12 @@ SDL_Texture* Window::createTextureAndFree(SDL_Surface* _surface) const {
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, _surface);
     SDL_DestroySurface(_surface);
     return texture;
+}
+
+void Window::copyTexture(SDL_Texture* _dest, SDL_Texture* _src) const {
+    setRenderTarget(_dest);
+    SDL_RenderTexture(renderer, _src, nullptr, nullptr);
+    resetRenderTarget();
 }
 
 void Window::blit(SDL_Texture* _texture, const SDL_FRect& _dest) const {

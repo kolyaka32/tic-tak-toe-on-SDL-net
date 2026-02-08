@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -17,6 +17,9 @@
 Cycle App::nextCycle = Cycle::Menu;
 
 void App::run(Window& _window) {
+    logAdditional("\nStart selecting loop");
+
+    // Starting loop of selecting cycles
     while (running) {
         // Selecting new
         switch (nextCycle) {

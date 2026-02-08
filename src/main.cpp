@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -32,7 +32,7 @@ MusicData music{};
 SoundsData sounds{};
 #endif
 
-#if (USE_SDL_NET)
+#if (USE_NET)
 Internet internet{};
 #endif
 

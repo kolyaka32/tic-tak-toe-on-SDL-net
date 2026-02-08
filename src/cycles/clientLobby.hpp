@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -10,7 +10,7 @@
 
 // Game cycle (for single player (special animation))
 class ClientLobbyCycle : public BaseCycle {
- private:
+ protected:
     // Input fields
     GUI::StaticText enterIPText;
     static char baseIP[15];
@@ -33,7 +33,6 @@ class ClientLobbyCycle : public BaseCycle {
 
  public:
     ClientLobbyCycle(Window& _window);
-    ~ClientLobbyCycle();
     static void writeBaseIP(const char* text);
     static const char* getBaseIP();
     static void writeBasePort(const char* text);

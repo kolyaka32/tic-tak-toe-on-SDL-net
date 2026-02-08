@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -56,9 +56,8 @@ bool InternetCycle::inputMouseDown() {
 
 void InternetCycle::update() {
     // Getting messages
-    while (NET_Datagram* datagramm = internet.getNewMessages()) {
-        GetPacket packet(datagramm);
-        getInternetPacket(packet);
+    while (const GetPacket* packet = internet.getNewMessages()) {
+        getInternetPacket(*packet);
     }
     // Checking applied messages
     internet.checkResendMessages();
@@ -76,8 +75,8 @@ void InternetCycle::update() {
     BaseCycle::update();
 }
 
-void InternetCycle::getInternetPacket(GetPacket& packet) {
-    switch (ConnectionCode(packet.getData<Uint8>())) {
+void InternetCycle::getInternetPacket(const GetPacket& packet) {
+    switch (ConnectionCode(packet.getData<Uint8>(0))) {
     case ConnectionCode::Quit:
         termianatedBox.activate();
         break;

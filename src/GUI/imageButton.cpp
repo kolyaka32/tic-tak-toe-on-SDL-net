@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -21,5 +21,8 @@ GUI::ImageButton::ImageButton(const Window& _window, float _X, float _Y, float _
     rect.x = window.getWidth() * _X - rect.w / 2;
     rect.y = window.getHeight() * _Y - rect.h / 2;
 }
+
+GUI::ImageButton::ImageButton(ImageButton&& _object) noexcept
+: TextureTemplate(std::move(_object)) {}
 
 #endif  // (USE_SDL_IMAGE) && (PRELOAD_TEXTURES)

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -435,9 +435,9 @@ int Field::getWindowHeight() const {
     return getWindowWidth() * (1.0f + upperLine);
 }
 
-void Field::updateWindow(Window& window) {
-    window.setWidth(getWindowWidth());
-    window.setHeight(getWindowHeight());
+void Field::updateWindow(Window& _window) {
+    _window.setWidth(getWindowWidth());
+    _window.setHeight(getWindowHeight());
 }
 
 bool Field::isValid(const Mouse _mouse) const {
@@ -457,6 +457,9 @@ gameState(GameState(_saveText[3]-'0')),
 upperLinePixels(upperLine*getWindowWidth()) {
     memcpy(&saveTime, _saveText+4, sizeof(saveTime));
     memcpy(data, _saveText+4+sizeof(saveTime), width*width);
+    for (int i=0; i < width*width; ++i) {
+        data[i] = Cell(_saveText[4+sizeof(saveTime)+i]-'0');
+    }
 }
 
 const Array<char> Field::getSave() const {
@@ -466,9 +469,11 @@ const Array<char> Field::getSave() const {
     buffer[2] = winWidth + '0';
     buffer[3] = (char)gameState + '0';
     memcpy(buffer+4, &saveTime, sizeof(saveTime));
-    // Writing data itself
+    // Writing field data itself
     // ! should be optimised to fit better (write straight bits)
-    memcpy(buffer+4+sizeof(saveTime), data, width*width);
+    for (int i=0; i < width*width; ++i) {
+        buffer[4+sizeof(saveTime)+i] = (char)data[i] + '0';
+    }
     return Array<char>(buffer, getSaveSize(width));
 }
 

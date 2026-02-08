@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -8,13 +8,21 @@
 #if (USE_SDL_FONT) && (PRELOAD_FONTS)
 
 
-GUI::TwoOptionBox::TwoOptionBox(const Window& _window, const LanguagedText _title,
-    const LanguagedText _button1Text, const LanguagedText _button2Text)
+GUI::TwoOptionBox::TwoOptionBox(const Window& _window, const LanguagedText&& _title,
+    const LanguagedText&& _button1Text, const LanguagedText&& _button2Text)
 : Template(_window),
-button1(_window, 0.5, 0.48, _button1Text),
-button2(_window, 0.5, 0.6, _button2Text),
-mainText(_window, 0.5, 0.35, _title, 1, Height::SubTitle),
+button1(_window, 0.5, 0.48, std::move(_button1Text)),
+button2(_window, 0.5, 0.6, std::move(_button2Text)),
+mainText(_window, 0.5, 0.35, std::move(_title), 1, Height::SubTitle),
 background(_window, 0.5, 0.5, 0.9, 0.4, 5.0, 1.0) {}
+
+GUI::TwoOptionBox::TwoOptionBox(TwoOptionBox&& _object) noexcept
+: Template(_object.window),
+active(_object.active),
+button1(std::move(_object.button1)),
+button2(std::move(_object.button2)),
+mainText(std::move(_object.mainText)),
+background(std::move(_object.background)) {}
 
 int GUI::TwoOptionBox::click(const Mouse _mouse) {
     if (active) {

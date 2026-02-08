@@ -1,51 +1,51 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
 #include "destination.hpp"
 
-#if (USE_SDL_NET)
 
-
-Destination::Destination(NET_Address* _address, Uint16 _port)
-: address(_address),
-port(_port) {}
-
-bool Destination::operator==(const Destination& b) {
-    return (NET_CompareAddresses(address, b.address) == 0) && (port == b.port);
+#if (USE_WINSOCK)
+Destination::Destination(const sockaddr_in* _address) {
+    address = *_address;
 }
 
-void Destination::send(NET_DatagramSocket *_sock, const Message& _message) const {
-    #if (CHECK_ALL)
-    char buffer[100];
-    for (int i=0; i < _message.getLength(); ++i) {
-        buffer[i] = char(_message.getData()[i] + '0');
+Destination::Destination(const sockaddr* _address, int _size) {
+    #if CHECK_CORRECTION
+    if (_size != sizeof(address)) {
+        logImportant("Size doesn't fit - wrong address type");
     }
-    buffer[_message.getLength()] = '\0';
-    logAdditional("Sending packet to %s:%u, length %u: %s", NET_GetAddressString(address),
-        port, _message.getLength(), buffer);
     #endif
-    NET_SendDatagram(_sock, address, port, _message.getData(), _message.getLength());
+    memcpy(&address, _address, sizeof(address));
+}
+
+Destination::Destination(const char* _name, Uint16 _port) {
+    // IP address, and port for the socket that is being bound.
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = inet_addr(_name);
+    address.sin_port = htons(_port);
+}
+
+bool Destination::operator==(const sockaddr_in* b) const {
+    return address.sin_addr.S_un.S_addr == b->sin_addr.S_un.S_addr
+        && address.sin_port == b->sin_port;
 }
 
 const char* Destination::getName() const {
-    return NET_GetAddressString(address);
+    return inet_ntoa(address.sin_addr);
 }
 
-NET_DatagramSocket* Destination::getDatagrammSocket() {
-    return NET_CreateDatagramSocket(address, port);
+Uint16 Destination::getPort() const {
+    return address.sin_port;
 }
 
-
-StringDestination::StringDestination(const char* _address, Uint16 _port)
-: Destination(NET_ResolveHostname(_address), _port) {
-    // Waiting until hostname resolved
-    NET_WaitUntilResolved(address, 10);
+sockaddr* Destination::getAddress() const {
+    return (sockaddr*)&address;
 }
 
-StringDestination::~StringDestination() {
-    NET_UnrefAddress(address);
+int Destination::getSize() const {
+    return sizeof(address);
 }
 
-#endif  // (USE_SDL_NET)
+#endif  // (USE_WINSOCK)

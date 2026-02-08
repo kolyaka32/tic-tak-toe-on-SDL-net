@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -8,22 +8,18 @@
 #include <vector>
 #include "reciepient.hpp"
 
-// Check, if need internet library
-#if (USE_SDL_NET)
-
 
 // Global class for send/recieve data from internet
 class Internet {
  private:
-    // Getting part
-    NET_DatagramSocket* gettingSocket;
+    // Socket for recieve/send data (general)
+    Socket socket;
+    // Socket for broadcast recieve/send data
+    Socket broadcastSocket;
+    // Address to send tp broadcast
+    Destination broadcstDest;
     // Flag of disconnecting current user from main internet system
     bool disconnected;
-
-    // Special addresses
-    char localhost[16];  // Address of current machine
-    void getLocalAddress();
-
     // Reciepients
     std::vector<Reciepient> reciepients;
 
@@ -31,19 +27,20 @@ class Internet {
     Internet();
 
     // Init part
-    Uint16 openServer();
-    void openClient();
-    void connectTo(NET_Address* address, Uint16 port);
+    void connectTo(const Destination& dest);
+    Uint16 getPort() const;
+    const char* getHostName() const;
     void close();
     void disconnect();
-    const char* getLocalhost();
 
     // Sending data to specialised user, without applience
-    void sendFirst(Destination dest, const Message message);
+    void sendFirst(const Destination& dest, const Message& message) const;
     // Sending data to all reciepients, without applience
-    void sendAll(const Message message);
+    void sendAll(const Message& message);
     // Sending data to all reciepients, confirming for delievery
-    void sendAllConfirmed(const ConfirmedMessage message);
+    void sendAllConfirmed(const ConfirmedMessage& message);
+    // Broadcast message to whole subnet
+    void sendBroadcast(const Message& message);
 
     // Control part
     void checkResendMessages();
@@ -51,10 +48,9 @@ class Internet {
     bool checkStatus();  // Return true on disconect
 
     // Getting part
-    NET_Datagram* getNewMessages();
+    const GetPacket* getNewMessages();
+    const GetPacket* getNewBroadcasts();
 };
 
 // Global system to send/recieve messages throw internet
 extern Internet internet;
-
-#endif  // (USE_SDL_NET)

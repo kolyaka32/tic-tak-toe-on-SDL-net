@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -12,17 +12,22 @@ GUI::Animation::Animation(const Window& _window, float _X, float _Y, float _W, f
 : Animation(_window, {_X*window.getWidth(), _Y*window.getHeight(), _W*window.getWidth(), _H*window.getHeight()}, _type) {}
 
 GUI::Animation::Animation(const Window& _window, const SDL_FRect& _dest, Animations _type)
-: TextureTemplate(_window),
+: TextureTemplate(_window, _dest, _window.createTexture(animation->frames[0])),
 type(_type),
-prevTick(0),
-animation(window.getAnimation(_type)) {
-    rect = _dest;
-    texture = window.createTexture(animation->frames[0]);
-    prevTick = getTime() + animation->delays[0];
-}
+animation(window.getAnimation(_type)),
+prevTick(getTime() + animation->delays[0]) {}
 
-GUI::Animation::~Animation() {
-    SDL_DestroyTexture(texture);
+GUI::Animation::Animation(Animation&& _object) noexcept
+: TextureTemplate(_object),
+type(_object.type),
+animation(_object.animation),
+frame(_object.frame),
+prevTick(_object.type), {}
+
+GUI::Animation::~Animation() noexcept {
+    if (texture) {
+        SDL_DestroyTexture(texture);
+    }
 }
 
 void GUI::Animation::update() {

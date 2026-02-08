@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -15,6 +15,12 @@ LanguagedText::LanguagedText(const std::string englishVariant, const std::string
 
 LanguagedText::LanguagedText(const std::string singleVariant)
 : textVariants{singleVariant, singleVariant, singleVariant, singleVariant} {}
+
+LanguagedText::LanguagedText(const LanguagedText& _copyText) noexcept
+: textVariants(_copyText.textVariants) {}
+
+LanguagedText::LanguagedText(LanguagedText&& _movedText) noexcept
+: textVariants(std::move(_movedText.textVariants)) {}
 
 const std::string& LanguagedText::getString() const {
     return textVariants[(unsigned)currentLanguage];

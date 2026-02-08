@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -25,6 +25,3 @@ enum class ConnectionCode : Uint8 {
     GameNew,      // Code of sending new field
     // GameRestart,  // Code of restart game with options of new game (field, turn)
 };
-
-// Basic connecting port
-const Uint16 basePort = 8000;

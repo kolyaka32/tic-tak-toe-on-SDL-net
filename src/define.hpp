@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025, Kazankov Nikolay
+ * Copyright (C) 2024-2026, Kazankov Nikolay
  * <nik.kazankov.05@mail.ru>
  */
 
@@ -13,7 +13,7 @@
 #define USE_SDL_IMAGE        true   // Library for load external images from disk
 #define USE_SDL_MIXER        true   // Library for play sounds/music
 #define USE_SDL_FONT         true   // Library for draw text at screen
-#define USE_SDL_NET          true   // Library for internet connection by UDP/TCP
+#define USE_NET              true   // Any of libraries for use with internet connection
 #define USE_LIBZIP           true   // Library for compress data to zip archives
 // Use setting file for store data between seccions  
 #define USE_SETTING_FILE     true
@@ -42,6 +42,12 @@
 #endif
 
 // Number of active connections in internet part
-#if USE_SDL_NET
+#if (USE_NET)
 #define MAX_CONNECTIONS 1
+#define BASE_PORT 8000
+// Broadcast mode
+#define USE_BROADCAST true
+#if (USE_BROADCAST)
+#define BROADCAST_PORT 5667
 #endif
+#endif  // (USE_NET)
