@@ -16,13 +16,12 @@ emptySavesText(_window, _posX, _posY - _height/4, std::move(_emptyItemsText), 1)
 #endif
 maxItems(_maxItems) {
     // Creating options to start
-    for (int i=0; i < items.size(); ++i) {
-        items.emplace_back(_window, _startItems[i], _startItems.size() - i - 2);
-        logAdditional("Object placed");
+    items.reserve(_startItems.size());
+    for (int i=0; i < _startItems.size(); ++i) {
+        items.emplace_back(_window, _startItems[i], _startItems.size()-i-1);
     }
-    startField = 0;
-    endField = min((int)items.size(), maxItems);
-    logAdditional("Created scrolling box, start %d, end %d, size %d", startField, endField, items.size());
+    endField = items.size();
+    startField = max(endField-maxItems, 0);
 }
 
 template <class Item, class SourceItem>
