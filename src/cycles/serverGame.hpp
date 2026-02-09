@@ -6,7 +6,7 @@
 #pragma once
 
 #include "internetCycle.hpp"
-#include "../game/menu/selectingMenu.hpp"
+#include "../game/gameMenu/selectingMenu.hpp"
 
 
 // Game cycle with game part of server

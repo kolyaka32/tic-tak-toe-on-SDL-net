@@ -7,58 +7,28 @@
 #include "clientGame.hpp"
 
 
-// Static objects for save inputted parameters
-char ClientLobbyCycle::baseIP[15] = "127.0.0.1";
-char ClientLobbyCycle::basePort[6] = "8000";
-
 ClientLobbyCycle::ClientLobbyCycle(Window& _window)
 : BaseCycle(_window),
-enterIPText(window, 0.5, 0.2, {"Enter IP:", "Введите IP:", "Geben Sie die IP ein:", "Увядзіце IP:"}, Height::SubTitle),
-enterIPField(window, 0.5, 0.32, baseIP),
-enterPortText(window, 0.5, 0.45, {"Enter port:", "Введите порт:", "Port eingeben:", "Увядзіце порт:"}, Height::SubTitle),
-enterPortField(window, 0.5, 0.57, basePort),
-pasteButton(window, 0.5, 0.75, {"Paste the address", "Вставить адрес", "Kopierte Adresse", "Уставіць адрас"}),
-connectButton(window, 0.5, 0.9, {"Connect", "Присоединится", "Beitritt", "Далучыцца"}) {
+serverScroller(_window, 0.5, 0.5, 1.0, 0.9, 6, {"No servers found", "Сервера не найдены", "Kein Server gefunden", "Сервера не знойдзены"}),
+targetConnectButton(_window, 0.5, 0.9, {"Connect by IP", "Присоединиться по IP", "Über IP beitreten", "Далучыцца па IP"}),
+targetConnectMenu(_window) {
     // Starting random getting socket
     logAdditional("Start client lobby cycle");
+
+    if (!isRestarted()) {
+        targetConnectMenu.reset();
+    }
 }
 
 bool ClientLobbyCycle::inputMouseDown() {
     if (BaseCycle::inputMouseDown()) {
         return true;
     }
-
-    // Connection part
-    if (enterIPField.click(mouse)) {
+    if (targetConnectMenu.click(mouse)) {
         return true;
     }
-    if (enterPortField.click(mouse)) {
-        return true;
-    }
-
-    // Check, if press paste data
-    if (pasteButton.in(mouse)) {
-        pasteFromClipboard();
-        return true;
-    }
-
-    // Trying to connect at specified address
-    if (connectButton.in(mouse)) {
-        // Checking correction of port text
-        char portTextCorrected[7];
-        memcpy(portTextCorrected, enterPortField.getString(), 7);
-        for (char* c = portTextCorrected; *c; ++c) {
-            if (*c < '0' || *c > '9') {
-                logAdditional("Couldn't connect - wrong port");
-                return true;
-            }
-        }
-        // Saving inputted address
-        memcpy(baseIP, enterIPField.getString(), sizeof(baseIP));
-        memcpy(basePort, portTextCorrected, sizeof(basePort));
-        // Trying connect at specified address
-        Destination dest{enterIPField.getString(), (Uint16)SDL_atoi(portTextCorrected)};
-        internet.sendFirst(dest, {ConnectionCode::Init, 1});
+    if (targetConnectButton.in(mouse)) {
+        targetConnectMenu.activate();
         return true;
     }
     return false;
@@ -66,22 +36,16 @@ bool ClientLobbyCycle::inputMouseDown() {
 
 void ClientLobbyCycle::inputMouseUp() {
     settings.unClick();
-    enterIPField.unclick();
-    enterPortField.unclick();
+    targetConnectMenu.unclick();
 }
 
 void ClientLobbyCycle::inputKeys(SDL_Keycode _key) {
-    enterIPField.type(_key);
-    enterPortField.type(_key);
+    targetConnectMenu.press(_key);
 }
 
 void ClientLobbyCycle::update() {
     BaseCycle::update();
-
-    // Updating typeboxes
-    mouse.updatePos();
-    enterIPField.update(mouse.getX());
-    enterPortField.update(mouse.getX());
+    targetConnectMenu.update();
 
     // Getting internet data
     while (const GetPacket* packet = internet.getNewMessages()) {
@@ -100,10 +64,8 @@ void ClientLobbyCycle::update() {
     }
 }
 
-void ClientLobbyCycle::inputText(const char* text) {
-    // Inputing text
-    enterIPField.writeString(text);
-    enterPortField.writeString(text);
+void ClientLobbyCycle::inputText(const char* _text) {
+    targetConnectMenu.write(_text);
 }
 
 void ClientLobbyCycle::draw() const {
@@ -115,70 +77,13 @@ void ClientLobbyCycle::draw() const {
     exitButton.blit();
 
     // Draw main part
-    enterIPText.blit();
-    enterPortText.blit();
-    pasteButton.blit();
-    connectButton.blit();
-    enterIPField.blit();
-    enterPortField.blit();
+    serverScroller.blit();
+    targetConnectButton.blit();
+    targetConnectMenu.blit();
 
     // Drawing settings
     settings.blit();
 
     // Bliting all to screen
     window.render();
-}
-
-void ClientLobbyCycle::pasteFromClipboard() {
-    // Getting data from clipboard
-    char* clipboard = SDL_GetClipboardText();
-
-    // Check text on correction
-    if (clipboard == nullptr) {
-        logAdditional("Couldn't get clipboard");
-        return;
-    }
-    // Find IP text (first part)
-    int i = 0;
-    for (; clipboard[i]; ++i) {
-        // Finding : as port separator
-        if (clipboard[i] == ':') {
-            break;
-        }
-        // Checking coorection of string
-        if (clipboard[i] != '.' && (clipboard[i] < '0' || clipboard[i] > '9')) {
-            logAdditional("Wrong clipboard: %s", clipboard);
-            SDL_free(clipboard);
-            return;
-        }
-    }
-    clipboard[i] = '\0';
-    i++;
-    // Finding end of port text
-    for (int k=i; clipboard[k]; ++k) {
-        if (clipboard[k] < '0' || clipboard[k] > '9') {
-            clipboard[k] = '\0';
-            break;
-        }
-    }
-    logAdditional("From clipboard: IP: %s, port: %s", clipboard, clipboard+i);
-    enterIPField.setString(clipboard);
-    enterPortField.setString(clipboard+i);
-    SDL_free(clipboard);
-}
-
-void ClientLobbyCycle::writeBaseIP(const char* _text) {
-    snprintf(baseIP, sizeof(baseIP), "%s", _text);
-}
-
-const char* ClientLobbyCycle::getBaseIP() {
-    return baseIP;
-}
-
-void ClientLobbyCycle::writeBasePort(const char* _text) {
-    snprintf(basePort, sizeof(basePort), "%s", _text);
-}
-
-const char* ClientLobbyCycle::getBasePort() {
-    return basePort;
 }

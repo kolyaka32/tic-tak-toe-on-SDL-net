@@ -342,11 +342,14 @@ namespace GUI {
      public:
         // Create menu for scrolling objects, placed at center with (posX, posY) and size.
         // Shows "maxShowedItems" items at a time
-        ScrollBox(const Window& window, float posX, float posY, float width, float height,
-            std::vector<SourceItem> items, const LanguagedText&& emptyItemsText, int maxShowedItems = 3);
+        ScrollBox(const Window& window, float posX, float posY, float width, float height, int maxShowedItems,
+            const LanguagedText&& emptyItemsText);
+        ScrollBox(const Window& window, float posX, float posY, float width, float height, int maxShowedItems,
+            std::vector<SourceItem> items, const LanguagedText&& emptyItemsText);
         ScrollBox(ScrollBox&& object) noexcept;
         ~ScrollBox() noexcept;
         void addItem(const SourceItem& field);
+        void clear();
         // Return index of selected+1 and 0, if don't
         int click(const Mouse mouse);
         void unclick();

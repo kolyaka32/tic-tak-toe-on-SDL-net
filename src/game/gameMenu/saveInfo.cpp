@@ -6,7 +6,7 @@
 #include "saveInfo.hpp"
 
 
-SaveInfo::SaveInfo(const Window& _window, const Field& _field, int _position)
+SaveInfo::SaveInfo(const Window& _window, int _position, const Field& _field)
 : TextureTemplate(_window, {0.06f * _window.getWidth(), (_position*0.2f + 0.14f) * _window.getHeight(),
     0.18f * _window.getWidth(), 0.18f * _window.getHeight()},
     _window.createTexture(_field.getWindowWidth(), _field.getWindowWidth())),
