@@ -326,23 +326,22 @@ namespace GUI {
         const int maxItems;
         // Items in reverce order for easier appending
         std::vector<Item> items;
-        // Additional interface
-        GUI::RoundedBackplate backplate;
+        // Adding text of absence of objects
+        #if (USE_SDL_FONT) && (PRELOAD_FONTS)
+        GUI::HighlightedStaticText emptySavesText;
+        #endif
         // Slider for showing position
         SDL_FRect sliderRect;
         const SDL_FRect sliderBackRect;
         bool holding = false;
         float holdPosition;
-        // Adding text of absence of objects
-        #if (USE_SDL_FONT) && (PRELOAD_FONTS)
-        GUI::HighlightedStaticText emptySavesText;
-        #endif
 
         void moveUp();
         void moveDown();
 
      public:
-        // Create menu for scrolling objects, placed at center with (posX, posY) and size. Shows fully maxItems at screen
+        // Create menu for scrolling objects, placed at center with (posX, posY) and size.
+        // Shows "maxShowedItems" items at a time
         ScrollBox(const Window& window, float posX, float posY, float width, float height,
             std::vector<SourceItem> items, const LanguagedText&& emptyItemsText, int maxShowedItems = 3);
         ScrollBox(ScrollBox&& object) noexcept;
@@ -352,7 +351,7 @@ namespace GUI {
         int click(const Mouse mouse);
         void unclick();
         void update(const Mouse mouse);
-        void scroll(float wheelY);
+        void scroll(const Mouse mouse, float wheelY);
         void blit() const override;
     };
 

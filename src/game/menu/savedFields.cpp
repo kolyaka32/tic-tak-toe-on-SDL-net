@@ -11,6 +11,7 @@ bool SavedFields::active = false;
 
 SavedFields::SavedFields(const Window& _window)
 : Template(_window),
+backplate(_window, 0.5, 0.51, 0.94, 0.8, 20.0, 4.0),
 scroller(_window, 0.5, 0.51, 0.94, 0.8, startOptions, {"No saves", "Нет сохранений", "Keine Speicherung", "Няма захаванняў"}, 3),
 exitButton(_window, 0.5, 0.81, {"Close", "Закрыть", "Schließen", "Зачыніць"}) {}
 
@@ -51,13 +52,16 @@ void SavedFields::update() {
 }
 
 void SavedFields::scroll(float _wheelY) {
-    if (active) {
-        scroller.scroll(_wheelY);
+    Mouse mouse{};
+    mouse.updatePos();
+    if (active && backplate.in(mouse)) {
+        scroller.scroll(mouse, _wheelY);
     }
 }
 
 void SavedFields::blit() const {
     if (active) {
+        backplate.blit();
         scroller.blit();
         exitButton.blit();
     }

@@ -10,7 +10,6 @@ template <class Item, class SourceItem>
 GUI::ScrollBox<Item, SourceItem>::ScrollBox(const Window& _window, float _posX, float _posY, float _width, float _height,
     std::vector<SourceItem> _startItems, const LanguagedText&& _emptyItemsText, int _maxItems)
 : Template(_window),
-backplate(_window, _posX, _posY, _width, _height, 20.0, 4.0),
 #if (USE_SDL_FONT) && (PRELOAD_FONTS)
 emptySavesText(_window, _posX, _posY - _height/4, std::move(_emptyItemsText), 1),
 #endif
@@ -47,7 +46,10 @@ maxItems(_object.maxItems),
 #if (USE_SDL_FONT) && (PRELOAD_FONTS)
 emptySavesText(std::move(_object.emptySavesText)),
 #endif
-backplate(std::move(_object.backplate)) {}
+sliderRect(_object.sliderRect),
+sliderBackRect(_object.sliderBackRect),
+holding(_object.holding),
+holdPosition(_object.holdPosition) {}
 
 template <class Item, class SourceItem>
 GUI::ScrollBox<Item, SourceItem>::~ScrollBox() noexcept {
@@ -151,11 +153,9 @@ void GUI::ScrollBox<Item, SourceItem>::update(const Mouse _mouse) {
 }
 
 template <class Item, class SourceItem>
-void GUI::ScrollBox<Item, SourceItem>::scroll(float _wheelY) {
-    Mouse mouse{};
-    mouse.updatePos();
+void GUI::ScrollBox<Item, SourceItem>::scroll(const Mouse _mouse, float _wheelY) {
     // Check, if scroll in this menu
-    if (!holding && backplate.in(mouse)) {
+    if (!holding) {
         if (_wheelY > 0) {
             for (;_wheelY > 0; --_wheelY) {
                 // Check, if can scroll up
@@ -180,7 +180,6 @@ void GUI::ScrollBox<Item, SourceItem>::scroll(float _wheelY) {
 
 template <class Item, class SourceItem>
 void GUI::ScrollBox<Item, SourceItem>::blit() const {
-    backplate.blit();
     // Check, if has fields
     if (endField) {
         for (int i=startField; i < endField; ++i) {
