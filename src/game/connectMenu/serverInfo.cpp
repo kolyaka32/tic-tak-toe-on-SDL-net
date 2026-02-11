@@ -7,12 +7,18 @@
 
 
 ServerInfo::ServerInfo(const Window& _window, int _position, const ServerData& _data)
-: backplate(_window, 0.48, _position*0.15f, 1.0, 0.15, 20, 2) {
-    
+: backplate(_window, 0.48, _position*0.14f+0.1, 1.0, 0.14, 20, 2),
+addressText(_window, 0.1, _position*0.14f+0.03, {"%s:%d"},
+    Height::Main, WHITE, GUI::Aligment::Left, _data.getAddress().getName(), _data.getAddress().getPort()),
+pingText(_window, 0.1, _position*0.14f+0.11, {"Ping: %d"},
+    Height::Main, WHITE, GUI::Aligment::Left, _data.getPing()) {
+
 }
 
-ServerInfo::ServerInfo(ServerInfo&& _info) noexcept
-: backplate(std::move(_info.backplate)) {}
+ServerInfo::ServerInfo(ServerInfo&& _object) noexcept
+: backplate(std::move(_object.backplate)),
+addressText(std::move(_object.addressText)),
+pingText(std::move(_object.pingText)) {}
 
 ServerInfo::~ServerInfo() noexcept {
     

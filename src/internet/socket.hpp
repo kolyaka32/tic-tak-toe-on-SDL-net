@@ -32,10 +32,14 @@ class Socket {
     // Created unspecified socket
     Socket();
     ~Socket();
-    // Setting socket to use for recieving specified data
+    // Setting socket to use for recieving data at specified port (or another open)
     void tryBindTo(Uint16 port);
-    // Setting socket to recieve/send to whole subnet
-    void setBroadcast();
+    // Bind to random port
+    void tryBindTo();
+    // Setting socket to recieve from whole subnet
+    void setRecieveBroadcast();
+    // Set special modes
+    void setSendBroadcast();
     // Working with socket itself
     Uint16 getPort() const;
     void send(const Destination& dest, const Message& message) const;

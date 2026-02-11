@@ -13,6 +13,8 @@
 class ServerInfo {
  private:
     GUI::RoundedBackplate backplate;
+    GUI::StaticText addressText;
+    GUI::StaticText pingText;
 
  public:
     ServerInfo(const Window& window, int position, const ServerData& data);

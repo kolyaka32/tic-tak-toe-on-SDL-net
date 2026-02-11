@@ -23,6 +23,7 @@ class TargetConnect {
     GUI::TypeBox<6> portField;
     GUI::TextButton pasteButton;
     GUI::TextButton connectButton;
+    GUI::TextButton closeButton;
 
     void pasteFromClipboard();
     void tryConnect();

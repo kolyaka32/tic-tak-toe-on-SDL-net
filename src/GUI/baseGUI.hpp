@@ -125,8 +125,23 @@ namespace GUI {
     // Static text on screen
     class StaticText : public TextureTemplate {
      public:
-        StaticText(const Window& window, float X, float Y, const LanguagedText&& texts,
-            float height = Height::Main, Color color = WHITE, Aligment aligment = Aligment::Midle);
+        template <typename ...Args>
+        StaticText(const Window& window, float X, float Y, const LanguagedText&& texts, float height = Height::Main,
+            Color color = WHITE, Aligment aligment = Aligment::Midle, const Args... args)
+        : TextureTemplate(window) {
+                // Checking for all chars
+                char buffer[100];
+                std::snprintf(buffer, sizeof(buffer), texts.getString().c_str(), args...);
+
+                // Creating surface with text
+                texture = window.createTexture(Fonts::Main, height, buffer, 0, color);
+
+                // Updating rect height for correct button
+                rect.w = texture->w;
+                rect.h = texture->h;
+                rect.x = SDL_roundf(window.getWidth() * X - (rect.w * (unsigned)aligment / 2));
+                rect.y = SDL_roundf(window.getHeight() * Y - rect.h / 2);
+            }
         StaticText(StaticText&& object) noexcept;
         ~StaticText() noexcept;
     };

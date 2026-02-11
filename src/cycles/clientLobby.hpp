@@ -13,10 +13,19 @@
 // Game cycle (for single player (special animation))
 class ClientLobbyCycle : public BaseCycle {
  protected:
+    // Object with all servers for connection
+    std::vector<ServerData> serverDatas;
+    // Socket for broadcast send data (for finding servers)
+    Socket broadcastSendSocket;
+    timer startSearchTimer = 0;
+
     // Input fields
     GUI::ScrollBox<ServerInfo, ServerData> serverScroller;
+    GUI::TextButton updateButton;
     GUI::TextButton targetConnectButton;
     TargetConnect targetConnectMenu;
+
+    void updateList();
 
     // Main run functions
     bool inputMouseDown() override;

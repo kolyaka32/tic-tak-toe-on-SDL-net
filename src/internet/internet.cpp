@@ -8,11 +8,8 @@
 
 
 Internet::Internet()
-: socket(),
-broadcastSocket(),
-broadcstDest("255.255.255.255", BROADCAST_PORT) {
+: socket() {
     socket.tryBindTo(BASE_PORT);
-    broadcastSocket.setBroadcast();
     logAdditional("Internet created correctly");
 }
 
@@ -85,10 +82,6 @@ void Internet::sendAllConfirmed(const ConfirmedMessage& _message) {
     }
 }
 
-void Internet::sendBroadcast(const Message& _message) {
-    broadcastSocket.send(broadcstDest, _message);
-}
-
 const GetPacket* Internet::getNewMessages() {
     // Try get message
     GetPacket* packet = socket.recieve();
@@ -146,16 +139,6 @@ const GetPacket* Internet::getNewMessages() {
             // Special action, if address is unknown
             return packet;
         }
-    }
-    return nullptr;
-}
-
-const GetPacket* Internet::getNewBroadcasts() {
-    // Try get message
-    GetPacket* packet = socket.recieve();
-    // Check, if get correct message
-    if (packet && packet->isBytesAvaliable(2)) {
-        return packet;
     }
     return nullptr;
 }

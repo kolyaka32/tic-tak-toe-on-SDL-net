@@ -71,10 +71,16 @@ void Socket::tryBindTo(Uint16 _port) {
         }
     }
     setNonBlockingMode();
-    logAdditional("Openned general socket at port %d", port);
+    logAdditional("Openned socket at port %d", port);
 }
 
-void Socket::setBroadcast() {
+void Socket::tryBindTo() {
+    // Setting random seed from time
+    SDL_srand(0);
+    tryBindTo(SDL_rand(40000) + 1500);
+}
+
+void Socket::setRecieveBroadcast() {
     // Set, that any app could use that port (for many apps run simultaneously)
     setReuseAddressMode();
     // Setting basic port for broadcast
@@ -85,6 +91,15 @@ void Socket::setBroadcast() {
     }
     setNonBlockingMode();
     logAdditional("Openned broadcast socket at port %d", port);
+}
+
+void Socket::setSendBroadcast() {
+    // Setting random seed from time
+    SDL_srand(0);
+    // Setting at random port
+    tryBindTo(SDL_rand(40000) + 1500);
+    // Setting to allow send broadcast messages
+    setBroadcastMode();
 }
 
 void Socket::send(const Destination& _dest, const Message& _message) const {

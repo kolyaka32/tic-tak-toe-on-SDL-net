@@ -16,7 +16,7 @@ class ServerLobbyCycle : public BaseCycle {
 
     // Text with current connection address
     static bool showAddress;            // Flag of showing current address to screen
-    GUI::DynamicText showAddressText;   // Text for showing/copying current address
+    GUI::StaticText showAddressText;   // Text for showing/copying current address
     GUI::StaticText hideAddressText;    // Text for showing/copying current address
     GUI::InfoBox copiedInfoBox;         // Message about copying to clipboard address
     GUI::TextButton showAddressButton;  // Buttons to change state of showing address at screen

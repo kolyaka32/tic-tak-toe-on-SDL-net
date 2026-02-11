@@ -5,13 +5,18 @@
 
 #pragma once
 
+#include "../../internet/destination.hpp"
+
 
 // Object contains information of server for list
 class ServerData {
  private:
     int ping;
+    Destination dest;
 
  public:
-    ServerData();
-    ~ServerData();
+    ServerData(const sockaddr_in* address, int ping);
+    // Getters
+    int getPing() const;
+    const Destination& getAddress() const;
 };
