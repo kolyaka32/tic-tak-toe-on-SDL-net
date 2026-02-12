@@ -36,7 +36,7 @@ void Internet::close() {
 void Internet::disconnect() {
     // Sending message with quiting connection
     for (int i=0; i < reciepients.size(); ++i) {
-        reciepients[i].sendUnconfirmed(socket, Message{ConnectionCode::Quit, 1});
+        reciepients[i].sendUnconfirmed(socket, Message{ConnectionCode::Quit, Uint8(1)});
     }
     logAdditional("Disconnecting from games");
 }

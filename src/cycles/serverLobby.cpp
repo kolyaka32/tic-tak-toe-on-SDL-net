@@ -11,6 +11,7 @@ bool ServerLobbyCycle::showAddress = false;
 
 ServerLobbyCycle::ServerLobbyCycle(Window& _window)
 : BaseCycle(_window),
+broadcastRecieveSocket(),
 titleText(window, 0.5, 0.15,
     {"Wait for connection", "Ожидайте подключения", "Verbindungen erwarten", "Чакайце падлучэнняў"}, 2, Height::SubTitle),
 hideAddressText(window, 0.5, 0.3,
@@ -24,6 +25,10 @@ hideAddressButton(window, 0.5, 0.5, {"Hide address", "Скрыть адресс"
     if (!isRestarted()) {
         showAddress = false;
     }
+
+    // Openning socket for recieving broadcast
+    broadcastRecieveSocket.setRecieveBroadcast();
+
     logAdditional("Start server lobby cycle");
 }
 
@@ -62,7 +67,7 @@ void ServerLobbyCycle::update() {
     // Update infobox
     copiedInfoBox.update();
 
-    // Getting internet data (applied messages)
+    // Getting internet messages (for main connection)
     while (const GetPacket* packet = internet.getNewMessages()) {
         switch (ConnectionCode(packet->getData<Uint8>(0))) {
         case ConnectionCode::Init:
@@ -70,7 +75,7 @@ void ServerLobbyCycle::update() {
             internet.connectTo(Destination{packet->getSourceAddress()});
 
             // Sending applying initialsiation message
-            internet.sendAllConfirmed(ConnectionCode::Init);
+            internet.sendAllConfirmed({ConnectionCode::Init, Uint8(1)});
 
             // Starting game (as server)
             App::setNextCycle(Cycle::ServerGame);
@@ -78,6 +83,21 @@ void ServerLobbyCycle::update() {
 
         default:
             return;
+        }
+    }
+
+    // Getting internet messges (for broadcast)
+    while (const GetPacket* packet = broadcastRecieveSocket.recieve()) {
+        if (packet->isBytesAvaliable(2)) {
+            switch (ConnectionCode(packet->getData<Uint8>(0))) {
+            case ConnectionCode::Search:
+                // Reporting about itself
+                internet.sendFirst(Destination{packet->getSourceAddress()}, {ConnectionCode::Server, Uint8(1)});
+                return;
+
+            default:
+                return;
+            }
         }
     }
 }

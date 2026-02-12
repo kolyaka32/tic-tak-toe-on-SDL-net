@@ -24,7 +24,7 @@ class ConfirmedMessage : public Message {
     template <typename ...Args>
     ConfirmedMessage(ConnectionCode code, const Args ...args);
     bool isNeedResend();
-    bool applyMessage(Uint8 index) const;  // Check, if that message arrived and need to clearing
+    bool applyMessage(Uint8 index) const;  // Check, if that message arrived and need to be cleared
 };
 
 template <typename ...Args>

@@ -10,7 +10,7 @@
 ClientLobbyCycle::ClientLobbyCycle(Window& _window)
 : BaseCycle(_window),
 broadcastSendSocket(),
-serverScroller(_window, 0.5, 0.45, 1.0, 0.7, 5,
+serverScroller(_window, 0.5, 0.4, 1.0, 0.6, 4,
     {"No servers found", "Сервера не найдены", "Kein Server gefunden", "Сервера не знойдзены"}),
 updateButton(_window, 0.5, 0.85, {"Update", "Обновить", "Update", "Абнаўленне"}),
 targetConnectButton(_window, 0.5, 0.95,
@@ -47,7 +47,7 @@ bool ClientLobbyCycle::inputMouseDown() {
     }
     if (int i = serverScroller.click(mouse)) {
         // Connecting to selected server
-        internet.sendFirst(serverDatas[i].getAddress(), {ConnectionCode::Init, 1});
+        internet.sendFirst(serverDatas[i-1].getAddress(), {ConnectionCode::Init, Uint8(1)});
         return true;
     }
     return false;
@@ -91,6 +91,10 @@ void ClientLobbyCycle::update() {
                 // Get server information
                 // Adding to list
                 serverDatas.emplace_back(packet->getSourceAddress(), int(getTime()-startSearchTimer));
+                logAdditional("Added server: address: %s:%d, ping: %d",
+                    serverDatas[serverDatas.size()-1].getAddress().getName(),
+                    serverDatas[serverDatas.size()-1].getAddress().getPort(),
+                    serverDatas[serverDatas.size()-1].getPing());
                 // Adding variant to select menu
                 serverScroller.addItem(serverDatas[serverDatas.size()-1]);
                 break;
@@ -134,7 +138,7 @@ void ClientLobbyCycle::updateList() {
     serverDatas.clear();
     // Sending searching message to broadcast
     Destination dest{"255.255.255.255", BROADCAST_PORT};
-    broadcastSendSocket.send(dest, {ConnectionCode::Search, 1});
+    broadcastSendSocket.send(dest, {ConnectionCode::Search, Uint8(1)});
     // Update timer
     startSearchTimer = getTime();
 }

@@ -37,7 +37,7 @@ const char* Destination::getName() const {
 }
 
 Uint16 Destination::getPort() const {
-    return address.sin_port;
+    return ntohs(address.sin_port);
 }
 
 sockaddr* Destination::getAddress() const {

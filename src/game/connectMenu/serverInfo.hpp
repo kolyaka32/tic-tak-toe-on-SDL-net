@@ -19,7 +19,6 @@ class ServerInfo {
  public:
     ServerInfo(const Window& window, int position, const ServerData& data);
     ServerInfo(ServerInfo&& info) noexcept;
-    ~ServerInfo() noexcept;
     void moveUp();
     void moveDown();
     void blit() const;
