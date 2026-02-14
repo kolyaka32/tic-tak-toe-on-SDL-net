@@ -4,6 +4,7 @@
  */
 
 #include "library.hpp"
+#include <stdio.h>
 
 
 // Winsocket realisation

@@ -85,23 +85,21 @@ void ClientLobbyCycle::update() {
     // Getting data from broadcast socket
     // Getting internet data
     while (const GetPacket* packet = broadcastSendSocket.recieve()) {
-        if (packet->isBytesAvaliable(2)) {
-            switch (ConnectionCode(packet->getData<Uint8>(0))) {
-            case ConnectionCode::Server:
-                // Get server information
-                // Adding to list
-                serverDatas.emplace_back(packet->getSourceAddress(), int(getTime()-startSearchTimer));
-                logAdditional("Added server: address: %s:%d, ping: %d",
-                    serverDatas[serverDatas.size()-1].getAddress().getName(),
-                    serverDatas[serverDatas.size()-1].getAddress().getPort(),
-                    serverDatas[serverDatas.size()-1].getPing());
-                // Adding variant to select menu
-                serverScroller.addItem(serverDatas[serverDatas.size()-1]);
-                break;
+        switch (ConnectionCode(packet->getData<Uint8>(0))) {
+        case ConnectionCode::Server:
+            // Get server information
+            // Adding to list
+            serverDatas.emplace_back(packet->getSourceAddress(), int(getTime()-startSearchTimer));
+            logAdditional("Added server: address: %s:%d, ping: %d",
+                serverDatas[serverDatas.size()-1].getAddress().getName(),
+                serverDatas[serverDatas.size()-1].getAddress().getPort(),
+                serverDatas[serverDatas.size()-1].getPing());
+            // Adding variant to select menu
+            serverScroller.addItem(serverDatas[serverDatas.size()-1]);
+            break;
 
-            default:
-                return;
-            }
+        default:
+            return;
         }
     }
 }

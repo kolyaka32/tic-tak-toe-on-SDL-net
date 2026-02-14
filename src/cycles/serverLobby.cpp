@@ -88,16 +88,14 @@ void ServerLobbyCycle::update() {
 
     // Getting internet messges (for broadcast)
     while (const GetPacket* packet = broadcastRecieveSocket.recieve()) {
-        if (packet->isBytesAvaliable(2)) {
-            switch (ConnectionCode(packet->getData<Uint8>(0))) {
-            case ConnectionCode::Search:
-                // Reporting about itself
-                internet.sendFirst(Destination{packet->getSourceAddress()}, {ConnectionCode::Server, Uint8(1)});
-                return;
+        switch (ConnectionCode(packet->getData<Uint8>(0))) {
+        case ConnectionCode::Search:
+            // Reporting about itself
+            internet.sendFirst(Destination{packet->getSourceAddress()}, {ConnectionCode::Server, Uint8(1)});
+            return;
 
-            default:
-                return;
-            }
+        default:
+            return;
         }
     }
 }
