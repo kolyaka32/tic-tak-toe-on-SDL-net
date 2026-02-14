@@ -16,8 +16,9 @@
 #if ((USE_NET) && (SDL_PLATFORM_WINDOWS))
 #define USE_WINSOCK true   // Internet library for windows (winsock2.h)
 #define NET_SELECTED true
-// Including librry itself
+// Including library itself
 #include <winsock2.h>
+// Including library for getting localhost
 #include <iphlpapi.h>
 #endif  // ((USE_NET) && (SDL_PLATFORM_WINDOWS))
 

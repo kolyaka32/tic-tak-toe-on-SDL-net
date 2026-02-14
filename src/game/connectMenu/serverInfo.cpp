@@ -8,9 +8,9 @@
 
 ServerInfo::ServerInfo(const Window& _window, int _position, const ServerData& _data)
 : backplate(_window, 0.48, _position*0.15f+0.175, 0.9, 0.15, 20, 2),
-addressText(_window, 0.1, _position*0.15f+0.14, {"Address: %s:%d"},  // !
+addressText(_window, 0.1, _position*0.15f+0.14, {"Address: %s:%d", "Адрес: %s:%d", "Adresse: %s:%d", "Адрас: %s: %d"},
     Height::Main, WHITE, GUI::Aligment::Left, _data.getAddress().getName(), _data.getAddress().getPort()),
-pingText(_window, 0.1, _position*0.15f+0.21, {"Ping: %d"},  // !
+pingText(_window, 0.1, _position*0.15f+0.21, {"Ping: %d", "Задержка: %d", "Verzögerung: %d", "Затрымка: %d"},
     Height::Main, WHITE, GUI::Aligment::Left, _data.getPing()) {}
 
 ServerInfo::ServerInfo(ServerInfo&& _object) noexcept

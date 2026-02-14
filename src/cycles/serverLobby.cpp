@@ -12,15 +12,15 @@ bool ServerLobbyCycle::showAddress = false;
 ServerLobbyCycle::ServerLobbyCycle(Window& _window)
 : BaseCycle(_window),
 broadcastRecieveSocket(),
-titleText(window, 0.5, 0.15,
+titleText(_window, 0.5, 0.15,
     {"Wait for connection", "Ожидайте подключения", "Verbindungen erwarten", "Чакайце падлучэнняў"}, 2, Height::SubTitle),
-hideAddressText(window, 0.5, 0.3,
+hideAddressText(_window, 0.5, 0.3,
     {"Your address: **************", "Ваш адресс: **************", "Ihre Adresse: **************", "Ваш адрас: **************"}),
-showAddressText(window, 0.5, 0.3, {"Your address: %s:%d", "Ваш адресс: %s:%d", "Ihre Adresse: %s:%d", "Ваш адрас: %s:%d"},
+showAddressText(_window, 0.5, 0.3, {"Your address: %s:%d", "Ваш адресс: %s:%d", "Ihre Adresse: %s:%d", "Ваш адрас: %s:%d"},
     Height::Main, WHITE, GUI::Aligment::Midle, internet.getHostName(), internet.getPort()),
-copiedInfoBox(window, 0.5, 0.4, {"Address copied", "Адрес скопирован", "Adresse kopiert", "Скапіяваны адрас"}),
-showAddressButton(window, 0.5, 0.5, {"Show address", "Показать адресс", "Adresse anzeigen", "Паказаць адрас"}),
-hideAddressButton(window, 0.5, 0.5, {"Hide address", "Скрыть адресс", "Adresse verbergen", "Схаваць адрас"}) {
+copiedInfoBox(_window, 0.5, 0.4, {"Address copied", "Адрес скопирован", "Adresse kopiert", "Скапіяваны адрас"}),
+showAddressButton(_window, 0.5, 0.5, {"Show address", "Показать адресс", "Adresse anzeigen", "Паказаць адрас"}),
+hideAddressButton(_window, 0.5, 0.5, {"Hide address", "Скрыть адресс", "Adresse verbergen", "Схаваць адрас"}) {
     // Resetting flag of showing address
     if (!isRestarted()) {
         showAddress = false;

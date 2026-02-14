@@ -31,7 +31,7 @@ GUI::RectBackplate::RectBackplate(const RectBackplate& _object) noexcept
 GUI::RectBackplate::RectBackplate(RectBackplate&& _object) noexcept
 : TextureTemplate(std::move(_object)) {}
 
-GUI::RectBackplate::~RectBackplate() {
+GUI::RectBackplate::~RectBackplate() noexcept {
     if (texture) {
         SDL_DestroyTexture(texture);
     }

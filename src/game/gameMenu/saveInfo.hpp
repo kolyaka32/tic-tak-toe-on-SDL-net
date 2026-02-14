@@ -25,5 +25,5 @@ class SaveInfo : public GUI::TextureTemplate {
     void moveUp();
     void moveDown();
     void blit() const override;
-    bool in(Mouse mouse) const;
+    bool in(Mouse mouse) const override;
 };

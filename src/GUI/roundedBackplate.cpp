@@ -61,7 +61,7 @@ GUI::RoundedBackplate::RoundedBackplate(const Window& _window, const SDL_FRect& 
 GUI::RoundedBackplate::RoundedBackplate(RoundedBackplate&& _object) noexcept
 : TextureTemplate(std::move(_object)) {}
 
-GUI::RoundedBackplate::~RoundedBackplate() {
+GUI::RoundedBackplate::~RoundedBackplate() noexcept {
     if (texture) {
         SDL_DestroyTexture(texture);
     }

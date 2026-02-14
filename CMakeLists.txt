@@ -16,7 +16,7 @@ if (WIN32)
     # Hidding console on windows
     set(CMAKE_CXX_FLAGS "-mwindows")
     # Linking library for net
-    target_link_libraries(${PROJECT_NAME} PRIVATE wsock32 iphlpapi)
+    target_link_libraries(${PROJECT_NAME} PRIVATE iphlpapi ws2_32)
 endif (WIN32)
 
 # Setting to link standart libraries statickly
