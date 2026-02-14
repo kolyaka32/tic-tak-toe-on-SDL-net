@@ -11,22 +11,24 @@ bool ServerLobbyCycle::showAddress = false;
 
 ServerLobbyCycle::ServerLobbyCycle(Window& _window)
 : BaseCycle(_window),
-titleText(window, 0.5, 0.15,
+broadcastRecieveSocket(),
+titleText(_window, 0.5, 0.15,
     {"Wait for connection", "Ожидайте подключения", "Verbindungen erwarten", "Чакайце падлучэнняў"}, 2, Height::SubTitle),
-hideAddressText(window, 0.5, 0.3,
+hideAddressText(_window, 0.5, 0.3,
     {"Your address: **************", "Ваш адресс: **************", "Ihre Adresse: **************", "Ваш адрас: **************"}),
-showAddressText(window, 0.5, 0.3,
-    {"Your address: %s:%d", "Ваш адресс: %s:%d", "Ihre Adresse: %s:%d", "Ваш адрас: %s:%d"}),
-copiedInfoBox(window, 0.5, 0.4, {"Address copied", "Адрес скопирован", "Adresse kopiert", "Скапіяваны адрас"}),
-showAddressButton(window, 0.5, 0.5, {"Show address", "Показать адресс", "Adresse anzeigen", "Паказаць адрас"}),
-hideAddressButton(window, 0.5, 0.5, {"Hide address", "Скрыть адресс", "Adresse verbergen", "Схаваць адрас"}) {
-    // Getting string with full address of current app
-    showAddressText.setValues(internet.getHostName(), internet.getPort());
-
+showAddressText(_window, 0.5, 0.3, {"Your address: %s:%d", "Ваш адресс: %s:%d", "Ihre Adresse: %s:%d", "Ваш адрас: %s:%d"},
+    Height::Main, WHITE, GUI::Aligment::Midle, internet.getHostName(), internet.getPort()),
+copiedInfoBox(_window, 0.5, 0.4, {"Address copied", "Адрес скопирован", "Adresse kopiert", "Скапіяваны адрас"}),
+showAddressButton(_window, 0.5, 0.5, {"Show address", "Показать адресс", "Adresse anzeigen", "Паказаць адрас"}),
+hideAddressButton(_window, 0.5, 0.5, {"Hide address", "Скрыть адресс", "Adresse verbergen", "Схаваць адрас"}) {
     // Resetting flag of showing address
     if (!isRestarted()) {
         showAddress = false;
     }
+
+    // Openning socket for recieving broadcast
+    broadcastRecieveSocket.setRecieveBroadcast();
+
     logAdditional("Start server lobby cycle");
 }
 
@@ -65,7 +67,7 @@ void ServerLobbyCycle::update() {
     // Update infobox
     copiedInfoBox.update();
 
-    // Getting internet data (applied messages)
+    // Getting internet messages (for main connection)
     while (const GetPacket* packet = internet.getNewMessages()) {
         switch (ConnectionCode(packet->getData<Uint8>(0))) {
         case ConnectionCode::Init:
@@ -73,10 +75,23 @@ void ServerLobbyCycle::update() {
             internet.connectTo(Destination{packet->getSourceAddress()});
 
             // Sending applying initialsiation message
-            internet.sendAllConfirmed(ConnectionCode::Init);
+            internet.sendAllConfirmed({ConnectionCode::Init, Uint8(1)});
 
             // Starting game (as server)
             App::setNextCycle(Cycle::ServerGame);
+            return;
+
+        default:
+            return;
+        }
+    }
+
+    // Getting internet messges (for broadcast)
+    while (const GetPacket* packet = broadcastRecieveSocket.recieve()) {
+        switch (ConnectionCode(packet->getData<Uint8>(0))) {
+        case ConnectionCode::Search:
+            // Reporting about itself
+            internet.sendFirst(Destination{packet->getSourceAddress()}, {ConnectionCode::Server, Uint8(1)});
             return;
 
         default:

@@ -16,7 +16,6 @@ class LanguagedText {
  private:
     // Text in different languages
     const std::array<std::string, (unsigned)Language::Count> textVariants;
-    //const std::string textVariants[(unsigned)Language::Count];
     // Currently selected language for whole app
     static Language currentLanguage;
 

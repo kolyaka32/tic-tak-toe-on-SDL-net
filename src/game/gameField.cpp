@@ -5,7 +5,7 @@
 
 #include "gameField.hpp"
 #include "../data/cycleTemplate.hpp"
-#include "menu/selectingMenu.hpp"
+#include "gameMenu/selectingMenu.hpp"
 
 
 // Creating start game field 3 by 3

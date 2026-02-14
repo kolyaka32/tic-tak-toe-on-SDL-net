@@ -125,8 +125,23 @@ namespace GUI {
     // Static text on screen
     class StaticText : public TextureTemplate {
      public:
-        StaticText(const Window& window, float X, float Y, const LanguagedText&& texts,
-            float height = Height::Main, Color color = WHITE, Aligment aligment = Aligment::Midle);
+        template <typename ...Args>
+        StaticText(const Window& window, float X, float Y, const LanguagedText&& texts, float height = Height::Main,
+            Color color = WHITE, Aligment aligment = Aligment::Midle, const Args... args)
+        : TextureTemplate(window) {
+                // Checking for all chars
+                char buffer[100];
+                std::snprintf(buffer, sizeof(buffer), texts.getString().c_str(), args...);
+
+                // Creating surface with text
+                texture = window.createTexture(Fonts::Main, height, buffer, 0, color);
+
+                // Updating rect height for correct button
+                rect.w = texture->w;
+                rect.h = texture->h;
+                rect.x = SDL_roundf(window.getWidth() * X - (rect.w * (unsigned)aligment / 2));
+                rect.y = SDL_roundf(window.getHeight() * Y - rect.h / 2);
+            }
         StaticText(StaticText&& object) noexcept;
         ~StaticText() noexcept;
     };
@@ -178,45 +193,47 @@ namespace GUI {
     class TypeField : public TextureTemplate {
      protected:
         // Class constants
-        const int posX;                    // Relevant x position on screen
-        const Aligment aligment;           // Aligment type for correct placed position
-        const Color textColor;             // Color of typing text
-        TTF_Font* font;                    // Font for type text
+        const int posX;               // Relevant x position on screen
+        const Aligment aligment;      // Aligment type for correct placed position
+        const Color textColor;        // Color of typing text (and inversed background)
+        const Color backColor;        // Color of background plate (and inversed text)
+        TTF_Font* font;               // Font for type text
 
         // Variables
-        char buffer[bufferSize+1];         // String, that was typed
-        size_t length = 0;                 // Length of all text
-        size_t caret = 0;                  // Position of place, where user type
-        timer needSwapCaret = 0;           // Time, when next need to change caret
-        int selectLength = 0;              // Length of selected box
+        char buffer[bufferSize+1];    // String, that was typed
+        size_t length = 0;            // Length of all text
+        size_t caret = 0;             // Position of place, where user type
+        timer needSwapCaret = 0;      // Time, when next need to change caret
+        int selectLength = 0;         // Length of selected box
 
-        bool showCaret = false;            // Flag, if need to show caret
-        SDL_FRect caretRect;               // Place, where caret should be at screen
-        SDL_FRect inversedRectDest;        // Rect of inversed selected text, where should be drawn
-        SDL_FRect inversedRectSrc;         // Part of text, that should be reversed (relative)
-        SDL_Texture* inverseTexture;       // Texture of inversed selected box
-        bool pressed = false;              //
-        bool selected = false;             //
+        bool showCaret = false;       // Flag, if need to show caret
+        SDL_FRect caretRect;          // Place, where caret should be at screen
+        SDL_FRect inversedRectDest;   // Rect of inversed selected text, where should be drawn
+        SDL_FRect inversedRectSrc;    // Part of text, that should be reversed (relative)
+        SDL_Texture* inverseTexture;  // Texture of inversed selected box
+        bool pressed = false;         // Flag if currently mouse is pressed and selecting text
+        bool selected = false;        // Flag if currently typing in this field
 
-        void updateTexture();              // Creat new texture of updated text
-        void updateSelected();             // Update reversed rect position (selected part)
-        void deleteSelected();             // Clearing selected part
-        void writeClipboard();             // Write clipboard content after caret
-        void copyToClipboard();            // Writing selected text to clipboard
+        void updateTexture();         // Creat new texture of updated text
+        void updateSelected();        // Update reversed rect position (selected part)
+        void deleteSelected();        // Clearing selected part
+        void writeClipboard();        // Write clipboard content after caret
+        void copyToClipboard();       // Writing selected text to clipboard
 
      public:
         TypeField(const Window& window, float posX, float posY, const char *startText = "",
-            float height = Height::TypeBox, Aligment aligment = Aligment::Midle, Color textColor = BLACK);
+            float height = Height::TypeBox, Aligment aligment = Aligment::Midle,
+            Color textColor = BLACK, Color backColor = WHITE);
         TypeField(TypeField<bufferSize>&& object) noexcept;
         ~TypeField() noexcept;
-        void writeString(const char* str);   // Function of writing any string to buffer at caret position
-        void type(SDL_Keycode code);         // Function of processing special keycodes
-        void update(float mouseX);           // Function of change caret symbol from '|' to ' ' and back
-        bool click(const Mouse mouse);       // Function of setting caret for typing after
-        void unclick();                      // Function of resetting pressing
-        const char* getString();             // Function of getting typed string
-        void setString(const char* string);  // Function for replace text with new string
-        void blit() const override;          // Function for draw at screen
+        void writeString(const char* str);   // Write string to buffer at caret position
+        void type(SDL_Keycode code);         // Processing special keycodes (like arrows, home, CTRL-C...)
+        void update(float mouseX);           // Highlated area of typing
+        bool click(const Mouse mouse);       // Set caret for typing at specified place
+        void unclick();                      // Reset pressing
+        const char* getString();             // Return typed string
+        void setString(const char* string);  // Replace text with new string
+        void blit() const override;          // Draw current text with selection at screen
     };
 
 
@@ -324,33 +341,35 @@ namespace GUI {
         const int maxItems;
         // Items in reverce order for easier appending
         std::vector<Item> items;
-        // Additional interface
-        GUI::RoundedBackplate backplate;
+        // Adding text of absence of objects
+        #if (USE_SDL_FONT) && (PRELOAD_FONTS)
+        GUI::HighlightedStaticText emptySavesText;
+        #endif
         // Slider for showing position
         SDL_FRect sliderRect;
         const SDL_FRect sliderBackRect;
         bool holding = false;
         float holdPosition;
-        // Adding text of absence of objects
-        #if (USE_SDL_FONT) && (PRELOAD_FONTS)
-        GUI::HighlightedStaticText emptySavesText;
-        #endif
 
         void moveUp();
         void moveDown();
 
      public:
-        // Create menu for scrolling objects, placed at center with (posX, posY) and size. Shows fully maxItems at screen
-        ScrollBox(const Window& window, float posX, float posY, float width, float height,
-            std::vector<SourceItem> items, const LanguagedText&& emptyItemsText, int maxShowedItems = 3);
+        // Create menu for scrolling objects, placed at center with (posX, posY) and size.
+        // Shows "maxShowedItems" items at a time
+        ScrollBox(const Window& window, float posX, float posY, float width, float height, int maxShowedItems,
+            const LanguagedText&& emptyItemsText);
+        ScrollBox(const Window& window, float posX, float posY, float width, float height, int maxShowedItems,
+            std::vector<SourceItem> items, const LanguagedText&& emptyItemsText);
         ScrollBox(ScrollBox&& object) noexcept;
         ~ScrollBox() noexcept;
         void addItem(const SourceItem& field);
+        void clear();
         // Return index of selected+1 and 0, if don't
         int click(const Mouse mouse);
         void unclick();
         void update(const Mouse mouse);
-        void scroll(float wheelY);
+        void scroll(const Mouse mouse, float wheelY);
         void blit() const override;
     };
 

@@ -66,7 +66,7 @@ bool ServerGameCycle::inputMouseDown() {
 }
 
 void ServerGameCycle::inputMouseUp() {
-    GameCycle::inputMouseUp();
+    InternetCycle::inputMouseUp();
     menu.unclick();
 }
 
@@ -80,11 +80,13 @@ void ServerGameCycle::inputKeys(SDL_Keycode _key) {
         }
         return;
     }
-    GameCycle::inputKeys(_key);
+    InternetCycle::inputKeys(_key);
 }
 
 void ServerGameCycle::inputMouseWheel(float _wheelY) {
-    GameCycle::inputMouseWheel(_wheelY);
+    if (settings.scroll(mouse, _wheelY)) {
+        return;
+    }
     menu.scroll(_wheelY);
 }
 
@@ -105,7 +107,7 @@ void ServerGameCycle::getInternetPacket(const GetPacket& packet) {
             music.startFromCurrent(Music::MainCombat);
             logAdditional("Turn of opponent player to %u", packet.getData<Uint8>(2));
         }
-        return;
+        break;
 
     default:
         break;
@@ -113,7 +115,7 @@ void ServerGameCycle::getInternetPacket(const GetPacket& packet) {
 }
 
 void ServerGameCycle::update() {
-    GameCycle::update();
+    InternetCycle::update();
     menu.update();
 }
 
@@ -136,11 +138,11 @@ void ServerGameCycle::draw() const {
         break;
 
     case GameState::CurrentWin:
-        firstWinText.blit();
+        winText.blit();
         break;
 
     case GameState::OpponentWin:
-        secondWinText.blit();
+        looseText.blit();
         break;
 
     case GameState::NobodyWin:

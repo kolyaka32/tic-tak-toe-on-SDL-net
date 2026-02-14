@@ -6,22 +6,26 @@
 #pragma once
 
 #include "internetCycle.hpp"
+#include "../game/connectMenu/serverInfo.hpp"
+#include "../game/connectMenu/targetConnect.hpp"
 
 
 // Game cycle (for single player (special animation))
 class ClientLobbyCycle : public BaseCycle {
  protected:
-    // Input fields
-    GUI::StaticText enterIPText;
-    static char baseIP[15];
-    GUI::TypeBox<15> enterIPField;
-    GUI::StaticText enterPortText;
-    static char basePort[6];
-    GUI::TypeBox<6> enterPortField;
-    GUI::TextButton pasteButton;
-    GUI::TextButton connectButton;
+    // Object with all servers for connection
+    std::vector<ServerData> serverDatas;
+    // Socket for broadcast send data (for finding servers)
+    Socket broadcastSendSocket;
+    timer startSearchTimer = 0;
 
-    void pasteFromClipboard();
+    // Input fields
+    GUI::ScrollBox<ServerInfo, ServerData> serverScroller;
+    GUI::TextButton updateButton;
+    GUI::TextButton targetConnectButton;
+    TargetConnect targetConnectMenu;
+
+    void updateList();
 
     // Main run functions
     bool inputMouseDown() override;
@@ -33,8 +37,4 @@ class ClientLobbyCycle : public BaseCycle {
 
  public:
     ClientLobbyCycle(Window& _window);
-    static void writeBaseIP(const char* text);
-    static const char* getBaseIP();
-    static void writeBasePort(const char* text);
-    static const char* getBasePort();
 };

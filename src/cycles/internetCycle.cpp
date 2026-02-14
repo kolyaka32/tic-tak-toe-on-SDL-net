@@ -43,7 +43,7 @@ bool InternetCycle::inputMouseDown() {
     if (int code = disconnectedBox.click(mouse)) {
         if (code == 2) {
             // Trying to reconnect
-            internet.sendAll(ConnectionCode::ApplyConnection);
+            internet.sendAll({ConnectionCode::ApplyConnection});
         } else if (code == 3) {
             // Going to menu
             App::setNextCycle(Cycle::Menu);
@@ -55,6 +55,8 @@ bool InternetCycle::inputMouseDown() {
 }
 
 void InternetCycle::update() {
+    // Basic update
+    GameCycle::update();
     // Getting messages
     while (const GetPacket* packet = internet.getNewMessages()) {
         getInternetPacket(*packet);
@@ -71,8 +73,6 @@ void InternetCycle::update() {
     } else {
         disconnectedBox.reset();
     }
-    // Basic update
-    BaseCycle::update();
 }
 
 void InternetCycle::getInternetPacket(const GetPacket& packet) {

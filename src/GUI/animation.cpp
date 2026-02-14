@@ -12,10 +12,12 @@ GUI::Animation::Animation(const Window& _window, float _X, float _Y, float _W, f
 : Animation(_window, {_X*window.getWidth(), _Y*window.getHeight(), _W*window.getWidth(), _H*window.getHeight()}, _type) {}
 
 GUI::Animation::Animation(const Window& _window, const SDL_FRect& _dest, Animations _type)
-: TextureTemplate(_window, _dest, _window.createTexture(animation->frames[0])),
+: TextureTemplate(_window, _dest),
 type(_type),
 animation(window.getAnimation(_type)),
-prevTick(getTime() + animation->delays[0]) {}
+prevTick(getTime() + animation->delays[0]) {
+    texture = _window.createTexture(animation->frames[0])
+}
 
 GUI::Animation::Animation(Animation&& _object) noexcept
 : TextureTemplate(_object),

@@ -11,11 +11,11 @@ Socket::Socket() {
     // Create a SOCKET for listening for incoming connection requests.
     sck = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (sck == INVALID_SOCKET) {
-        printf("socket function failed with error: %ld", WSAGetLastError());
+        logAdditional("socket function failed with error: %ld", WSAGetLastError());
     }
     // Setting local address
     localAddress.sin_family = AF_INET;
-    localAddress.sin_addr.s_addr = inet_addr("127.0.0.1");
+    localAddress.sin_addr.S_un.S_addr = INADDR_ANY;
 }
 
 Socket::~Socket() {
@@ -33,7 +33,7 @@ void Socket::setNonBlockingMode() {
     // Setting socket to non-blocking mode
     DWORD nonBlocking = 1;
     if (ioctlsocket(sck, FIONBIO, &nonBlocking) != 0) {
-        logImportant("Can't set socket to non-blocking mode");
+        logImportant("Can't set socket to non-blocking mode: %d", WSAGetLastError());
     }
 }
 
@@ -41,7 +41,7 @@ void Socket::setReuseAddressMode() {
     // Setting socket to allow to reuse address
     bool t = true;
     if (setsockopt(sck, SOL_SOCKET, SO_REUSEADDR, (char*)&t, sizeof(t))) {
-        logImportant("Can't set reusing socket");
+        logImportant("Can't set reusing socket: %d", WSAGetLastError());
     }
 }
 
@@ -49,7 +49,7 @@ void Socket::setBroadcastMode() {
     // Setting socket to broadcast
     bool t = true;
     if (setsockopt(sck, SOL_SOCKET, SO_BROADCAST, (char*)&t, sizeof(t))) {
-        logImportant("Can't set socket to broadcast");
+        logImportant("Can't set socket to broadcast: %d", WSAGetLastError());
     }
 }
 
@@ -71,10 +71,16 @@ void Socket::tryBindTo(Uint16 _port) {
         }
     }
     setNonBlockingMode();
-    logAdditional("Openned general socket at port %d", port);
+    logAdditional("Openned socket at port %d", port);
 }
 
-void Socket::setBroadcast() {
+void Socket::tryBindTo() {
+    // Setting random seed from time
+    SDL_srand(0);
+    tryBindTo(SDL_rand(40000) + 1500);
+}
+
+void Socket::setRecieveBroadcast() {
     // Set, that any app could use that port (for many apps run simultaneously)
     setReuseAddressMode();
     // Setting basic port for broadcast
@@ -87,12 +93,26 @@ void Socket::setBroadcast() {
     logAdditional("Openned broadcast socket at port %d", port);
 }
 
+void Socket::setSendBroadcast() {
+    // Setting random seed from time
+    SDL_srand(0);
+    // Setting at random port
+    tryBindTo(SDL_rand(40000) + 1500);
+    // Setting to allow send broadcast messages
+    setBroadcastMode();
+}
+
 void Socket::send(const Destination& _dest, const Message& _message) const {
-    if (sendto(sck, _message.getData(), _message.getLength(), 0, _dest.getAddress(), _dest.getSize()) < 0) {
+    int sendLength = sendto(sck, _message.getData(), _message.getLength(), 0, _dest.getAddress(), _dest.getSize());
+    #if (CHECK_CORRECTION)
+    if (sendLength < 0) {
         logImportant("Can't send data %d", WSAGetLastError());
+    } else if (sendLength != _message.getLength()) {
+        logAdditional("Don't send fully: %d", WSAGetLastError());
     } else {
         logAdditional("Send sucsesfull: %d", _message.getLength());
     }
+    #endif
 }
 
 Uint16 Socket::getPort() const {

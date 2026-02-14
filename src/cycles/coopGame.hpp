@@ -6,7 +6,7 @@
 #pragma once
 
 #include "gameCycle.hpp"
-#include "../game/menu/selectingMenu.hpp"
+#include "../game/gameMenu/selectingMenu.hpp"
 
 
 // Creating two player mode (standart game)

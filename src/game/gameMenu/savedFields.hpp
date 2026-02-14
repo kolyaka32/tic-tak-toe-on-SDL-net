@@ -17,6 +17,7 @@ class SavedFields : GUI::Template {
     static bool active;
 
     // Draw options
+    GUI::RoundedBackplate backplate;
     GUI::ScrollBox<SaveInfo, Field> scroller;
     GUI::TextButton exitButton;
 

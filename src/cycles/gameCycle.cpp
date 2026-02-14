@@ -44,7 +44,7 @@ void GameCycle::inputKeys(SDL_Keycode key) {
 }
 
 void GameCycle::update() {
+    BaseCycle::update();
     screamer.update();
     savedInfo.update();
-    BaseCycle::update();
 }

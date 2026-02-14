@@ -74,18 +74,20 @@ void SettingsMenu::unClick() {
     }
 }
 
-void SettingsMenu::scroll(const Mouse mouse, float _wheelY) {
+bool SettingsMenu::scroll(const Mouse mouse, float _wheelY) {
     if (active) {
         // Checking scroll on sliders
         if (musicSlider.in(mouse)) {
             music.setVolume(musicSlider.scroll(_wheelY));
-            return;
+            return true;
         }
         if (soundSlider.in(mouse)) {
             sounds.setVolume(soundSlider.scroll(_wheelY));
-            return;
+            return true;
         }
+        return true;
     }
+    return false;
 }
 
 void SettingsMenu::update() {

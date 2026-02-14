@@ -8,30 +8,36 @@
 
 template <class Item, class SourceItem>
 GUI::ScrollBox<Item, SourceItem>::ScrollBox(const Window& _window, float _posX, float _posY, float _width, float _height,
-    std::vector<SourceItem> _startItems, const LanguagedText&& _emptyItemsText, int _maxItems)
+    int _maxItems, const LanguagedText&& _emptyItemsText)
 : Template(_window),
-backplate(_window, _posX, _posY, _width, _height, 20.0, 4.0),
 #if (USE_SDL_FONT) && (PRELOAD_FONTS)
 emptySavesText(_window, _posX, _posY - _height/4, std::move(_emptyItemsText), 1),
 #endif
 maxItems(_maxItems),
 sliderBackRect({(_posX+_width/2-0.04f)*_window.getWidth(), (_posY - _height/2)*_window.getHeight(),
     0.03f * _window.getWidth(), _height*_window.getHeight()}) {
-    // Creating options to start
-    items.reserve(_startItems.size());
-    for (int i=0; i < _startItems.size(); ++i) {
-        items.emplace_back(_window, _startItems[i], _startItems.size()-i-1);
-    }
-    endField = items.size();
+    startField = 0;
+    endField = 0;
     // Side slider
     sliderRect.x = sliderBackRect.x+0.005f*_window.getWidth();
     sliderRect.w = 0.02f*_window.getWidth();
+    // Basic full version
+    sliderRect.h = sliderBackRect.h;
+    sliderRect.y = sliderBackRect.y;
+}
 
-    if (items.size() <= maxItems) {
-        startField = 0;
-        sliderRect.h = sliderBackRect.h;
-        sliderRect.y = sliderBackRect.y;
-    } else {
+template <class Item, class SourceItem>
+GUI::ScrollBox<Item, SourceItem>::ScrollBox(const Window& _window, float _posX, float _posY, float _width, float _height,
+    int _maxItems, std::vector<SourceItem> _startItems, const LanguagedText&& _emptyItemsText)
+: ScrollBox(_window, _posX, _posY, _width, _height, _maxItems, std::move(_emptyItemsText)) {
+    // Creating options to start
+    items.reserve(_startItems.size());
+    for (int i=0; i < _startItems.size(); ++i) {
+        items.emplace_back(_window, _startItems.size()-i-1, _startItems[i]);
+    }
+    endField = items.size();
+    // If has more items, than can show
+    if (items.size() > maxItems) {
         startField = endField-maxItems;
         sliderRect.h = float(maxItems) / items.size() * sliderBackRect.h;
         sliderRect.y = (1 - float(endField) / items.size()) * sliderBackRect.h + sliderBackRect.y;
@@ -47,7 +53,10 @@ maxItems(_object.maxItems),
 #if (USE_SDL_FONT) && (PRELOAD_FONTS)
 emptySavesText(std::move(_object.emptySavesText)),
 #endif
-backplate(std::move(_object.backplate)) {}
+sliderRect(_object.sliderRect),
+sliderBackRect(_object.sliderBackRect),
+holding(_object.holding),
+holdPosition(_object.holdPosition) {}
 
 template <class Item, class SourceItem>
 GUI::ScrollBox<Item, SourceItem>::~ScrollBox() noexcept {
@@ -62,7 +71,7 @@ void GUI::ScrollBox<Item, SourceItem>::addItem(const SourceItem& _sourceItem) {
         for (int i=0; i < items.size(); ++i) {
             items[i].moveDown();
         }
-        items.emplace_back(window, _sourceItem, 0);
+        items.emplace_back(window, 0, _sourceItem);
         endField++;
         // Not changing slider
         return;
@@ -73,7 +82,7 @@ void GUI::ScrollBox<Item, SourceItem>::addItem(const SourceItem& _sourceItem) {
         for (int i=0; i < items.size(); ++i) {
             items[i].moveDown();
         }
-        items.emplace_back(window, _sourceItem, 0);
+        items.emplace_back(window, 0, _sourceItem);
         endField++;
         startField++;
         // Changing slider
@@ -82,10 +91,19 @@ void GUI::ScrollBox<Item, SourceItem>::addItem(const SourceItem& _sourceItem) {
         return;
     }
     // Placing and not showing
-    items.emplace_back(window, _sourceItem, startField - endField);
+    items.emplace_back(window, startField - endField, _sourceItem);
     // Changing slider
     sliderRect.h = float(maxItems) / items.size() * sliderBackRect.h;
     sliderRect.y = (1 - float(endField) / items.size()) * sliderBackRect.h + sliderBackRect.y;
+}
+
+template <class Item, class SourceItem>
+void GUI::ScrollBox<Item, SourceItem>::clear() {
+    items.clear();
+    startField = 0;
+    endField = 0;
+    sliderRect.h = sliderBackRect.h;
+    sliderRect.y = sliderBackRect.y;
 }
 
 template <class Item, class SourceItem>
@@ -151,13 +169,9 @@ void GUI::ScrollBox<Item, SourceItem>::update(const Mouse _mouse) {
 }
 
 template <class Item, class SourceItem>
-void GUI::ScrollBox<Item, SourceItem>::scroll(float _wheelY) {
-    Mouse mouse{};
-    mouse.updatePos();
-    // Resetting holding
-    holding = false;
+void GUI::ScrollBox<Item, SourceItem>::scroll(const Mouse _mouse, float _wheelY) {
     // Check, if scroll in this menu
-    if (backplate.in(mouse)) {
+    if (!holding) {
         if (_wheelY > 0) {
             for (;_wheelY > 0; --_wheelY) {
                 // Check, if can scroll up
@@ -182,7 +196,6 @@ void GUI::ScrollBox<Item, SourceItem>::scroll(float _wheelY) {
 
 template <class Item, class SourceItem>
 void GUI::ScrollBox<Item, SourceItem>::blit() const {
-    backplate.blit();
     // Check, if has fields
     if (endField) {
         for (int i=startField; i < endField; ++i) {

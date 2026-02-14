@@ -19,11 +19,11 @@ class SaveInfo : public GUI::TextureTemplate {
     GUI::HighlightedStaticText lastModifiedText;
 
  public:
-    explicit SaveInfo(const Window& window, const Field& field, int position);
+    explicit SaveInfo(const Window& window, int position, const Field& field);
     SaveInfo(SaveInfo&& info) noexcept;
     ~SaveInfo() noexcept;
     void moveUp();
     void moveDown();
     void blit() const override;
-    bool in(Mouse mouse) const;
+    bool in(Mouse mouse) const override;
 };

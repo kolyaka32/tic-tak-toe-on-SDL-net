@@ -56,8 +56,9 @@ class Field {
     int winWidth;  // Length of line to win
     float upperLinePixels;  // Absolute height of upper line in pixels
 
-    //
+    // Create new field with new parameters
     Field(int width, int winWidth);
+    // Create field from saved string (from iternet/load file)
     Field(const char* saveText);
     Field(const Field& field);
     Field& operator=(const Field* field);
