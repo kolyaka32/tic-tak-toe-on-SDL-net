@@ -20,10 +20,14 @@ flags {
     {window, 0.35, 0.45, 0.25, Textures::FlagGER},
     {window, 0.65, 0.45, 0.25, Textures::FlagBEL},
 },
+#if (PRELOAD_MUSIC)
 musicText{window, 0.5, 0.58, {"Music", "Музыка", "Die Musik", "Музыка"}, 1},
 musicSlider{window, 0.5, 0.64, 0.5, audio.music.getVolume()},
+#endif
+#if (PRELOAD_SOUNDS)
 soundText{window, 0.5, 0.7, {"Sounds", "Звуки", "Geräusche", "Гук"}, 1},
 soundSlider{window, 0.5, 0.76, 0.5, audio.sounds.getVolume()},
+#endif
 exitButton{window, 0.5, 0.85, {"Exit", "Выход", "Ausfahrt", "Выхад"}} {}
 
 bool SettingsMenu::click(const Mouse _mouse) {
@@ -49,14 +53,18 @@ bool SettingsMenu::click(const Mouse _mouse) {
                 }
             }
         }
-        /*if (musicSlider.in(_mouse)) {
+        #if (PRELOAD_MUSIC)
+        if (musicSlider.in(_mouse)) {
             holdingSlider = 1;
             return true;
-        }*/
+        }
+        #endif
+        #if (PRELOAD_SOUNDS)
         if (soundSlider.in(_mouse)) {
             holdingSlider = 2;
             return true;
         }
+        #endif
         if (exitButton.in(_mouse)) {
             // Checking on exit
             active = false;
@@ -77,14 +85,18 @@ void SettingsMenu::unClick() {
 bool SettingsMenu::scroll(const Mouse mouse, float _wheelY) {
     if (active) {
         // Checking scroll on sliders
+        #if (PRELOAD_MUSIC)
         if (musicSlider.in(mouse)) {
             audio.music.setVolume(musicSlider.scroll(_wheelY));
             return true;
         }
+        #endif
+        #if (PRELOAD_SOUNDS)
         if (soundSlider.in(mouse)) {
             audio.sounds.setVolume(soundSlider.scroll(_wheelY));
             return true;
         }
+        #endif
         return true;
     }
     return false;
@@ -98,20 +110,28 @@ void SettingsMenu::update() {
 
         // Updating pressing on sliders
         switch (holdingSlider) {
+        // Music slier
+        #if (PRELOAD_MUSIC)
         case 1:
-            // Updating music slider state
             audio.music.setVolume(musicSlider.setValue(mouse.getX()));
             break;
+        #endif
 
+        // Sound slider
+        #if (PRELOAD_SOUNDS)
         case 2:
             // Updating sound slider state
             audio.sounds.setVolume(soundSlider.setValue(mouse.getX()));
 
             // Playing sound effect for understanding loud
             if (getTime() > nextSound) {
-                audio.sounds.play(Sounds::Turn);
+                audio.sounds.play(Sounds::SliderSound);
                 nextSound = getTime() + 400;
             }
+            break;
+        #endif
+
+        default:
             break;
         }
     }
@@ -130,11 +150,16 @@ void SettingsMenu::blit() const {
         for (unsigned i = 0; i < 4; ++i) {
             flags[i].blit();
         }
-        // Sliders
+        // Music slider
+        #if (PRELOAD_MUSIC)
         musicText.blit();
         musicSlider.blit();
+        #endif
+        // Sound slier
+        #if (PRELOAD_SOUNDS)
         soundSlider.blit();
         soundText.blit();
+        #endif
         // Quit
         exitButton.blit();
     }

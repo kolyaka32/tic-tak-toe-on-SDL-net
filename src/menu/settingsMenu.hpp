@@ -23,11 +23,16 @@ class SettingsMenu : GUI::Template {
     GUI::HighlightedStaticText titleText;
     // Flags for select language
     const GUI::ImageButton flags[(unsigned)Language::Count];
-    // Sliders and it texts
+    // Sliders for music (if need)
+    #if (PRELOAD_MUSIC)
     GUI::HighlightedStaticText musicText;
     GUI::Slider musicSlider;
+    #endif
+    // Slider for sounds (if need)
+    #if (PRELOAD_SOUNDS)
     GUI::HighlightedStaticText soundText;
     GUI::Slider soundSlider;
+    #endif
     // Quit button
     GUI::TextButton exitButton;
 
