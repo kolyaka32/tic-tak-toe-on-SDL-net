@@ -14,10 +14,6 @@ class Internet {
  private:
     // Socket for recieve/send data (general)
     Socket socket;
-    // Socket for broadcast recieve/send data
-    //Socket broadcastSocket;
-    // Address to send tp broadcast
-    //Destination broadcstDest;
     // Flag of disconnecting current user from main internet system
     bool disconnected;
     // Reciepients

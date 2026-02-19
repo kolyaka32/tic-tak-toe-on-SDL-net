@@ -11,50 +11,64 @@
 #include "../exceptions.hpp"
 
 
-MusicData::MusicData() {
+MusicData::MusicData(MIX_Mixer* _mixer) {
     // Resetting all tracks
     #if (CHECK_CORRECTION)
     for (unsigned i=0; i < unsigned(Music::Count); ++i) {
-        music[i] = nullptr;
+        musics[i] = nullptr;
     }
     #endif
 
     // Loading all needed music tracks
     for (unsigned i=0; i < unsigned(Music::Count); ++i) {
-        loadMusic(Music(i), musicFilesNames[i]);
+        loadMusic(_mixer, Music(i), musicFilesNames[i]);
     }
+
+    // Creating option for infinite music play
+    playOption = SDL_CreateProperties();
+    SDL_SetNumberProperty(playOption, MIX_PROP_PLAY_LOOPS_NUMBER, -1);
+
+    // Creating tracks for switchy play
+    tracks[0] = MIX_CreateTrack(_mixer);
+    tracks[1] = MIX_CreateTrack(_mixer);
+
+    // Setting music volume
+    setVolume(0.5f);
 
     // Checking massive on loading correction
     #if (CHECK_CORRECTION)
     for (unsigned i=0; i < unsigned(Music::Count); ++i) {
-        if (music[i] == NULL) {
+        if (musics[i] == NULL) {
             throw DataLoadException("Music with name: " + std::string(musicFilesNames[i]));
         }
     }
     logAdditional("Music loaded corretly");
     #endif
-
-    // Resetting music volume
-    setVolume(MIX_MAX_VOLUME/2);
 }
 
 MusicData::~MusicData() {
-    // Closing all tracks
+    // Destrying option
+    SDL_DestroyProperties(playOption);
+
+    // Closing all audios and tracks
     for (unsigned i=0; i < unsigned(Music::Count); ++i) {
-        Mix_FreeMusic(music[i]);
+        MIX_DestroyAudio(musics[i]);
     }
+    // Clearing tracks
+    MIX_DestroyTrack(tracks[0]);
+    MIX_DestroyTrack(tracks[1]);
 }
 
-void MusicData::loadMusic(Music _index, const char* _name) {
+void MusicData::loadMusic(MIX_Mixer* _mixer, Music _index, const char* _name) {
     // Load data of current music track
     SDL_IOStream* iodata = dataLoader.load(_name);
 
     // Loading track
-    music[unsigned(_index)] = Mix_LoadMUS_IO(iodata, true);
+    musics[unsigned(_index)] = MIX_LoadAudio_IO(_mixer, iodata, false, true);
 
-    // Checking correction of loaded track
+    // Checking correction of loaded music
     #if (CHECK_CORRECTION)
-    if (music[unsigned(_index)] == nullptr) {
+    if (musics[unsigned(_index)] == nullptr) {
         throw DataLoadException(_name);
     }
     #endif
@@ -62,49 +76,80 @@ void MusicData::loadMusic(Music _index, const char* _name) {
 
 void MusicData::start(Music _index) {
     // Check, if already playing it
-    if (currentPlay != music[unsigned(_index)]) {
-        // Infinite playing selected music
-        Mix_PlayMusic(music[unsigned(_index)], -1);
-        // Set new playing track
-        currentPlay = music[unsigned(_index)];
+    if (currentPlay != musics[unsigned(_index)]) {
+        // Stop playing current track
+        MIX_StopTrack(tracks[currentTrack], 0);
+
+        // Updating current track position
+        currentTrack = 1 - currentTrack;
+        currentPlay = musics[unsigned(_index)];
+
+        // Setting on another track new music
+        MIX_SetTrackAudio(tracks[currentTrack], musics[unsigned(_index)]);
+
+        // Resetting fading
+        SDL_SetNumberProperty(playOption, MIX_PROP_PLAY_FADE_IN_FRAMES_NUMBER, 0);
+        SDL_SetNumberProperty(playOption, MIX_PROP_PLAY_START_MILLISECOND_NUMBER, 0);
+
+        // Infinite playing new selected track withiou fading
+        MIX_PlayTrack(tracks[currentTrack], playOption);
     }
 }
 
 void MusicData::startFading(Music _index) {
     // Check, if already playing it
-    if (currentPlay != music[unsigned(_index)]) {
-        // Infinite playing selected music
-        Mix_FadeInMusic(music[unsigned(_index)], -1, 1000);
-        // Set new playing track
-        currentPlay = music[unsigned(_index)];
+    if (currentPlay != musics[unsigned(_index)]) {
+        // Stop playing current track (with fade out)
+        MIX_StopTrack(tracks[currentTrack], fadeFrames);
+
+        // Updating current track position
+        currentTrack = 1 - currentTrack;
+        currentPlay = musics[unsigned(_index)];
+
+        // Setting on another track new music
+        MIX_SetTrackAudio(tracks[currentTrack], musics[unsigned(_index)]);
+
+        // Setting fading
+        SDL_SetNumberProperty(playOption, MIX_PROP_PLAY_FADE_IN_FRAMES_NUMBER, fadeFrames);
+        SDL_SetNumberProperty(playOption, MIX_PROP_PLAY_START_MILLISECOND_NUMBER, 0);
+
+        // Infinite playing new selected track with fade in
+        MIX_PlayTrack(tracks[currentTrack], playOption);
     }
 }
 
 void MusicData::startFromCurrent(Music _index) {
     // Check, if already playing it
-    if (currentPlay != music[unsigned(_index)]) {
-        // Getting position of current song
-        double currentPos = Mix_GetMusicPosition(nullptr);
-        // Infinite playing selected music from get position
-        Mix_FadeInMusicPos(music[unsigned(_index)], -1, 1000, currentPos);
-        // Set new playing track
-        currentPlay = music[unsigned(_index)];
+    if (currentPlay != musics[unsigned(_index)]) {
+        // Stop playing current track (with fade out)
+        MIX_StopTrack(tracks[currentTrack], fadeFrames);
+
+        // Getting current position in that track
+        Sint64 framePosition = MIX_GetTrackPlaybackPosition(tracks[currentTrack]);
+
+        // Updating current track position
+        currentTrack = 1 - currentTrack;
+        currentPlay = musics[unsigned(_index)];
+
+        // Setting on another track new music
+        MIX_SetTrackAudio(tracks[currentTrack], musics[unsigned(_index)]);
+
+        // Setting fading
+        SDL_SetNumberProperty(playOption, MIX_PROP_PLAY_FADE_IN_FRAMES_NUMBER, fadeFrames);
+        SDL_SetNumberProperty(playOption, MIX_PROP_PLAY_LOOP_START_FRAME_NUMBER, framePosition);
+
+        // Infinite playing new selected track with fade in
+        MIX_PlayTrack(tracks[currentTrack], playOption);
     }
 }
 
-void MusicData::setVolume(unsigned _volume) {
-    // Checking correction given volume
-    #if (CHECK_CORRECTION)
-    if (_volume/2 > MIX_MAX_VOLUME) {
-        throw "Wrong volume";
-    }
-    #endif
-    volume = _volume/2;
-    Mix_VolumeMusic(volume);
+void MusicData::setVolume(float _volume) {
+    MIX_SetTrackGain(tracks[0], _volume);
+    MIX_SetTrackGain(tracks[1], _volume);
 }
 
-unsigned MusicData::getVolume() const {
-    return volume * 2;
+float MusicData::getVolume() const {
+    return MIX_GetTrackGain(tracks[0]);
 }
 
 #endif  // (PRELOAD_MUSIC)

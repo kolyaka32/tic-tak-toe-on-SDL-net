@@ -19,7 +19,7 @@ twoPlayerButton(window, 0.5, 0.5, {"Two players", "Два игрока", "Zwei S
 serverButton(window, 0.5, 0.7, {"Create server", "Создать сервер", "Server erstellen", "Стварыць сервер"}),
 connectButton(window, 0.5, 0.9, {"Connect", "Присоединиться", "Beitreten", "Далучыцца"}) {
     // Starting menu song (if wasn't started)
-    music.start(Music::Menu);
+    music.startFading(Music::Menu);
     logAdditional("Start select cycle");
 }
 

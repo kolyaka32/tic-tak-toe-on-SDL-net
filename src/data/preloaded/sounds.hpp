@@ -19,16 +19,16 @@
 // Class for playing sound with need name
 class SoundsData {
  private:
-    Mix_Chunk* sounds[unsigned(Sounds::Count)];
-    Uint8 volume = 0;
-    void loadSound(unsigned index, const char* name);
+    MIX_Audio* sounds[unsigned(Sounds::Count)];
+    MIX_Track* tracks[unsigned(Sounds::Count)];
+    void loadSound(MIX_Mixer* mixer, unsigned index, const char* name);
 
  public:
-    SoundsData();
+    SoundsData(MIX_Mixer* mixer);
     ~SoundsData();
     void play(Sounds name) const;
-    void setVolume(unsigned _volume);
-    unsigned getVolume() const;
+    void setVolume(float volume);
+    float getVolume() const;
 };
 
 // Global system for launch music tracks

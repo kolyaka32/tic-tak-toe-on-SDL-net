@@ -25,48 +25,58 @@ Libraries::Libraries() {
     if (!SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO)) {
         throw LibararyLoadException("Main library: " + std::string(SDL_GetError()));
     }
+
     // Initialasing font library
     #if (USE_SDL_FONT)
     if (!TTF_Init()) {
         throw LibararyLoadException("Font library: " + std::string(SDL_GetError()));
     }
     #endif
-    // Initialasing audio library
+
+    // Initialising audio library
     #if (USE_SDL_MIXER)
-    if (!Mix_Init(MIX_INIT_MP3 | MIX_INIT_WAVPACK)) {
-        throw LibararyLoadException("Mixer library: " + std::string(SDL_GetError()));
+    if (!MIX_Init()) {
+        throw LibararyLoadException("Couldn't initialise mixer library: " + std::string(SDL_GetError()));
     }
-    // Starting audio
+    // Selecting audio device for audio output
     audioDeviceID = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
     if (audioDeviceID == 0) {
         throw LibararyLoadException("Couldn't get audio device ID: " + std::string(SDL_GetError()));
     }
-    // Openning audio chanel
-    if (!Mix_OpenAudio(audioDeviceID, NULL)) {
-        throw LibararyLoadException("Couldn't initialase audio chanel: " + std::string(SDL_GetError()));
+    // Creating mixer
+    mixer = MIX_CreateMixerDevice(audioDeviceID, nullptr);
+    if (mixer == nullptr) {
+        throw LibararyLoadException("Couldn't create mixer: " + std::string(SDL_GetError()));
     }
-    #endif
+    #endif  // (USE_SDL_MIXER)
+
     // Intialasing internet library
     #if (USE_NET)
     if (initNet()) {
         throw LibararyLoadException("Couldn't initialase internet library: " + std::string(SDL_GetError()));
     }
     #endif
-
     logAdditional("Libraries load correctly");
+
     #else  // (CHECK_CORRECTION)
+    // Loading without checking correction
+
     SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO);
+
     #if (USE_SDL_FONT)
     TTF_Init();
     #endif
+
     #if (USE_SDL_MIXER)
-    Mix_Init(MIX_INIT_MP3 | MIX_INIT_WAVPACK);
+    MIX_Init();
     audioDeviceID = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
-    Mix_OpenAudio(audioDeviceID, NULL);
+    mixer = MIX_CreateMixerDevice(audioDeviceID, nullptr);
     #endif
+
     #if (USE_NET)
     initNet();
     #endif
+
     #endif  // (CHECK_CORRECTION)
 }
 
@@ -76,19 +86,21 @@ Libraries::~Libraries() noexcept {
     closeNet();
     #endif
 
-    // Closing audio device
+    // Closing mixer with audio device
     #if (USE_SDL_MIXER)
-    Mix_CloseAudio();
+    MIX_DestroyMixer(mixer);
     SDL_CloseAudioDevice(audioDeviceID);
     #endif
 
-    // Closing all library reversed
-    #if (USE_SDL_MIXER)
-    Mix_CloseAudio();
-    #endif
+    // Closing trueTypeFont library
     #if (USE_SDL_FONT)
     TTF_Quit();
     #endif
+
     // Closing main SDL library
     SDL_Quit();
+}
+
+MIX_Mixer* Libraries::getMixer() const {
+    return mixer;
 }

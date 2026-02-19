@@ -25,11 +25,11 @@ const DataLoader dataLoader{};
 #endif
 
 #if (PRELOAD_MUSIC)
-MusicData music{};
+MusicData music{libraries.getMixer()};
 #endif
 
 #if (PRELOAD_SOUNDS)
-SoundsData sounds{};
+SoundsData sounds{libraries.getMixer()};
 #endif
 
 #if (USE_NET)
