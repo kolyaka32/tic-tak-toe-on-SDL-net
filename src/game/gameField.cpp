@@ -55,7 +55,7 @@ void GameField::setNewField(const Field* field, Window& _window) {
     currentField = field;
     // Check, if game already started
     if (currentField.isStarted()) {
-        music.startFromCurrent(Music::MainCombat);
+        audio.music.startFromCurrent(Music::MainCombat);
     }
 }
 
@@ -122,26 +122,26 @@ void GameField::blit() const {
 
 void GameField::checkEnd() {
     // Starting main combat music
-    music.startFromCurrent(Music::MainCombat);
+    audio.music.startFromCurrent(Music::MainCombat);
     // Making sound depend on state
     switch (currentField.getState()) {
     case GameState::CurrentWin:
-        sounds.play(Sounds::Win);
+        audio.sounds.play(Sounds::Win);
         logAdditional("Opponent win");
         break;
 
     case GameState::OpponentWin:
-        sounds.play(Sounds::Loose);
+        audio.sounds.play(Sounds::Loose);
         logAdditional("Current win");
         break;
 
     case GameState::NobodyWin:
-        sounds.play(Sounds::Loose);
+        audio.sounds.play(Sounds::Loose);
         logAdditional("Nobody win");
         break;
 
     default:
-        sounds.play(Sounds::Turn);
+        audio.sounds.play(Sounds::Turn);
         return;
     }
     // Setting start menu for next game
@@ -150,26 +150,26 @@ void GameField::checkEnd() {
 
 void GameField::checkEndInverted() {
     // Starting main combat music
-    music.startFromCurrent(Music::MainCombat);
+    audio.music.startFromCurrent(Music::MainCombat);
     // Making sound depend on state
     switch (currentField.getState()) {
     case GameState::CurrentWin:
-        sounds.play(Sounds::Loose);
+        audio.sounds.play(Sounds::Loose);
         logAdditional("Current win");
         break;
 
     case GameState::OpponentWin:
-        sounds.play(Sounds::Win);
+        audio.sounds.play(Sounds::Win);
         logAdditional("Opponent win");
         break;
 
     case GameState::NobodyWin:
-        sounds.play(Sounds::Loose);
+        audio.sounds.play(Sounds::Loose);
         logAdditional("Nobody win");
         break;
 
     default:
-        sounds.play(Sounds::Turn);
+        audio.sounds.play(Sounds::Turn);
         return;
     }
     // Setting start menu for next game

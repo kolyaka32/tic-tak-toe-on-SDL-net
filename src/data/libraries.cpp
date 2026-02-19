@@ -32,23 +32,6 @@ Libraries::Libraries() {
         throw LibararyLoadException("Font library: " + std::string(SDL_GetError()));
     }
     #endif
-
-    // Initialising audio library
-    #if (USE_SDL_MIXER)
-    if (!MIX_Init()) {
-        throw LibararyLoadException("Couldn't initialise mixer library: " + std::string(SDL_GetError()));
-    }
-    // Selecting audio device for audio output
-    audioDeviceID = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
-    if (audioDeviceID == 0) {
-        throw LibararyLoadException("Couldn't get audio device ID: " + std::string(SDL_GetError()));
-    }
-    // Creating mixer
-    mixer = MIX_CreateMixerDevice(audioDeviceID, nullptr);
-    if (mixer == nullptr) {
-        throw LibararyLoadException("Couldn't create mixer: " + std::string(SDL_GetError()));
-    }
-    #endif  // (USE_SDL_MIXER)
     logAdditional("Libraries load correctly");
 
     #else  // (CHECK_CORRECTION)
@@ -60,22 +43,10 @@ Libraries::Libraries() {
     TTF_Init();
     #endif
 
-    #if (USE_SDL_MIXER)
-    MIX_Init();
-    audioDeviceID = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, NULL);
-    mixer = MIX_CreateMixerDevice(audioDeviceID, nullptr);
-    #endif
-
     #endif  // (CHECK_CORRECTION)
 }
 
 Libraries::~Libraries() noexcept {
-    // Closing mixer with audio device
-    #if (USE_SDL_MIXER)
-    MIX_DestroyMixer(mixer);
-    SDL_CloseAudioDevice(audioDeviceID);
-    #endif
-
     // Closing trueTypeFont library
     #if (USE_SDL_FONT)
     TTF_Quit();
@@ -83,8 +54,4 @@ Libraries::~Libraries() noexcept {
 
     // Closing main SDL library
     SDL_Quit();
-}
-
-MIX_Mixer* Libraries::getMixer() const {
-    return mixer;
 }

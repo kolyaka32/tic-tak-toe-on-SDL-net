@@ -30,7 +30,7 @@ void Screamer::update() {
         // Checking, if not already activated
         if (!active) {
             // Playing 'scary' sound
-            sounds.play(Sounds::Screamer);
+            audio.sounds.play(Sounds::Screamer);
 
             // Changing state
             active = true;

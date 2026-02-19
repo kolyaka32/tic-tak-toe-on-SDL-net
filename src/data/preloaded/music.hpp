@@ -33,7 +33,7 @@ class MusicData {
     void loadMusic(MIX_Mixer* mixer, Music index, const char* name);
 
  public:
-    MusicData(MIX_Mixer* mixer);
+    explicit MusicData(MIX_Mixer* mixer);
     ~MusicData();
     void start(Music name);
     void startFading(Music name);
@@ -42,8 +42,5 @@ class MusicData {
     void setVolume(float volume);
     float getVolume() const;
 };
-
-// Global system for launch music tracks
-extern MusicData music;
 
 #endif  // (PRELOAD_MUSIC)

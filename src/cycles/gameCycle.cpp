@@ -26,7 +26,7 @@ nobodyWinText(window, 0.5, 0.05, {"Nobody win", "Ничья", "Unentschieden", "
         field.restart();
     }
     // Starting main song (if wasn't started)
-    music.startFading(Music::MainCalm);
+    audio.music.startFading(Music::MainCalm);
 }
 
 bool GameCycle::inputMouseDown() {

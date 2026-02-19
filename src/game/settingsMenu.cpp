@@ -21,9 +21,9 @@ flags {
     {window, 0.65, 0.45, 0.25, Textures::FlagBEL},
 },
 musicText{window, 0.5, 0.58, {"Music", "Музыка", "Die Musik", "Музыка"}, 1},
-musicSlider{window, 0.5, 0.64, 0.5, music.getVolume()},
+musicSlider{window, 0.5, 0.64, 0.5, audio.music.getVolume()},
 soundText{window, 0.5, 0.7, {"Sounds", "Звуки", "Geräusche", "Гук"}, 1},
-soundSlider{window, 0.5, 0.76, 0.5, sounds.getVolume()},
+soundSlider{window, 0.5, 0.76, 0.5, audio.sounds.getVolume()},
 exitButton{window, 0.5, 0.85, {"Exit", "Выход", "Ausfahrt", "Выхад"}} {}
 
 bool SettingsMenu::click(const Mouse _mouse) {
@@ -78,11 +78,11 @@ bool SettingsMenu::scroll(const Mouse mouse, float _wheelY) {
     if (active) {
         // Checking scroll on sliders
         if (musicSlider.in(mouse)) {
-            music.setVolume(musicSlider.scroll(_wheelY));
+            audio.music.setVolume(musicSlider.scroll(_wheelY));
             return true;
         }
         if (soundSlider.in(mouse)) {
-            sounds.setVolume(soundSlider.scroll(_wheelY));
+            audio.sounds.setVolume(soundSlider.scroll(_wheelY));
             return true;
         }
         return true;
@@ -100,16 +100,16 @@ void SettingsMenu::update() {
         switch (holdingSlider) {
         case 1:
             // Updating music slider state
-            music.setVolume(musicSlider.setValue(mouse.getX()));
+            audio.music.setVolume(musicSlider.setValue(mouse.getX()));
             break;
 
         case 2:
             // Updating sound slider state
-            sounds.setVolume(soundSlider.setValue(mouse.getX()));
+            audio.sounds.setVolume(soundSlider.setValue(mouse.getX()));
 
             // Playing sound effect for understanding loud
             if (getTime() > nextSound) {
-                sounds.play(Sounds::Turn);
+                audio.sounds.play(Sounds::Turn);
                 nextSound = getTime() + 400;
             }
             break;

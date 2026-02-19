@@ -41,9 +41,9 @@ void InitFile::loadSettings() {
                 LanguagedText::setLanguage(Language::Bellarusian);
             }
         } else if (parameter == "music") {
-            music.setVolume(getValue(currentLine) / 100.0f);
+            audio.music.setVolume(getValue(currentLine) / 100.0f);
         } else if (parameter == "sounds") {
-            sounds.setVolume(getValue(currentLine) / 100.0f);
+            audio.sounds.setVolume(getValue(currentLine) / 100.0f);
         } else if (parameter == "IP") {
             TargetConnect::writeBaseIP(getText(currentLine).c_str());
         } else if (parameter == "port") {
@@ -88,8 +88,8 @@ void InitFile::saveSettings() {
     }
 
     // Writing music and sounds volumes
-    outSettings << "music = " << int(music.getVolume()*100) << "\n";
-    outSettings << "sounds = " << int(sounds.getVolume()*100) << "\n";
+    outSettings << "music = " << int(audio.music.getVolume()*100) << "\n";
+    outSettings << "sounds = " << int(audio.sounds.getVolume()*100) << "\n";
 
     // Writing internet connection data
     outSettings << "\n# Internet base parameters:\n";

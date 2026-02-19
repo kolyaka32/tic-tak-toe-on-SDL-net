@@ -24,12 +24,8 @@ Libraries libraries{};
 const DataLoader dataLoader{};
 #endif
 
-#if (PRELOAD_MUSIC)
-MusicData music{libraries.getMixer()};
-#endif
-
-#if (PRELOAD_SOUNDS)
-SoundsData sounds{libraries.getMixer()};
+#if (USE_SDL_MIXER)
+Audio audio{};
 #endif
 
 #if (USE_NET)

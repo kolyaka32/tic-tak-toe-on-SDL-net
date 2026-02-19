@@ -5,8 +5,7 @@
 
 #pragma once
 
-#include "preloaded/sounds.hpp"
-#include "preloaded/music.hpp"
+#include "preloaded/audio.hpp"
 #include "window.hpp"
 #include "mouse.hpp"
 #include "macroses.hpp"

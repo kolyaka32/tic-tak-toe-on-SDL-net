@@ -103,8 +103,8 @@ void ServerGameCycle::getInternetPacket(const GetPacket& packet) {
             field.clickServerOpponent(packet.getData<Uint8>(2));
 
             // Making sound
-            sounds.play(Sounds::Turn);
-            music.startFromCurrent(Music::MainCombat);
+            audio.sounds.play(Sounds::Turn);
+            audio.music.startFromCurrent(Music::MainCombat);
             logAdditional("Turn of opponent player to %u", packet.getData<Uint8>(2));
         }
         break;

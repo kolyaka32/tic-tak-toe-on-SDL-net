@@ -24,14 +24,12 @@ class SoundsData {
     void loadSound(MIX_Mixer* mixer, unsigned index, const char* name);
 
  public:
-    SoundsData(MIX_Mixer* mixer);
+    explicit SoundsData(MIX_Mixer* mixer);
     ~SoundsData();
     void play(Sounds name) const;
+    // Get/set volume for all sounds: 1.0f - is normal
     void setVolume(float volume);
     float getVolume() const;
 };
-
-// Global system for launch music tracks
-extern SoundsData sounds;
 
 #endif  // (PRELOAD_SOUNDS)
