@@ -9,6 +9,29 @@
 Reciepient::Reciepient(const Destination& _dest)
 : dest(_dest) {}
 
+Reciepient::Reciepient(const Reciepient& _object)
+: dest(_object.dest),
+needResendApplyConnection(_object.needResendApplyConnection),
+wasDisconected(_object.wasDisconected),
+unconfirmedMessages(_object.unconfirmedMessages),
+getIndexes(_object.getIndexes) {}
+
+Reciepient::Reciepient(Reciepient&& _object) noexcept
+: dest(std::move(_object.dest)),
+needResendApplyConnection(_object.needResendApplyConnection),
+wasDisconected(_object.wasDisconected),
+unconfirmedMessages(std::move(_object.unconfirmedMessages)),
+getIndexes(std::move(_object.getIndexes)) {}
+
+Reciepient& Reciepient::operator=(Reciepient&& _object) noexcept {
+    dest = std::move(_object.dest);
+    needResendApplyConnection = _object.needResendApplyConnection,
+    wasDisconected = _object.wasDisconected,
+    unconfirmedMessages = _object.unconfirmedMessages,
+    getIndexes = std::move(_object.getIndexes);
+    return *this;
+}
+
 void Reciepient::sendConfirmed(const Socket& _socket, const ConfirmedMessage& _message) {
     // Firstly sending it
     sendUnconfirmed(_socket, _message);

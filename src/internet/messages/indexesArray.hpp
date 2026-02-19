@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <array>
 #include <SDL3/SDL_stdinc.h>
 
 
@@ -12,11 +13,16 @@
 template <unsigned length>
 class IndexesArray {
  private:
-    Uint8 array[length];  // Array with last getted messages for check repeats
-    int lastPosition;     // Position in array with last get message (for correct updation)
+    // Array with last getted messages for check repeats
+    std::array<Uint8, length> array;
+    // Position in array with last get message (for correct updation)
+    int lastPosition;
 
  public:
     IndexesArray();
+    /*IndexesArray(const IndexesArray& object);
+    IndexesArray& operator=(const IndexesArray& object);
+    IndexesArray(IndexesArray&& object) noexcept;*/
     bool isUnique(Uint8 index);
     void add(Uint8 index);
 };

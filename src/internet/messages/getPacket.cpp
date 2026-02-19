@@ -13,8 +13,6 @@ GetPacket* GetPacket::tryGetData(const SOCKET _socket) {
     length = recvfrom(_socket, buffer, sizeof(buffer), 0, (SOCKADDR*)&srcAddress, &srcAddressLength);
     if (length > 0) {
         logAdditional("Get data with length %d: %s\n", length, buffer);
-        // Reset offset
-        offset = 0;
         return this;
     }
     return nullptr;

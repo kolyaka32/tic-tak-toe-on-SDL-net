@@ -20,7 +20,7 @@
 class SoundsData {
  private:
     MIX_Audio* sounds[unsigned(Sounds::Count)];
-    MIX_Track* tracks[unsigned(Sounds::Count)];
+    MIX_Track* tracks[unsigned(Sounds::Count)];  // ! Should be optimised to use less tracks
     void loadSound(MIX_Mixer* mixer, unsigned index, const char* name);
 
  public:

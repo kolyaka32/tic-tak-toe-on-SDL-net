@@ -18,8 +18,6 @@ class GetPacket {
     // Data, contained in this array
     char buffer[100];
     int length = 0;
-    // Offeset of current reading caret
-    int offset = 0;
     #endif  // (USE_WINSOCK)
 
  public:
@@ -35,29 +33,12 @@ class GetPacket {
     bool isBytesAvaliable(int bytes) const;
     // Returns length of getted data
     int getLength() const;
-    // Functions for get data from message by order
-    //template <typename T>
-    //T getData() const;
     // Functions for get data from message at specified position
     template <typename T>
     T getData(int offset) const;
     const void* getPointer() const;
 };
 
-
-/*template <typename T>
-T GetPacket::getData() const {
-    #if (CHECK_CORRECTION)
-    if (offset + sizeof(T) > length) {
-        logImportant("Can't read data - not enogh length");
-    }
-    #endif
-
-    // Moving caret for reading next object correct
-    offset += sizeof(T);
-    // Reading current object (without added offset)
-    return readNet((T)(buffer[offset-sizeof(T)]));
-}*/
 
 template <typename T>
 T GetPacket::getData(int _offset) const {
