@@ -25,6 +25,7 @@ class Destination {
     bool operator==(const sockaddr_in* compareAddress) const;
     // Getters
     sockaddr* getAddress() const;
+    int getSize() const;
     const char* getName() const;
     Uint16 getPort() const;
 };

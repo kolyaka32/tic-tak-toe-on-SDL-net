@@ -37,6 +37,10 @@ sockaddr* Destination::getAddress() const {
     return (sockaddr*)&address;
 }
 
+int Destination::getSize() const {
+    return sizeof(address);
+}
+
 const char* Destination::getName() const {
     return inet_ntoa(address.sin_addr);
 }

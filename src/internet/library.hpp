@@ -36,12 +36,21 @@
 #error "Can't find internet library"
 #else  // (!USE_NET)
 
-// Net initialisation function
-bool initNet();
-// Net closing function
-void closeNet();
-// Get local host name for sharing
-char* getLocalHostName();
+// Class for control loading/unloading internet library
+class InternetLibrary {
+ private:
+    // Local hostname for sharing
+    char hostName[16];
+    // Function for find usable hostname
+    bool findHostName();
+
+ public:
+    InternetLibrary();
+    ~InternetLibrary();
+
+    // Get local machine IP name for sharing
+    const char* getHostName() const;
+};
 
 
 // Functions for write data for send in correct byte order

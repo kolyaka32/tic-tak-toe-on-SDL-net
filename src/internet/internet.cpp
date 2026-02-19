@@ -35,10 +35,6 @@ Uint16 Internet::getPort() const {
     return socket.getPort();
 }
 
-const char* Internet::getHostName() const {
-    return getLocalHostName();
-}
-
 void Internet::close() {
     // Closing all reciepients
     reciepients.clear();

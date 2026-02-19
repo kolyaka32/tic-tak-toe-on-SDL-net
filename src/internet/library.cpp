@@ -9,10 +9,8 @@
 
 // Winsocket realisation
 #if (USE_WINSOCK)
-// Data for storing hostname
-char hostName[16];
 
-bool findHostName() {
+bool InternetLibrary::findHostName() {
     // Allocating static memory for that process
     char buffer[10000];
     PIP_ADAPTER_ADDRESSES addresses = (PIP_ADAPTER_ADDRESSES)buffer;
@@ -44,29 +42,45 @@ bool findHostName() {
     return true;
 }
 
-char* getLocalHostName() {
-    return hostName;
+#endif  // (USE_WINSOCK)
+
+// Socket realisation
+#if (USE_SOCKET)
+
+bool InternetLibrary::findHostName() {
+    // Socket realisation
 }
 
-bool initNet() {
+#endif // (USE_SOCKET)
+
+
+InternetLibrary::InternetLibrary() {
+    #if (USE_WINSOCK)
     // Initialize Winsock
     WSADATA wsaData;
-
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != NO_ERROR) {
-        logImportant("WSAStartup() failed\n");
-        return true;
+        logImportant("WSAStartup() failed: %d", WSAGetLastError());
+        return;
     }
+    #endif  // (USE_WINSOCK)
+
     if (findHostName()) {
         logImportant("Can't find hostname");
-        return true;
+        return;
     }
-    return false;
 }
 
-void closeNet() {
+InternetLibrary::~InternetLibrary() {
+    #if (USE_WINSOCK)
     if (WSACleanup() < 0) {
         logImportant("Can't cleanup\n");
+        return;
     }
+    #endif  // (USE_WINSOCK)
+}
+
+const char* InternetLibrary::getHostName() const {
+    return hostName;
 }
 
 
@@ -157,12 +171,3 @@ Uint32 readNet(Uint32 _object) {
 /*Sint64 readNet(Sint64 _object) {
     return ;
 }*/
-
-
-#endif  // (USE_WINSOCK)
-
-
-// Socket realisation
-#if (USE_SOCKET)
-
-#endif // (USE_SOCKET)

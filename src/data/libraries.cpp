@@ -49,13 +49,6 @@ Libraries::Libraries() {
         throw LibararyLoadException("Couldn't create mixer: " + std::string(SDL_GetError()));
     }
     #endif  // (USE_SDL_MIXER)
-
-    // Intialasing internet library
-    #if (USE_NET)
-    if (initNet()) {
-        throw LibararyLoadException("Couldn't initialase internet library: " + std::string(SDL_GetError()));
-    }
-    #endif
     logAdditional("Libraries load correctly");
 
     #else  // (CHECK_CORRECTION)
@@ -73,19 +66,10 @@ Libraries::Libraries() {
     mixer = MIX_CreateMixerDevice(audioDeviceID, nullptr);
     #endif
 
-    #if (USE_NET)
-    initNet();
-    #endif
-
     #endif  // (CHECK_CORRECTION)
 }
 
 Libraries::~Libraries() noexcept {
-    // Closing internet library
-    #if (USE_NET)
-    closeNet();
-    #endif
-
     // Closing mixer with audio device
     #if (USE_SDL_MIXER)
     MIX_DestroyMixer(mixer);

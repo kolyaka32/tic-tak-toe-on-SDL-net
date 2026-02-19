@@ -10,7 +10,7 @@
 
 
 // Global class for send/recieve data from internet
-class Internet {
+class Internet : public InternetLibrary {
  private:
     // Socket for recieve/send data (general)
     Socket socket;
@@ -30,7 +30,6 @@ class Internet {
 
     // Getting localhost data
     Uint16 getPort() const;
-    const char* getHostName() const;
 
     // Sending data to specialised user, without applience
     void sendFirst(const Destination& dest, const Message& message) const;
