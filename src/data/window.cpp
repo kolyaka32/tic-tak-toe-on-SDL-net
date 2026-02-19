@@ -5,7 +5,6 @@
 
 #include "window.hpp"
 #include "../define.hpp"
-#include "exceptions.hpp"
 
 
 Window::Window(int _width, int _height, const LanguagedText _title)
@@ -26,14 +25,14 @@ titleText(_title) {
     // Checking on correction of created objects
     #if (CHECK_CORRECTION)
     if (window == NULL) {
-        throw LibararyLoadException("window creation");
+        logImportant("Can't create window");
     }
     #endif
 
     // Creating renderer from window
     #if (CHECK_CORRECTION)
     if (renderer == NULL) {
-        throw LibararyLoadException("renderer creation");
+        logImportant("Can't create renderer");
     }
     #endif
 }

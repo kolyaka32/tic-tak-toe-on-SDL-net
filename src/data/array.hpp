@@ -6,6 +6,7 @@
 #pragma once
 
 #include "../define.hpp"
+#include "logger.hpp"
 
 
 // Custom
@@ -33,7 +34,7 @@ const T& Array<T>::operator[](unsigned _index) const {
     // Additional check on correction
     #if CHECK_CORRECTION
     if (_index >= size) {
-        throw "Wrong address";
+        logImportant("Wrong address");
     }
     #endif
     return data[_index];

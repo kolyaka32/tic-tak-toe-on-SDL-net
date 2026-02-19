@@ -8,7 +8,6 @@
 #if (PRELOAD_MUSIC)
 
 #include "loader/loader.hpp"
-#include "../exceptions.hpp"
 
 
 MusicData::MusicData(MIX_Mixer* _mixer) {
@@ -39,7 +38,8 @@ MusicData::MusicData(MIX_Mixer* _mixer) {
     #if (CHECK_CORRECTION)
     for (unsigned i=0; i < unsigned(Music::Count); ++i) {
         if (musics[i] == NULL) {
-            throw DataLoadException("Music with name: " + std::string(musicFilesNames[i]));
+            logImportant("Don't load music: %s", musicFilesNames[i]);
+            return;
         }
     }
     logAdditional("Music loaded corretly");
@@ -69,7 +69,8 @@ void MusicData::loadMusic(MIX_Mixer* _mixer, Music _index, const char* _name) {
     // Checking correction of loaded music
     #if (CHECK_CORRECTION)
     if (musics[unsigned(_index)] == nullptr) {
-        throw DataLoadException(_name);
+        logImportant("Can't create music: %s", _name);
+        return;
     }
     #endif
 }

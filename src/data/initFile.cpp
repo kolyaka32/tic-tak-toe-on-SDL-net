@@ -4,6 +4,8 @@
  */
 
 #include "initFile.hpp"
+#include "macroses.hpp"
+#include "logger.hpp"
 
 
 // Check if has initfile

@@ -8,7 +8,6 @@
 #if (PRELOAD_SOUNDS)
 
 #include "loader/loader.hpp"
-#include "../exceptions.hpp"
 
 
 SoundsData::SoundsData(MIX_Mixer* _mixer) {
@@ -31,7 +30,7 @@ SoundsData::SoundsData(MIX_Mixer* _mixer) {
     #if (CHECK_CORRECTION)
     for (unsigned i=0; i < unsigned(Sounds::Count); ++i) {
         if (sounds[i] == NULL) {
-            throw DataLoadException(soundsFilesNames[i]);
+            logImportant("Don't load sound: %s", soundsFilesNames[i]);
         }
     }
     logAdditional("Sounds loaded corretly");
@@ -56,7 +55,8 @@ void SoundsData::loadSound(MIX_Mixer* _mixer, unsigned _index, const char* _name
     // Checking of correction of loaded sound
     #if (CHECK_CORRECTION)
     if (sounds[_index] == nullptr) {
-        throw DataLoadException(_name);
+        logImportant("Can't create sound: %s", _name);
+        return;
     }
     #endif
 
@@ -66,7 +66,8 @@ void SoundsData::loadSound(MIX_Mixer* _mixer, unsigned _index, const char* _name
     // Checking of correction of created track
     #if (CHECK_CORRECTION)
     if (tracks[_index] == nullptr) {
-        throw DataLoadException(_name);
+        logImportant("Can't create track: %s", _name);
+        return;
     }
     #endif
 

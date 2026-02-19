@@ -25,10 +25,13 @@
 #define PRELOAD_MUSIC        true   // Preload music
 // Use archive for store additional GFX
 #define PRELOAD_DATA PRELOAD_TEXTURES | PRELOAD_FONTS | PRELOAD_ANIMATIONS | PRELOAD_SOUNDS | PRELOAD_MUSIC
+// Additional flags
+#define CAPTURE_AUIO         false  // Flag of using audio capture device
 
 
 // System game name
 #define WINDOW_NAME "Tic-tac-toe on SDL"
+#define LOG_NAME "log.txt"
 
 // Base file names
 // File with all GFX

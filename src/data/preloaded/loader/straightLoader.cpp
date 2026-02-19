@@ -9,7 +9,7 @@
 // Check, if need to load data straight from files
 #if (PRELOAD_DATA) && !(ARCHIEVE_LOADING)
 
-#include "../../exceptions.hpp"
+#include "../../logger.hpp"
 
 
 SDL_IOStream* StraightLoader::load(const char* _fileName) const {
@@ -27,7 +27,8 @@ SDL_IOStream* StraightLoader::load(const char* _fileName) const {
     // Checking correction of loaded font
     #if (CHECK_CORRECTION)
     if (data == nullptr) {
-        throw DataLoadException(_fileName);
+        logImportant("Can't load straight: %s", _fileName);
+        return nullptr;
     }
     #endif
 

@@ -9,7 +9,7 @@
 // Check, if need to load data from archieve
 #if (PRELOAD_DATA) && (ARCHIEVE_LOADING)
 
-#include "../../exceptions.hpp"
+#include "../../logger.hpp"
 
 
 ArchieveLoader::ArchieveLoader() {
@@ -23,7 +23,7 @@ ArchieveLoader::ArchieveLoader() {
     // Checking openning correction
     #if (CHECK_CORRECTION)
     if (archive == nullptr) {
-        throw DataLoadException("load archieve: " + std::string(DATA_FILE));
+        logImportant("Can't load archieve: %s", DATA_FILE);
     }
     #endif
 }
@@ -39,7 +39,7 @@ SDL_IOStream* ArchieveLoader::load(const char* _file) const {
     // Checking correction of openned file
     #if (CHECK_CORRECTION)
     if (file == nullptr) {
-        throw DataLoadException("load file from archieve: " + std::string(_file));
+        logImportant("Can't load file from archieve: %s", _file);
     }
     #endif
 
@@ -50,7 +50,7 @@ SDL_IOStream* ArchieveLoader::load(const char* _file) const {
     // Checking correction of openned file
     #if (CHECK_CORRECTION)
     if (st.size == 0) {
-        throw DataLoadException("load file from archieve: " + std::string(_file));
+        logImportant("load file from archieve: ", _file);
     }
     #endif
 
@@ -69,13 +69,13 @@ SDL_IOStream* ArchieveLoader::load(const char* _file) const {
     // Checking correction of loaded object
     #if (CHECK_CORRECTION)
     if (!tempIO) {
-        throw DataLoadException("load file from archieve: " + std::string(_file));
+        logImportant("Can't load file from archieve: %s", _file);
+        return nullptr;
     }
     #endif
 
     // Returning created data structure
     return tempIO;
-    return nullptr;
 }
 
 #endif  // (PRELOAD_DATA) && (ARCHIEVE_LOADING)
