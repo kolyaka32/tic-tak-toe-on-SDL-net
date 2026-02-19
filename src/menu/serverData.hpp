@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "../../internet/destination.hpp"
+#include "../internet/destination.hpp"
 
 
 // Object contains information of server for list

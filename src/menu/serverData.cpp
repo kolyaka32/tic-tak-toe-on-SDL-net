@@ -4,7 +4,7 @@
  */
 
 #include "serverData.hpp"
-#include "../../data/macroses.hpp"
+#include "../data/macroses.hpp"
 
 
 ServerData::ServerData(const sockaddr_in* _address, int _ping)

@@ -49,10 +49,10 @@ bool SettingsMenu::click(const Mouse _mouse) {
                 }
             }
         }
-        if (musicSlider.in(_mouse)) {
+        /*if (musicSlider.in(_mouse)) {
             holdingSlider = 1;
             return true;
-        }
+        }*/
         if (soundSlider.in(_mouse)) {
             holdingSlider = 2;
             return true;
@@ -132,9 +132,9 @@ void SettingsMenu::blit() const {
         }
         // Sliders
         musicText.blit();
+        musicSlider.blit();
         soundSlider.blit();
         soundText.blit();
-        musicSlider.blit();
         // Quit
         exitButton.blit();
     }

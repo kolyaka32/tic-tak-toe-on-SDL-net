@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "../../GUI/interface.hpp"
+#include "../GUI/interface.hpp"
 #include "serverData.hpp"
 
 

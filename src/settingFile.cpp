@@ -13,8 +13,8 @@
 // Files to setup
 #include "data/languages.hpp"
 #include "game/gameField.hpp"
-#include "game/connectMenu/targetConnect.hpp"
 #include "game/gameMenu/savedFields.hpp"
+#include "menu/targetConnect.hpp"
 
 
 // Data, load from setting file

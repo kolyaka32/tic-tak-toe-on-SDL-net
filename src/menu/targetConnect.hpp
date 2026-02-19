@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include "../../GUI/interface.hpp"
+#include "../GUI/interface.hpp"
 
 
 // Menu for target connect at specified address
