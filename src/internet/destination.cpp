@@ -6,7 +6,7 @@
 #include "destination.hpp"
 
 
-#if (USE_WINSOCK)
+#if ((USE_WINSOCK) || (USE_SOCKET))
 
 Destination::Destination(const sockaddr_in* _address) {
     address = *_address;
@@ -29,8 +29,14 @@ Destination::Destination(const char* _name, Uint16 _port) {
 }
 
 bool Destination::operator==(const sockaddr_in* b) const {
+    #if (USE_WINSOCK)
     return address.sin_addr.S_un.S_addr == b->sin_addr.S_un.S_addr
         && address.sin_port == b->sin_port;
+    #endif
+    #if (USE_SOCKET)
+    return address.sin_addr.s_addr == b->sin_addr.s_addr
+        && address.sin_port == b->sin_port;
+    #endif
 }
 
 sockaddr* Destination::getAddress() const {
@@ -49,4 +55,4 @@ Uint16 Destination::getPort() const {
     return ntohs(address.sin_port);
 }
 
-#endif  // (USE_WINSOCK)
+#endif  // ((USE_WINSOCK) || (USE_SOCKET))

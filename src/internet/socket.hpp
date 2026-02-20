@@ -13,11 +13,15 @@
 // Also contains local address for it
 class Socket {
  private:
-    #if (USE_WINSOCK)
     sockaddr_in localAddress;     // Internet address to from
+
+    #if (USE_WINSOCK)
     SOCKET sck = INVALID_SOCKET;  // Socket itself
-    Uint16 port;                  // Port at hich socket as created
     #endif  // (USE_WINSOCK)
+    #if (USE_SOCKET)
+    int sck = 0;  // Socket itself
+    #endif
+    Uint16 port;  // Port at which socket is created
 
     // Packet, with data that was recieved
     GetPacket packet;

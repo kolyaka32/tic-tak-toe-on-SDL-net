@@ -47,8 +47,32 @@ bool InternetLibrary::findHostName() {
 // Socket realisation
 #if (USE_SOCKET)
 
+#include <ifaddrs.h>
+
 bool InternetLibrary::findHostName() {
-    // Socket realisation
+    ifaddrs* ifAddrStruct = nullptr;
+
+    // Getting address as linked list
+    getifaddrs(&ifAddrStruct);
+
+    // Check, if empty
+    if (ifAddrStruct == nullptr) {
+        return true;
+    }
+
+    // Checking them, until find need
+    for (ifaddrs * ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next) {
+        if (ifa->ifa_addr->sa_family == AF_INET) { // check it is IP4
+            // is a valid IP4 Address
+            void* tmpAddrPtr=&((struct sockaddr_in *)ifa->ifa_addr)->sin_addr;
+            inet_ntop(AF_INET, tmpAddrPtr, hostName, sizeof(hostName));
+
+            // Writing getted address
+            logAdditional("Hostname: %s", ifa->ifa_name);
+        }
+    }
+    freeifaddrs(ifAddrStruct);
+    return true;
 }
 
 #endif // (USE_SOCKET)

@@ -10,31 +10,37 @@
 #include "../data/logger.hpp"
 #include "../data/array.hpp"
 
+// Check, if use net
+#if (USE_NET)
 
 // Select library depend on platform
 // Windows
-#if ((USE_NET) && (SDL_PLATFORM_WINDOWS))
+#if (SDL_PLATFORM_WINDOWS)
 #define USE_WINSOCK true   // Internet library for windows (winsock2.h)
 #define NET_SELECTED true
 // Including library itself
 #include <winsock2.h>
 // Including library for getting localhost
 #include <iphlpapi.h>
-#endif  // ((USE_NET) && (SDL_PLATFORM_WINDOWS))
+#endif  // (SDL_PLATFORM_WINDOWS)
 
 // Unix
-#if ((USE_NET) && (SDL_PLATFORM_UNIX))
+#if (SDL_PLATFORM_UNIX)
 #define USE_SOCKET true  // Internet library for unix
 #define NET_SELECTED true
 // Including librry itself
-#include 
-#endif  // ((USE_NET) && (SDL_PLATFORM_UNIX))
+// Including libraries
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#endif  // (SDL_PLATFORM_UNIX)
 
 
 // Check on define correction
-#if ((USE_NET) && (NET_SELECTED != true))
+#if (NET_SELECTED != true)
 #error "Can't find internet library"
-#else  // (!USE_NET)
+#else  // (NET_SELECTED != true)
 
 // Class for control loading/unloading internet library
 class InternetLibrary {
@@ -79,4 +85,6 @@ float  readNet(float object);
 Uint64 readNet(Uint64 object);
 Sint64 readNet(Sint64 object);
 
-#endif  // (!USE_NET)
+#endif  // (NET_SELECTED != true)
+
+#endif  // (USE_NET)

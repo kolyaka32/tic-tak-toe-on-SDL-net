@@ -6,42 +6,63 @@
 #include "socket.hpp"
 
 
-#if (USE_WINSOCK)
+
 Socket::Socket() {
     // Create a SOCKET for listening for incoming connection requests.
-    sck = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    //sck = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    sck = socket(AF_INET, SOCK_NONBLOCK, IPPROTO_UDP);
+    #if (USE_WINSOCK)
     if (sck == INVALID_SOCKET) {
-        logAdditional("socket function failed with error: %ld", WSAGetLastError());
+        logAdditional("Can't create socket with error: %ld", WSAGetLastError());
     }
+    #endif
+    #if (USE_SOCKET)
+    if (sck == -1) {
+        logAdditional("Can't create socket");
+    }
+    #endif
     // Setting local address
     localAddress.sin_family = AF_INET;
-    localAddress.sin_addr.S_un.S_addr = INADDR_ANY;
+    localAddress.sin_addr.s_addr = INADDR_ANY;
 }
 
 Socket::~Socket() {
+    #if (USE_WINSOCK)
     if (closesocket(sck) == SOCKET_ERROR) {
         logImportant("Closesocket function failed with error %d", WSAGetLastError());
     }
+    #endif
+    #if (USE_SOCKET)
+    close(sck);
+    #endif
 }
 
 int Socket::tryBind() {
     localAddress.sin_port = htons(port);
-    return bind(sck, (SOCKADDR*)&localAddress, sizeof(localAddress));
+    return bind(sck, (sockaddr*)&localAddress, sizeof(localAddress));
 }
 
 void Socket::setNonBlockingMode() {
     // Setting socket to non-blocking mode
+    #if (USE_WINSOCK)
     DWORD nonBlocking = 1;
     if (ioctlsocket(sck, FIONBIO, &nonBlocking) != 0) {
         logImportant("Can't set socket to non-blocking mode: %d", WSAGetLastError());
     }
+    #endif
+    /*#if (USE_SOCKET)
+    #endif*/
 }
 
 void Socket::setReuseAddressMode() {
     // Setting socket to allow to reuse address
     bool t = true;
     if (setsockopt(sck, SOL_SOCKET, SO_REUSEADDR, (char*)&t, sizeof(t))) {
+        #if (USE_WINSOCK)
         logImportant("Can't set reusing socket: %d", WSAGetLastError());
+        #else
+        logImportant("Can't set reusing socket");
+        #endif
     }
 }
 
@@ -49,7 +70,11 @@ void Socket::setBroadcastMode() {
     // Setting socket to broadcast
     bool t = true;
     if (setsockopt(sck, SOL_SOCKET, SO_BROADCAST, (char*)&t, sizeof(t))) {
+        #if (USE_WINSOCK)
         logImportant("Can't set socket to broadcast: %d", WSAGetLastError());
+        #else
+        logImportant("Can't set socket to broadcast");
+        #endif
     }
 }
 
@@ -122,5 +147,5 @@ Uint16 Socket::getPort() const {
 GetPacket* Socket::recieve() {
     return packet.tryGetData(sck);
 }
-
+#if (USE_WINSOCK)
 #endif  // (USE_WINSOCK)
