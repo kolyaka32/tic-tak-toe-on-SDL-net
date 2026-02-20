@@ -9,14 +9,19 @@
 
 Socket::Socket() {
     // Create a SOCKET for listening for incoming connection requests.
-    //sck = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-    sck = socket(AF_INET, SOCK_NONBLOCK, IPPROTO_UDP);
     #if (USE_WINSOCK)
+    sck = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (sck == INVALID_SOCKET) {
         logAdditional("Can't create socket with error: %ld", WSAGetLastError());
     }
+    // Setting socket to non-blocking mode
+    DWORD nonBlocking = 1;
+    if (ioctlsocket(sck, FIONBIO, &nonBlocking) != 0) {
+        logImportant("Can't set socket to non-blocking mode: %d", WSAGetLastError());
+    }
     #endif
     #if (USE_SOCKET)
+    sck = socket(AF_INET, SOCK_NONBLOCK, IPPROTO_UDP);
     if (sck == -1) {
         logAdditional("Can't create socket");
     }
@@ -29,7 +34,7 @@ Socket::Socket() {
 Socket::~Socket() {
     #if (USE_WINSOCK)
     if (closesocket(sck) == SOCKET_ERROR) {
-        logImportant("Closesocket function failed with error %d", WSAGetLastError());
+        logImportant("Close socket function failed with error %d", WSAGetLastError());
     }
     #endif
     #if (USE_SOCKET)
@@ -40,18 +45,6 @@ Socket::~Socket() {
 int Socket::tryBind() {
     localAddress.sin_port = htons(port);
     return bind(sck, (sockaddr*)&localAddress, sizeof(localAddress));
-}
-
-void Socket::setNonBlockingMode() {
-    // Setting socket to non-blocking mode
-    #if (USE_WINSOCK)
-    DWORD nonBlocking = 1;
-    if (ioctlsocket(sck, FIONBIO, &nonBlocking) != 0) {
-        logImportant("Can't set socket to non-blocking mode: %d", WSAGetLastError());
-    }
-    #endif
-    /*#if (USE_SOCKET)
-    #endif*/
 }
 
 void Socket::setReuseAddressMode() {
@@ -95,7 +88,6 @@ void Socket::tryBindTo(Uint16 _port) {
             logImportant("bind function failed with error %d", WSAGetLastError());
         }
     }
-    setNonBlockingMode();
     logAdditional("Openned socket at port %d", port);
 }
 
@@ -114,7 +106,6 @@ void Socket::setRecieveBroadcast() {
     if (tryBind() == SOCKET_ERROR) {
         logImportant("Brodcast bind function failed with error %d", WSAGetLastError());
     }
-    setNonBlockingMode();
     logAdditional("Openned broadcast socket at port %d", port);
 }
 

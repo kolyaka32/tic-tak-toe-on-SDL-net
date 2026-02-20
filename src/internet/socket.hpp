@@ -28,7 +28,6 @@ class Socket {
 
  protected:
     int tryBind();
-    void setNonBlockingMode();
     void setReuseAddressMode();
     void setBroadcastMode();
 
