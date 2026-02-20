@@ -17,10 +17,9 @@ if (WIN32)
     set(CMAKE_CXX_FLAGS "-mwindows")
     # Linking library for net
     target_link_libraries(${PROJECT_NAME} PRIVATE iphlpapi ws2_32)
+    # Setting to link standart libraries statickly
+    set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 endif (WIN32)
-
-# Setting to link standart libraries statickly
-set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 
 # Look for a SDL3 package
 find_package(SDL3 REQUIRED)

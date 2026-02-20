@@ -12,9 +12,7 @@
 class Destination {
  protected:
     // Address and port, where can sending or recieve from
-    #if ((USE_WINSOCK) || (USE_SOCKET))
     sockaddr_in address;
-    #endif
 
  public:
     Destination(const sockaddr_in* address);

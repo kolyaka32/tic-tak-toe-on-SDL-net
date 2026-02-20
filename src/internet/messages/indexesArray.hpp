@@ -20,9 +20,6 @@ class IndexesArray {
 
  public:
     IndexesArray();
-    /*IndexesArray(const IndexesArray& object);
-    IndexesArray& operator=(const IndexesArray& object);
-    IndexesArray(IndexesArray&& object) noexcept;*/
     bool isUnique(Uint8 index);
     void add(Uint8 index);
 };

@@ -29,14 +29,8 @@ Destination::Destination(const char* _name, Uint16 _port) {
 }
 
 bool Destination::operator==(const sockaddr_in* b) const {
-    #if (USE_WINSOCK)
-    return address.sin_addr.S_un.S_addr == b->sin_addr.S_un.S_addr
-        && address.sin_port == b->sin_port;
-    #endif
-    #if (USE_SOCKET)
     return address.sin_addr.s_addr == b->sin_addr.s_addr
         && address.sin_port == b->sin_port;
-    #endif
 }
 
 sockaddr* Destination::getAddress() const {

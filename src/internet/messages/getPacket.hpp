@@ -11,24 +11,20 @@
 // Class with getted data from somewhere
 class GetPacket {
  private:
-    #if (USE_WINSOCK)
     // Address, from which
     sockaddr_in srcAddress;
-    int srcAddressLength = sizeof(sockaddr_in);
+    socklen_t srcAddressLength;  // ! Check on windows
     // Data, contained in this array
     char buffer[100];
     int length = 0;
-    #endif  // (USE_WINSOCK)
 
  public:
-    // Winsock special functions
-    #if (USE_WINSOCK)
-    // Function to try get new data from net
-    GetPacket* tryGetData(const SOCKET winSocket);
+    // Trying get new data from specified socket
+    GetPacket* tryGetData(const SocketType winSocket);
+
+    // Working with get data
     const sockaddr_in* getSourceAddress() const;
     int getSourceAddressLength() const;
-    #endif
-
     // Function for check, if has enought bytes to read
     bool isBytesAvaliable(int bytes) const;
     // Returns length of getted data

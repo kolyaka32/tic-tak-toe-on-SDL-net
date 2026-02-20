@@ -62,13 +62,18 @@ bool InternetLibrary::findHostName() {
 
     // Checking them, until find need
     for (ifaddrs * ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next) {
-        if (ifa->ifa_addr->sa_family == AF_INET) { // check it is IP4
-            // is a valid IP4 Address
-            void* tmpAddrPtr=&((struct sockaddr_in *)ifa->ifa_addr)->sin_addr;
-            inet_ntop(AF_INET, tmpAddrPtr, hostName, sizeof(hostName));
+        // check it is IP4
+        if (ifa->ifa_addr->sa_family == AF_INET) {
+            // Getting string representation
+            char* ipStr = inet_ntoa(((sockaddr_in*)ifa->ifa_addr)->sin_addr);
 
-            // Writing getted address
-            logAdditional("Hostname: %s", ifa->ifa_name);
+            // Check if not loopback
+            if (strcmp(ipStr, "127.0.0.1")) {
+                // Writing getted address
+                snprintf(hostName, sizeof(hostName), "%s", ipStr);
+                logAdditional("Hostname: %s", ipStr);
+                return false;
+            }
         }
     }
     freeifaddrs(ifAddrStruct);
@@ -86,7 +91,7 @@ InternetLibrary::InternetLibrary() {
         logImportant("WSAStartup() failed: %d", WSAGetLastError());
         return;
     }
-    #endif  // (USE_WINSOCK)
+    #endif
 
     if (findHostName()) {
         logImportant("Can't find hostname");

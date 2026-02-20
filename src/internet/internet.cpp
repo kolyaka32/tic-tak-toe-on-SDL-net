@@ -107,7 +107,7 @@ const GetPacket* Internet::getNewMessages() {
         if (source) {
             // Logging get message
             logAdditional("Get message from %s, size %u, type: %u",
-                source->getName(), packet->getLength(), packet->getData<Uint8>(0)+'0');
+                source->getName(), packet->getLength(), packet->getData<Uint8>(0));
 
             // Update wait timer
             source->updateGetTimeout();

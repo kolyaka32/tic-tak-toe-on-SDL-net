@@ -22,18 +22,23 @@
 #include <winsock2.h>
 // Including library for getting localhost
 #include <iphlpapi.h>
+// Setting socket data type
+typedef SOCKET SocketType;
 #endif  // (SDL_PLATFORM_WINDOWS)
 
 // Unix
 #if (SDL_PLATFORM_UNIX)
 #define USE_SOCKET true  // Internet library for unix
 #define NET_SELECTED true
-// Including librry itself
-// Including libraries
+// Including librries itself
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/ioctl.h> 
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <errno.h>
+// Setting socket data type
+typedef int SocketType;
 #endif  // (SDL_PLATFORM_UNIX)
 
 
