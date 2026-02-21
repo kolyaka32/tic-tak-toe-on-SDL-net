@@ -88,7 +88,7 @@ InternetLibrary::InternetLibrary() {
     // Initialize Winsock
     WSADATA wsaData;
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != NO_ERROR) {
-        logImportant("WSAStartup() failed: %d", WSAGetLastError());
+        logImportant("WSAStartup() failed: %d", getError);
         return;
     }
     #endif
@@ -102,7 +102,7 @@ InternetLibrary::InternetLibrary() {
 InternetLibrary::~InternetLibrary() {
     #if (USE_WINSOCK)
     if (WSACleanup() < 0) {
-        logImportant("Can't cleanup\n");
+        logImportant("Can't cleanup");
         return;
     }
     #endif  // (USE_WINSOCK)

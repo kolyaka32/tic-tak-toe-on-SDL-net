@@ -12,12 +12,12 @@ Socket::Socket() {
     #if (USE_WINSOCK)
     sck = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (sck == INVALID_SOCKET) {
-        logAdditional("Can't create socket with error: %d", WSAGetLastError());
+        logAdditional("Can't create socket with error: %d", getError);
     }
     #endif
     #if (USE_SOCKET)
     if (sck == -1) {
-        logAdditional("Can't create socket with error: %d", errno);
+        logAdditional("Can't create socket with error: %d", getError);
     }
     #endif
     // Setting local address
@@ -30,7 +30,7 @@ Socket::Socket() {
 Socket::~Socket() {
     #if (USE_WINSOCK)
     if (closesocket(sck) == SOCKET_ERROR) {
-        logImportant("Close socket function failed with error %d", WSAGetLastError());
+        logImportant("Close socket function failed with error %d", getError);
     }
     #endif
     #if (USE_SOCKET)
@@ -45,12 +45,12 @@ int Socket::tryBind() {
     // Trying bind address to socket
     if (bind(sck, (sockaddr*)&localAddress, sizeof(localAddress))) {
         #if (USE_WINSOCK)
-        if (WSAGetLastError() == WSAEADDRINUSE) {
+        if (getError == WSAEADDRINUSE) {
             return 1;
         }
         #endif
         #if (USE_SOCKET)
-        if (errno == EADDRINUSE) {
+        if (getError == EADDRINUSE) {
             return 1;
         }
         #endif
@@ -64,13 +64,13 @@ void Socket::setNonBlockingMode() {
     #if (USE_WINSOCK)
     DWORD nonBlocking = 1;
     if (ioctlsocket(sck, FIONBIO, &nonBlocking) != 0) {
-        logImportant("Can't set socket to non-blocking mode: %d", WSAGetLastError());
+        logImportant("Can't set socket to non-blocking mode: %d", getError);
     }
     #endif
     #if (USE_SOCKET)
     int value = 1;
     if (ioctl(sck, FIONBIO, &value) == -1) {
-        logImportant("Can't set socket to non-blocking mode: %d", errno);
+        logImportant("Can't set socket to non-blocking mode: %d", getError);
     }
     #endif
 }
@@ -83,11 +83,7 @@ void Socket::setReuseAddressMode() {
     int value = 1;
     #endif
     if (setsockopt(sck, SOL_SOCKET, SO_REUSEADDR, (char*)&value, sizeof(value))) {
-        #if (USE_WINSOCK)
-        logImportant("Can't set reusing socket, error: %d", WSAGetLastError());
-        #elif (USE_SOCKET)
-        logImportant("Can't set reusing socket, error: %d", errno);
-        #endif
+        logImportant("Can't set reusing socket, error: %d", getError);
     }
 }
 
@@ -99,11 +95,7 @@ void Socket::setBroadcastMode() {
     int value = 1;
     #endif
     if (setsockopt(sck, SOL_SOCKET, SO_BROADCAST, (char*)&value, sizeof(value))) {
-        #if (USE_WINSOCK)
-        logImportant("Can't set socket to broadcast: %d", WSAGetLastError());
-        #elif (USE_SOCKET)
-        logImportant("Can't set socket to broadcast: %d", errno);
-        #endif
+        logImportant("Can't set socket to broadcast: %d", getError);
     }
 }
 
@@ -120,11 +112,7 @@ void Socket::tryBindTo(Uint16 _port) {
             // Finding another port
             port = SDL_rand(40000) + 1500;
         } else {
-            #if (USE_WINSOCK)
-            logImportant("Bind function failed with error %d", WSAGetLastError());
-            #elif (USE_SOCKET)
-            logImportant("Bind function failed with error %d", errno);
-            #endif
+            logImportant("Bind function failed with error %d", getError);
             return;
         }
     }
@@ -144,11 +132,7 @@ void Socket::setRecieveBroadcast() {
     port = BROADCAST_PORT;
     // Tring to set this port to use
     if (tryBind()) {
-        #if (USE_WINSOCK)
-        logImportant("Brodcast bind function failed with error %d", WSAGetLastError());
-        #elif (USE_SOCKET)
-        logImportant("Brodcast bind function failed with error %d", errno);
-        #endif
+        logImportant("Brodcast bind function failed with error %d", getError);
     }
     logAdditional("Openned broadcast socket at port %d", port);
 }
@@ -166,11 +150,7 @@ void Socket::send(const Destination& _dest, const Message& _message) const {
     int sendLength = sendto(sck, _message.getData(), _message.getLength(), 0, _dest.getAddress(), _dest.getSize());
     #if (CHECK_CORRECTION)
     if (sendLength != _message.getLength()) {
-        #if (USE_WINSOCK)
-        logImportant("Don't send data correct, error: %d", WSAGetLastError());
-        #elif (USE_SOCKET)
-        logImportant("Don't send data correct, error: %d", errno);
-        #endif
+        logImportant("Don't send data correct, error: %d", getError);
     } else {
         logAdditional("Send sucsesfull: %d", _message.getLength());
     }

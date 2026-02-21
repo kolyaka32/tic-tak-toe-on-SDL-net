@@ -24,6 +24,10 @@
 #include <iphlpapi.h>
 // Setting socket data type
 typedef SOCKET SocketType;
+// Setting socket address length data type
+typedef int socklen_t;
+// Function for get last error
+#define getError WSAGetLastError()
 #endif  // (SDL_PLATFORM_WINDOWS)
 
 // Unix
@@ -39,6 +43,8 @@ typedef SOCKET SocketType;
 #include <errno.h>
 // Setting socket data type
 typedef int SocketType;
+// Function for get last error
+#define getError errno
 #endif  // (SDL_PLATFORM_UNIX)
 
 

@@ -13,7 +13,7 @@ class GetPacket {
  private:
     // Address, from which
     sockaddr_in srcAddress;
-    socklen_t srcAddressLength;  // ! Check on windows
+    socklen_t srcAddressLength;
     // Data, contained in this array
     char buffer[100];
     int length = 0;
