@@ -10,38 +10,64 @@
 #include "../data/logger.hpp"
 #include "../data/array.hpp"
 
+// Check, if use net
+#if (USE_NET)
 
 // Select library depend on platform
 // Windows
-#if ((USE_NET) && (SDL_PLATFORM_WINDOWS))
+#if (SDL_PLATFORM_WINDOWS)
 #define USE_WINSOCK true   // Internet library for windows (winsock2.h)
 #define NET_SELECTED true
 // Including library itself
 #include <winsock2.h>
 // Including library for getting localhost
 #include <iphlpapi.h>
-#endif  // ((USE_NET) && (SDL_PLATFORM_WINDOWS))
+// Setting socket data type
+typedef SOCKET SocketType;
+// Setting socket address length data type
+typedef int socklen_t;
+// Function for get last error
+#define getError WSAGetLastError()
+#endif  // (SDL_PLATFORM_WINDOWS)
 
 // Unix
-#if ((USE_NET) && (SDL_PLATFORM_UNIX))
+#if (SDL_PLATFORM_UNIX)
 #define USE_SOCKET true  // Internet library for unix
 #define NET_SELECTED true
-// Including librry itself
-#include 
-#endif  // ((USE_NET) && (SDL_PLATFORM_UNIX))
+// Including librries itself
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h> 
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <errno.h>
+// Setting socket data type
+typedef int SocketType;
+// Function for get last error
+#define getError errno
+#endif  // (SDL_PLATFORM_UNIX)
 
 
 // Check on define correction
-#if ((USE_NET) && (NET_SELECTED != true))
+#if (NET_SELECTED != true)
 #error "Can't find internet library"
-#else  // (!USE_NET)
+#else  // (NET_SELECTED != true)
 
-// Net initialisation function
-bool initNet();
-// Net closing function
-void closeNet();
-// Get local host name for sharing
-char* getLocalHostName();
+// Class for control loading/unloading internet library
+class InternetLibrary {
+ private:
+    // Local hostname for sharing
+    char hostName[16];
+    // Function for find usable hostname
+    bool findHostName();
+
+ public:
+    InternetLibrary();
+    ~InternetLibrary();
+
+    // Get local machine IP name for sharing
+    const char* getHostName() const;
+};
 
 
 // Functions for write data for send in correct byte order
@@ -70,4 +96,6 @@ float  readNet(float object);
 Uint64 readNet(Uint64 object);
 Sint64 readNet(Sint64 object);
 
-#endif  // (!USE_NET)
+#endif  // (NET_SELECTED != true)
+
+#endif  // (USE_NET)

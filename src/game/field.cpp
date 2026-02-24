@@ -126,8 +126,8 @@ bool Field::clickSingle(SDL_Point p) {
         count++;
 
         // Making sound
-        sounds.play(Sounds::Turn);
-        music.startFromCurrent(Music::MainCombat);
+        audio.sounds.play(Sounds::Turn);
+        audio.music.startFromCurrent(Music::MainCombat);
 
         // Checking for win
         gameState = checkWin(p);
@@ -487,5 +487,5 @@ char Field::getCheckSum() const {
 }
 
 int Field::getSaveSize(int _width) {
-    return 4+sizeof(saveTime)+_width*_width;
+    return 4 + sizeof(saveTime)+_width*_width;
 }

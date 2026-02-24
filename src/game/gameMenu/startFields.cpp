@@ -44,8 +44,8 @@ const Field* StartFields::click(const Mouse _mouse) {
     for (int i=0; i < 4; ++i) {
         if (optionButton[i].in(_mouse)) {
             // Making sound
-            sounds.play(Sounds::Reset);
-            music.startFromCurrent(Music::MainCalm);
+            audio.sounds.play(Sounds::Reset);
+            audio.music.startFromCurrent(Music::MainCalm);
             // Setting new field
             active = false;
             return startOptions + i;

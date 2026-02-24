@@ -68,8 +68,8 @@ void ClientGameCycle::getInternetPacket(const GetPacket& packet) {
             field.setNewField(&f, window);
 
             // Making sound
-            sounds.play(Sounds::Reset);
-            music.startFromCurrent(Music::MainCalm);
+            audio.sounds.play(Sounds::Reset);
+            audio.music.startFromCurrent(Music::MainCalm);
             logAdditional("Starting new game by connection");
         }
         return;

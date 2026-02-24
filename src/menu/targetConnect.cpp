@@ -4,7 +4,7 @@
  */
 
 #include "targetConnect.hpp"
-#include "../../internet/internet.hpp"
+#include "../internet/internet.hpp"
 
 
 // Static objects for save inputted parameters

@@ -6,50 +6,96 @@
 #include "socket.hpp"
 
 
-#if (USE_WINSOCK)
 Socket::Socket() {
-    // Create a SOCKET for listening for incoming connection requests.
+    // Create a socket for listening for incoming connection requests.
+    sck = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    #if (USE_WINSOCK)
     sck = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (sck == INVALID_SOCKET) {
-        logAdditional("socket function failed with error: %ld", WSAGetLastError());
+        logAdditional("Can't create socket with error: %d", getError);
     }
+    #endif
+    #if (USE_SOCKET)
+    if (sck == -1) {
+        logAdditional("Can't create socket with error: %d", getError);
+    }
+    #endif
     // Setting local address
     localAddress.sin_family = AF_INET;
-    localAddress.sin_addr.S_un.S_addr = INADDR_ANY;
+    localAddress.sin_addr.s_addr = INADDR_ANY;
+    // Setting to non-blocking mode
+    setNonBlockingMode();
 }
 
 Socket::~Socket() {
+    #if (USE_WINSOCK)
     if (closesocket(sck) == SOCKET_ERROR) {
-        logImportant("Closesocket function failed with error %d", WSAGetLastError());
+        logImportant("Close socket function failed with error %d", getError);
     }
+    #endif
+    #if (USE_SOCKET)
+    close(sck);
+    #endif
 }
 
 int Socket::tryBind() {
+    // Setting and remembering port
     localAddress.sin_port = htons(port);
-    return bind(sck, (SOCKADDR*)&localAddress, sizeof(localAddress));
+
+    // Trying bind address to socket
+    if (bind(sck, (sockaddr*)&localAddress, sizeof(localAddress))) {
+        #if (USE_WINSOCK)
+        if (getError == WSAEADDRINUSE) {
+            return 1;
+        }
+        #endif
+        #if (USE_SOCKET)
+        if (getError == EADDRINUSE) {
+            return 1;
+        }
+        #endif
+        return -1;
+    }
+    return 0;
 }
 
 void Socket::setNonBlockingMode() {
     // Setting socket to non-blocking mode
+    #if (USE_WINSOCK)
     DWORD nonBlocking = 1;
     if (ioctlsocket(sck, FIONBIO, &nonBlocking) != 0) {
-        logImportant("Can't set socket to non-blocking mode: %d", WSAGetLastError());
+        logImportant("Can't set socket to non-blocking mode: %d", getError);
     }
+    #endif
+    #if (USE_SOCKET)
+    int value = 1;
+    if (ioctl(sck, FIONBIO, &value) == -1) {
+        logImportant("Can't set socket to non-blocking mode: %d", getError);
+    }
+    #endif
 }
 
 void Socket::setReuseAddressMode() {
     // Setting socket to allow to reuse address
-    bool t = true;
-    if (setsockopt(sck, SOL_SOCKET, SO_REUSEADDR, (char*)&t, sizeof(t))) {
-        logImportant("Can't set reusing socket: %d", WSAGetLastError());
+    #if (USE_WINSOCK)
+    bool value = true;
+    #elif (USE_SOCKET)
+    int value = 1;
+    #endif
+    if (setsockopt(sck, SOL_SOCKET, SO_REUSEADDR, (char*)&value, sizeof(value))) {
+        logImportant("Can't set reusing socket, error: %d", getError);
     }
 }
 
 void Socket::setBroadcastMode() {
     // Setting socket to broadcast
-    bool t = true;
-    if (setsockopt(sck, SOL_SOCKET, SO_BROADCAST, (char*)&t, sizeof(t))) {
-        logImportant("Can't set socket to broadcast: %d", WSAGetLastError());
+    #if (USE_WINSOCK)
+    bool value = true;
+    #elif (USE_SOCKET)
+    int value = 1;
+    #endif
+    if (setsockopt(sck, SOL_SOCKET, SO_BROADCAST, (char*)&value, sizeof(value))) {
+        logImportant("Can't set socket to broadcast: %d", getError);
     }
 }
 
@@ -60,17 +106,16 @@ void Socket::tryBindTo(Uint16 _port) {
     SDL_srand(0);
     // Finding avaliable port
     // Setting socket to send from created local host (as back address)
-    while (tryBind() == SOCKET_ERROR) {
+    while (int result = tryBind()) {
         // Check, if port already using
-        if (WSAGetLastError() == WSAEADDRINUSE) {
+        if (result > 0) {
             // Finding another port
             port = SDL_rand(40000) + 1500;
         } else {
-            // Error
-            logImportant("bind function failed with error %d", WSAGetLastError());
+            logImportant("Bind function failed with error %d", getError);
+            return;
         }
     }
-    setNonBlockingMode();
     logAdditional("Openned socket at port %d", port);
 }
 
@@ -86,10 +131,9 @@ void Socket::setRecieveBroadcast() {
     // Setting basic port for broadcast
     port = BROADCAST_PORT;
     // Tring to set this port to use
-    if (tryBind() == SOCKET_ERROR) {
-        logImportant("Brodcast bind function failed with error %d", WSAGetLastError());
+    if (tryBind()) {
+        logImportant("Brodcast bind function failed with error %d", getError);
     }
-    setNonBlockingMode();
     logAdditional("Openned broadcast socket at port %d", port);
 }
 
@@ -105,10 +149,8 @@ void Socket::setSendBroadcast() {
 void Socket::send(const Destination& _dest, const Message& _message) const {
     int sendLength = sendto(sck, _message.getData(), _message.getLength(), 0, _dest.getAddress(), _dest.getSize());
     #if (CHECK_CORRECTION)
-    if (sendLength < 0) {
-        logImportant("Can't send data %d", WSAGetLastError());
-    } else if (sendLength != _message.getLength()) {
-        logAdditional("Don't send fully: %d", WSAGetLastError());
+    if (sendLength != _message.getLength()) {
+        logImportant("Don't send data correct, error: %d", getError);
     } else {
         logAdditional("Send sucsesfull: %d", _message.getLength());
     }
@@ -122,5 +164,3 @@ Uint16 Socket::getPort() const {
 GetPacket* Socket::recieve() {
     return packet.tryGetData(sck);
 }
-
-#endif  // (USE_WINSOCK)

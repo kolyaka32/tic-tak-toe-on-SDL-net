@@ -8,7 +8,6 @@
 #if (PRELOAD_ANIMATIONS)
 
 #include "loader/loader.hpp"
-#include "../exceptions.hpp"
 
 
 AnimationsData::AnimationsData() {
@@ -28,7 +27,8 @@ AnimationsData::AnimationsData() {
     #if (CHECK_CORRECTION)
     for (unsigned i=0; i < unsigned(Animations::Count); ++i) {
         if (animations[i] == nullptr) {
-            throw DataLoadException(animationsFilesNames[i]);
+            logImportant("Don't load animation: %s", animationsFilesNames[i]);
+            return;
         }
     }
     logAdditional("Animations loaded corretly");
@@ -52,7 +52,8 @@ void AnimationsData::loadAnimation(Animations _index, const char* _fileName) {
     // Checking correction of loaded texture
     #if (CHECK_CORRECTION)
     if (animations[unsigned(_index)] == nullptr) {
-        throw DataLoadException(_fileName);
+        logImportant("Can't load animation: %s", _fileName);
+        return;
     }
     #endif
 }

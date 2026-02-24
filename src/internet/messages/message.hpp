@@ -45,7 +45,8 @@ void Message::write(const T _object) {
     // Check on avaliable space
     #if (CHECK_CORRECTION)
     if (size + sizeof(T) > maxSize) {
-        throw "Can't write data - not enogh size";
+        logImportant("Can't write data - not enogh size");
+        return;
     }
     #endif
     *(data + size) = writeNet(_object);

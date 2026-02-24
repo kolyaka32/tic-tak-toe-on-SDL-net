@@ -13,7 +13,7 @@
 class Reciepient {
  private:
     // Address, where send to or recieve from
-    const Destination dest;
+    Destination dest;
     // System for confirmation of connection
     timer needResendApplyConnection = 0;             // Time, after which need resend apply connection message
     static const timer messageApplyTimeout = 2000;   // Time to send apply message to keep connecion
@@ -26,6 +26,9 @@ class Reciepient {
 
  public:
     Reciepient(const Destination& dest);
+    Reciepient(const Reciepient& object);
+    Reciepient(Reciepient&& object) noexcept;
+    Reciepient& operator=(Reciepient&& object) noexcept;
 
     // Send part
     void sendConfirmed(const Socket& socket, const ConfirmedMessage& message);

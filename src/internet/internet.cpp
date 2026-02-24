@@ -19,18 +19,26 @@ void Internet::connectTo(const Destination& _dest) {
     logAdditional("Connecting to %s:%u", _dest.getAddress(), _dest.getPort());
 }
 
+void Internet::detachOf(const sockaddr_in* _address) {
+    // Delete connection
+    for (int i=0; i < reciepients.size(); ++i) {
+        if (reciepients[i].isAddress(_address)) {
+            reciepients.erase(reciepients.begin()+i);
+            logAdditional("Deleting connection to %d", i);
+            return;
+        }
+    }
+    logAdditional("Can't detach connection");
+}
+
 Uint16 Internet::getPort() const {
     return socket.getPort();
 }
 
-const char* Internet::getHostName() const {
-    return getLocalHostName();
-}
-
 void Internet::close() {
-    logAdditional("Close datagramm socket");
     // Closing all reciepients
     reciepients.clear();
+    logAdditional("Close all connections");
 }
 
 void Internet::disconnect() {
@@ -69,7 +77,7 @@ void Internet::sendFirst(const Destination& _dest, const Message& _message) cons
 }
 
 void Internet::sendAll(const Message& _message) {
-    // Sending it to all
+    // Sending it to all recipients
     for (int i=0; i < reciepients.size(); ++i) {
         reciepients[i].sendUnconfirmed(socket, _message);
     }
@@ -99,7 +107,7 @@ const GetPacket* Internet::getNewMessages() {
         if (source) {
             // Logging get message
             logAdditional("Get message from %s, size %u, type: %u",
-                source->getName(), packet->getLength(), packet->getData<Uint8>(0)+'0');
+                source->getName(), packet->getLength(), packet->getData<Uint8>(0));
 
             // Update wait timer
             source->updateGetTimeout();

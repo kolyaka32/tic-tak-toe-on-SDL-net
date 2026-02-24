@@ -111,10 +111,10 @@ void ServerLobbyCycle::draw() const {
 
     if (showAddress) {
         showAddressText.blit();
-        showAddressButton.blit();
+        hideAddressButton.blit();
     } else {
         hideAddressText.blit();
-        hideAddressButton.blit();
+        showAddressButton.blit();
     }
 
     // Drawing buttons

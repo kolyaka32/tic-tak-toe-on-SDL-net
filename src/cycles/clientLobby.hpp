@@ -6,8 +6,8 @@
 #pragma once
 
 #include "internetCycle.hpp"
-#include "../game/connectMenu/serverInfo.hpp"
-#include "../game/connectMenu/targetConnect.hpp"
+#include "../menu/serverInfo.hpp"
+#include "../menu/targetConnect.hpp"
 
 
 // Game cycle (for single player (special animation))

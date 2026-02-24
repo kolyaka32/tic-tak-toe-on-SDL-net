@@ -10,14 +10,10 @@
 
 
 // Global class for send/recieve data from internet
-class Internet {
+class Internet : public InternetLibrary {
  private:
     // Socket for recieve/send data (general)
     Socket socket;
-    // Socket for broadcast recieve/send data
-    //Socket broadcastSocket;
-    // Address to send tp broadcast
-    //Destination broadcstDest;
     // Flag of disconnecting current user from main internet system
     bool disconnected;
     // Reciepients
@@ -26,12 +22,14 @@ class Internet {
  public:
     Internet();
 
-    // Init part
+    // Connection managment
     void connectTo(const Destination& dest);
-    Uint16 getPort() const;
-    const char* getHostName() const;
+    void detachOf(const sockaddr_in* address);
     void close();
     void disconnect();
+
+    // Getting localhost data
+    Uint16 getPort() const;
 
     // Sending data to specialised user, without applience
     void sendFirst(const Destination& dest, const Message& message) const;

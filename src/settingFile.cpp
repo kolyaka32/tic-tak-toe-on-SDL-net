@@ -13,8 +13,8 @@
 // Files to setup
 #include "data/languages.hpp"
 #include "game/gameField.hpp"
-#include "game/connectMenu/targetConnect.hpp"
 #include "game/gameMenu/savedFields.hpp"
+#include "menu/targetConnect.hpp"
 
 
 // Data, load from setting file
@@ -41,9 +41,9 @@ void InitFile::loadSettings() {
                 LanguagedText::setLanguage(Language::Bellarusian);
             }
         } else if (parameter == "music") {
-            music.setVolume(getValue(currentLine));
+            audio.music.setVolume(getValue(currentLine) / 100.0f);
         } else if (parameter == "sounds") {
-            sounds.setVolume(getValue(currentLine));
+            audio.sounds.setVolume(getValue(currentLine) / 100.0f);
         } else if (parameter == "IP") {
             TargetConnect::writeBaseIP(getText(currentLine).c_str());
         } else if (parameter == "port") {
@@ -88,8 +88,8 @@ void InitFile::saveSettings() {
     }
 
     // Writing music and sounds volumes
-    outSettings << "music = " << music.getVolume() << "\n";
-    outSettings << "sounds = " << sounds.getVolume() << "\n";
+    outSettings << "music = " << int(audio.music.getVolume()*100) << "\n";
+    outSettings << "sounds = " << int(audio.sounds.getVolume()*100) << "\n";
 
     // Writing internet connection data
     outSettings << "\n# Internet base parameters:\n";

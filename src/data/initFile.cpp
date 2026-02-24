@@ -4,6 +4,8 @@
  */
 
 #include "initFile.hpp"
+#include "macroses.hpp"
+#include "logger.hpp"
 
 
 // Check if has initfile
@@ -11,10 +13,12 @@
 
 InitFile::InitFile() {
     loadSettings();
+    logAdditional("Settings loaded correcly");
 }
 
 InitFile::~InitFile() {
     saveSettings();
+    logAdditional("Settings saved correctly");
 }
 
 const std::string InitFile::getText(const std::string _line) const {

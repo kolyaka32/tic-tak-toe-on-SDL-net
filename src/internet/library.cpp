@@ -9,10 +9,8 @@
 
 // Winsocket realisation
 #if (USE_WINSOCK)
-// Data for storing hostname
-char hostName[16];
 
-bool findHostName() {
+bool InternetLibrary::findHostName() {
     // Allocating static memory for that process
     char buffer[10000];
     PIP_ADAPTER_ADDRESSES addresses = (PIP_ADAPTER_ADDRESSES)buffer;
@@ -44,29 +42,74 @@ bool findHostName() {
     return true;
 }
 
-char* getLocalHostName() {
-    return hostName;
+#endif  // (USE_WINSOCK)
+
+// Socket realisation
+#if (USE_SOCKET)
+
+#include <ifaddrs.h>
+
+bool InternetLibrary::findHostName() {
+    ifaddrs* ifAddrStruct = nullptr;
+
+    // Getting address as linked list
+    getifaddrs(&ifAddrStruct);
+
+    // Check, if empty
+    if (ifAddrStruct == nullptr) {
+        return true;
+    }
+
+    // Checking them, until find need
+    for (ifaddrs * ifa = ifAddrStruct; ifa != NULL; ifa = ifa->ifa_next) {
+        // check it is IP4
+        if (ifa->ifa_addr->sa_family == AF_INET) {
+            // Getting string representation
+            char* ipStr = inet_ntoa(((sockaddr_in*)ifa->ifa_addr)->sin_addr);
+
+            // Check if not loopback
+            if (strcmp(ipStr, "127.0.0.1")) {
+                // Writing getted address
+                snprintf(hostName, sizeof(hostName), "%s", ipStr);
+                logAdditional("Hostname: %s", ipStr);
+                return false;
+            }
+        }
+    }
+    freeifaddrs(ifAddrStruct);
+    return true;
 }
 
-bool initNet() {
+#endif // (USE_SOCKET)
+
+
+InternetLibrary::InternetLibrary() {
+    #if (USE_WINSOCK)
     // Initialize Winsock
     WSADATA wsaData;
-
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != NO_ERROR) {
-        logImportant("WSAStartup() failed\n");
-        return true;
+        logImportant("WSAStartup() failed: %d", getError);
+        return;
     }
+    #endif
+
     if (findHostName()) {
         logImportant("Can't find hostname");
-        return true;
+        return;
     }
-    return false;
 }
 
-void closeNet() {
+InternetLibrary::~InternetLibrary() {
+    #if (USE_WINSOCK)
     if (WSACleanup() < 0) {
-        logImportant("Can't cleanup\n");
+        logImportant("Can't cleanup");
+        return;
     }
+    #endif  // (USE_WINSOCK)
+}
+
+const char* InternetLibrary::getHostName() const {
+    return hostName;
 }
 
 
@@ -157,12 +200,3 @@ Uint32 readNet(Uint32 _object) {
 /*Sint64 readNet(Sint64 _object) {
     return ;
 }*/
-
-
-#endif  // (USE_WINSOCK)
-
-
-// Socket realisation
-#if (USE_SOCKET)
-
-#endif // (USE_SOCKET)

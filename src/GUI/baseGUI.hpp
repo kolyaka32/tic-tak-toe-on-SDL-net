@@ -79,15 +79,14 @@ namespace GUI {
      private:
         SDL_Texture *buttonTexture;  // Texture of line (upper part of slider)
         SDL_FRect buttonRect;        // Place for rendering upper part
-        const unsigned maxValue;     // Maximal value of state
 
      public:
         // Create slide with need line and button images
-        Slider(const Window& window, float X, float Y, float width, unsigned startValue,
-            Textures lineImage = Textures::SliderLine, Textures buttonImage = Textures::SliderButton, unsigned max = 255);
+        Slider(const Window& window, float X, float Y, float width, float startValue,
+            Textures lineImage = Textures::SliderLine, Textures buttonImage = Textures::SliderButton);
         Slider(Slider&& object) noexcept;
-        unsigned setValue(float mouseX);  // Setting new state from mouse position
-        unsigned scroll(float wheelY);    // Checking mouse wheel action
+        float setValue(float mouseX);  // Setting new state from mouse position
+        float scroll(float wheelY);    // Checking mouse wheel action
         void blit() const override;       // Drawing slider with need button position
     };
 

@@ -25,10 +25,13 @@
 #define PRELOAD_MUSIC        true   // Preload music
 // Use archive for store additional GFX
 #define PRELOAD_DATA PRELOAD_TEXTURES | PRELOAD_FONTS | PRELOAD_ANIMATIONS | PRELOAD_SOUNDS | PRELOAD_MUSIC
+// Additional flags
+#define CAPTURE_AUIO         false  // Flag of using audio capture device
 
 
-// System numbers
-#define WINDOW_NAME "Tic-tac-toe on SDL"   // System game name
+// System game name
+#define WINDOW_NAME "Tic-tac-toe on SDL"
+#define LOG_NAME "log.txt"
 
 // Base file names
 // File with all GFX
@@ -37,7 +40,7 @@
 #endif
 
 // File with all saved data (language, settings, volumes...)
-#if USE_SETTING_FILE
+#if (USE_SETTING_FILE)
 #define SETTING_FILE "settings-tic-tac-toe.ini"
 #endif
 
@@ -45,9 +48,5 @@
 #if (USE_NET)
 #define MAX_CONNECTIONS 1
 #define BASE_PORT 8000
-// Broadcast mode
-#define USE_BROADCAST true
-#if (USE_BROADCAST)
 #define BROADCAST_PORT 5667
-#endif
 #endif  // (USE_NET)

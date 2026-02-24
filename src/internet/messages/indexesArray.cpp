@@ -8,11 +8,27 @@
 
 
 template <unsigned length>
-IndexesArray<length>::IndexesArray() {
-    // Resetting array
-    memset(array, 0, length);
+IndexesArray<length>::IndexesArray()
+: array() {
     lastPosition = 0;
 }
+
+/*template <unsigned length>
+IndexesArray<length>::IndexesArray(const IndexesArray& _object)
+: array(_object.array),
+lastPosition(_object.lastPosition) {}
+
+template <unsigned length>
+IndexesArray<length>& IndexesArray<length>::operator=(const IndexesArray& _object) {
+    array = _object.array;
+    lastPosition = _object.lastPosition;
+    return *this;
+}
+
+template <unsigned length>
+IndexesArray<length>::IndexesArray(IndexesArray&& _object) noexcept
+: array(std::move(_object.array)),
+lastPosition(_object.lastPosition) {}*/
 
 template <unsigned length>
 bool IndexesArray<length>::isUnique(Uint8 _index) {

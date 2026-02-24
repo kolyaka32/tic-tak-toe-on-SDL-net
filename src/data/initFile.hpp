@@ -6,8 +6,6 @@
 #pragma once
 
 #include "../define.hpp"
-#include "macroses.hpp"
-#include "exceptions.hpp"
 
 
 // Check if has initfile
@@ -27,5 +25,8 @@ class InitFile {
     void loadSettings();
     void saveSettings();
 };
+
+// Global file with all loading settings
+extern InitFile initFile;
 
 #endif  // (USE_SETTING_FILE)

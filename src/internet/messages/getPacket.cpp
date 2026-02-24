@@ -6,15 +6,12 @@
 #include "getPacket.hpp"
 
 
-#if (USE_WINSOCK)
-GetPacket* GetPacket::tryGetData(const SOCKET _socket) {
+GetPacket* GetPacket::tryGetData(const SocketType _socket) {
     // Try recieve data
     srcAddressLength = sizeof(srcAddress);
-    length = recvfrom(_socket, buffer, sizeof(buffer), 0, (SOCKADDR*)&srcAddress, &srcAddressLength);
+    length = recvfrom(_socket, buffer, sizeof(buffer), 0, (sockaddr*)&srcAddress, &srcAddressLength);
     if (length > 0) {
         logAdditional("Get data with length %d: %s\n", length, buffer);
-        // Reset offset
-        offset = 0;
         return this;
     }
     return nullptr;
@@ -27,7 +24,6 @@ const sockaddr_in* GetPacket::getSourceAddress() const {
 int GetPacket::getSourceAddressLength() const {
     return srcAddressLength;
 }
-#endif  // (USE_WINSOCK)
 
 bool GetPacket::isBytesAvaliable(int bytes) const {
     return length >= bytes;

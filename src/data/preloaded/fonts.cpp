@@ -8,7 +8,6 @@
 #if (PRELOAD_FONTS)
 
 #include "loader/loader.hpp"
-#include "../exceptions.hpp"
 
 
 FontsData::FontsData() {
@@ -28,7 +27,8 @@ FontsData::FontsData() {
     #if (CHECK_CORRECTION)
     for (unsigned i=0; i < unsigned(Fonts::Count); ++i) {
         if (fonts[i] == NULL) {
-            throw DataLoadException(fontsFilesNames[i]);
+            logImportant("Don't load font: %s", fontsFilesNames[i]);
+            return;
         }
     }
     logAdditional("Fonts loaded corretly");
@@ -39,6 +39,7 @@ FontsData::~FontsData() {
     // Closing all used fonts
     for (unsigned i=0; i < unsigned(Fonts::Count); ++i) {
         TTF_CloseFont(fonts[i]);
+        return;
     }
 }
 
@@ -50,7 +51,8 @@ void FontsData::loadFont(Fonts _index, const char* _fileName) {
     // Checking correction of loaded font
     #if (CHECK_CORRECTION)
     if (fonts[unsigned(_index)] == nullptr) {
-        throw DataLoadException(_fileName);
+        logImportant("Can't create font: %s", _fileName);
+        return;
     }
     #endif
 }
