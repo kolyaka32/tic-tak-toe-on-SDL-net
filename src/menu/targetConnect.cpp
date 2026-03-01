@@ -136,7 +136,7 @@ void TargetConnect::tryConnect() {
     memcpy(basePort, portTextCorrected, sizeof(basePort));
     // Trying connect at specified address
     Destination dest{IPField.getString(), (Uint16)SDL_atoi(portTextCorrected)};
-    internet.sendFirst(dest, {ConnectionCode::Init, Uint8(1)});
+    internet.sendFirst(dest, {ConnectionCode::Init, Uint8(BROADCAST_APP_INDEX)});
 }
 
 void TargetConnect::blit() const {

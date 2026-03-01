@@ -51,6 +51,7 @@
 // Number of active connections in internet part
 #if (USE_NET)
 #define MAX_CONNECTIONS 1
+#define BROADCAST_APP_INDEX 2
 #define BASE_PORT 8000
 #define BROADCAST_PORT 5667
 #endif  // (USE_NET)

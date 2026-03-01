@@ -152,7 +152,7 @@ void Socket::send(const Destination& _dest, const Message& _message) const {
     if (sendLength != _message.getLength()) {
         logImportant("Don't send data correct, error: %d", getError);
     } else {
-        logAdditional("Send sucsesfull: %d", _message.getLength());
+        logAdditional("Send sucsesfull length: %d, type: %d", _message.getLength(), _message.getData()[0]);
     }
     #endif
 }
