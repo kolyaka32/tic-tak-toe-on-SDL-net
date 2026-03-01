@@ -9,16 +9,19 @@
 #include "../internet/internet.hpp"
 
 
-// Cycle with game part of internet connection
+// Cycle with game part and internet connection
 class InternetCycle : public GameCycle {
  protected:
-    // Graphical part
-    GUI::StaticText playersTurnsTexts[2];
+    // Messages with internet state
     GUI::TwoOptionBox disconnectedBox;
     GUI::OneOptionBox termianatedBox;
+
+    // Redefined current texts
+    GUI::StaticText playersTurnsTexts[2];
     GUI::HighlightedStaticText winText;
     GUI::HighlightedStaticText looseText;
 
+ protected:
     bool inputMouseDown() override;
     void update() override;
     virtual void getInternetPacket(const GetPacket& packet);

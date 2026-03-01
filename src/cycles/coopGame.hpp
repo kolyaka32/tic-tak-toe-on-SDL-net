@@ -9,19 +9,19 @@
 #include "../game/gameMenu/selectingMenu.hpp"
 
 
-// Creating two player mode (standart game)
+// Local coopertive game mode
 class TwoPlayerGameCycle : public GameCycle {
- private:
+ protected:
    SelectingMenu menu;
 
  protected:
     bool inputMouseDown() override;
     void inputMouseUp() override;
-    void inputMouseWheel(float _wheelY) override;
-    void inputKeys(SDL_Keycode _key) override;
+    void inputMouseWheel(float wheelY) override;
+    void inputKeys(SDL_Keycode key) override;
     void update() override;
     void draw() const override;
 
  public:
-    TwoPlayerGameCycle(Window& _window);
+    TwoPlayerGameCycle(Window& window);
 };

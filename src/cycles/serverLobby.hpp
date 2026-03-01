@@ -8,10 +8,10 @@
 #include "internetCycle.hpp"
 
 
-// Cycle with waiting for client connect
+// Cycle with waiting for client to connect
 class ServerLobbyCycle : public BaseCycle {
- private:
-    // Broadcast socket for server list
+ protected:
+    // Broadcast socket for confirmation for server list
     Socket broadcastRecieveSocket;
 
     // Title
@@ -24,7 +24,7 @@ class ServerLobbyCycle : public BaseCycle {
     GUI::TextButton showAddressButton;  // Buttons to change state of showing address at screen
     GUI::TextButton hideAddressButton;  // Button with illustration of address, hidden by stars
 
-    // Main run functions
+ protected:
     bool inputMouseDown() override;
     void update() override;
     void draw() const override;

@@ -9,8 +9,7 @@
 
 #if (PRELOAD_ANIMATIONS)
 
-
-// Names of all images with related numbers
+// Names of gif animation
 enum class Animations : unsigned {
 
     // Count of all animations

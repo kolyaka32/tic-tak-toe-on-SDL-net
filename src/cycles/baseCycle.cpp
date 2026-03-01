@@ -6,7 +6,6 @@
 #include "baseCycle.hpp"
 
 
-// Base cycle class
 BaseCycle::BaseCycle(Window& _window)
 : CycleTemplate(_window),
 exitButton(window, 0.04, 0.05, 0.08, Textures::QuitButton),

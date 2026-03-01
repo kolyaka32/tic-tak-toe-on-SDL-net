@@ -8,16 +8,16 @@
 #include "baseCycle.hpp"
 
 
-// Cycle for select variants to start
+// Menu for selection of variants to start
 class SelectCycle : public BaseCycle {
- private:
+ protected:
     GUI::HighlightedStaticText titleText;
     GUI::TextButton singleplayerButton;
     GUI::TextButton twoPlayerButton;
     GUI::TextButton serverButton;
     GUI::TextButton connectButton;
 
-    // New overrided cycle functions
+ protected:
     bool inputMouseDown() override;
     void inputKeys(SDL_Keycode key) override;
     void update() override;
