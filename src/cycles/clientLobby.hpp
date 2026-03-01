@@ -10,12 +10,12 @@
 #include "../menu/targetConnect.hpp"
 
 
-// Game cycle (for single player (special animation))
+// Client lobby cycly for search and connect to server
 class ClientLobbyCycle : public BaseCycle {
  protected:
     // Object with all servers for connection
     std::vector<ServerData> serverDatas;
-    // Socket for broadcast send data (for finding servers)
+    // Special socket for broadcast send data (for finding servers)
     Socket broadcastSendSocket;
     timer startSearchTimer = 0;
 
@@ -25,9 +25,10 @@ class ClientLobbyCycle : public BaseCycle {
     GUI::TextButton targetConnectButton;
     TargetConnect targetConnectMenu;
 
+    // Function for reset search and start searching for new servers
     void updateList();
 
-    // Main run functions
+ protected:
     bool inputMouseDown() override;
     void inputMouseUp() override;
     void inputKeys(SDL_Keycode key) override;

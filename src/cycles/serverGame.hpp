@@ -9,13 +9,12 @@
 #include "../game/gameMenu/selectingMenu.hpp"
 
 
-// Game cycle with game part of server
+// Game cycle for internet connection from server side, control client state
 class ServerGameCycle : public InternetCycle {
- private:
+ protected:
     SelectingMenu menu;
 
  protected:
-    // Main run functions
     bool inputMouseDown() override;
     void inputMouseUp() override;
     void inputKeys(SDL_Keycode key) override;

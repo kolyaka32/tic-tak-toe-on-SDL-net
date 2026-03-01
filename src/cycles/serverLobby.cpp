@@ -71,14 +71,17 @@ void ServerLobbyCycle::update() {
     while (const GetPacket* packet = internet.getNewMessages()) {
         switch (ConnectionCode(packet->getData<Uint8>(0))) {
         case ConnectionCode::Init:
-            // Connecting to getted address
-            internet.connectTo(Destination{packet->getSourceAddress()});
+            // Check if app type is match
+            if (packet->getData<Uint8>(1) == BROADCAST_APP_INDEX) {
+                // Connecting to getted address
+                internet.connectTo(Destination{packet->getSourceAddress()});
 
-            // Sending applying initialsiation message
-            internet.sendAllConfirmed({ConnectionCode::Init, Uint8(1)});
+                // Sending initialisation applying message
+                internet.sendAllConfirmed({ConnectionCode::Init, Uint8(BROADCAST_APP_INDEX)});
 
-            // Starting game (as server)
-            App::setNextCycle(Cycle::ServerGame);
+                // Starting game (as server)
+                App::setNextCycle(Cycle::ServerGame);
+            }
             return;
 
         default:
@@ -90,8 +93,8 @@ void ServerLobbyCycle::update() {
     while (const GetPacket* packet = broadcastRecieveSocket.recieve()) {
         switch (ConnectionCode(packet->getData<Uint8>(0))) {
         case ConnectionCode::Search:
-            // Reporting about itself
-            internet.sendFirst(Destination{packet->getSourceAddress()}, {ConnectionCode::Server, Uint8(1)});
+            // Reporting about oneself
+            internet.sendFirst(Destination{packet->getSourceAddress()}, {ConnectionCode::Server, Uint8(BROADCAST_APP_INDEX)});
             return;
 
         default:

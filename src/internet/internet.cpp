@@ -16,7 +16,7 @@ Internet::Internet()
 void Internet::connectTo(const Destination& _dest) {
     // Add new connection
     reciepients.emplace_back(_dest);
-    logAdditional("Connecting to %s:%u", _dest.getAddress(), _dest.getPort());
+    logAdditional("Connecting to %s:%u", _dest.getName(), _dest.getPort());
 }
 
 void Internet::detachOf(const sockaddr_in* _address) {
@@ -105,10 +105,6 @@ const GetPacket* Internet::getNewMessages() {
         }
 
         if (source) {
-            // Logging get message
-            logAdditional("Get message from %s, size %u, type: %u",
-                source->getName(), packet->getLength(), packet->getData<Uint8>(0));
-
             // Update wait timer
             source->updateGetTimeout();
 

@@ -8,13 +8,12 @@
 #include "internetCycle.hpp"
 
 
-// Game cycle (for single player (special animation))
+// Game cycle for internet connection from client side, controlled from server
 class ClientGameCycle : public InternetCycle {
- private:
-    // Additional text
+ protected:
     GUI::StaticText waitText;
 
-    // Main run functions
+ protected:
     bool inputMouseDown() override;
     void getInternetPacket(const GetPacket& packet) override;
     void draw() const override;

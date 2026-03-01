@@ -1,10 +1,12 @@
 # The standard "Tic-tac-toe" game on c++ using SDL3
-[![en](https://img.shields.io/badge/lang-en-green.svg)](https://github.com/kolyaka32/tic-tak-toe-on-SDL-net/blob/master/README.md)  [![ru](https://img.shields.io/badge/lang-ru-green.svg)](https://github.com/kolyaka32/tic-tak-toe-on-SDL-net/blob/master/README-ru.md)
+[![en](https://img.shields.io/badge/lang-en-green.svg)](README.md)  [![ru](https://img.shields.io/badge/lang-ru-green.svg)](README-ru.md)
 
 This codebase implement standart tic-tac-toe game with cooperative and online mods.
 
 ![Screenshot of game](/screenshots/game-main-en.png?raw=true)
 
+## Launching of the game
+Download archieve from [releases](https://github.com/kolyaka32/tic-tak-toe-on-SDL-net/releases), depend on platform, unzip and run 'Tic-tak-toe.exe'/'Tic-tak-toe'!
 
 ## Usage
 Classical game "tic-tac-toe", ported on computer. Rules are simple you need to set crosses or circles at field.
@@ -17,6 +19,7 @@ Game have 3 mode:
 
 Also you can change start field configuration and other usefull things from "settings-tic-tac-toe.ini" file.
 
+![Screenshot of extended game](/screenshots/game-extended-en.png?raw=true)
 
 ## Supported languages
 * English
@@ -24,12 +27,20 @@ Also you can change start field configuration and other usefull things from "set
 * German (Deutsch) (WIP)
 * Bellarussian (Беларускі) (WIP)
 
+## License
+This project is distributed under the terms of the GNU GENERAL PUBLIC LICENSE v3, available in [LICENSE.txt](LICENSE.txt).
 
-![Screenshot of extended game](/screenshots/game-extended-en.png?raw=true)
+## Platforms
+This project has been compiled and tested on several platforms, including:
+- Windows (10, 11)
+- Ubuntu (22.04)
+- Fedora (43)
 
+## Compiling
+For use by yourself and validation can check [installation guide](docs/INSTALL.md)
 
-## Launching of the game
-Download archieve from [releases](https://github.com/kolyaka32/tic-tak-toe-on-SDL-net/releases), depend on platform, unzip and run 'Tic-tak-toe.exe'/'Tic-tak-toe'!
+## Bugs
+Bug reports are welcome, if you find any, report them [here](https://github.com/kolyaka32/tic-tak-toe-on-SDL-net/issues)
 
 ## Used external libraries:
 * https://github.com/libsdl-org/SDL

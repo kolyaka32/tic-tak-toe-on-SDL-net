@@ -6,7 +6,6 @@
 #include "coopGame.hpp"
 
 
-// Two player mode (standart game)
 TwoPlayerGameCycle::TwoPlayerGameCycle(Window& _window)
 : GameCycle(_window),
 menu(_window) {

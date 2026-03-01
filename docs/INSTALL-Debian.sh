@@ -1,4 +1,4 @@
-# Full installation of tic-tac-toe on fedora for development
+# Full installation on Debian-like systems for development
 
 # Updating systems and libraries
 sudo apt-get update
@@ -32,41 +32,35 @@ sudo apt-get install libpipewire-0.3-dev libwayland-dev libdecor-0-dev liburing-
 # SDL
 git clone https://github.com/libsdl-org/SDL.git
 cd SDL; mkdir build; cd build
-cmake ..
-make; sudo make install
-cd ../../
+cmake ..; make; sudo make install
+cd ../..
 # SDL_image
 git clone https://github.com/libsdl-org/SDL_image.git
 cd SDL_image; mkdir build; cd build
-cmake ..
-make; sudo make install
-cd ../../
+cmake ..; make; sudo make install
+cd ../..
 # SDL_mixer
 git clone https://github.com/libsdl-org/SDL_mixer.git
 cd SDL_mixer; mkdir build; cd build
-cmake ..
-make; sudo make install
-cd ../../
+cmake ..; make; sudo make install
+cd ../..
 # SDL_ttf
 git clone https://github.com/libsdl-org/SDL_ttf.git
 cd SDL_ttf; mkdir build; cd build
-cmake ..
-make; sudo make install
-cd ../../
+cmake ..; make; sudo make install
+cd ../..
 # SDL_net
 git clone https://github.com/libsdl-org/SDL_net.git
 cd SDL_net; mkdir build; cd build
-cmake ..
-make; sudo make install
-cd ../../
+cmake ..; make; sudo make install
+cd ../..
 # libzip
 git clone https://github.com/nih-at/libzip.git
 cd libzip; mkdir build; cd build
-cmake ..
-make; sudo make install
-cd ../../
+cmake ..; make; sudo make install
+cd ../..
 
-# Building app itself
+# Building game itself
 git clone https://github.com/kolyaka32/tic-tak-toe-on-SDL-net.git
 cd tic-tak-toe-on-SDL-net
 cmake --build ./build --config Release --target all

@@ -9,9 +9,9 @@
 #include "../game/gameMenu/selectingMenu.hpp"
 
 
-// Game cycle (for single player (special animation))
+// Singleplayer game mode - competition with computer
 class SinglePlayerGameCycle : public GameCycle {
- private:
+ protected:
     SelectingMenu menu;
 
  protected:

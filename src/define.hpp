@@ -33,6 +33,10 @@
 #define WINDOW_NAME "Tic-tac-toe on SDL"
 #define LOG_NAME "log.txt"
 
+// Game-specigfic data
+#define FIELD_LIGHT {255, 206, 158, 255}
+#define FIELD_DARK {206, 139, 71, 255}
+
 // Base file names
 // File with all GFX
 #if (PRELOAD_DATA)
@@ -47,6 +51,7 @@
 // Number of active connections in internet part
 #if (USE_NET)
 #define MAX_CONNECTIONS 1
+#define BROADCAST_APP_INDEX 2
 #define BASE_PORT 8000
 #define BROADCAST_PORT 5667
 #endif  // (USE_NET)

@@ -36,9 +36,9 @@ bool GameCycle::inputMouseDown() {
     return BaseCycle::inputMouseDown();
 }
 
-void GameCycle::inputKeys(SDL_Keycode key) {
+void GameCycle::inputKeys(SDL_Keycode _key) {
     // Quiting to menu
-    if (key == SDLK_Q) {
+    if (_key == SDLK_Q) {
         App::setNextCycle(Cycle::Menu);
     }
 }

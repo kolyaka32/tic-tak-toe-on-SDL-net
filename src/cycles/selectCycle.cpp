@@ -10,20 +10,18 @@
 #include "clientLobby.hpp"
 
 
-// Starting basic template with main theme
 SelectCycle::SelectCycle(Window& _window)
 : BaseCycle(_window),
-titleText(window, 0.5, 0.15, {"Tic-tac-toe", "Крестики нолики", "Tic-tac-toe", "Крыжыкі нулікі"}, 3, Height::Title),
-singleplayerButton(window, 0.5, 0.3, {"Singleplayer", "Одиночная игра", "Einzelspiel", "Адзіночная гульня"}),
-twoPlayerButton(window, 0.5, 0.5, {"Two players", "Два игрока", "Zwei Spieler", "Два гульца"}),
-serverButton(window, 0.5, 0.7, {"Create server", "Создать сервер", "Server erstellen", "Стварыць сервер"}),
-connectButton(window, 0.5, 0.9, {"Connect", "Присоединиться", "Beitreten", "Далучыцца"}) {
+titleText(_window, 0.5, 0.15, {"Tic-tac-toe", "Крестики нолики", "Tic-tac-toe", "Крыжыкі нулікі"}, 3, Height::Title),
+singleplayerButton(_window, 0.5, 0.3, {"Singleplayer", "Одиночная игра", "Einzelspiel", "Адзіночная гульня"}),
+twoPlayerButton(_window, 0.5, 0.5, {"Two players", "Два игрока", "Zwei Spieler", "Два гульца"}),
+serverButton(_window, 0.5, 0.7, {"Create server", "Создать сервер", "Server erstellen", "Стварыць сервер"}),
+connectButton(_window, 0.5, 0.9, {"Connect", "Присоединиться", "Beitreten", "Далучыцца"}) {
     // Starting menu song (if wasn't started)
     audio.music.startFading(Music::Menu);
     logAdditional("Start select cycle");
 }
 
-// Getting selected button
 bool SelectCycle::inputMouseDown() {
     if (settings.click(mouse)) {
         return true;

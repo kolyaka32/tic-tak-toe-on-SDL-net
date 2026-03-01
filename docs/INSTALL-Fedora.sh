@@ -1,4 +1,4 @@
-# Full installation of tic-tac-toe on fedora for development
+# Full installation on Fedora for development
 
 # Updating systems and libraries
 sudo dnf update
@@ -32,42 +32,34 @@ sudo dnf install zlib-ng-compat-static
 # Installing SDL (main library)
 git clone https://github.com/libsdl-org/SDL.git
 cd SDL; mkdir build; cd build
-cmake ..
-make
-sudo make install
+cmake ..; make; sudo make install
 cd ../..
 
 # SDL_image
 git clone https://github.com/libsdl-org/SDL_image.git
 cd SDL_image; mkdir build; cd build
-cmake ..
-make
-sudo make install
+cmake ..; make; sudo make install
 cd ../..
 
 # SDL_mixer
 git clone https://github.com/libsdl-org/SDL_mixer.git
 cd SDL_mixer; mkdir build; cd build
-cmake ..
-make
-sudo make install
+cmake ..; make; sudo make install
 cd ../..
 
 # SDL_ttf
 git clone https://github.com/libsdl-org/SDL_ttf.git
 cd SDL_ttf; mkdir build; cd build
-cmake ..
-make; sudo make install
+cmake ..; make; sudo make install
 cd ../..
 
 # Libzip (for archieve loading)
 git clone https://github.com/nih-at/libzip.git
 cd libzip; mkdir build; cd build
-cmake ..
-make; sudo make install
-cd ../../
+cmake ..; make; sudo make install
+cd ../..
 
-# Game itself
+# Building game itself
 git clone https://github.com/kolyaka32/tic-tak-toe-on-SDL-net.git
 cd tic-tak-toe-on-SDL-net
 cmake --build ./build --config Release --target all
