@@ -10,7 +10,6 @@ Socket::Socket() {
     // Create a socket for listening for incoming connection requests.
     sck = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     #if (USE_WINSOCK)
-    sck = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (sck == INVALID_SOCKET) {
         logAdditional("Can't create socket with error: %d", getError);
     }
