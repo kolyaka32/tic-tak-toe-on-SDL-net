@@ -31,7 +31,7 @@
 
 // System game name
 #define WINDOW_NAME "Tic-tac-toe on SDL"
-#define LOG_NAME "log_%d.txt"
+#define LOG_NAME "log.txt"
 
 // Game-specigfic data
 #define FIELD_LIGHT {255, 206, 158, 255}
