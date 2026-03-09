@@ -14,7 +14,7 @@ waitText(window, 0.5, 0.05, {"Wait start", "Ожидайте начала", "War
         field.restart();
         field.setState(GameState::WaitState);
     }
-    logAdditional("Start client game cycle");
+    logger.additional("Start client game cycle");
 }
 
 ClientGameCycle::~ClientGameCycle() {
@@ -36,7 +36,7 @@ bool ClientGameCycle::inputMouseDown() {
         SavedFields::addField(field.saveField());
         // Showing message of sucsessful saving
         savedInfo.reset();
-        logAdditional("Saving field");
+        logger.additional("Saving field");
     }
     // Normal turn
     if (field.tryClickClientCurrent(mouse)) {
@@ -56,7 +56,7 @@ void ClientGameCycle::getInternetPacket(const GetPacket& packet) {
     case ConnectionCode::GameTurn:
         if (packet.isBytesAvaliable(3)) {
             field.clickClientOpponent(packet.getData<Uint8>(2));
-            logAdditional("Turn of opponent player to %u", packet.getData<Uint8>(2));
+            logger.additional("Turn of opponent player to %u", packet.getData<Uint8>(2));
         }
         return;
 
@@ -70,7 +70,7 @@ void ClientGameCycle::getInternetPacket(const GetPacket& packet) {
             // Making sound
             audio.sounds.play(Sounds::Reset);
             audio.music.startFromCurrent(Music::MainCalm);
-            logAdditional("Starting new game by connection");
+            logger.additional("Starting new game by connection");
         }
         return;
 

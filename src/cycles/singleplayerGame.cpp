@@ -14,7 +14,7 @@ menu(_window) {
         // Starting game
         field.restart();
     }
-    logAdditional("Start singleplayer game cycle");
+    logger.additional("Start singleplayer game cycle");
 }
 
 bool SinglePlayerGameCycle::inputMouseDown() {
@@ -26,7 +26,7 @@ bool SinglePlayerGameCycle::inputMouseDown() {
         menu.addField(field.saveField());
         // Showing message of sucsessful saving
         savedInfo.reset();
-        logAdditional("Saving field");
+        logger.additional("Saving field");
     }
     if (gameMenuButton.in(mouse)) {
         // Starting game menu
@@ -38,7 +38,7 @@ bool SinglePlayerGameCycle::inputMouseDown() {
         if (const Field* f = menu.click(mouse)) {
             field.setNewField(f, window);
             menu.reset();
-            logAdditional("Select new field");
+            logger.additional("Select new field");
         }
         return true;
     } else {

@@ -29,7 +29,7 @@ hideAddressButton(_window, 0.5, 0.5, {"Hide address", "Скрыть адресс
     // Openning socket for recieving broadcast
     broadcastRecieveSocket.setRecieveBroadcast();
 
-    logAdditional("Start server lobby cycle");
+    logger.additional("Start server lobby cycle");
 }
 
 bool ServerLobbyCycle::inputMouseDown() {
@@ -40,7 +40,7 @@ bool ServerLobbyCycle::inputMouseDown() {
     if (hideAddressText.in(mouse)) {
         // Copying address to buffer
         static char clipboardText[24];
-        snprintf(clipboardText, sizeof(clipboardText), "%s:%d", internet.getHostName(), internet.getPort());
+        SDL_snprintf(clipboardText, sizeof(clipboardText), "%s:%d", internet.getHostName(), internet.getPort());
         SDL_SetClipboardText(clipboardText);
         copiedInfoBox.reset();
         return true;

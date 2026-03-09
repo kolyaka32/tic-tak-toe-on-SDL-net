@@ -17,7 +17,7 @@ targetConnectButton(_window, 0.5, 0.95,
     {"Connect by IP", "Присоединиться по IP", "Über IP beitreten", "Далучыцца па IP"}),
 targetConnectMenu(_window) {
     // Starting random getting socket
-    logAdditional("Start client lobby cycle");
+    logger.additional("Start client lobby cycle");
 
     // Setting to correct send broadcast
     broadcastSendSocket.setSendBroadcast();
@@ -92,7 +92,7 @@ void ClientLobbyCycle::update() {
                 // Get server information
                 // Adding to list
                 serverDatas.emplace_back(packet->getSourceAddress(), int(getTime()-startSearchTimer));
-                logAdditional("Added server: address: %s:%d, ping: %d",
+                logger.additional("Added server: address: %s:%d, ping: %d",
                     serverDatas[serverDatas.size()-1].getAddress().getName(),
                     serverDatas[serverDatas.size()-1].getAddress().getPort(),
                     serverDatas[serverDatas.size()-1].getPing());

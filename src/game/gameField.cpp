@@ -127,17 +127,17 @@ void GameField::checkEnd() {
     switch (currentField.getState()) {
     case GameState::CurrentWin:
         audio.sounds.play(Sounds::Win);
-        logAdditional("Opponent win");
+        logger.additional("Opponent win");
         break;
 
     case GameState::OpponentWin:
         audio.sounds.play(Sounds::Loose);
-        logAdditional("Current win");
+        logger.additional("Current win");
         break;
 
     case GameState::NobodyWin:
         audio.sounds.play(Sounds::Loose);
-        logAdditional("Nobody win");
+        logger.additional("Nobody win");
         break;
 
     default:
@@ -155,17 +155,17 @@ void GameField::checkEndInverted() {
     switch (currentField.getState()) {
     case GameState::CurrentWin:
         audio.sounds.play(Sounds::Loose);
-        logAdditional("Current win");
+        logger.additional("Current win");
         break;
 
     case GameState::OpponentWin:
         audio.sounds.play(Sounds::Win);
-        logAdditional("Opponent win");
+        logger.additional("Opponent win");
         break;
 
     case GameState::NobodyWin:
         audio.sounds.play(Sounds::Loose);
-        logAdditional("Nobody win");
+        logger.additional("Nobody win");
         break;
 
     default:

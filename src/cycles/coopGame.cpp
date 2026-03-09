@@ -14,7 +14,7 @@ menu(_window) {
         // Starting selecting game
         field.restart();
     }
-    logAdditional("Start coop game cycle");
+    logger.additional("Start coop game cycle");
 }
 
 bool TwoPlayerGameCycle::inputMouseDown() {
@@ -26,7 +26,7 @@ bool TwoPlayerGameCycle::inputMouseDown() {
         menu.addField(field.saveField());
         // Showing message of sucsessful saving
         savedInfo.reset();
-        logAdditional("Saving field");
+        logger.additional("Saving field");
     }
     if (gameMenuButton.in(mouse)) {
         // Starting game menu
@@ -38,7 +38,7 @@ bool TwoPlayerGameCycle::inputMouseDown() {
         if (const Field* f = menu.click(mouse)) {
             field.setNewField(f, window);
             menu.reset();
-            logAdditional("Selecting new field");
+            logger.additional("Selecting new field");
         }
         return true;
     } else {

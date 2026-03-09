@@ -22,7 +22,7 @@ bool ConfirmedMessage::isNeedResend() {
     if (getTime() > nextResend) {
         // Resending this message
         nextResend = getTime() + messageResendTimeout;
-        logAdditional("Resending packet with code: %u, index: %u", getData()[0], messageIndex);
+        logger.additional("Resending packet with code: %u, index: %u", getData()[0], messageIndex);
         return true;
     }
     return false;

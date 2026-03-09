@@ -79,33 +79,33 @@ const char* Field::getSaveTime() const {
     // Writing date
     switch (dateFormat) {
     case SDL_DATE_FORMAT_YYYYMMDD:
-        snprintf(buffer, 11, "%04d.%02d.%02d",
+        SDL_snprintf(buffer, 11, "%04d.%02d.%02d",
             time.year, time.month, time.day);
         break;
 
     case SDL_DATE_FORMAT_DDMMYYYY:
-        snprintf(buffer, 11, "%02d.%02d.%04d",
+        SDL_snprintf(buffer, 11, "%02d.%02d.%04d",
             time.day, time.month, time.year);
         break;
 
     case SDL_DATE_FORMAT_MMDDYYYY:
-        snprintf(buffer, 11, "%02d.%02d.%04d",
+        SDL_snprintf(buffer, 11, "%02d.%02d.%04d",
             time.year, time.month, time.day);
         break;
     }
     // Writing time
     switch (timeFormat) {
     case SDL_TIME_FORMAT_24HR:
-        snprintf(buffer+10, sizeof(buffer)-10, " %02d:%02d:%02d",
+        SDL_snprintf(buffer+10, sizeof(buffer)-10, " %02d:%02d:%02d",
             time.hour, time.minute, time.second);
         break;
 
     case SDL_TIME_FORMAT_12HR:
         if (time.hour < 12) {
-            snprintf(buffer+10, sizeof(buffer)-10, " %02dAM:%02d:%02d",
+            SDL_snprintf(buffer+10, sizeof(buffer)-10, " %02dAM:%02d:%02d",
                 time.hour, time.minute, time.second);
         } else {
-            snprintf(buffer+10, sizeof(buffer)-10, " %02dPM:%02d:%02d",
+            SDL_snprintf(buffer+10, sizeof(buffer)-10, " %02dPM:%02d:%02d",
                 time.hour, time.minute, time.second);
         }
         break;

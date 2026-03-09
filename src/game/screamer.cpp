@@ -34,7 +34,7 @@ void Screamer::update() {
 
             // Changing state
             active = true;
-            logAdditional("Show screamer");
+            logger.additional("Show screamer");
         }
     }
 }
